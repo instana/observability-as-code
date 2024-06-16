@@ -5,7 +5,7 @@
   "main": "./dist/index.js",
   "scripts": {
     "build": "tsc",
-    "pkg": "pkg . --out-path build --public"
+    "pkg": "pkg . --output build/stanctl-ex"
   },
   "bin": {
     "stanctl-ex": "./dist/index.js"
