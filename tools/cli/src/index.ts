@@ -18,18 +18,21 @@ Handlebars.registerHelper('default', function (value: string, defaultValue: stri
     return typeof value !== 'undefined' ? value : defaultValue;
 });
 
+// Dynamically determine the executable name
+const execName = path.basename(process.argv[1]);
+
 const examplesForDownload = `
 Examples:
 
 Download configuration package to a specific location:
-  stanctl configuration download --package my-package --location ./my-packages
+  ${execName} configuration download --package my-package --location ./my-packages
 `;
 
 const examplesForImport = `
 Examples:
 
 Import configuration with parameters replaced:
-  stanctl configuration deploy --package my-package --server example.com --include "dashboards/**/test-*.json" --set key1=value1 --set key2=value2
+  ${execName} configuration deploy --package my-package --server example.com --include "dashboards/**/test-*.json" --set key1=value1 --set key2=value2
 `;
 
 // Configure yargs to parse command-line arguments with subcommands
