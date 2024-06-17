@@ -1,4 +1,4 @@
-#!/usr/bin/env ts-node
+#!/usr/bin/env node
 
 import fs from 'fs';
 import path from 'path';
@@ -32,7 +32,7 @@ const examplesForImport = `
 Examples:
 
 Import configuration with parameters replaced:
-  ${execName} configuration deploy --package my-package --server example.com --include "dashboards/**/test-*.json" --set key1=value1 --set key2=value2
+  ${execName} configuration import --package my-package --server example.com --include "dashboards/**/test-*.json" --set key1=value1 --set key2=value2
 `;
 
 // Configure yargs to parse command-line arguments with subcommands
@@ -72,7 +72,7 @@ yargs
                         demandOption: true
                     })
                     .option('server', {
-                        alias: 's',
+                        alias: 'S',
                         describe: 'Address of an environment',
                         type: 'string',
                         demandOption: true
@@ -173,6 +173,11 @@ async function handleImport(argv: any) {
         const files = globSync(searchPattern);
 
         logger.info(`Start to import configuration from ${searchPattern}.`);
+
+        if (files.length === 0) {
+            logger.warn(`No files found for pattern: ${searchPattern}`);
+            return;
+        }
 
         for (const file of files) {
             if (path.extname(file) === '.json') {
