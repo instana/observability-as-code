@@ -1,4 +1,4 @@
 {
-  "packages": ["customer-dashboards/packages/*"], 
+  "packages": ["packages/*"], 
   "version": "independent" 
 }
