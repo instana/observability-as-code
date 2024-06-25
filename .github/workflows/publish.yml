@@ -12,6 +12,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+     
+      - name: Update npm
+        run: npm install -g npm@latest
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
