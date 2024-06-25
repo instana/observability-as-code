@@ -5,10 +5,10 @@
   "main": "./dist/index.js",
   "scripts": {
     "build": "tsc",
-    "pkg": "pkg . --output build/stanctl-ex"
+    "pkg": "pkg . --output build/stanctl-configuration"
   },
   "bin": {
-    "stanctl-ex": "./dist/index.js"
+    "stanctl-configuration": "./dist/index.js"
   },
   "pkg": {
     "assets": [

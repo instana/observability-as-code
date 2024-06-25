@@ -25,95 +25,93 @@ const examplesForDownload = `
 Examples:
 
 Download configuration package to a specific location:
-  ${execName} configuration download --package my-package --location ./my-packages
+  ${execName} download --package my-package --location ./my-packages
 `;
 
 const examplesForImport = `
 Examples:
 
 Import configuration with parameters replaced:
-  ${execName} configuration import --package my-package --server example.com --include "dashboards/**/test-*.json" --set key1=value1 --set key2=value2
+  ${execName} import --package my-package --server example.com --include "dashboards/**/test-*.json" --set key1=value1 --set key2=value2
 `;
 
 // Configure yargs to parse command-line arguments with subcommands
 yargs
-    .wrap(200) // Set the desired width here
-    .command('configuration <action>', 'Perform actions on configurations', (yargs) => {
+    .wrap(160) // Set the desired width here
+    .usage(`Usage: ${execName} <command> <options>`)
+    .command('download', 'Download a configuration package', (yargs) => {
         return yargs
-            .command('download', 'Download a configuration package', (yargs) => {
-                return yargs
-                    .option('package', {
-                        alias: 'p',
-                        describe: 'Name of the package to download',
-                        type: 'string',
-                        demandOption: true
-                    })
-                    .option('location', {
-                        alias: 'l',
-                        describe: 'Location to store the downloaded package',
-                        type: 'string',
-                        demandOption: false,
-                        default: process.cwd() // Set the default location to the current working directory
-                    })
-                    .option('debug', {
-                        alias: 'd',
-                        describe: 'Enable debug mode',
-                        type: 'boolean',
-                        default: false
-                    })
-                    .epilog(examplesForDownload);
-                })
-            .command('import', 'Import configuration into an environment', (yargs) => {
-                return yargs
-                    .option('package', {
-                        alias: 'p',
-                        describe: 'Name of the package to locate',
-                        type: 'string',
-                        demandOption: true
-                    })
-                    .option('server', {
-                        alias: 'S',
-                        describe: 'Address of an environment',
-                        type: 'string',
-                        demandOption: true
-                    })
-                    .option('token', {
-                        alias: 't',
-                        describe: 'API token to post the configuration',
-                        type: 'string',
-                        demandOption: true
-                    })
-                    .option('location', {
-                        alias: 'l',
-                        describe: 'Location to store the downloaded package',
-                        type: 'string',
-                        demandOption: false,
-                        default: process.cwd() // Set the default location to the current working directory
-                    })
-                    .option('include', {
-                        alias: 'i',
-                        describe: 'Folder or pattern to match configuration files to include',
-                        type: 'string',
-                        demandOption: false
-                    })
-                    .option('set', {
-                        alias: 's',
-                        describe: 'Parameter values in the format key=value',
-                        type: 'array',
-                        demandOption: false
-                    })
-                    .option('debug', {
-                        alias: 'd',
-                        describe: 'Enable debug mode',
-                        type: 'boolean',
-                        default: false
-                    })
-                    .epilog(examplesForImport);
+            .option('package', {
+                alias: 'p',
+                describe: 'The package name',
+                type: 'string',
+                demandOption: true
             })
-            .demandCommand(1, 'You need at least one command before moving on')
-            .help()
-            .alias('help', 'h');
+            .option('location', {
+                alias: 'l',
+                describe: 'The location to store all the configuration packages',
+                type: 'string',
+                demandOption: false,
+                default: process.cwd() // Set the default location to the current working directory
+            })
+            .option('debug', {
+                alias: 'd',
+                describe: 'Enable debug mode',
+                type: 'boolean',
+                default: false
+            })
+            .epilog(examplesForDownload);
+        })
+    .command('import', 'Import configuration into an environment', (yargs) => {
+        return yargs
+            .option('package', {
+                alias: 'p',
+                describe: 'The package name or path to the package',
+                type: 'string',
+                demandOption: true
+            })
+            .option('server', {
+                alias: 'S',
+                describe: 'Address of an environment',
+                type: 'string',
+                demandOption: true
+            })
+            .option('token', {
+                alias: 't',
+                describe: 'API token to import the configuration',
+                type: 'string',
+                demandOption: true
+            })
+            .option('location', {
+                alias: 'L',
+                describe: 'The location to store all the configuration packages',
+                type: 'string',
+                demandOption: false,
+                default: process.cwd() // Set the default location to the current working directory
+            })
+            .option('include', {
+                alias: 'i',
+                describe: 'Folder or pattern to match configuration files to include',
+                type: 'string',
+                demandOption: false
+            })
+            .option('set', {
+                alias: 's',
+                describe: 'Parameter values in the format key=value',
+                type: 'array',
+                demandOption: false
+            })
+            .option('debug', {
+                alias: 'd',
+                describe: 'Enable debug mode',
+                type: 'boolean',
+                default: false
+            })
+            .epilog(examplesForImport);
     })
+    .demandCommand(1, 'You need at least one command before moving on')
+    .help()
+    .alias('help', 'h')
     .argv;
 
 // Print help information if no command is given
@@ -143,14 +141,18 @@ async function handleDownload(argv: any) {
 
 // Function to handle import logic
 async function handleImport(argv: any) {
-    const { package: packageName, server, token, location, include: includePattern, set: parameters, debug } = argv;
+    const { package: packageNameOrPath, server, token, location, include: includePattern, set: parameters, debug } = argv;
 
     // Set log level to debug if the debug flag is set
     if (debug) {
         logger.level = 'debug';
     }
 
-    const basePath = path.join(location, "node_modules", packageName);
+    let packagePath = packageNameOrPath;
+    if (!fs.existsSync(packageNameOrPath)) {
+        packagePath = path.join(location, 'node_modules', packageNameOrPath);
+    }
+    
     const defaultFolders = ['dashboards', 'alerts'];
 
     // Parse parameter values into an object
@@ -235,11 +237,11 @@ async function handleImport(argv: any) {
     }
 
     if (includePattern) {
-        const searchPattern = path.join(basePath, includePattern);
+        const searchPattern = path.join(packagePath, includePattern);
         await importConfiguration(searchPattern);
     } else {
         for (const defaultFolder of defaultFolders) {
-            const searchPattern = path.join(basePath, defaultFolder, '**/*.json');
+            const searchPattern = path.join(packagePath, defaultFolder, '**/*.json');
             await importConfiguration(searchPattern);
         }
     }
@@ -247,11 +249,8 @@ async function handleImport(argv: any) {
 
 // Route to the appropriate function based on the sub-command
 const command = process.argv[2];
-if (command === 'configuration') {
-    const action = process.argv[3];
-    if (action === 'download') {
-        handleDownload(yargs.argv);
-    } else if (action === 'import') {
-        handleImport(yargs.argv);
-    }
+if (command === 'download') {
+    handleDownload(yargs.argv);
+} else if (command === 'import') {
+    handleImport(yargs.argv);
 }
