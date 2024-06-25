@@ -3,7 +3,7 @@ name: Publish to npmjs
 on:
   push:
     branches:
-      - main-test
+      - release-test
 
 jobs:
   publish:
