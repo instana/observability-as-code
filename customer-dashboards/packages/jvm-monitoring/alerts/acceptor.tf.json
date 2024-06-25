@@ -1,0 +1,41 @@
+  locals {
+    acceptorQuery       = "entity.kubernetes.deployment.name:\"acceptor\""
+    acceptorEntityType  = "dropwizardApplicationContainer"
+  }
+  
+  resource "instana_custom_event_spec_threshold_rule" "acceptor_high_span_error_rate" {
+    name                    = "[SRESLO] Acceptor spans_error_rate rate is too high"
+    description             = <<EOM
+  This indicates problems with either too high load on the individual Acceptor node or problems with the Kafka cluster in this 
+  region and leads to gaps in metrics and calls for customers.
+  EOM
+    query                   = local.acceptorQuery
+    entity_type             = local.acceptorEntityType
+    rule_window             = local.oneMinute
+    expiration_time         = local.fiveMinutes
+    rule_severity           = "critical"
+    rule_metric_name        = "metrics.gauges.KPI.outgoing.spans.error_rate"
+    rule_aggregation        = "avg"
+    rule_condition_operator = ">"
+    rule_condition_value    = 0.05
+  }
+  
+  resource "instana_custom_event_spec_threshold_rule" "acceptor_high_job_queue_utilization" {
+    name                    = "[SRESLO] Acceptor HTTP job queue is filling up"
+    description             = <<EOM
+  The HTTP threads of this instance do not seem to be able to handle the number of incoming requests causing job
+  queue to fill up. This may eventually result in rejected HTTP requests and Acceptor responding with HTTP status 
+  code ENHANCE_YOUR_CALM. 
+  
+  Potential causes for this are the respective Acceptor instance receiving too much traffic or problems with the Kafka cluster.
+  EOM
+    query                   = local.acceptorQuery
+    entity_type             = local.acceptorEntityType
+    rule_window             = local.oneMinute
+    expiration_time         = local.fiveMinutes
+    rule_severity           = "critical"
+    rule_metric_name        = "metrics.gauges.org.eclipse.jetty.util.thread.QueuedThreadPool.dw.jobs-queue-utilization"
+    rule_aggregation        = "avg"
+    rule_condition_operator = ">"
+    rule_condition_value    = 0.5
+  }

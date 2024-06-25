@@ -1,0 +1,4 @@
+{
+  "packages": ["customer-dashboards/packages/*"], 
+  "version": "independent" 
+}

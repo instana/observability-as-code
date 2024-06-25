@@ -1,0 +1,512 @@
+{
+    "id": "TgnrebNcRhakXvY-ZRw1_g",
+    "title": "llm-change publish13",
+    "accessRules": [
+      {
+        "accessType": "READ_WRITE",
+        "relationType": "GLOBAL",
+        "relatedId": ""
+      }
+    ],
+    "widgets": [
+      {
+        "id": "L3VuOuc4-Rmy1B9Y",
+        "title": "Total Cost by Model",
+        "width": 4,
+        "height": 16,
+        "x": 8,
+        "y": 5,
+        "type": "topList",
+        "config": {
+          "formatter": "number.compact",
+          "metricConfiguration": {
+            "formatter": "number.compact",
+            "lastValue": false,
+            "metric": "metrics.gauges.llm.usage.cost",
+            "timeShift": 0,
+            "tagFilterExpression": {
+              "logicalOperator": "AND",
+              "elements": [],
+              "type": "EXPRESSION"
+            },
+            "allowedCrossSeriesAggregations": [],
+            "aggregation": "SUM",
+            "source": "INFRASTRUCTURE_METRICS",
+            "crossSeriesAggregation": "SUM",
+            "type": "oTelLLM",
+            "metricPath": [
+              "Others"
+            ],
+            "grouping": [
+              {
+                "maxResults": 5,
+                "by": {
+                  "groupbyTag": "metric.tag.model_id",
+                  "groupbyTagEntity": "NOT_APPLICABLE",
+                  "groupbyTagSecondLevelKey": ""
+                },
+                "includeOthers": false,
+                "direction": "DESC"
+              }
+            ]
+          },
+          "formatterSelected": false
+        }
+      },
+      {
+        "id": "FXcZLZA9zdvMTs6u",
+        "title": "Cost",
+        "width": 12,
+        "height": 13,
+        "x": 0,
+        "y": 34,
+        "type": "chart",
+        "config": {
+          "shareMaxAxisDomain": false,
+          "y1": {
+            "formatter": "number.compact",
+            "renderer": "line",
+            "metrics": [
+              {
+                "lastValue": false,
+                "color": "",
+                "compareToTimeShifted": false,
+                "aggregation": "MEAN",
+                "label": "Cost",
+                "source": "INFRASTRUCTURE_METRICS",
+                "type": "oTelLLM",
+                "metricPath": [
+                  "Others",
+                  "OpenTelemetry SDK LLM"
+                ],
+                "grouping": [
+                  {
+                    "groupBys": [
+                      {
+                        "groupbyTag": "metric.tag.model_id",
+                        "groupbyTagEntity": "NOT_APPLICABLE",
+                        "groupbyTagSecondLevelKey": ""
+                      }
+                    ],
+                    "maxResults": 5,
+                    "includeOthers": false,
+                    "direction": "DESC"
+                  }
+                ],
+                "formatter": "number.compact",
+                "metric": "metrics.gauges.llm.usage.cost",
+                "timeShift": 0,
+                "tagFilterExpression": {
+                  "logicalOperator": "AND",
+                  "elements": [],
+                  "type": "EXPRESSION"
+                },
+                "allowedCrossSeriesAggregations": [],
+                "metricLabel": "OpenTelemetry gauge llm.usage.cost",
+                "crossSeriesAggregation": "MEAN"
+              }
+            ],
+            "formatterSelected": false
+          },
+          "y2": {
+            "formatter": "number.detailed",
+            "renderer": "line",
+            "metrics": []
+          },
+          "type": "TIME_SERIES"
+        }
+      },
+      {
+        "id": "CBNq9r7sAHAJlkIK",
+        "title": "Total Request Counts by Model",
+        "width": 4,
+        "height": 16,
+        "x": 0,
+        "y": 5,
+        "type": "topList",
+        "config": {
+          "formatter": "number.compact",
+          "metricConfiguration": {
+            "formatter": "number.compact",
+            "lastValue": false,
+            "metric": "metrics.sums.llm.request.count",
+            "timeShift": 0,
+            "tagFilterExpression": {
+              "logicalOperator": "AND",
+              "elements": [],
+              "type": "EXPRESSION"
+            },
+            "allowedCrossSeriesAggregations": [],
+            "aggregation": "SUM",
+            "source": "INFRASTRUCTURE_METRICS",
+            "crossSeriesAggregation": "SUM",
+            "type": "oTelLLM",
+            "metricPath": [
+              "Others"
+            ],
+            "grouping": [
+              {
+                "maxResults": 5,
+                "by": {
+                  "groupbyTag": "metric.tag.model_id",
+                  "groupbyTagEntity": "NOT_APPLICABLE",
+                  "groupbyTagSecondLevelKey": ""
+                },
+                "includeOthers": false,
+                "direction": "DESC"
+              }
+            ]
+          },
+          "formatterSelected": false
+        }
+      },
+      {
+        "id": "rIMn7M2jVI7Eeiu0",
+        "title": "Total Cost",
+        "width": 4,
+        "height": 5,
+        "x": 4,
+        "y": 0,
+        "type": "bigNumber",
+        "config": {
+          "formatter": "number.compact",
+          "threshold": {
+            "thresholdEnabled": false,
+            "operator": ">="
+          },
+          "comparisonDecreaseColor": "greenish",
+          "metricConfiguration": {
+            "formatter": "number.compact",
+            "lastValue": false,
+            "metric": "metrics.gauges.llm.usage.cost",
+            "timeShift": 0,
+            "tagFilterExpression": {
+              "logicalOperator": "AND",
+              "elements": [],
+              "type": "EXPRESSION"
+            },
+            "allowedCrossSeriesAggregations": [],
+            "aggregation": "SUM",
+            "source": "INFRASTRUCTURE_METRICS",
+            "crossSeriesAggregation": "SUM",
+            "type": "oTelLLM",
+            "metricPath": [
+              "Others"
+            ]
+          },
+          "comparisonIncreaseColor": "redish",
+          "formatterSelected": false
+        }
+      },
+      {
+        "id": "8g79cbK3mhWKKeVZ",
+        "title": "Total Request Counts",
+        "width": 4,
+        "height": 5,
+        "x": 8,
+        "y": 0,
+        "type": "bigNumber",
+        "config": {
+          "formatter": "number.compact",
+          "threshold": {
+            "thresholdEnabled": false,
+            "operator": ">="
+          },
+          "comparisonDecreaseColor": "greenish",
+          "metricConfiguration": {
+            "formatter": "number.compact",
+            "lastValue": false,
+            "metric": "metrics.sums.llm.request.count",
+            "timeShift": 0,
+            "tagFilterExpression": {
+              "logicalOperator": "AND",
+              "elements": [],
+              "type": "EXPRESSION"
+            },
+            "allowedCrossSeriesAggregations": [],
+            "aggregation": "SUM",
+            "source": "INFRASTRUCTURE_METRICS",
+            "crossSeriesAggregation": "SUM",
+            "type": "oTelLLM",
+            "metricPath": [
+              "Others"
+            ]
+          },
+          "comparisonIncreaseColor": "redish",
+          "formatterSelected": false
+        }
+      },
+      {
+        "id": "NpXbaKW52_M2CqXE",
+        "title": "Total Tokens",
+        "width": 4,
+        "height": 5,
+        "x": 0,
+        "y": 0,
+        "type": "bigNumber",
+        "config": {
+          "formatter": "number.compact",
+          "threshold": {
+            "thresholdEnabled": false,
+            "operator": ">="
+          },
+          "comparisonDecreaseColor": "greenish",
+          "metricConfiguration": {
+            "formatter": "number.compact",
+            "lastValue": false,
+            "metric": "metrics.gauges.llm.usage.total_tokens",
+            "timeShift": 0,
+            "tagFilterExpression": {
+              "logicalOperator": "AND",
+              "elements": [],
+              "type": "EXPRESSION"
+            },
+            "allowedCrossSeriesAggregations": [],
+            "aggregation": "SUM",
+            "source": "INFRASTRUCTURE_METRICS",
+            "crossSeriesAggregation": "SUM",
+            "type": "oTelLLM",
+            "metricPath": [
+              "Others"
+            ]
+          },
+          "comparisonIncreaseColor": "redish",
+          "formatterSelected": false
+        }
+      },
+      {
+        "id": "xyjZ3eZaH_G13egG",
+        "title": "Total Tokens by Model",
+        "width": 4,
+        "height": 16,
+        "x": 4,
+        "y": 5,
+        "type": "topList",
+        "config": {
+          "formatter": "number.compact",
+          "metricConfiguration": {
+            "formatter": "number.compact",
+            "lastValue": false,
+            "metric": "metrics.gauges.llm.usage.total_tokens",
+            "timeShift": 0,
+            "tagFilterExpression": {
+              "logicalOperator": "AND",
+              "elements": [],
+              "type": "EXPRESSION"
+            },
+            "allowedCrossSeriesAggregations": [],
+            "aggregation": "SUM",
+            "source": "INFRASTRUCTURE_METRICS",
+            "crossSeriesAggregation": "SUM",
+            "type": "oTelLLM",
+            "metricPath": [
+              "Others"
+            ],
+            "grouping": [
+              {
+                "maxResults": 20,
+                "by": {
+                  "groupbyTag": "metric.tag.model_id",
+                  "groupbyTagEntity": "NOT_APPLICABLE",
+                  "groupbyTagSecondLevelKey": ""
+                },
+                "includeOthers": false,
+                "direction": "DESC"
+              }
+            ]
+          },
+          "formatterSelected": false
+        }
+      },
+      {
+        "id": "OBWfaPn_PALtl1AR",
+        "title": "Tokens",
+        "width": 12,
+        "height": 13,
+        "x": 0,
+        "y": 21,
+        "type": "chart",
+        "config": {
+          "shareMaxAxisDomain": false,
+          "y1": {
+            "formatter": "number.compact",
+            "renderer": "line",
+            "metrics": [
+              {
+                "lastValue": false,
+                "color": "",
+                "compareToTimeShifted": false,
+                "aggregation": "SUM",
+                "label": "",
+                "source": "INFRASTRUCTURE_METRICS",
+                "type": "oTelLLM",
+                "metricPath": [
+                  "Others",
+                  "OpenTelemetry SDK LLM"
+                ],
+                "grouping": [
+                  {
+                    "groupBys": [
+                      {
+                        "groupbyTag": "metric.tag.model_id",
+                        "groupbyTagEntity": "NOT_APPLICABLE",
+                        "groupbyTagSecondLevelKey": ""
+                      }
+                    ],
+                    "maxResults": 5,
+                    "includeOthers": false,
+                    "direction": "DESC"
+                  }
+                ],
+                "formatter": "number.compact",
+                "metric": "metrics.gauges.llm.usage.total_tokens",
+                "timeShift": 0,
+                "tagFilterExpression": {
+                  "logicalOperator": "AND",
+                  "elements": [],
+                  "type": "EXPRESSION"
+                },
+                "allowedCrossSeriesAggregations": [],
+                "metricLabel": "OpenTelemetry gauge llm.usage.total_tokens",
+                "crossSeriesAggregation": "SUM"
+              }
+            ],
+            "formatterSelected": false
+          },
+          "y2": {
+            "formatter": "number.detailed",
+            "renderer": "line",
+            "metrics": []
+          },
+          "type": "TIME_SERIES"
+        }
+      },
+      {
+        "id": "qJ5q7vtv5i7u-SR5",
+        "title": "Request Counts",
+        "width": 12,
+        "height": 13,
+        "x": 0,
+        "y": 47,
+        "type": "chart",
+        "config": {
+          "shareMaxAxisDomain": false,
+          "y1": {
+            "formatter": "number.compact",
+            "renderer": "line",
+            "metrics": [
+              {
+                "lastValue": false,
+                "color": "",
+                "compareToTimeShifted": false,
+                "aggregation": "SUM",
+                "label": "",
+                "source": "INFRASTRUCTURE_METRICS",
+                "type": "oTelLLM",
+                "metricPath": [
+                  "Others",
+                  "OpenTelemetry SDK LLM"
+                ],
+                "grouping": [
+                  {
+                    "groupBys": [
+                      {
+                        "groupbyTag": "metric.tag.model_id",
+                        "groupbyTagEntity": "NOT_APPLICABLE",
+                        "groupbyTagSecondLevelKey": ""
+                      }
+                    ],
+                    "maxResults": 5,
+                    "includeOthers": false,
+                    "direction": "DESC"
+                  }
+                ],
+                "formatter": "number.compact",
+                "metric": "metrics.sums.llm.request.count",
+                "timeShift": 0,
+                "tagFilterExpression": {
+                  "logicalOperator": "AND",
+                  "elements": [],
+                  "type": "EXPRESSION"
+                },
+                "allowedCrossSeriesAggregations": [],
+                "metricLabel": "OpenTelemetry sums llm.request.count",
+                "crossSeriesAggregation": "SUM"
+              }
+            ],
+            "formatterSelected": false
+          },
+          "y2": {
+            "formatter": "number.detailed",
+            "renderer": "line",
+            "metrics": []
+          },
+          "type": "TIME_SERIES"
+        }
+      },
+      {
+        "id": "PUjCURABk8HTyjg4",
+        "title": "Model Latencies",
+        "width": 12,
+        "height": 13,
+        "x": 0,
+        "y": 60,
+        "type": "chart",
+        "config": {
+          "shareMaxAxisDomain": false,
+          "y1": {
+            "formatter": "number.compact",
+            "renderer": "line",
+            "metrics": [
+              {
+                "lastValue": false,
+                "color": "",
+                "compareToTimeShifted": false,
+                "aggregation": "MEAN",
+                "label": "",
+                "source": "INFRASTRUCTURE_METRICS",
+                "type": "oTelLLM",
+                "metricPath": [
+                  "Others",
+                  "OpenTelemetry SDK LLM"
+                ],
+                "grouping": [
+                  {
+                    "groupBys": [
+                      {
+                        "groupbyTag": "metric.tag.model_id",
+                        "groupbyTagEntity": "NOT_APPLICABLE",
+                        "groupbyTagSecondLevelKey": ""
+                      }
+                    ],
+                    "maxResults": 5,
+                    "includeOthers": false,
+                    "direction": "DESC"
+                  }
+                ],
+                "formatter": "number.compact",
+                "metric": "metrics.gauges.llm.response.duration",
+                "timeShift": 0,
+                "tagFilterExpression": {
+                  "logicalOperator": "AND",
+                  "elements": [],
+                  "type": "EXPRESSION"
+                },
+                "allowedCrossSeriesAggregations": [],
+                "metricLabel": "OpenTelemetry gauge llm.response.duration",
+                "crossSeriesAggregation": "MEAN"
+              }
+            ],
+            "formatterSelected": false
+          },
+          "y2": {
+            "formatter": "number.detailed",
+            "renderer": "line",
+            "metrics": []
+          },
+          "type": "TIME_SERIES"
+        }
+      }
+    ],
+    "writable": true
+  }
