@@ -1,3 +1,2 @@
-tools/cli/build/
-tools/cli/dist/
-tools/cli/node_modules/
+tools/configuration/dist/
+tools/configuration/node_modules/

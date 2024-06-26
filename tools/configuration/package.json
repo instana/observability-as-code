@@ -1,11 +1,11 @@
 {
-  "name": "instana-observability-as-code-cli",
+  "name": "@ibm/stanctl-configuration",
   "version": "1.0.0",
-  "description": "Instana observability as code command line interface",
+  "description": "The Instana CLI for configuration package management",
   "main": "./dist/index.js",
   "scripts": {
     "build": "tsc",
-    "pkg": "pkg . --output build/stanctl-configuration"
+    "pkg": "pkg . --output dist/stanctl-configuration"
   },
   "bin": {
     "stanctl-configuration": "./dist/index.js"
@@ -14,6 +14,11 @@
     "assets": [
       "dist/**/*.js",
       "node_modules/**/*"
+    ],
+    "targets": [
+      "node16-macos",
+      "node16-linux",
+      "node16-win"
     ]
   },
   "repository": {
@@ -22,10 +27,12 @@
   },
   "keywords": [
     "instana",
+    "cli",
     "observability",
     "as",
     "code",
-    "cli"
+    "configuration",
+    "package"
   ],
   "author": "morningspace",
   "license": "ISC",
