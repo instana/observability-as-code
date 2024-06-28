@@ -10,6 +10,7 @@ import Handlebars from 'handlebars';
 import logger from './logger'; // Import the logger
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import { input, checkbox } from '@inquirer/prompts';
 
 const execAsync = promisify(exec);
 
@@ -61,7 +62,7 @@ yargs
                 default: false
             })
             .epilog(examplesForDownload);
-        })
+    }, handleDownload)
     .command('import', 'Import configuration into an environment', (yargs) => {
         return yargs
             .option('package', {
@@ -108,35 +109,51 @@ yargs
                 default: false
             })
             .epilog(examplesForImport);
-    })
+    }, handleImport)
+    .command('init', 'Initialize a new package', {}, handleInit)
     .demandCommand(1, 'You need at least one command before moving on')
     .help()
     .alias('help', 'h')
     .argv;
 
-// Print help information if no command is given
-if (process.argv.length === 2) {
-    yargs.showHelp();
-}
-
 // Function to handle download logic
 async function handleDownload(argv: any) {
     const { package: packageName, location, debug } = argv;
 
-    logger.info(`Start to download configuration package: ${packageName}`);
+    logger.info(`Start to download the configuration package: ${packageName}`);
 
     const downloadCommand = `npm install ${packageName} --prefix ${location}`;
     try {
         const { stdout, stderr } = await execAsync(downloadCommand);
-        logger.info(`Download completed: \n${stdout}`);
+        logger.info(`Download completed, detailed logs: \n${stdout}`);
+        logger.info(`The configuration package is downloaded at: ${location}`);
         if (stderr) {
             logger.error(`Download warnings/errors: ${stderr}`);
         }
     } catch (error) {
-        logger.error(`Failed to download package ${packageName}: ${error}`);
+        logger.error(`Failed to download the configuration package ${packageName}: ${error}`);
         process.exit(1);
     }
 
+}
+
+function parseParams(params: string[]): any {
+    const result: any = {};
+  
+    params.forEach(param => {
+      const [key, value] = param.split('=');
+      const keys = key.split('.');
+      keys.reduce((acc, key, index) => {
+        if (index === keys.length - 1) {
+          acc[key] = value || acc[key];
+        } else {
+          acc[key] = acc[key] || {};
+        }
+        return acc[key];
+      }, result);
+    });
+  
+    return result;
 }
 
 // Function to handle import logic
@@ -155,15 +172,6 @@ async function handleImport(argv: any) {
     
     const defaultFolders = ['dashboards', 'alerts'];
 
-    // Parse parameter values into an object
-    const parameterValues: { [key: string]: string } = {};
-    if (parameters) {
-        (parameters as string[]).forEach(ph => {
-            const [key, value] = ph.split('=');
-            parameterValues[key] = value;
-        });
-    }
-
     // Create an axios instance with a custom httpsAgent to ignore self-signed certificate errors
     const axiosInstance = axios.create({
         httpsAgent: new https.Agent({
@@ -174,12 +182,14 @@ async function handleImport(argv: any) {
     async function importConfiguration(searchPattern: string) {
         const files = globSync(searchPattern);
 
-        logger.info(`Start to import configuration from ${searchPattern}.`);
+        logger.info(`Start to import the configuration from ${searchPattern}.`);
 
         if (files.length === 0) {
             logger.warn(`No files found for pattern: ${searchPattern}`);
             return;
         }
+
+        const paramsObject = parameters ? parseParams(parameters) : {};
 
         for (const file of files) {
             if (path.extname(file) === '.json') {
@@ -191,7 +201,7 @@ async function handleImport(argv: any) {
                 // Modify template to use default helper to preserve parameters
                 const templateContent = fileContent.replace(/{{\s*(\w+)\s*}}/g, (match, p1) => `{{default ${p1} "${match}"}}`);
                 const template = Handlebars.compile(templateContent);
-                const resolvedContent = template(parameterValues)
+                const resolvedContent = template(paramsObject)
 
                 if (logger.isDebugEnabled()) {
                     logger.debug(`The content after parameters are replaced: \n${resolvedContent}`);
@@ -211,7 +221,7 @@ async function handleImport(argv: any) {
 
                 try {
                     const url = `https://${server}/api/custom-dashboard`
-                    logger.info(`Applying configuration to ${url}.`);
+                    logger.info(`Applying the configuration to ${url}.`);
 
                     const response = await axiosInstance.post(url, jsonContent, {
                         headers: {
@@ -247,10 +257,60 @@ async function handleImport(argv: any) {
     }
 }
 
-// Route to the appropriate function based on the sub-command
-const command = process.argv[2];
-if (command === 'download') {
-    handleDownload(yargs.argv);
-} else if (command === 'import') {
-    handleImport(yargs.argv);
+async function handleInit() {
+    const pkgName = await input({
+        message: 'Enter the configuration package name (e.g.: @ibm-instana/self-monitoring, my-package): ',
+        validate: (input: string) => input ? true : 'Package name is required'
+    });
+
+    const pkgVersion = await input({
+        message: 'Enter the configuration package version: ',
+        default: '1.0.0',
+        validate: (input: string) => {
+            const versionRegex = /^\d+\.\d+\.\d+$/;
+            if (!versionRegex.test(input)) {
+                return 'Please enter a valid version number';
+            }
+            return true;
+        }
+    });
+
+    const pkgAuthor = await input({
+        message: 'Enter the configuration package author: ',
+        validate: (input: string) => input ? true : 'Package author is required'
+    });
+
+    const pkgDescription = await input({
+        message: 'Enter the package description: '
+    });
+
+    const cfgTypes = await checkbox({
+        message: 'Select the types of configuration to be included in the package:',
+        choices: [
+            { name: 'dashboards', value: 'dashboards' },
+            { name: 'alerts', value: 'alerts' },
+            { name: 'misc', value: 'misc' },
+        ],
+        required: true
+    });
+
+    logger.info(`Start to generate the skeleton for the configuration package: ${pkgName} ...`);
+
+    const packagePath = path.join(process.cwd(), pkgName);
+    fs.mkdirSync(packagePath, { recursive: true });
+    
+    cfgTypes.forEach((type: string) => {
+        fs.mkdirSync(path.join(packagePath, type), { recursive: true });
+    });
+    
+    const packageJson = {
+        name: pkgName,
+        version: pkgVersion,
+        author: pkgAuthor,
+        description: pkgDescription
+    };
+    
+    fs.writeFileSync(path.join(packagePath, 'package.json'), JSON.stringify(packageJson, null, 2));
+    
+    logger.info(`Initialized new configuration package at ${packagePath}`);
 }
