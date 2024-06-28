@@ -74,11 +74,8 @@ Then, you should be able to run the CLI from any place:
 stanctl-configuration
 ```
 
-To run the CLI using the binary
-Alternatively, go to build directory, and run:
+To run the CLI using the binary executable, you can go to `dist` directory, and select the one that matches your platform, e.g., on MacOS, please run:
 
 ```console
-./stanctl-configuration
+./stanctl-configuration-macos
 ```
-
-This uses the executable built by `pkg`.
