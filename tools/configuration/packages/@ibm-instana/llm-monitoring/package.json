@@ -3,5 +3,8 @@
   "version": "0.0.14",
   "description": "LLM Customer Dashboard",
   "author": "zhi li",
-  "license": "ISC"
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  }
 }
