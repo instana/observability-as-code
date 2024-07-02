@@ -11,7 +11,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: tools/configuration/packages
+        working-directory: packages
 
     steps:
       - name: Checkout repository

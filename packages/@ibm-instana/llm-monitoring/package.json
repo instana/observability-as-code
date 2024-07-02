@@ -1,6 +1,6 @@
 {
   "name": "@ibm-instana/llm-monitoring",
-  "version": "0.0.14",
+  "version": "0.0.1",
   "description": "LLM Customer Dashboard",
   "author": "zhi li",
   "license": "ISC",
