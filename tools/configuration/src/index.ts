@@ -3,16 +3,30 @@
 import fs from 'fs';
 import path from 'path';
 import axios from 'axios';
-import https from 'https'; // Import the https module
+import https from 'https';
 import yargs from 'yargs';
 import { globSync } from 'glob';
 import Handlebars from 'handlebars';
 import logger from './logger'; // Import the logger
-import { exec } from 'child_process';
+import { exec, spawn } from 'child_process';
 import { promisify } from 'util';
-import { input, checkbox } from '@inquirer/prompts';
+import { input, checkbox, password } from '@inquirer/prompts';
 
 const execAsync = promisify(exec);
+// Helper function to promisify spawn
+const spawnAsync = (command: any, args: any, options: any) => {
+    return new Promise<void>((resolve, reject) => {
+      const child = spawn(command, args, options);
+      child.on('close', (code) => {
+        if (code !== 0) {
+          reject(new Error(`Command failed with exit code ${code}`));
+        } else {
+          resolve();
+        }
+      });
+      child.on('error', reject);
+    });
+};
 
 // Register a helper to preserve placeholders if no value is provided
 Handlebars.registerHelper('default', function (value: string, defaultValue: string) {
@@ -54,12 +68,6 @@ yargs
                 type: 'string',
                 demandOption: false,
                 default: process.cwd() // Set the default location to the current working directory
-            })
-            .option('debug', {
-                alias: 'd',
-                describe: 'Enable debug mode',
-                type: 'boolean',
-                default: false
             })
             .epilog(examplesForDownload);
     }, handleDownload)
@@ -111,6 +119,27 @@ yargs
             .epilog(examplesForImport);
     }, handleImport)
     .command('init', 'Initialize a new package', {}, handleInit)
+    .command('publish', 'Publish the local configuration package', (yargs) => {
+        return yargs
+            .option('package', {
+                alias: 'p',
+                describe: 'The package name or path to the package',
+                type: 'string',
+                demandOption: true
+            })
+            .option('registry-username', {
+                alias: 'U',
+                describe: 'Username to access the configuration package registry',
+                type: 'string',
+                demandOption: true
+            })
+            .option('registry-email', {
+                alias: 'E',
+                describe: 'Email to access the configuration package registry',
+                type: 'string',
+                demandOption: true
+            });
+    }, handlePublish)
     .demandCommand(1, 'You need at least one command before moving on')
     .help()
     .alias('help', 'h')
@@ -118,7 +147,7 @@ yargs
 
 // Function to handle download logic
 async function handleDownload(argv: any) {
-    const { package: packageName, location, debug } = argv;
+    const { package: packageName, location } = argv;
 
     logger.info(`Start to download the configuration package: ${packageName}`);
 
@@ -135,6 +164,62 @@ async function handleDownload(argv: any) {
         process.exit(1);
     }
 
+}
+
+// Function to handle publish logic
+async function handlePublish(argv: any) {
+    let { package: packageNameOrPath, registryUsername, registryEmail } = argv;
+
+    logger.info(`Start to publish the configuration package: ${packageNameOrPath}`);
+
+    // Determine if packageNameOrPath is a path or a name
+    const isPath = path.isAbsolute(packageNameOrPath) || packageNameOrPath.includes('/');
+    let packageName;
+    let packagePath;
+    let scope;
+
+    if (isPath) {
+        packagePath = packageNameOrPath;
+        const packageJsonPath = path.join(packageNameOrPath, 'package.json');
+        try {
+            const packageJson = require(packageJsonPath);
+            packageName = packageJson.name;
+        } catch (error) {
+            logger.error('Failed to read package.json:', error);
+            return;
+        }
+    } else {
+        packageName = packageNameOrPath;
+        packagePath = path.join(process.cwd(), packageName); // Assume the current working directory if only the package name is provided
+    }
+
+    // Extract scope from package name if it exists
+    const scopeMatch = packageName.match(/^@([^/]+)\/.+$/);
+    scope = scopeMatch ? scopeMatch[1] : null;    
+
+    try {
+        // npm login
+        const loginArgs = ['login', '--username', registryUsername, '--email', registryEmail];
+        if (scope) {
+            loginArgs.push(`--scope=@${scope}`);
+        }
+        await spawnAsync('npm', loginArgs, { stdio: 'inherit' });
+
+        logger.info('Logged in to the configuration package registry successfully.');
+        logger.info('Start to publish the configuration package to the registry ...');
+
+        // npm publish command
+        const publishArgs = ['publish'];
+        if (scope) {
+            publishArgs.push('--access', 'public');
+        }
+        await spawnAsync('npm', publishArgs, { cwd: packagePath, stdio: 'inherit' });
+
+        logger.info(`Package ${packageName} published successfully`);
+     } catch (error) {
+        logger.error(`Error publishing the configuration package ${packageNameOrPath}:`, error);
+        process.exit(1);
+    }
 }
 
 function parseParams(params: string[]): any {
@@ -257,31 +342,37 @@ async function handleImport(argv: any) {
     }
 }
 
+// Function to handle init logic
 async function handleInit() {
     const pkgName = await input({
-        message: 'Enter the configuration package name (e.g.: @ibm-instana/self-monitoring, my-package): ',
+        message: `Enter configuration package name: (e.g.: @ibm-instana/self-monitoring, my-awesome-package): `,
         validate: (input: string) => input ? true : 'Package name is required'
     });
 
     const pkgVersion = await input({
-        message: 'Enter the configuration package version: ',
+        message: 'Enter configuration package version: ',
         default: '1.0.0',
-        validate: (input: string) => {
-            const versionRegex = /^\d+\.\d+\.\d+$/;
-            if (!versionRegex.test(input)) {
-                return 'Please enter a valid version number';
-            }
-            return true;
-        }
-    });
-
-    const pkgAuthor = await input({
-        message: 'Enter the configuration package author: ',
-        validate: (input: string) => input ? true : 'Package author is required'
+        validate: (input: string) => /^\d+\.\d+\.\d+$/.test(input) ? true : 'Please enter a valid version number'
     });
 
     const pkgDescription = await input({
-        message: 'Enter the package description: '
+        message: 'Enter configuration package description: '
+    });
+
+    const keywordsInput = await input({
+        message: 'Enter configuration package keywords (comma-separated): '
+      });
+    
+    const keywords = keywordsInput.split(',').map(keyword => keyword.trim()).filter(keyword => keyword);
+
+    const pkgAuthor = await input({
+        message: 'Enter configuration package author: ',
+        validate: (input: string) => input ? true : 'Package author is required'
+    });
+
+    const pkgLicense = await input({
+        message: 'Enter configuration package license: ',
+        default: 'MIT'
     });
 
     const cfgTypes = await checkbox({
@@ -303,13 +394,25 @@ async function handleInit() {
         fs.mkdirSync(path.join(packagePath, type), { recursive: true });
     });
     
-    const packageJson = {
+    const packageJson: {
+        name: string;
+        version: string;
+        description: string;
+        keywords?: string[];
+        author: string;
+        license: string;
+      } = {
         name: pkgName,
         version: pkgVersion,
+        description: pkgDescription,
         author: pkgAuthor,
-        description: pkgDescription
+        license: pkgLicense,
     };
-    
+
+    if (keywords.length > 0) {
+        packageJson.keywords = keywords;
+    }
+
     fs.writeFileSync(path.join(packagePath, 'package.json'), JSON.stringify(packageJson, null, 2));
     
     logger.info(`Initialized new configuration package at ${packagePath}`);
