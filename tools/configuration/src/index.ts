@@ -13,6 +13,7 @@ import { promisify } from 'util';
 import { input, checkbox, password } from '@inquirer/prompts';
 
 const execAsync = promisify(exec);
+
 // Helper function to promisify spawn
 const spawnAsync = (command: any, args: any, options: any) => {
     return new Promise<void>((resolve, reject) => {
@@ -27,6 +28,36 @@ const spawnAsync = (command: any, args: any, options: any) => {
       child.on('error', reject);
     });
 };
+
+// Helper function to check if a path exists
+const pathExists = (filePath: string) => {
+    try {
+      return fs.existsSync(filePath);
+    } catch (err) {
+      return false;
+    }
+};
+
+// Helper function to read the package.json file
+const readPackageJson = (filePath: string) => {
+    try {
+      const packageJson = fs.readFileSync(path.join(filePath, 'package.json'), 'utf8');
+      return JSON.parse(packageJson);
+    } catch (error) {
+      logger.error('Failed to read package.json:', error);
+      return null;
+    }
+};
+
+async function isUserLoggedIn() {
+    const homeDir = process.env.HOME || process.env.USERPROFILE || '';
+    const npmrcPath = path.join(homeDir, '.npmrc');
+    if (fs.existsSync(npmrcPath)) {
+      const npmrcContent = fs.readFileSync(npmrcPath, 'utf-8');
+      return npmrcContent.includes('//registry.npmjs.org/:_authToken=');
+    }
+    return false;
+}
 
 // Register a helper to preserve placeholders if no value is provided
 Handlebars.registerHelper('default', function (value: string, defaultValue: string) {
@@ -172,42 +203,56 @@ async function handlePublish(argv: any) {
 
     logger.info(`Start to publish the configuration package: ${packageNameOrPath}`);
 
-    // Determine if packageNameOrPath is a path or a name
-    const isPath = path.isAbsolute(packageNameOrPath) || packageNameOrPath.includes('/');
     let packageName;
     let packagePath;
     let scope;
 
-    if (isPath) {
+    if (pathExists(packageNameOrPath)) {
         packagePath = packageNameOrPath;
-        const packageJsonPath = path.join(packageNameOrPath, 'package.json');
-        try {
-            const packageJson = require(packageJsonPath);
-            packageName = packageJson.name;
-        } catch (error) {
-            logger.error('Failed to read package.json:', error);
+        const packageJson = readPackageJson(packagePath);
+        if (!packageJson) {
+            logger.error('Failed to read package.json.');
             return;
         }
+        packageName = packageJson.name;
     } else {
         packageName = packageNameOrPath;
-        packagePath = path.join(process.cwd(), packageName); // Assume the current working directory if only the package name is provided
+        packagePath = path.join(process.cwd(), packageNameOrPath); // Assume the current working directory if only the package name is provided
+        if (!pathExists(packagePath)) {
+            logger.error(`Path does not exist: ${packagePath}`);
+            return;
+        }
     }
 
     // Extract scope from package name if it exists
     const scopeMatch = packageName.match(/^@([^/]+)\/.+$/);
     scope = scopeMatch ? scopeMatch[1] : null;    
 
-    try {
-        // npm login
-        const loginArgs = ['login', '--username', registryUsername, '--email', registryEmail];
-        if (scope) {
-            loginArgs.push(`--scope=@${scope}`);
+    logger.info('Login to the configuration package registry ...');
+
+    if (!(await isUserLoggedIn())) {
+        try {
+            // npm login
+            const loginArgs = ['login', '--username', registryUsername, '--email', registryEmail];
+            if (scope) {
+                loginArgs.push(`--scope=@${scope}`);
+            }
+            await spawnAsync('npm', loginArgs, { stdio: 'inherit' });
+
+            logger.info('Logged in to the configuration package registry successfully.');
+        } catch (error) {
+            logger.error('Error during login:', error);
+            process.exit(1)
         }
-        await spawnAsync('npm', loginArgs, { stdio: 'inherit' });
+    } else {
+        logger.info('Already logged in to npm registry');
+    }
 
-        logger.info('Logged in to the configuration package registry successfully.');
-        logger.info('Start to publish the configuration package to the registry ...');
-
+    logger.info(`Publishing package from ${packagePath} ...`);
+    logger.info(`Package name: ${packageName}`);
+    logger.info(`Scope: ${scope || 'none'}`);
+  
+    try {
         // npm publish command
         const publishArgs = ['publish'];
         if (scope) {
@@ -344,18 +389,18 @@ async function handleImport(argv: any) {
 
 // Function to handle init logic
 async function handleInit() {
-    const pkgName = await input({
+    const packageName = await input({
         message: `Enter configuration package name: (e.g.: @ibm-instana/self-monitoring, my-awesome-package): `,
         validate: (input: string) => input ? true : 'Package name is required'
     });
 
-    const pkgVersion = await input({
+    const packageVersion = await input({
         message: 'Enter configuration package version: ',
         default: '1.0.0',
         validate: (input: string) => /^\d+\.\d+\.\d+$/.test(input) ? true : 'Please enter a valid version number'
     });
 
-    const pkgDescription = await input({
+    const packageDescription = await input({
         message: 'Enter configuration package description: '
     });
 
@@ -365,17 +410,17 @@ async function handleInit() {
     
     const keywords = keywordsInput.split(',').map(keyword => keyword.trim()).filter(keyword => keyword);
 
-    const pkgAuthor = await input({
+    const packageAuthor = await input({
         message: 'Enter configuration package author: ',
         validate: (input: string) => input ? true : 'Package author is required'
     });
 
-    const pkgLicense = await input({
+    const packageLicense = await input({
         message: 'Enter configuration package license: ',
         default: 'MIT'
     });
 
-    const cfgTypes = await checkbox({
+    const configTypes = await checkbox({
         message: 'Select the types of configuration to be included in the package:',
         choices: [
             { name: 'dashboards', value: 'dashboards' },
@@ -385,13 +430,16 @@ async function handleInit() {
         required: true
     });
 
-    logger.info(`Start to generate the skeleton for the configuration package: ${pkgName} ...`);
+    logger.info(`Start to generate the skeleton for the configuration package: ${packageName} ...`);
 
-    const packagePath = path.join(process.cwd(), pkgName);
+    const packagePath = path.join(process.cwd(), packageName);
     fs.mkdirSync(packagePath, { recursive: true });
+    logger.info(`Created the configuration package folder: ${packagePath}`);
     
-    cfgTypes.forEach((type: string) => {
-        fs.mkdirSync(path.join(packagePath, type), { recursive: true });
+    configTypes.forEach((type: string) => {
+        const configTypePath = path.join(packagePath, type)
+        fs.mkdirSync(configTypePath, { recursive: true });
+        logger.info(`Created the configuration package sub-folder: ${configTypePath}`);
     });
     
     const packageJson: {
@@ -401,12 +449,14 @@ async function handleInit() {
         keywords?: string[];
         author: string;
         license: string;
+        scripts: object;
       } = {
-        name: pkgName,
-        version: pkgVersion,
-        description: pkgDescription,
-        author: pkgAuthor,
-        license: pkgLicense,
+        name: packageName,
+        version: packageVersion,
+        description: packageDescription,
+        author: packageAuthor,
+        license: packageLicense,
+        scripts: {},
     };
 
     if (keywords.length > 0) {
@@ -414,6 +464,12 @@ async function handleInit() {
     }
 
     fs.writeFileSync(path.join(packagePath, 'package.json'), JSON.stringify(packageJson, null, 2));
-    
+    logger.info(`Created the package.json file.`);
+
+    // Generate README file
+    const readmeContent = `# ${packageName}\n\n${packageDescription}`;
+    fs.writeFileSync(path.join(packagePath, 'README.md'), readmeContent);
+    logger.info(`Created the package README file.`);
+
     logger.info(`Initialized new configuration package at ${packagePath}`);
 }
