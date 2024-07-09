@@ -1,0 +1,10 @@
+{
+  "name": "@ibm-instana/llm-monitoring",
+  "version": "0.0.1",
+  "description": "LLM Customer Dashboard",
+  "author": "author",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  }
+}
