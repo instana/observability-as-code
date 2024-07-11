@@ -149,7 +149,7 @@ yargs
             })
             .epilog(examplesForImport);
     }, handleImport)
-    .command('init', 'Initialize a new package', {}, handleInit)
+    .command('init', 'Initialize a new configuration package', {}, handleInit)
     .command('publish', 'Publish the local configuration package', (yargs) => {
         return yargs
             .option('package', {
@@ -390,7 +390,7 @@ async function handleImport(argv: any) {
 // Function to handle init logic
 async function handleInit() {
     const packageName = await input({
-        message: `Enter configuration package name: (e.g.: @ibm-instana/self-monitoring, my-awesome-package): `,
+        message: `Enter configuration package name: (e.g.: @ibm-instana/self-monitoring, my-awesome-xyz-monitoring): `,
         validate: (input: string) => input ? true : 'Package name is required'
     });
 
