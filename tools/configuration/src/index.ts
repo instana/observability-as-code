@@ -84,7 +84,7 @@ Import configuration with parameters replaced:
 // Configure yargs to parse command-line arguments with subcommands
 yargs
     .wrap(160) // Set the desired width here
-    .usage(`Usage: ${execName} <command> <options>`)
+    .usage(`The Instana CLI for configuration package management\n\nUsage: ${execName} <command> <options>`)
     .command('download', 'Download a configuration package', (yargs) => {
         return yargs
             .option('package', {
