@@ -4,8 +4,9 @@
   "description": "The Instana CLI for configuration package management",
   "main": "./dist/index.js",
   "scripts": {
+    "debug": "ts-node  src/index.ts  export --server test-instana.pink.instana.rocks --id SvTNIze4QWOe7vIIIsPBcw --token mDtys0PIQdmPfo9jSokrBg  --include annotation='SHARED'",
     "build": "tsc",
-    "pkg": "pkg . --output dist/stanctl-configuration"
+    "pkg": "pkg . --output dist/stanctl-configuration",
   },
   "bin": {
     "stanctl-configuration": "./dist/index.js"
