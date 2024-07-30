@@ -117,7 +117,7 @@ Export configuration with parameters replaced:
 // Configure yargs to parse command-line arguments with subcommands
 yargs
     .wrap(160) // Set the desired width here
-    .usage(`Usage: ${execName} <command> <options>`)
+    .usage(`The Instana CLI for configuration package management\n\nUsage: ${execName} <command> <options>`)
     .command('download', 'Download a configuration package', (yargs) => {
         return yargs
             .option('package', {
@@ -224,7 +224,7 @@ yargs
             })
             .epilog(examplesForExport);
     }, handleExport)
-    .command('init', 'Initialize a new package', {}, handleInit)
+    .command('init', 'Initialize a new configuration package', {}, handleInit)
     .command('publish', 'Publish the local configuration package', (yargs) => {
         return yargs
             .option('package', {
@@ -568,7 +568,7 @@ async function handleExport(argv: any) {
 // Function to handle init logic
 async function handleInit() {
     const packageName = await input({
-        message: `Enter configuration package name: (e.g.: @ibm-instana/self-monitoring, my-awesome-package): `,
+        message: `Enter configuration package name: (e.g.: @ibm-instana/self-monitoring, my-awesome-xyz-monitoring): `,
         validate: (input: string) => input ? true : 'Package name is required'
     });
 

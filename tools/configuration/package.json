@@ -1,6 +1,6 @@
 {
-  "name": "@ibm/stanctl-configuration",
-  "version": "1.0.0",
+  "name": "@ibm-instana/stanctl-configuration",
+  "version": "1.1.0",
   "description": "The Instana CLI for configuration package management",
   "main": "./dist/index.js",
   "scripts": {
