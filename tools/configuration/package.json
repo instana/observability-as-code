@@ -5,7 +5,8 @@
   "main": "./dist/index.js",
   "scripts": {
     "build": "tsc",
-    "pkg": "pkg . --output dist/stanctl-configuration"
+    "pkg": "pkg . --output dist/stanctl-configuration",
+    "debug": "ts-node  src/index.ts  export --server test-instana.pink.instana.rocks --id SvTNIze4QWOe7vIIIsPBcw --token mDtys0PIQdmPfo9jSokrBg  --include annotation='SHARED'"
   },
   "bin": {
     "stanctl-configuration": "./dist/index.js"

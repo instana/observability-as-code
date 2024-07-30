@@ -14,38 +14,64 @@ import { input, checkbox, password } from '@inquirer/prompts';
 
 const execAsync = promisify(exec);
 
+interface IdObject {
+    id: string;
+    title: string;
+    ownerId: string;
+    annotations: string[];
+}
+
+    function filterIdObjects(idObjects: IdObject[], include: string[]): IdObject[] {
+        return idObjects.filter(obj => {
+            return include.every(condition => {
+                const [key, value] = condition.split('=');
+                if (key === 'title') {
+                    const regex = new RegExp(value);
+                    return regex.test(obj.title);
+                } else if (key === 'ownerId') {
+                    const regex = new RegExp(value);
+                    return regex.test(obj.ownerId);
+                } else if (key === 'annotation') {
+                    const annotations = value.split(' ');
+                    return annotations.every(annotation => obj.annotations.includes(annotation));
+                }
+                return false;
+            });
+        });
+    }
+
 // Helper function to promisify spawn
 const spawnAsync = (command: any, args: any, options: any) => {
     return new Promise<void>((resolve, reject) => {
-      const child = spawn(command, args, options);
-      child.on('close', (code) => {
-        if (code !== 0) {
-          reject(new Error(`Command failed with exit code ${code}`));
-        } else {
-          resolve();
-        }
-      });
-      child.on('error', reject);
+        const child = spawn(command, args, options);
+        child.on('close', (code) => {
+            if (code !== 0) {
+                reject(new Error(`Command failed with exit code ${code}`));
+            } else {
+                resolve();
+            }
+        });
+        child.on('error', reject);
     });
 };
 
 // Helper function to check if a path exists
 const pathExists = (filePath: string) => {
     try {
-      return fs.existsSync(filePath);
+        return fs.existsSync(filePath);
     } catch (err) {
-      return false;
+        return false;
     }
 };
 
 // Helper function to read the package.json file
 const readPackageJson = (filePath: string) => {
     try {
-      const packageJson = fs.readFileSync(path.join(filePath, 'package.json'), 'utf8');
-      return JSON.parse(packageJson);
+        const packageJson = fs.readFileSync(path.join(filePath, 'package.json'), 'utf8');
+        return JSON.parse(packageJson);
     } catch (error) {
-      logger.error('Failed to read package.json:', error);
-      return null;
+        logger.error('Failed to read package.json:', error);
+        return null;
     }
 };
 
@@ -53,8 +79,8 @@ async function isUserLoggedIn() {
     const homeDir = process.env.HOME || process.env.USERPROFILE || '';
     const npmrcPath = path.join(homeDir, '.npmrc');
     if (fs.existsSync(npmrcPath)) {
-      const npmrcContent = fs.readFileSync(npmrcPath, 'utf-8');
-      return npmrcContent.includes('//registry.npmjs.org/:_authToken=');
+        const npmrcContent = fs.readFileSync(npmrcPath, 'utf-8');
+        return npmrcContent.includes('//registry.npmjs.org/:_authToken=');
     }
     return false;
 }
@@ -79,6 +105,13 @@ Examples:
 
 Import configuration with parameters replaced:
   ${execName} import --package my-package --server example.com --include "dashboards/**/test-*.json" --set key1=value1 --set key2=value2
+`;
+
+const examplesForExport = `
+Examples:
+
+Export configuration with parameters replaced:
+  ${execName} export --server example.com --id xxxxx --include title="some-prefix.*" --include annotation="foo bar"
 `;
 
 // Configure yargs to parse command-line arguments with subcommands
@@ -149,6 +182,48 @@ yargs
             })
             .epilog(examplesForImport);
     }, handleImport)
+    .command('export', 'Export configuration from an environment', (yargs) => {
+        return yargs
+            .option('server', {
+                alias: 'S',
+                describe: 'Address of an environment',
+                type: 'string',
+                demandOption: true
+            })
+            .option('id', {
+                alias: 'i',
+                describe: 'Dashboard ID of the environment',
+                type: 'string',
+                demandOption: true
+            })
+            .option('token', {
+                alias: 't',
+                describe: 'API token to export the configuration',
+                type: 'string',
+                demandOption: true
+            })
+            .option('location', {
+                alias: 'L',
+                describe: 'The location to store all the configuration packages',
+                type: 'string',
+                demandOption: false,
+                default: process.cwd() // Set the default location to the current working directory
+            })
+            // --include title="some-prefix.*" --include annotation="foo bar"
+            .option('include', {
+                alias: 'F',
+                describe: 'pattern to match which widgets will be exported',
+                type: 'string',
+                demandOption: false
+            })
+            .option('debug', {
+                alias: 'd',
+                describe: 'Enable debug mode',
+                type: 'boolean',
+                default: false
+            })
+            .epilog(examplesForExport);
+    }, handleExport)
     .command('init', 'Initialize a new package', {}, handleInit)
     .command('publish', 'Publish the local configuration package', (yargs) => {
         return yargs
@@ -226,7 +301,7 @@ async function handlePublish(argv: any) {
 
     // Extract scope from package name if it exists
     const scopeMatch = packageName.match(/^@([^/]+)\/.+$/);
-    scope = scopeMatch ? scopeMatch[1] : null;    
+    scope = scopeMatch ? scopeMatch[1] : null;
 
     logger.info('Login to the configuration package registry ...');
 
@@ -251,7 +326,7 @@ async function handlePublish(argv: any) {
     logger.info(`Publishing package from ${packagePath} ...`);
     logger.info(`Package name: ${packageName}`);
     logger.info(`Scope: ${scope || 'none'}`);
-  
+
     try {
         // npm publish command
         const publishArgs = ['publish'];
@@ -261,7 +336,7 @@ async function handlePublish(argv: any) {
         await spawnAsync('npm', publishArgs, { cwd: packagePath, stdio: 'inherit' });
 
         logger.info(`Package ${packageName} published successfully`);
-     } catch (error) {
+    } catch (error) {
         logger.error(`Error publishing the configuration package ${packageNameOrPath}:`, error);
         process.exit(1);
     }
@@ -269,20 +344,20 @@ async function handlePublish(argv: any) {
 
 function parseParams(params: string[]): any {
     const result: any = {};
-  
+
     params.forEach(param => {
-      const [key, value] = param.split('=');
-      const keys = key.split('.');
-      keys.reduce((acc, key, index) => {
-        if (index === keys.length - 1) {
-          acc[key] = value || acc[key];
-        } else {
-          acc[key] = acc[key] || {};
-        }
-        return acc[key];
-      }, result);
+        const [key, value] = param.split('=');
+        const keys = key.split('.');
+        keys.reduce((acc, key, index) => {
+            if (index === keys.length - 1) {
+                acc[key] = value || acc[key];
+            } else {
+                acc[key] = acc[key] || {};
+            }
+            return acc[key];
+        }, result);
     });
-  
+
     return result;
 }
 
@@ -299,7 +374,7 @@ async function handleImport(argv: any) {
     if (!fs.existsSync(packageNameOrPath)) {
         packagePath = path.join(location, 'node_modules', packageNameOrPath);
     }
-    
+
     const defaultFolders = ['dashboards', 'alerts'];
 
     // Create an axios instance with a custom httpsAgent to ignore self-signed certificate errors
@@ -327,7 +402,7 @@ async function handleImport(argv: any) {
                 logger.info(`Importing ${file}.`);
 
                 const fileContent = fs.readFileSync(file, 'utf8');
-            
+
                 // Modify template to use default helper to preserve parameters
                 const templateContent = fileContent.replace(/{{\s*(\w+)\s*}}/g, (match, p1) => `{{default ${p1} "${match}"}}`);
                 const template = Handlebars.compile(templateContent);
@@ -387,6 +462,109 @@ async function handleImport(argv: any) {
     }
 }
 
+// Function to handle export logic
+async function handleExport(argv: any) {
+    const { server, id: customDashboardId, token, location, include: includePattern, debug } = argv;
+
+    // Set log level to debug if the debug flag is set
+    if (debug) {
+        logger.level = 'debug';
+    }
+
+    const axiosInstance = axios.create({
+        httpsAgent: new https.Agent({
+            rejectUnauthorized: false
+        })
+    });
+
+    ////api/custom-dashboard/{customDashboardId}
+    //                 curl --request GET \
+    //   --url https://test-instana.pink.instana.rocks/api/custom-dashboard/SvTNIze4QWOe7vIIIsPBcw \
+    //   --header 'authorization: apiToken mDtys0PIQdmPfo9jSokrBg'   
+
+    async function exportConfiguration(customDashboardId: string): Promise<any> {
+
+        try {
+            const url = `https://${server}/api/custom-dashboard/${customDashboardId}`
+            logger.info(`Applying the configuration to ${url}.`);
+
+            const response = await axiosInstance.get(url, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `apiToken ${token}`
+                }
+            });
+            return JSON.stringify(response.data);
+            logger.info(`Successfully get customer dashboard ${customDashboardId}: ${response.status}`);
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                logger.error(`Failed to get customer dashboard ${customDashboardId}: ${error.message}`);
+                if (error.response) {
+                    logger.error(`Response data: ${JSON.stringify(error.response.data)}`);
+                    logger.error(`Response status: ${error.response.status}`);
+                    logger.error(`Response headers: ${JSON.stringify(error.response.headers)}`);
+                }
+            } else {
+                logger.error(`Failed get customer dashboard ${customDashboardId}: ${String(error)}`);
+            }
+            return null;
+        }
+    }
+
+    async function getAllWidgetsId(): Promise<any> {
+
+        try {
+            const url = `https://${server}/api/custom-dashboard`
+            logger.info(`Applying the configuration to ${url}.`);
+
+            const response = await axiosInstance.get(url, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `apiToken ${token}`
+                }
+            });
+            logger.info(`Successfully get customer dashboard ${customDashboardId}: ${response.status}`);
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                logger.error(`Failed to get customer dashboard ${customDashboardId}: ${error.message}`);
+                if (error.response) {
+                    logger.error(`Response data: ${JSON.stringify(error.response.data)}`);
+                    logger.error(`Response status: ${error.response.status}`);
+                    logger.error(`Response headers: ${JSON.stringify(error.response.headers)}`);
+                }
+            } else {
+                logger.error(`Failed get customer dashboard ${customDashboardId}: ${String(error)}`);
+            }
+        }
+    }
+
+    if (!includePattern) {
+        const details = await exportConfiguration(customDashboardId);
+        fs.writeFileSync(path.join(process.cwd() + "dashboards", 'dashboard.json'), details);
+    } else {
+        
+        const idObjects = await getAllWidgetsId();
+
+        const includeConditions = Array.isArray(argv.include) ? argv.include : [argv.include];
+
+        const filteredIdObjects = filterIdObjects(idObjects, includeConditions);
+
+        const packagePath = path.join(process.cwd(), "dashboards");
+        fs.mkdirSync(packagePath, { recursive: true });
+        for (const obj of filteredIdObjects) {
+            try {
+                const details = await exportConfiguration(obj.id);
+                fs.writeFileSync(path.join(packagePath, obj.id + ".json"), details);
+            } catch (error) {
+                console.error(`Error processing ID ${obj.id}:`, error);
+            }
+        }
+
+    }
+
+}
+
 // Function to handle init logic
 async function handleInit() {
     const packageName = await input({
@@ -406,8 +584,8 @@ async function handleInit() {
 
     const keywordsInput = await input({
         message: 'Enter configuration package keywords (comma-separated): '
-      });
-    
+    });
+
     const keywords = keywordsInput.split(',').map(keyword => keyword.trim()).filter(keyword => keyword);
 
     const packageAuthor = await input({
@@ -435,13 +613,13 @@ async function handleInit() {
     const packagePath = path.join(process.cwd(), packageName);
     fs.mkdirSync(packagePath, { recursive: true });
     logger.info(`Created the configuration package folder: ${packagePath}`);
-    
+
     configTypes.forEach((type: string) => {
         const configTypePath = path.join(packagePath, type)
         fs.mkdirSync(configTypePath, { recursive: true });
         logger.info(`Created the configuration package sub-folder: ${configTypePath}`);
     });
-    
+
     const packageJson: {
         name: string;
         version: string;
@@ -450,7 +628,7 @@ async function handleInit() {
         author: string;
         license: string;
         scripts: object;
-      } = {
+    } = {
         name: packageName,
         version: packageVersion,
         description: packageDescription,
