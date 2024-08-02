@@ -21,7 +21,7 @@ interface IdObject {
     annotations: string[];
 }
 
-function filterIdObjects(idObjects: IdObject[], include: string[]): IdObject[] {
+function filterDashboardsBy(idObjects: IdObject[], include: string[]): IdObject[] {
     return idObjects.filter(obj => {
         return include.every(condition => {
             const [key, value] = condition.split('=');
@@ -38,6 +38,16 @@ function filterIdObjects(idObjects: IdObject[], include: string[]): IdObject[] {
             return false;
         });
     });
+}
+
+function fetchValueFromInclude(array: string[], key: string): string | undefined {
+    const prefix = `${key}=`;
+    for (const item of array) {
+        if (item.startsWith(prefix)) {
+            return item.substring(prefix.length);
+        }
+    }
+    return undefined;
 }
 
 // Helper function to promisify spawn
@@ -111,7 +121,7 @@ const examplesForExport = `
 Examples:
 
 Export configuration with parameters replaced:
-  ${execName} export --server example.com --id xxxxx --include title="some-prefix.*" --include annotation="foo bar"
+  ${execName} export --server example.com --include type=<dashboard|alert> --include id=<id> --include title="some-prefix.*" --include annotation="foo bar --location ./my-package"
 `;
 
 // Configure yargs to parse command-line arguments with subcommands
@@ -190,12 +200,6 @@ yargs
                 type: 'string',
                 demandOption: true
             })
-            .option('id', {
-                alias: 'i',
-                describe: 'Dashboard ID of the environment',
-                type: 'string',
-                demandOption: true
-            })
             .option('token', {
                 alias: 't',
                 describe: 'API token to export the configuration',
@@ -204,15 +208,20 @@ yargs
             })
             .option('location', {
                 alias: 'L',
-                describe: 'The location to store all the configuration packages',
+                describe: 'The location to store the configuration',
                 type: 'string',
                 demandOption: false,
                 default: process.cwd() // Set the default location to the current working directory
             })
-            // --include title="some-prefix.*" --include annotation="foo bar"
+            .option('type', {
+                alias: 'T',
+                describe: 'The type of which configuration to be exported',
+                type: 'string',
+                demandOption: false
+            })
             .option('include', {
                 alias: 'F',
-                describe: 'pattern to match which widgets will be exported',
+                describe: 'Pattern to match different aspects, e.g.: title, annotation, for the configuration to be exported',
                 type: 'string',
                 demandOption: false
             })
@@ -464,7 +473,7 @@ async function handleImport(argv: any) {
 
 // Function to handle export logic
 async function handleExport(argv: any) {
-    const { server, id: customDashboardId, token, location, include: includePattern, debug } = argv;
+    const { server, token, type, location, include: includePattern, debug } = argv;
 
     // Set log level to debug if the debug flag is set
     if (debug) {
@@ -475,13 +484,12 @@ async function handleExport(argv: any) {
         httpsAgent: new https.Agent({
             rejectUnauthorized: false
         })
-    }); 
+    });
 
-    async function exportConfiguration(customDashboardId: string): Promise<any> {
-
+    async function exportDashboardConfiguration(dashboardId: string): Promise<any> {
         try {
-            const url = `https://${server}/api/custom-dashboard/${customDashboardId}`
-            logger.info(`Applying the configuration to ${url}.`);
+            const url = `https://${server}/api/custom-dashboard/${dashboardId}`
+            logger.info(`Retrieving the configuration from ${url}.`);
 
             const response = await axiosInstance.get(url, {
                 headers: {
@@ -489,28 +497,28 @@ async function handleExport(argv: any) {
                     'Authorization': `apiToken ${token}`
                 }
             });
+            logger.info(`Successfully retrieved the dashboard ${dashboardId}: ${response.status}`);
             return JSON.stringify(response.data);
-            logger.info(`Successfully get customer dashboard ${customDashboardId}: ${response.status}`);
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                logger.error(`Failed to get customer dashboard ${customDashboardId}: ${error.message}`);
+                logger.error(`Failed to get customer dashboard ${dashboardId}: ${error.message}`);
                 if (error.response) {
                     logger.error(`Response data: ${JSON.stringify(error.response.data)}`);
                     logger.error(`Response status: ${error.response.status}`);
                     logger.error(`Response headers: ${JSON.stringify(error.response.headers)}`);
                 }
             } else {
-                logger.error(`Failed get customer dashboard ${customDashboardId}: ${String(error)}`);
+                logger.error(`Failed get customer dashboard ${dashboardId}: ${String(error)}`);
             }
             return null;
         }
     }
 
-    async function getAllWidgetsId(): Promise<any> {
+    async function getDashboardList(): Promise<any> {
 
         try {
             const url = `https://${server}/api/custom-dashboard`
-            logger.info(`Applying the configuration to ${url}.`);
+            logger.info(`Retrieving the dashboard list from ${url}.`);
 
             const response = await axiosInstance.get(url, {
                 headers: {
@@ -518,44 +526,47 @@ async function handleExport(argv: any) {
                     'Authorization': `apiToken ${token}`
                 }
             });
-            logger.info(`Successfully get customer dashboard ${customDashboardId}: ${response.status}`);
+            logger.info(`Successfully retrieved the dashboard list: ${response.status}`);
             return response.data;
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                logger.error(`Failed to get customer dashboard ${customDashboardId}: ${error.message}`);
+                logger.error(`Failed to retrieve the dashboard list: ${error.message}`);
                 if (error.response) {
                     logger.error(`Response data: ${JSON.stringify(error.response.data)}`);
                     logger.error(`Response status: ${error.response.status}`);
                     logger.error(`Response headers: ${JSON.stringify(error.response.headers)}`);
                 }
             } else {
-                logger.error(`Failed get customer dashboard ${customDashboardId}: ${String(error)}`);
+                logger.error(`Failed to retrieve the dashboard list: ${String(error)}`);
             }
         }
     }
 
-    if (!includePattern) {
-        const details = await exportConfiguration(customDashboardId);
-        fs.writeFileSync(path.join(process.cwd() + "dashboards", 'dashboard.json'), details);
-    } else {
+    const includeConditions = Array.isArray(argv.include) ? argv.include : [argv.include];
 
-        const idObjects = await getAllWidgetsId();
+    const customDashboardId = fetchValueFromInclude(includeConditions, "id");
 
-        const includeConditions = Array.isArray(argv.include) ? argv.include : [argv.include];
-
-        const filteredIdObjects = filterIdObjects(idObjects, includeConditions);
-
-        const packagePath = path.join(process.cwd(), "dashboards");
+    if (type == "dashboard") {
+        const packagePath = path.join(location, "dashboards");
         fs.mkdirSync(packagePath, { recursive: true });
-        for (const obj of filteredIdObjects) {
-            try {
-                const details = await exportConfiguration(obj.id);
-                fs.writeFileSync(path.join(packagePath, obj.id + ".json"), details);
-            } catch (error) {
-                console.error(`Error processing ID ${obj.id}:`, error);
-            }
-        }
+        if (customDashboardId) {
+            const details = await exportDashboardConfiguration(customDashboardId);
+            fs.writeFileSync(path.join(location, "dashboards", 'dashboard.json'), details);
+        } else {
+            const idObjects = await getDashboardList();
 
+            const filteredIdObjects = filterDashboardsBy(idObjects, includeConditions);
+
+            for (const obj of filteredIdObjects) {
+                try {
+                    const details = await exportDashboardConfiguration(obj.id);
+                    fs.writeFileSync(path.join(packagePath, obj.id + ".json"), details);
+                } catch (error) {
+                    console.error(`Error processing ID ${obj.id}:`, error);
+                }
+            }
+
+        }
     }
 
 }
