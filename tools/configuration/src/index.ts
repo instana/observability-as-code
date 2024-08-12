@@ -121,7 +121,7 @@ const examplesForExport = `
 Examples:
 
 Export configuration with parameters replaced:
-  ${execName} export --server example.com --include type=<dashboard|alert> --include id=<id> --include title="some-prefix.*" --include annotation="foo bar --location ./my-package"
+${execName} export --server example.com --include type=<dashboard|alert> --include id=<id> --include title="some-prefix.*" --include annotation="foo bar" --location ./my-package
 `;
 
 // Configure yargs to parse command-line arguments with subcommands
@@ -501,14 +501,14 @@ async function handleExport(argv: any) {
             return JSON.stringify(response.data);
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                logger.error(`Failed to get customer dashboard ${dashboardId}: ${error.message}`);
+                logger.error(`Failed to get dashboard ${dashboardId}: ${error.message}`);
                 if (error.response) {
                     logger.error(`Response data: ${JSON.stringify(error.response.data)}`);
                     logger.error(`Response status: ${error.response.status}`);
                     logger.error(`Response headers: ${JSON.stringify(error.response.headers)}`);
                 }
             } else {
-                logger.error(`Failed get customer dashboard ${dashboardId}: ${String(error)}`);
+                logger.error(`Failed get dashboard ${dashboardId}: ${String(error)}`);
             }
             return null;
         }
