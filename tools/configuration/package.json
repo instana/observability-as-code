@@ -4,7 +4,7 @@
   "description": "The Instana CLI for configuration package management",
   "main": "./dist/index.js",
   "scripts": {
-    "debug": "ts-node  src/index.ts  export --server sample.instana.io --type dashboard --token **TOKEN**  --include id='**DASHBOARDID**' --include annotation='SHARED' ",
+    "debug": "ts-node  src/index.ts  export --server sample.instana.io --token **TOKEN**  --include annotation='SHARED' ",
     "build": "tsc",
     "pkg": "pkg . --output dist/stanctl-configuration"
   },

@@ -121,7 +121,7 @@ const examplesForExport = `
 Examples:
 
 Export configuration with parameters replaced:
-${execName} export --server example.com --include type=<dashboard|alert> --include id=<id> --include title="some-prefix.*" --include annotation="foo bar" --location ./my-package
+${execName} export --server example.com --include type=<dashboard|alert> --include title="some-prefix.*" --include annotation="foo bar" --location ./my-package
 `;
 
 // Configure yargs to parse command-line arguments with subcommands
@@ -212,12 +212,6 @@ yargs
                 type: 'string',
                 demandOption: false,
                 default: process.cwd() // Set the default location to the current working directory
-            })
-            .option('type', {
-                alias: 'T',
-                describe: 'The type of which configuration to be exported',
-                type: 'string',
-                demandOption: false
             })
             .option('include', {
                 alias: 'F',
@@ -473,7 +467,7 @@ async function handleImport(argv: any) {
 
 // Function to handle export logic
 async function handleExport(argv: any) {
-    const { server, token, type, location, include: includePattern, debug } = argv;
+    const { server, token, location, include: includePattern, debug } = argv;
 
     // Set log level to debug if the debug flag is set
     if (debug) {
@@ -544,9 +538,9 @@ async function handleExport(argv: any) {
 
     const includeConditions = Array.isArray(argv.include) ? argv.include : [argv.include];
 
-    const customDashboardId = fetchValueFromInclude(includeConditions, "id");
-
-    if (type == "dashboard") {
+    if (includeConditions.includes("type=dashboard")) {
+        includeConditions.splice(includeConditions.indexOf("type=dashboard"),1)
+        const customDashboardId = fetchValueFromInclude(includeConditions, "id");
         const packagePath = path.join(location, "dashboards");
         fs.mkdirSync(packagePath, { recursive: true });
         if (customDashboardId) {
