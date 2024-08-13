@@ -121,7 +121,7 @@ const examplesForExport = `
 Examples:
 
 Export configuration with parameters replaced:
-${execName} export --server example.com --include type=<dashboard|alert> --include title="some-prefix.*" --include annotation="foo bar" --location ./my-package
+${execName} export --server example.com --include title="some-prefix.*" --include annotation="foo bar" --location ./my-package
 `;
 
 // Configure yargs to parse command-line arguments with subcommands
@@ -538,8 +538,8 @@ async function handleExport(argv: any) {
 
     const includeConditions = Array.isArray(argv.include) ? argv.include : [argv.include];
 
-    if (includeConditions.includes("type=dashboard")) {
-        includeConditions.splice(includeConditions.indexOf("type=dashboard"),1)
+    // if (includeConditions.includes("type=dashboard")) {
+        // includeConditions.splice(includeConditions.indexOf("type=dashboard"),1)
         const customDashboardId = fetchValueFromInclude(includeConditions, "id");
         const packagePath = path.join(location, "dashboards");
         fs.mkdirSync(packagePath, { recursive: true });
@@ -561,7 +561,7 @@ async function handleExport(argv: any) {
             }
 
         }
-    }
+    // }
 
 }
 
