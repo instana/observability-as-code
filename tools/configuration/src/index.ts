@@ -40,7 +40,7 @@ function filterDashboardsBy(idObjects: IdObject[], include: string[]): IdObject[
     });
 }
 
-function fetchValueFromInclude(array: string[], key: string): string | undefined {
+function getValueByKeyFromArray(array: string[], key: string): string | undefined {
     const prefix = `${key}=`;
     for (const item of array) {
         if (item.startsWith(prefix)) {
@@ -121,7 +121,7 @@ const examplesForExport = `
 Examples:
 
 Export configuration with parameters replaced:
-${execName} export --server example.com --include title="some-prefix.*" --include annotation="foo bar" --location ./my-package
+${execName} export --server example.com --include title="foo.*" --include annotation="bar baz" --location ./my-package
 `;
 
 // Configure yargs to parse command-line arguments with subcommands
@@ -492,7 +492,11 @@ async function handleExport(argv: any) {
                 }
             });
             logger.info(`Successfully retrieved the dashboard ${dashboardId}: ${response.status}`);
-            return JSON.stringify(response.data);
+            const dashboardContent = JSON.stringify(response.data)
+            if (logger.isDebugEnabled()) {
+                logger.debug(`The response data: \n${dashboardContent}`);
+            }
+            return dashboardContent;
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 logger.error(`Failed to get dashboard ${dashboardId}: ${error.message}`);
@@ -521,7 +525,10 @@ async function handleExport(argv: any) {
                 }
             });
             logger.info(`Successfully retrieved the dashboard list: ${response.status}`);
-            return response.data;
+            if (logger.isDebugEnabled()) {
+                logger.debug(`The response data: \n${JSON.stringify(response.data)}`);
+            }
+        return response.data;
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 logger.error(`Failed to retrieve the dashboard list: ${error.message}`);
@@ -536,33 +543,33 @@ async function handleExport(argv: any) {
         }
     }
 
-    const includeConditions = Array.isArray(argv.include) ? argv.include : [argv.include];
+    const includeConditions = Array.isArray(argv.include) ? argv.include : ( argv.include ? [argv.include] : []);
 
-    // if (includeConditions.includes("type=dashboard")) {
-        // includeConditions.splice(includeConditions.indexOf("type=dashboard"),1)
-        const customDashboardId = fetchValueFromInclude(includeConditions, "id");
-        const packagePath = path.join(location, "dashboards");
-        fs.mkdirSync(packagePath, { recursive: true });
-        if (customDashboardId) {
-            const details = await exportDashboardConfiguration(customDashboardId);
-            fs.writeFileSync(path.join(location, "dashboards", 'dashboard.json'), details);
-        } else {
-            const idObjects = await getDashboardList();
-
-            const filteredIdObjects = filterDashboardsBy(idObjects, includeConditions);
-
-            for (const obj of filteredIdObjects) {
-                try {
-                    const details = await exportDashboardConfiguration(obj.id);
-                    fs.writeFileSync(path.join(packagePath, obj.id + ".json"), details);
-                } catch (error) {
-                    console.error(`Error processing ID ${obj.id}:`, error);
-                }
-            }
-
+    const dashboardId = getValueByKeyFromArray(includeConditions, "id");
+    const packagePath = path.join(location, "dashboards");
+    fs.mkdirSync(packagePath, { recursive: true });
+    if (dashboardId) {
+        try {
+            const details = await exportDashboardConfiguration(dashboardId);
+            fs.writeFileSync(path.join(location, "dashboards", dashboardId + '.json'), details);
+        } catch (error) {
+            console.error(`Error processing ID ${dashboardId}:`, error);
         }
-    // }
+    } else {
+        const idObjects = await getDashboardList();
 
+        const filteredIdObjects = filterDashboardsBy(idObjects, includeConditions);
+
+        for (const obj of filteredIdObjects) {
+            try {
+                const details = await exportDashboardConfiguration(obj.id);
+                fs.writeFileSync(path.join(packagePath, obj.title + ".json"), details);
+            } catch (error) {
+                console.error(`Error processing ID ${obj.id}:`, error);
+            }
+        }
+
+    }
 }
 
 // Function to handle init logic
