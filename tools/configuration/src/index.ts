@@ -385,6 +385,28 @@ function parseParams(params: string[]): any {
     return result;
 }
 
+interface AccessRule {
+    accessType: string;
+    relationType: string;
+}
+
+function ensureAccessRules(dashboard: any): void {
+    const globalAccessRule = {
+        accessType: "READ_WRITE",
+        relationType: "GLOBAL",
+        relatedId: ""
+    }
+
+    const globalAccessRuleExists = dashboard.accessRules.some(
+        (rule: AccessRule) => rule.accessType === "READ_WRITE" && rule.relationType === "GLOBAL"
+    );
+
+    if (!globalAccessRuleExists) {
+        dashboard.accessRules.push(globalAccessRule);
+        logger.info("Added the missing global access rule.");
+    }
+}
+
 // Function to handle import logic
 async function handleImport(argv: any) {
     const { package: packageNameOrPath, server, token, location, include: includePattern, set: parameters, debug } = argv;
@@ -447,6 +469,8 @@ async function handleImport(argv: any) {
                     }
                     continue; // Continue with the next file
                 }
+
+                ensureAccessRules(jsonContent)
 
                 try {
                     const url = `https://${server}/api/custom-dashboard`
