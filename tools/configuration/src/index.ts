@@ -50,6 +50,28 @@ function getValueByKeyFromArray(array: string[], key: string): string | undefine
     return undefined;
 }
 
+// Function to sanitize dashboard titles
+function sanitizeDashboardTitles(idObjects: IdObject[]): IdObject[] {
+    const titleMap: { [key: string]: number } = {};
+
+    return idObjects.map((obj) => {
+        let originalTitle = obj.title.replace(/[^a-z0-9-]/gi, '_').toLowerCase(); // sanitize title;
+        let newTitle = originalTitle;
+
+        if (titleMap[originalTitle]) {
+            // If title exists, append a counter
+            titleMap[originalTitle]++;
+            newTitle = `${originalTitle}_${titleMap[originalTitle]}`;
+        } else {
+            // First time this title is encountered
+            titleMap[originalTitle] = 1;
+        }
+
+        // Update the title in the object
+        return { ...obj, title: newTitle };
+    });
+}
+
 // Helper function to promisify spawn
 const spawnAsync = (command: any, args: any, options: any) => {
     return new Promise<void>((resolve, reject) => {
@@ -120,8 +142,8 @@ Import configuration with parameters replaced:
 const examplesForExport = `
 Examples:
 
-Export configuration with parameters replaced:
-${execName} export --server example.com --include title="foo.*" --include annotation="bar baz" --location ./my-package
+Export configuration:
+  ${execName} export --server example.com --include title="foo.*" --include annotation="bar baz" --location ./my-package
 `;
 
 // Configure yargs to parse command-line arguments with subcommands
@@ -483,7 +505,7 @@ async function handleExport(argv: any) {
     async function exportDashboardConfiguration(dashboardId: string): Promise<any> {
         try {
             const url = `https://${server}/api/custom-dashboard/${dashboardId}`
-            logger.info(`Retrieving the configuration from ${url}.`);
+            logger.info(`Retrieving dashboard(id=${dashboardId}) from ${url}`);
 
             const response = await axiosInstance.get(url, {
                 headers: {
@@ -491,22 +513,21 @@ async function handleExport(argv: any) {
                     'Authorization': `apiToken ${token}`
                 }
             });
-            logger.info(`Successfully retrieved the dashboard ${dashboardId}: ${response.status}`);
-            const dashboardContent = JSON.stringify(response.data)
+            logger.info(`Successfully retrieved dashboard(id=${dashboardId}): ${response.status}`);
             if (logger.isDebugEnabled()) {
-                logger.debug(`The response data: \n${dashboardContent}`);
+                logger.debug(`Response data: \n${JSON.stringify(response.data)}`);
             }
-            return dashboardContent;
+            return response.data;
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                logger.error(`Failed to get dashboard ${dashboardId}: ${error.message}`);
+                logger.error(`Failed to get dashboard(id=${dashboardId}): ${error.message}`);
                 if (error.response) {
                     logger.error(`Response data: ${JSON.stringify(error.response.data)}`);
                     logger.error(`Response status: ${error.response.status}`);
                     logger.error(`Response headers: ${JSON.stringify(error.response.headers)}`);
                 }
             } else {
-                logger.error(`Failed get dashboard ${dashboardId}: ${String(error)}`);
+                logger.error(`Failed to get dashboard(id=${dashboardId}): ${String(error)}`);
             }
             return null;
         }
@@ -516,7 +537,7 @@ async function handleExport(argv: any) {
 
         try {
             const url = `https://${server}/api/custom-dashboard`
-            logger.info(`Retrieving the dashboard list from ${url}.`);
+            logger.info(`Retrieving dashboard list from ${url}`);
 
             const response = await axiosInstance.get(url, {
                 headers: {
@@ -524,51 +545,54 @@ async function handleExport(argv: any) {
                     'Authorization': `apiToken ${token}`
                 }
             });
-            logger.info(`Successfully retrieved the dashboard list: ${response.status}`);
+            logger.info(`Successfully retrieved dashboard list: ${response.status}`);
             if (logger.isDebugEnabled()) {
-                logger.debug(`The response data: \n${JSON.stringify(response.data)}`);
+                logger.debug(`Response data: \n${JSON.stringify(response.data)}`);
             }
         return response.data;
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                logger.error(`Failed to retrieve the dashboard list: ${error.message}`);
+                logger.error(`Failed to retrieve dashboard list: ${error.message}`);
                 if (error.response) {
                     logger.error(`Response data: ${JSON.stringify(error.response.data)}`);
                     logger.error(`Response status: ${error.response.status}`);
                     logger.error(`Response headers: ${JSON.stringify(error.response.headers)}`);
                 }
             } else {
-                logger.error(`Failed to retrieve the dashboard list: ${String(error)}`);
+                logger.error(`Failed to retrieve dashboard list: ${String(error)}`);
             }
         }
+    }
+
+    async function saveDashboard(dir: string, id: string, title: string, dashboard: string) {
+        try {
+            const filename = `${title}.json`
+            logger.info(`Saving dashboard(id=${id}) into ${filename}`);
+            fs.writeFileSync(path.join(dir, filename), JSON.stringify(dashboard));
+        } catch (error) {
+            logger.error(`Error processing dashboard(id=${id}):`, error);
+        }
+        logger.info(`Dashboard(id=${id}) saved successfully`)
     }
 
     const includeConditions = Array.isArray(argv.include) ? argv.include : ( argv.include ? [argv.include] : []);
 
     const dashboardId = getValueByKeyFromArray(includeConditions, "id");
-    const packagePath = path.join(location, "dashboards");
-    fs.mkdirSync(packagePath, { recursive: true });
+    const dashboardsPath = path.join(location, "dashboards");
+    fs.mkdirSync(dashboardsPath, { recursive: true });
     if (dashboardId) {
-        try {
-            const details = await exportDashboardConfiguration(dashboardId);
-            fs.writeFileSync(path.join(location, "dashboards", dashboardId + '.json'), details);
-        } catch (error) {
-            console.error(`Error processing ID ${dashboardId}:`, error);
-        }
+        const dashboard = await exportDashboardConfiguration(dashboardId);
+        saveDashboard(dashboardsPath, dashboardId, dashboard.title, dashboard)
     } else {
         const idObjects = await getDashboardList();
 
         const filteredIdObjects = filterDashboardsBy(idObjects, includeConditions);
+        const sanitizedIdObjects = sanitizeDashboardTitles(filteredIdObjects)
 
-        for (const obj of filteredIdObjects) {
-            try {
-                const details = await exportDashboardConfiguration(obj.id);
-                fs.writeFileSync(path.join(packagePath, obj.title + ".json"), details);
-            } catch (error) {
-                console.error(`Error processing ID ${obj.id}:`, error);
-            }
+        for (const obj of sanitizedIdObjects) {
+            const dashboard = await exportDashboardConfiguration(obj.id);
+            saveDashboard(dashboardsPath, obj.id, obj.title, dashboard)
         }
-
     }
 }
 
