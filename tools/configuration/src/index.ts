@@ -102,7 +102,7 @@ const readPackageJson = (filePath: string) => {
         const packageJson = fs.readFileSync(path.join(filePath, 'package.json'), 'utf8');
         return JSON.parse(packageJson);
     } catch (error) {
-        logger.error('Failed to read package.json:', error);
+        logger.error('Failed to read the package.json:', error);
         return null;
     }
 };
@@ -294,7 +294,6 @@ async function handleDownload(argv: any) {
         logger.error(`Failed to download the configuration package ${packageName}: ${error}`);
         process.exit(1);
     }
-
 }
 
 // Function to handle publish logic
@@ -311,7 +310,7 @@ async function handlePublish(argv: any) {
         packagePath = packageNameOrPath;
         const packageJson = readPackageJson(packagePath);
         if (!packageJson) {
-            logger.error('Failed to read package.json.');
+            logger.error('Failed to read the package.json');
             return;
         }
         packageName = packageJson.name;
@@ -328,7 +327,7 @@ async function handlePublish(argv: any) {
     const scopeMatch = packageName.match(/^@([^/]+)\/.+$/);
     scope = scopeMatch ? scopeMatch[1] : null;
 
-    logger.info('Login to the configuration package registry ...');
+    logger.info('Logging into the configuration package registry ...');
 
     if (!(await isUserLoggedIn())) {
         try {
@@ -339,16 +338,16 @@ async function handlePublish(argv: any) {
             }
             await spawnAsync('npm', loginArgs, { stdio: 'inherit' });
 
-            logger.info('Logged in to the configuration package registry successfully.');
+            logger.info('Logged into the configuration package registry successfully');
         } catch (error) {
-            logger.error('Error during login:', error);
+            logger.error('Error occurred during login:', error);
             process.exit(1)
         }
     } else {
-        logger.info('Already logged in to npm registry');
+        logger.info('Already logged into the configuration package registry');
     }
 
-    logger.info(`Publishing package from ${packagePath} ...`);
+    logger.info(`Publishing the configuration package from ${packagePath} ...`);
     logger.info(`Package name: ${packageName}`);
     logger.info(`Scope: ${scope || 'none'}`);
 
@@ -412,7 +411,7 @@ async function handleImport(argv: any) {
     async function importConfiguration(searchPattern: string) {
         const files = globSync(searchPattern);
 
-        logger.info(`Start to import the configuration from ${searchPattern}.`);
+        logger.info(`Start to import the configuration package from ${searchPattern}`);
 
         if (files.length === 0) {
             logger.warn(`No files found for pattern: ${searchPattern}`);
@@ -424,7 +423,7 @@ async function handleImport(argv: any) {
         for (const file of files) {
             if (path.extname(file) === '.json') {
 
-                logger.info(`Importing ${file}.`);
+                logger.info(`Importing ${file} ...`);
 
                 const fileContent = fs.readFileSync(file, 'utf8');
 
@@ -442,16 +441,16 @@ async function handleImport(argv: any) {
                     jsonContent = JSON.parse(resolvedContent);
                 } catch (error) {
                     if (error instanceof Error) {
-                        logger.error(`Failed to parse JSON content for ${file}: ${error.message}`);
+                        logger.error(`Failed to parse the content for ${file}: ${error.message}`);
                     } else {
-                        logger.error(`Failed to parse JSON content for ${file}: ${String(error)}`);
+                        logger.error(`Failed to parse the content for ${file}: ${String(error)}`);
                     }
                     continue; // Continue with the next file
                 }
 
                 try {
                     const url = `https://${server}/api/custom-dashboard`
-                    logger.info(`Applying the configuration to ${url}.`);
+                    logger.info(`Applying the dashboard to ${url} ...`);
 
                     const response = await axiosInstance.post(url, jsonContent, {
                         headers: {
@@ -459,17 +458,17 @@ async function handleImport(argv: any) {
                             'Authorization': `apiToken ${token}`
                         }
                     });
-                    logger.info(`Successfully posted ${file}: ${response.status}`);
+                    logger.info(`Successfully applied ${file}: ${response.status}`);
                 } catch (error) {
                     if (axios.isAxiosError(error)) {
-                        logger.error(`Failed to post ${file}: ${error.message}`);
+                        logger.error(`Failed to apply ${file}: ${error.message}`);
                         if (error.response) {
                             logger.error(`Response data: ${JSON.stringify(error.response.data)}`);
                             logger.error(`Response status: ${error.response.status}`);
                             logger.error(`Response headers: ${JSON.stringify(error.response.headers)}`);
                         }
                     } else {
-                        logger.error(`Failed to post ${file}: ${String(error)}`);
+                        logger.error(`Failed to apply ${file}: ${String(error)}`);
                     }
                 }
             }
@@ -505,7 +504,7 @@ async function handleExport(argv: any) {
     async function exportDashboardConfiguration(dashboardId: string): Promise<any> {
         try {
             const url = `https://${server}/api/custom-dashboard/${dashboardId}`
-            logger.info(`Retrieving dashboard(id=${dashboardId}) from ${url}`);
+            logger.info(`Start to get the dashboard(id=${dashboardId}) from ${url}`);
 
             const response = await axiosInstance.get(url, {
                 headers: {
@@ -513,21 +512,21 @@ async function handleExport(argv: any) {
                     'Authorization': `apiToken ${token}`
                 }
             });
-            logger.info(`Successfully retrieved dashboard(id=${dashboardId}): ${response.status}`);
+            logger.info(`Successfully got the dashboard(id=${dashboardId}): ${response.status}`);
             if (logger.isDebugEnabled()) {
                 logger.debug(`Response data: \n${JSON.stringify(response.data)}`);
             }
             return response.data;
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                logger.error(`Failed to get dashboard(id=${dashboardId}): ${error.message}`);
+                logger.error(`Failed to get the dashboard(id=${dashboardId}): ${error.message}`);
                 if (error.response) {
                     logger.error(`Response data: ${JSON.stringify(error.response.data)}`);
                     logger.error(`Response status: ${error.response.status}`);
                     logger.error(`Response headers: ${JSON.stringify(error.response.headers)}`);
                 }
             } else {
-                logger.error(`Failed to get dashboard(id=${dashboardId}): ${String(error)}`);
+                logger.error(`Failed to get the dashboard(id=${dashboardId}): ${String(error)}`);
             }
             return null;
         }
@@ -536,7 +535,7 @@ async function handleExport(argv: any) {
     async function getDashboardList(): Promise<any> {
         try {
             const url = `https://${server}/api/custom-dashboard`
-            logger.info(`Retrieving dashboard list from ${url}`);
+            logger.info(`Start to get the dashboard list from ${url}`);
 
             const response = await axiosInstance.get(url, {
                 headers: {
@@ -544,21 +543,21 @@ async function handleExport(argv: any) {
                     'Authorization': `apiToken ${token}`
                 }
             });
-            logger.info(`Successfully retrieved dashboard list: ${response.status}`);
+            logger.info(`Successfully got the dashboard list: ${response.status}`);
             if (logger.isDebugEnabled()) {
                 logger.debug(`Response data: \n${JSON.stringify(response.data)}`);
             }
         return response.data;
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                logger.error(`Failed to retrieve dashboard list: ${error.message}`);
+                logger.error(`Failed to get the dashboard list: ${error.message}`);
                 if (error.response) {
                     logger.error(`Response data: ${JSON.stringify(error.response.data)}`);
                     logger.error(`Response status: ${error.response.status}`);
                     logger.error(`Response headers: ${JSON.stringify(error.response.headers)}`);
                 }
             } else {
-                logger.error(`Failed to retrieve dashboard list: ${String(error)}`);
+                logger.error(`Failed to get the dashboard list: ${String(error)}`);
             }
         }
     }
@@ -567,11 +566,11 @@ async function handleExport(argv: any) {
         try {
             const filename = `${title}.json`
             const filepath = path.join(dir, filename)
-            logger.info(`Saving dashboard(id=${id}) into ${filepath}`);
+            logger.info(`Saving the dashboard(id=${id}) into ${filepath} ...`);
             fs.writeFileSync(filepath, JSON.stringify(dashboard));
             logger.info(`Dashboard(id=${id}) saved successfully`)
         } catch (error) {
-            logger.error(`Error processing dashboard(id=${id}):`, error);
+            logger.error(`Error saving the dashboard(id=${id}):`, error);
         }
     }
 
@@ -641,7 +640,7 @@ async function handleInit() {
         required: true
     });
 
-    logger.info(`Start to generate the skeleton for the configuration package: ${packageName} ...`);
+    logger.info(`Start to generate the skeleton for the configuration package: ${packageName}`);
 
     const packagePath = path.join(process.cwd(), packageName);
     fs.mkdirSync(packagePath, { recursive: true });
@@ -675,12 +674,12 @@ async function handleInit() {
     }
 
     fs.writeFileSync(path.join(packagePath, 'package.json'), JSON.stringify(packageJson, null, 2));
-    logger.info(`Created the package.json file.`);
+    logger.info(`Created the package.json file`);
 
     // Generate README file
     const readmeContent = `# ${packageName}\n\n${packageDescription}`;
     fs.writeFileSync(path.join(packagePath, 'README.md'), readmeContent);
-    logger.info(`Created the package README file.`);
+    logger.info(`Created the package README file`);
 
     logger.info(`Initialized new configuration package at ${packagePath}`);
 }
