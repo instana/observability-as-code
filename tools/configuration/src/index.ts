@@ -10,7 +10,7 @@ import Handlebars from 'handlebars';
 import logger from './logger'; // Import the logger
 import { exec, spawn } from 'child_process';
 import { promisify } from 'util';
-import { input, checkbox, password } from '@inquirer/prompts';
+import { input, checkbox, password, Separator } from '@inquirer/prompts';
 
 const execAsync = promisify(exec);
 
@@ -28,7 +28,7 @@ function filterDashboardsBy(idObjects: IdObject[], include: string[]): IdObject[
             if (key === 'title') {
                 const regex = new RegExp(value);
                 return regex.test(obj.title);
-            } else if (key === 'ownerId') {
+            } else if (key === 'ownerid') {
                 const regex = new RegExp(value);
                 return regex.test(obj.ownerId);
             } else if (key === 'annotation') {
@@ -40,7 +40,7 @@ function filterDashboardsBy(idObjects: IdObject[], include: string[]): IdObject[
     });
 }
 
-function fetchValueFromInclude(array: string[], key: string): string | undefined {
+function getValueByKeyFromArray(array: string[], key: string): string | undefined {
     const prefix = `${key}=`;
     for (const item of array) {
         if (item.startsWith(prefix)) {
@@ -48,6 +48,28 @@ function fetchValueFromInclude(array: string[], key: string): string | undefined
         }
     }
     return undefined;
+}
+
+// Function to sanitize dashboard titles
+function sanitizeDashboardTitles(idObjects: IdObject[]): IdObject[] {
+    const titleMap: { [key: string]: number } = {};
+
+    return idObjects.map((obj) => {
+        let originalTitle = obj.title.replace(/[^a-z0-9-]/gi, '_').toLowerCase(); // sanitize title;
+        let newTitle = originalTitle;
+
+        if (titleMap[originalTitle]) {
+            // If title exists, append a counter
+            titleMap[originalTitle]++;
+            newTitle = `${originalTitle}_${titleMap[originalTitle]}`;
+        } else {
+            // First time this title is encountered
+            titleMap[originalTitle] = 1;
+        }
+
+        // Update the title in the object
+        return { ...obj, title: newTitle };
+    });
 }
 
 // Helper function to promisify spawn
@@ -80,7 +102,7 @@ const readPackageJson = (filePath: string) => {
         const packageJson = fs.readFileSync(path.join(filePath, 'package.json'), 'utf8');
         return JSON.parse(packageJson);
     } catch (error) {
-        logger.error('Failed to read package.json:', error);
+        logger.error('Failed to read the package.json:', error);
         return null;
     }
 };
@@ -120,8 +142,8 @@ Import configuration with parameters replaced:
 const examplesForExport = `
 Examples:
 
-Export configuration with parameters replaced:
-${execName} export --server example.com --include title="some-prefix.*" --include annotation="foo bar" --location ./my-package
+Export configuration:
+  ${execName} export --server example.com --include title="foo.*" --location ./my-package
 `;
 
 // Configure yargs to parse command-line arguments with subcommands
@@ -215,7 +237,7 @@ yargs
             })
             .option('include', {
                 alias: 'F',
-                describe: 'Pattern to match different aspects, e.g.: title, annotation, for the configuration to be exported',
+                describe: 'Pattern to match different aspects, e.g.: title, for the configuration to be exported',
                 type: 'string',
                 demandOption: false
             })
@@ -272,7 +294,6 @@ async function handleDownload(argv: any) {
         logger.error(`Failed to download the configuration package ${packageName}: ${error}`);
         process.exit(1);
     }
-
 }
 
 // Function to handle publish logic
@@ -289,7 +310,7 @@ async function handlePublish(argv: any) {
         packagePath = packageNameOrPath;
         const packageJson = readPackageJson(packagePath);
         if (!packageJson) {
-            logger.error('Failed to read package.json.');
+            logger.error('Failed to read the package.json');
             return;
         }
         packageName = packageJson.name;
@@ -306,7 +327,7 @@ async function handlePublish(argv: any) {
     const scopeMatch = packageName.match(/^@([^/]+)\/.+$/);
     scope = scopeMatch ? scopeMatch[1] : null;
 
-    logger.info('Login to the configuration package registry ...');
+    logger.info('Logging into the configuration package registry ...');
 
     if (!(await isUserLoggedIn())) {
         try {
@@ -317,16 +338,16 @@ async function handlePublish(argv: any) {
             }
             await spawnAsync('npm', loginArgs, { stdio: 'inherit' });
 
-            logger.info('Logged in to the configuration package registry successfully.');
+            logger.info('Logged into the configuration package registry successfully');
         } catch (error) {
-            logger.error('Error during login:', error);
+            logger.error('Error occurred during login:', error);
             process.exit(1)
         }
     } else {
-        logger.info('Already logged in to npm registry');
+        logger.info('Already logged into the configuration package registry');
     }
 
-    logger.info(`Publishing package from ${packagePath} ...`);
+    logger.info(`Publishing the configuration package from ${packagePath} ...`);
     logger.info(`Package name: ${packageName}`);
     logger.info(`Scope: ${scope || 'none'}`);
 
@@ -364,6 +385,28 @@ function parseParams(params: string[]): any {
     return result;
 }
 
+interface AccessRule {
+    accessType: string;
+    relationType: string;
+}
+
+function ensureAccessRules(dashboard: any): void {
+    const globalAccessRule = {
+        accessType: "READ_WRITE",
+        relationType: "GLOBAL",
+        relatedId: ""
+    }
+
+    const globalAccessRuleExists = dashboard.accessRules.some(
+        (rule: AccessRule) => rule.accessType === "READ_WRITE" && rule.relationType === "GLOBAL"
+    );
+
+    if (!globalAccessRuleExists) {
+        dashboard.accessRules.push(globalAccessRule);
+        logger.info("Added the missing global access rule.");
+    }
+}
+
 // Function to handle import logic
 async function handleImport(argv: any) {
     const { package: packageNameOrPath, server, token, location, include: includePattern, set: parameters, debug } = argv;
@@ -378,7 +421,7 @@ async function handleImport(argv: any) {
         packagePath = path.join(location, 'node_modules', packageNameOrPath);
     }
 
-    const defaultFolders = ['dashboards', 'alerts'];
+    const defaultFolders = ['dashboards'];
 
     // Create an axios instance with a custom httpsAgent to ignore self-signed certificate errors
     const axiosInstance = axios.create({
@@ -390,7 +433,7 @@ async function handleImport(argv: any) {
     async function importConfiguration(searchPattern: string) {
         const files = globSync(searchPattern);
 
-        logger.info(`Start to import the configuration from ${searchPattern}.`);
+        logger.info(`Start to import the configuration package from ${searchPattern}`);
 
         if (files.length === 0) {
             logger.warn(`No files found for pattern: ${searchPattern}`);
@@ -402,7 +445,7 @@ async function handleImport(argv: any) {
         for (const file of files) {
             if (path.extname(file) === '.json') {
 
-                logger.info(`Importing ${file}.`);
+                logger.info(`Importing ${file} ...`);
 
                 const fileContent = fs.readFileSync(file, 'utf8');
 
@@ -420,16 +463,18 @@ async function handleImport(argv: any) {
                     jsonContent = JSON.parse(resolvedContent);
                 } catch (error) {
                     if (error instanceof Error) {
-                        logger.error(`Failed to parse JSON content for ${file}: ${error.message}`);
+                        logger.error(`Failed to parse the content for ${file}: ${error.message}`);
                     } else {
-                        logger.error(`Failed to parse JSON content for ${file}: ${String(error)}`);
+                        logger.error(`Failed to parse the content for ${file}: ${String(error)}`);
                     }
                     continue; // Continue with the next file
                 }
 
+                ensureAccessRules(jsonContent)
+
                 try {
                     const url = `https://${server}/api/custom-dashboard`
-                    logger.info(`Applying the configuration to ${url}.`);
+                    logger.info(`Applying the dashboard to ${url} ...`);
 
                     const response = await axiosInstance.post(url, jsonContent, {
                         headers: {
@@ -437,21 +482,23 @@ async function handleImport(argv: any) {
                             'Authorization': `apiToken ${token}`
                         }
                     });
-                    logger.info(`Successfully posted ${file}: ${response.status}`);
+                    logger.info(`Successfully applied ${file}: ${response.status}`);
                 } catch (error) {
                     if (axios.isAxiosError(error)) {
-                        logger.error(`Failed to post ${file}: ${error.message}`);
+                        logger.error(`Failed to apply ${file}: ${error.message}`);
                         if (error.response) {
                             logger.error(`Response data: ${JSON.stringify(error.response.data)}`);
                             logger.error(`Response status: ${error.response.status}`);
                             logger.error(`Response headers: ${JSON.stringify(error.response.headers)}`);
                         }
                     } else {
-                        logger.error(`Failed to post ${file}: ${String(error)}`);
+                        logger.error(`Failed to apply ${file}: ${String(error)}`);
                     }
                 }
             }
         }
+
+        logger.info(`Total file(s) processed: ${files.length}`)
     }
 
     if (includePattern) {
@@ -483,7 +530,7 @@ async function handleExport(argv: any) {
     async function exportDashboardConfiguration(dashboardId: string): Promise<any> {
         try {
             const url = `https://${server}/api/custom-dashboard/${dashboardId}`
-            logger.info(`Retrieving the configuration from ${url}.`);
+            logger.info(`Start to get the dashboard(id=${dashboardId}) from ${url}`);
 
             const response = await axiosInstance.get(url, {
                 headers: {
@@ -491,28 +538,30 @@ async function handleExport(argv: any) {
                     'Authorization': `apiToken ${token}`
                 }
             });
-            logger.info(`Successfully retrieved the dashboard ${dashboardId}: ${response.status}`);
-            return JSON.stringify(response.data);
+            logger.info(`Successfully got the dashboard(id=${dashboardId}): ${response.status}`);
+            if (logger.isDebugEnabled()) {
+                logger.debug(`Response data: \n${JSON.stringify(response.data)}`);
+            }
+            return response.data;
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                logger.error(`Failed to get dashboard ${dashboardId}: ${error.message}`);
+                logger.error(`Failed to get the dashboard(id=${dashboardId}): ${error.message}`);
                 if (error.response) {
                     logger.error(`Response data: ${JSON.stringify(error.response.data)}`);
                     logger.error(`Response status: ${error.response.status}`);
                     logger.error(`Response headers: ${JSON.stringify(error.response.headers)}`);
                 }
             } else {
-                logger.error(`Failed get dashboard ${dashboardId}: ${String(error)}`);
+                logger.error(`Failed to get the dashboard(id=${dashboardId}): ${String(error)}`);
             }
             return null;
         }
     }
 
     async function getDashboardList(): Promise<any> {
-
         try {
             const url = `https://${server}/api/custom-dashboard`
-            logger.info(`Retrieving the dashboard list from ${url}.`);
+            logger.info(`Start to get the dashboard list from ${url}`);
 
             const response = await axiosInstance.get(url, {
                 headers: {
@@ -520,49 +569,82 @@ async function handleExport(argv: any) {
                     'Authorization': `apiToken ${token}`
                 }
             });
-            logger.info(`Successfully retrieved the dashboard list: ${response.status}`);
-            return response.data;
+            logger.info(`Successfully got the dashboard list: ${response.status}`);
+            if (logger.isDebugEnabled()) {
+                logger.debug(`Response data: \n${JSON.stringify(response.data)}`);
+            }
+        return response.data;
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                logger.error(`Failed to retrieve the dashboard list: ${error.message}`);
+                logger.error(`Failed to get the dashboard list: ${error.message}`);
                 if (error.response) {
                     logger.error(`Response data: ${JSON.stringify(error.response.data)}`);
                     logger.error(`Response status: ${error.response.status}`);
                     logger.error(`Response headers: ${JSON.stringify(error.response.headers)}`);
                 }
             } else {
-                logger.error(`Failed to retrieve the dashboard list: ${String(error)}`);
+                logger.error(`Failed to get the dashboard list: ${String(error)}`);
             }
         }
     }
 
-    const includeConditions = Array.isArray(argv.include) ? argv.include : [argv.include];
-
-    // if (includeConditions.includes("type=dashboard")) {
-        // includeConditions.splice(includeConditions.indexOf("type=dashboard"),1)
-        const customDashboardId = fetchValueFromInclude(includeConditions, "id");
-        const packagePath = path.join(location, "dashboards");
-        fs.mkdirSync(packagePath, { recursive: true });
-        if (customDashboardId) {
-            const details = await exportDashboardConfiguration(customDashboardId);
-            fs.writeFileSync(path.join(location, "dashboards", 'dashboard.json'), details);
-        } else {
-            const idObjects = await getDashboardList();
-
-            const filteredIdObjects = filterDashboardsBy(idObjects, includeConditions);
-
-            for (const obj of filteredIdObjects) {
-                try {
-                    const details = await exportDashboardConfiguration(obj.id);
-                    fs.writeFileSync(path.join(packagePath, obj.id + ".json"), details);
-                } catch (error) {
-                    console.error(`Error processing ID ${obj.id}:`, error);
-                }
-            }
-
+    async function saveDashboard(dir: string, id: string, title: string, dashboard: string) {
+        try {
+            const filename = `${title}.json`
+            const filepath = path.join(dir, filename)
+            logger.info(`Saving the dashboard(id=${id}) into ${filepath} ...`);
+            fs.writeFileSync(filepath, JSON.stringify(dashboard));
+            logger.info(`Dashboard(id=${id}) saved successfully`)
+        } catch (error) {
+            logger.error(`Error saving the dashboard(id=${id}):`, error);
         }
-    // }
+    }
 
+    const includeConditions = Array.isArray(argv.include) ? argv.include : ( argv.include ? [argv.include] : []);
+
+    const dashboardId = getValueByKeyFromArray(includeConditions, "id");
+    const dashboardsPath = path.join(location, "dashboards");
+    fs.mkdirSync(dashboardsPath, { recursive: true });
+    if (dashboardId) {
+        const dashboard = await exportDashboardConfiguration(dashboardId);
+        saveDashboard(dashboardsPath, dashboardId, dashboard.title, dashboard)
+    } else {
+        const idObjects = await getDashboardList();
+
+        const filteredIdObjects = filterDashboardsBy(idObjects, includeConditions);
+        const sanitizedIdObjects = sanitizeDashboardTitles(filteredIdObjects)
+
+        for (const obj of sanitizedIdObjects) {
+            const dashboard = await exportDashboardConfiguration(obj.id);
+            saveDashboard(dashboardsPath, obj.id, obj.title, dashboard)
+        }
+
+        logger.info(`Total dashboard(s) processed: ${sanitizedIdObjects.length}`)
+    }
+}
+
+function printDirectoryTree(dirPath: string, rootLabel: string, indent: string = ''): void {
+    const isRoot = indent === '';
+    if (isRoot) {
+      logger.info(rootLabel);
+    }
+
+    const files = fs.readdirSync(dirPath);
+    const lastIndex = files.length - 1;
+
+    files.forEach((file, index) => {
+      const fullPath = path.join(dirPath, file);
+      const isDirectory = fs.statSync(fullPath).isDirectory();
+      const isLast = index === lastIndex;
+      const prefix = isLast ? '└── ' : '├── ';
+
+      logger.info(indent + prefix + file);
+
+      if (isDirectory) {
+        const newIndent = indent + (isLast ? '    ' : '│   ');
+        printDirectoryTree(fullPath, rootLabel, newIndent);
+      }
+    });
 }
 
 // Function to handle init logic
@@ -601,14 +683,15 @@ async function handleInit() {
     const configTypes = await checkbox({
         message: 'Select the types of configuration to be included in the package:',
         choices: [
-            { name: 'dashboards', value: 'dashboards' },
-            { name: 'alerts', value: 'alerts' },
-            { name: 'misc', value: 'misc' },
+            { name: 'dashboards', value: 'dashboards', checked: true },
+            new Separator('-- Below items are not supported yet --'),
+            { name: 'alerts', value: 'alerts', disabled: true, },
+            { name: 'entities', value: 'entities', disabled: true, },
         ],
         required: true
     });
 
-    logger.info(`Start to generate the skeleton for the configuration package: ${packageName} ...`);
+    logger.info(`Start to generate the skeleton for the configuration package: ${packageName}`);
 
     const packagePath = path.join(process.cwd(), packageName);
     fs.mkdirSync(packagePath, { recursive: true });
@@ -642,12 +725,15 @@ async function handleInit() {
     }
 
     fs.writeFileSync(path.join(packagePath, 'package.json'), JSON.stringify(packageJson, null, 2));
-    logger.info(`Created the package.json file.`);
+    logger.info(`Created the package.json file`);
 
     // Generate README file
     const readmeContent = `# ${packageName}\n\n${packageDescription}`;
     fs.writeFileSync(path.join(packagePath, 'README.md'), readmeContent);
-    logger.info(`Created the package README file.`);
+    logger.info(`Created the package README file`);
 
     logger.info(`Initialized new configuration package at ${packagePath}`);
+
+    logger.info(`The following contents are created:`);
+    printDirectoryTree(packagePath, packageName)
 }
