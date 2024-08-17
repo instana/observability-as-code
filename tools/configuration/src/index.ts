@@ -10,7 +10,7 @@ import Handlebars from 'handlebars';
 import logger from './logger'; // Import the logger
 import { exec, spawn } from 'child_process';
 import { promisify } from 'util';
-import { input, checkbox, password } from '@inquirer/prompts';
+import { input, checkbox, password, Separator } from '@inquirer/prompts';
 
 const execAsync = promisify(exec);
 
@@ -621,6 +621,30 @@ async function handleExport(argv: any) {
     }
 }
 
+function printDirectoryTree(dirPath: string, rootLabel: string, indent: string = ''): void {
+    const isRoot = indent === '';
+    if (isRoot) {
+      logger.info(rootLabel);
+    }
+
+    const files = fs.readdirSync(dirPath);
+    const lastIndex = files.length - 1;
+
+    files.forEach((file, index) => {
+      const fullPath = path.join(dirPath, file);
+      const isDirectory = fs.statSync(fullPath).isDirectory();
+      const isLast = index === lastIndex;
+      const prefix = isLast ? '└── ' : '├── ';
+
+      logger.info(indent + prefix + file);
+
+      if (isDirectory) {
+        const newIndent = indent + (isLast ? '    ' : '│   ');
+        printDirectoryTree(fullPath, rootLabel, newIndent);
+      }
+    });
+}
+
 // Function to handle init logic
 async function handleInit() {
     const packageName = await input({
@@ -657,9 +681,10 @@ async function handleInit() {
     const configTypes = await checkbox({
         message: 'Select the types of configuration to be included in the package:',
         choices: [
-            { name: 'dashboards', value: 'dashboards' },
-            { name: 'alerts', value: 'alerts' },
-            { name: 'misc', value: 'misc' },
+            { name: 'dashboards', value: 'dashboards', checked: true },
+            new Separator('-- Below items are not supported yet --'),
+            { name: 'alerts', value: 'alerts', disabled: true, },
+            { name: 'entities', value: 'entities', disabled: true, },
         ],
         required: true
     });
@@ -706,4 +731,7 @@ async function handleInit() {
     logger.info(`Created the package README file`);
 
     logger.info(`Initialized new configuration package at ${packagePath}`);
+
+    logger.info(`The following contents are created:`);
+    printDirectoryTree(packagePath, packageName)
 }
