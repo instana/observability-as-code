@@ -28,7 +28,7 @@ function filterDashboardsBy(idObjects: IdObject[], include: string[]): IdObject[
             if (key === 'title') {
                 const regex = new RegExp(value);
                 return regex.test(obj.title);
-            } else if (key === 'ownerId') {
+            } else if (key === 'ownerid') {
                 const regex = new RegExp(value);
                 return regex.test(obj.ownerId);
             } else if (key === 'annotation') {
@@ -143,7 +143,7 @@ const examplesForExport = `
 Examples:
 
 Export configuration:
-  ${execName} export --server example.com --include title="foo.*" --include annotation="bar baz" --location ./my-package
+  ${execName} export --server example.com --include title="foo.*" --location ./my-package
 `;
 
 // Configure yargs to parse command-line arguments with subcommands
@@ -237,7 +237,7 @@ yargs
             })
             .option('include', {
                 alias: 'F',
-                describe: 'Pattern to match different aspects, e.g.: title, annotation, for the configuration to be exported',
+                describe: 'Pattern to match different aspects, e.g.: title, for the configuration to be exported',
                 type: 'string',
                 demandOption: false
             })
@@ -534,7 +534,6 @@ async function handleExport(argv: any) {
     }
 
     async function getDashboardList(): Promise<any> {
-
         try {
             const url = `https://${server}/api/custom-dashboard`
             logger.info(`Retrieving dashboard list from ${url}`);
@@ -567,12 +566,13 @@ async function handleExport(argv: any) {
     async function saveDashboard(dir: string, id: string, title: string, dashboard: string) {
         try {
             const filename = `${title}.json`
-            logger.info(`Saving dashboard(id=${id}) into ${filename}`);
-            fs.writeFileSync(path.join(dir, filename), JSON.stringify(dashboard));
+            const filepath = path.join(dir, filename)
+            logger.info(`Saving dashboard(id=${id}) into ${filepath}`);
+            fs.writeFileSync(filepath, JSON.stringify(dashboard));
+            logger.info(`Dashboard(id=${id}) saved successfully`)
         } catch (error) {
             logger.error(`Error processing dashboard(id=${id}):`, error);
         }
-        logger.info(`Dashboard(id=${id}) saved successfully`)
     }
 
     const includeConditions = Array.isArray(argv.include) ? argv.include : ( argv.include ? [argv.include] : []);
@@ -593,6 +593,8 @@ async function handleExport(argv: any) {
             const dashboard = await exportDashboardConfiguration(obj.id);
             saveDashboard(dashboardsPath, obj.id, obj.title, dashboard)
         }
+
+        logger.info(`Total dashboards processed: ${sanitizedIdObjects.length}`)
     }
 }
 
