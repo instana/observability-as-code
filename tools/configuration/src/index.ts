@@ -421,7 +421,7 @@ async function handleImport(argv: any) {
         packagePath = path.join(location, 'node_modules', packageNameOrPath);
     }
 
-    const defaultFolders = ['dashboards', 'alerts'];
+    const defaultFolders = ['dashboards'];
 
     // Create an axios instance with a custom httpsAgent to ignore self-signed certificate errors
     const axiosInstance = axios.create({
@@ -497,6 +497,8 @@ async function handleImport(argv: any) {
                 }
             }
         }
+
+        logger.info(`Total file(s) processed: ${files.length}`)
     }
 
     if (includePattern) {
@@ -617,7 +619,7 @@ async function handleExport(argv: any) {
             saveDashboard(dashboardsPath, obj.id, obj.title, dashboard)
         }
 
-        logger.info(`Total dashboards processed: ${sanitizedIdObjects.length}`)
+        logger.info(`Total dashboard(s) processed: ${sanitizedIdObjects.length}`)
     }
 }
 
