@@ -37,6 +37,13 @@ Install the prerequisites:
 ```console
 npm install -g ts-node
 npm install -g pkg
+npm install -g typescript
+```
+
+Install node modules:
+
+```console
+npm install
 ```
 
 To build the source code, please run:
