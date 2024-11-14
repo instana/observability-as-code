@@ -128,29 +128,29 @@ const execName = path.basename(process.argv[1]);
 const examplesForDownload = `
 Examples:
 
-Download configuration package to a specific location:
+Download integration package to a specific location:
   ${execName} download --package my-package --location ./my-packages
 `;
 
 const examplesForImport = `
 Examples:
 
-Import configuration with parameters replaced:
+Import integration package with parameters replaced:
   ${execName} import --package my-package --server example.com --include "dashboards/**/test-*.json" --set key1=value1 --set key2=value2
 `;
 
 const examplesForExport = `
 Examples:
 
-Export configuration:
+Export integration elements:
   ${execName} export --server example.com --include title="foo.*" --location ./my-package
 `;
 
 // Configure yargs to parse command-line arguments with subcommands
 yargs
     .wrap(160) // Set the desired width here
-    .usage(`The Instana CLI for configuration package management\n\nUsage: ${execName} <command> <options>`)
-    .command('download', 'Download a configuration package', (yargs) => {
+    .usage(`The Instana CLI for integration package management\n\nUsage: ${execName} <command> <options>`)
+    .command('download', 'Download an integration package', (yargs) => {
         return yargs
             .option('package', {
                 alias: 'p',
@@ -160,14 +160,14 @@ yargs
             })
             .option('location', {
                 alias: 'l',
-                describe: 'The location to store all the configuration packages',
+                describe: 'The location to store all the integration packages',
                 type: 'string',
                 demandOption: false,
                 default: process.cwd() // Set the default location to the current working directory
             })
             .epilog(examplesForDownload);
     }, handleDownload)
-    .command('import', 'Import configuration into an environment', (yargs) => {
+    .command('import', 'Import an integration package into an environment', (yargs) => {
         return yargs
             .option('package', {
                 alias: 'p',
@@ -183,20 +183,20 @@ yargs
             })
             .option('token', {
                 alias: 't',
-                describe: 'API token to import the configuration',
+                describe: 'API token to import the integration package',
                 type: 'string',
                 demandOption: true
             })
             .option('location', {
                 alias: 'L',
-                describe: 'The location to store all the configuration packages',
+                describe: 'The location to store all the integration packages',
                 type: 'string',
                 demandOption: false,
                 default: process.cwd() // Set the default location to the current working directory
             })
             .option('include', {
                 alias: 'i',
-                describe: 'Folder or pattern to match configuration files to include',
+                describe: 'Folder or pattern to match integration element files to include',
                 type: 'string',
                 demandOption: false
             })
@@ -214,7 +214,7 @@ yargs
             })
             .epilog(examplesForImport);
     }, handleImport)
-    .command('export', 'Export configuration from an environment', (yargs) => {
+    .command('export', 'Export integration elements from an environment', (yargs) => {
         return yargs
             .option('server', {
                 alias: 'S',
@@ -224,20 +224,20 @@ yargs
             })
             .option('token', {
                 alias: 't',
-                describe: 'API token to export the configuration',
+                describe: 'API token to export the integration elements',
                 type: 'string',
                 demandOption: true
             })
             .option('location', {
                 alias: 'L',
-                describe: 'The location to store the configuration',
+                describe: 'The location to store the integration elements',
                 type: 'string',
                 demandOption: false,
                 default: process.cwd() // Set the default location to the current working directory
             })
             .option('include', {
                 alias: 'F',
-                describe: 'Pattern to match different aspects, e.g.: title, for the configuration to be exported',
+                describe: 'Pattern to match different aspects, e.g.: title, for the integration elements to be exported',
                 type: 'string',
                 demandOption: false
             })
@@ -249,8 +249,8 @@ yargs
             })
             .epilog(examplesForExport);
     }, handleExport)
-    .command('init', 'Initialize a new configuration package', {}, handleInit)
-    .command('publish', 'Publish the local configuration package', (yargs) => {
+    .command('init', 'Initialize a new integration package', {}, handleInit)
+    .command('publish', 'Publish the local integration package', (yargs) => {
         return yargs
             .option('package', {
                 alias: 'p',
@@ -260,13 +260,13 @@ yargs
             })
             .option('registry-username', {
                 alias: 'U',
-                describe: 'Username to access the configuration package registry',
+                describe: 'Username to access the integration package registry',
                 type: 'string',
                 demandOption: true
             })
             .option('registry-email', {
                 alias: 'E',
-                describe: 'Email to access the configuration package registry',
+                describe: 'Email to access the integration package registry',
                 type: 'string',
                 demandOption: true
             });
@@ -280,18 +280,18 @@ yargs
 async function handleDownload(argv: any) {
     const { package: packageName, location } = argv;
 
-    logger.info(`Start to download the configuration package: ${packageName}`);
+    logger.info(`Start to download the integration package: ${packageName}`);
 
     const downloadCommand = `npm install ${packageName} --prefix ${location}`;
     try {
         const { stdout, stderr } = await execAsync(downloadCommand);
         logger.info(`Download completed, detailed logs: \n${stdout}`);
-        logger.info(`The configuration package is downloaded at: ${location}`);
+        logger.info(`The integration package is downloaded at: ${location}`);
         if (stderr) {
             logger.error(`Download warnings/errors: ${stderr}`);
         }
     } catch (error) {
-        logger.error(`Failed to download the configuration package ${packageName}: ${error}`);
+        logger.error(`Failed to download the integration package ${packageName}: ${error}`);
         process.exit(1);
     }
 }
@@ -300,7 +300,7 @@ async function handleDownload(argv: any) {
 async function handlePublish(argv: any) {
     let { package: packageNameOrPath, registryUsername, registryEmail } = argv;
 
-    logger.info(`Start to publish the configuration package: ${packageNameOrPath}`);
+    logger.info(`Start to publish the integration package: ${packageNameOrPath}`);
 
     let packageName;
     let packagePath;
@@ -327,7 +327,7 @@ async function handlePublish(argv: any) {
     const scopeMatch = packageName.match(/^@([^/]+)\/.+$/);
     scope = scopeMatch ? scopeMatch[1] : null;
 
-    logger.info('Logging into the configuration package registry ...');
+    logger.info('Logging into the integration package registry ...');
 
     if (!(await isUserLoggedIn())) {
         try {
@@ -338,16 +338,16 @@ async function handlePublish(argv: any) {
             }
             await spawnAsync('npm', loginArgs, { stdio: 'inherit' });
 
-            logger.info('Logged into the configuration package registry successfully');
+            logger.info('Logged into the integration package registry successfully');
         } catch (error) {
             logger.error('Error occurred during login:', error);
             process.exit(1)
         }
     } else {
-        logger.info('Already logged into the configuration package registry');
+        logger.info('Already logged into the integration package registry');
     }
 
-    logger.info(`Publishing the configuration package from ${packagePath} ...`);
+    logger.info(`Publishing the integration package from ${packagePath} ...`);
     logger.info(`Package name: ${packageName}`);
     logger.info(`Scope: ${scope || 'none'}`);
 
@@ -361,7 +361,7 @@ async function handlePublish(argv: any) {
 
         logger.info(`Package ${packageName} published successfully`);
     } catch (error) {
-        logger.error(`Error publishing the configuration package ${packageNameOrPath}:`, error);
+        logger.error(`Error publishing the integration package ${packageNameOrPath}:`, error);
         process.exit(1);
     }
 }
@@ -430,10 +430,10 @@ async function handleImport(argv: any) {
         })
     });
 
-    async function importConfiguration(searchPattern: string) {
+    async function importIntegration(searchPattern: string) {
         const files = globSync(searchPattern);
 
-        logger.info(`Start to import the configuration package from ${searchPattern}`);
+        logger.info(`Start to import the integration package from ${searchPattern}`);
 
         if (files.length === 0) {
             logger.warn(`No files found for pattern: ${searchPattern}`);
@@ -503,11 +503,11 @@ async function handleImport(argv: any) {
 
     if (includePattern) {
         const searchPattern = path.join(packagePath, includePattern);
-        await importConfiguration(searchPattern);
+        await importIntegration(searchPattern);
     } else {
         for (const defaultFolder of defaultFolders) {
             const searchPattern = path.join(packagePath, defaultFolder, '**/*.json');
-            await importConfiguration(searchPattern);
+            await importIntegration(searchPattern);
         }
     }
 }
@@ -527,7 +527,7 @@ async function handleExport(argv: any) {
         })
     });
 
-    async function exportDashboardConfiguration(dashboardId: string): Promise<any> {
+    async function exportDashboard(dashboardId: string): Promise<any> {
         try {
             const url = `https://${server}/api/custom-dashboard/${dashboardId}`
             logger.info(`Start to get the dashboard(id=${dashboardId}) from ${url}`);
@@ -606,7 +606,7 @@ async function handleExport(argv: any) {
     const dashboardsPath = path.join(location, "dashboards");
     fs.mkdirSync(dashboardsPath, { recursive: true });
     if (dashboardId) {
-        const dashboard = await exportDashboardConfiguration(dashboardId);
+        const dashboard = await exportDashboard(dashboardId);
         saveDashboard(dashboardsPath, dashboardId, dashboard.title, dashboard)
     } else {
         const idObjects = await getDashboardList();
@@ -615,7 +615,7 @@ async function handleExport(argv: any) {
         const sanitizedIdObjects = sanitizeDashboardTitles(filteredIdObjects)
 
         for (const obj of sanitizedIdObjects) {
-            const dashboard = await exportDashboardConfiguration(obj.id);
+            const dashboard = await exportDashboard(obj.id);
             saveDashboard(dashboardsPath, obj.id, obj.title, dashboard)
         }
 
@@ -650,57 +650,58 @@ function printDirectoryTree(dirPath: string, rootLabel: string, indent: string =
 // Function to handle init logic
 async function handleInit() {
     const packageName = await input({
-        message: `Enter configuration package name: (e.g.: @ibm-instana/self-monitoring, my-awesome-xyz-monitoring): `,
+        message: `Enter integration package name: (e.g.: @ibm-instana/self-monitoring, my-awesome-xyz-monitoring): `,
         validate: (input: string) => input ? true : 'Package name is required'
     });
 
     const packageVersion = await input({
-        message: 'Enter configuration package version: ',
+        message: 'Enter integration package version: ',
         default: '1.0.0',
         validate: (input: string) => /^\d+\.\d+\.\d+$/.test(input) ? true : 'Please enter a valid version number'
     });
 
     const packageDescription = await input({
-        message: 'Enter configuration package description: '
+        message: 'Enter integration package description: '
     });
 
     const keywordsInput = await input({
-        message: 'Enter configuration package keywords (comma-separated): '
+        message: 'Enter integration package keywords (comma-separated): '
     });
 
     const keywords = keywordsInput.split(',').map(keyword => keyword.trim()).filter(keyword => keyword);
 
     const packageAuthor = await input({
-        message: 'Enter configuration package author: ',
+        message: 'Enter integration package author: ',
         validate: (input: string) => input ? true : 'Package author is required'
     });
 
     const packageLicense = await input({
-        message: 'Enter configuration package license: ',
+        message: 'Enter integration package license: ',
         default: 'MIT'
     });
 
     const configTypes = await checkbox({
-        message: 'Select the types of configuration to be included in the package:',
+        message: 'Select the types of integration elements to be included in the package:',
         choices: [
             { name: 'dashboards', value: 'dashboards', checked: true },
             new Separator('-- Below items are not supported yet --'),
             { name: 'alerts', value: 'alerts', disabled: true, },
             { name: 'entities', value: 'entities', disabled: true, },
+            { name: 'collector configs', value: 'collector-configs', disabled: true, },
         ],
         required: true
     });
 
-    logger.info(`Start to generate the skeleton for the configuration package: ${packageName}`);
+    logger.info(`Start to generate the skeleton for the integration package: ${packageName}`);
 
     const packagePath = path.join(process.cwd(), packageName);
     fs.mkdirSync(packagePath, { recursive: true });
-    logger.info(`Created the configuration package folder: ${packagePath}`);
+    logger.info(`Created the integration package folder: ${packagePath}`);
 
     configTypes.forEach((type: string) => {
         const configTypePath = path.join(packagePath, type)
         fs.mkdirSync(configTypePath, { recursive: true });
-        logger.info(`Created the configuration package sub-folder: ${configTypePath}`);
+        logger.info(`Created the integration package sub-folder: ${configTypePath}`);
     });
 
     const packageJson: {
@@ -732,7 +733,7 @@ async function handleInit() {
     fs.writeFileSync(path.join(packagePath, 'README.md'), readmeContent);
     logger.info(`Created the package README file`);
 
-    logger.info(`Initialized new configuration package at ${packagePath}`);
+    logger.info(`Initialized new integration package at ${packagePath}`);
 
     logger.info(`The following contents are created:`);
     printDirectoryTree(packagePath, packageName)

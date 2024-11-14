@@ -1,23 +1,23 @@
-# The Instana CLI for Configuration Package Management
+# The Instana CLI for Integration Package Management
 
-The Instana CLI for Configuration Package Management is used to manage the lifecycle of Instana configuration package. For example, you can use this CLI to download the configuration package from public website to your local machine, then install the package into an existing Instana environment.
+The Instana CLI for Integration Package Management is used to manage the lifecycle of Instana integration package. For example, you can use this CLI to download the integration package from public website to your local machine, then install the package into an existing Instana environment.
 
 ## For end users
 
 ### Download the CLI
 
-You can find the available binaries for the CLI on different platforms on the release page of this project. Select the one that matches your platform to download, then rename it to `stanctl-configuration`. Now you should be able to run it on your local machine.
+You can find the available binaries for the CLI on different platforms on the release page of this project. Select the one that matches your platform to download, then rename it to `stanctl-integration`. Now you should be able to run it on your local machine.
 
 ### Run the CLI
 
 Simply run:
 ```console
-stanctl-configuration
+stanctl-integration
 ```
 
 It will show you the help information, including all available commands and flags. For each command, run:
 ```console
-stanctl-configuration <command>
+stanctl-integration <command>
 ```
 
 It will show the help information for the specific command to tell you how to run it.
@@ -30,7 +30,7 @@ Clone this project to your local machine and go into the CLI root directory:
 
 ```console
 git clone https://github.com/instana/observability-as-code.git
-cd tools/configuration
+cd tools/integration
 ```
 
 Install the prerequisites:
@@ -61,12 +61,12 @@ npm run pkg
 
 Then you will find the binaries for all platforms in the `dist` directory, e.g.:
 ```console
-stanctl-configuration-linux
-stanctl-configuration-macos
-stanctl-configuration-win.exe
+stanctl-integration-linux
+stanctl-integration-macos
+stanctl-integration-win.exe
 ```
 
-Choose the one that matches your platform and rename it to `stanctl-configuration`, then you should be able to run it as a normal executable.
+Choose the one that matches your platform and rename it to `stanctl-integration`, then you should be able to run it as a normal executable.
 
 ### Run the CLI
 
@@ -78,11 +78,11 @@ npm link
 Then, you should be able to run the CLI from any place:
 
 ```console
-stanctl-configuration
+stanctl-integration
 ```
 
 To run the CLI using the binary executable, you can go to `dist` directory, and select the one that matches your platform, e.g., on MacOS, please run:
 
 ```console
-./stanctl-configuration-macos
+./stanctl-integration-macos
 ```
