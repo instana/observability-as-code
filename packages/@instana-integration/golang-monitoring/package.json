@@ -1,0 +1,15 @@
+{
+  "name": "@instana-intergragration/golang-monitoring",
+  "version": "1.0.0",
+  "description": "The integration package is used to support Golang application monitoring. Once you import this package into your Instana environment, you will be able to monitor Golang application on various aspects by checking the dashboards, alerts, etc. Included in this integration package.",
+  "author": "IBM",
+  "license": "MIT",
+  "scripts": {},
+  "keywords": [
+    "ibm",
+    "instana",
+    "golang",
+    "customer dashboard",
+    "monitoring"
+  ]
+}
