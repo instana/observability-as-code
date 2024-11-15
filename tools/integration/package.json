@@ -1,15 +1,15 @@
 {
-  "name": "@ibm-instana/stanctl-configuration",
-  "version": "1.1.0",
-  "description": "The Instana CLI for configuration package management",
+  "name": "@instana/stanctl-integration",
+  "version": "1.2.0",
+  "description": "The Instana CLI for integration package management",
   "main": "./dist/index.js",
   "scripts": {
     "debug": "ts-node  src/index.ts  export --server sample.instana.io --token **TOKEN**  --include annotation='SHARED' ",
     "build": "tsc",
-    "pkg": "pkg . --output dist/stanctl-configuration"
+    "pkg": "pkg . --output dist/stanctl-integration"
   },
   "bin": {
-    "stanctl-configuration": "./dist/index.js"
+    "stanctl-integration": "./dist/index.js"
   },
   "pkg": {
     "assets": [
@@ -32,7 +32,7 @@
     "observability",
     "as",
     "code",
-    "configuration",
+    "integration",
     "package"
   ],
   "author": "morningspace",

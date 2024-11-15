@@ -1,0 +1,10 @@
+{
+  "name": "@instana-integration/llm",
+  "version": "0.0.1",
+  "description": "IBM Instana integration package for large language model",
+  "author": "IBM Instana",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  }
+}
