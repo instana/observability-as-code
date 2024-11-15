@@ -1,5 +1,3 @@
-./stanctl-integration publish --package @instana-integration/go --registry-username yanweili --registry-email yanweili@ibm.com
-
 {
     "id": "QLP8dDscTh6HsqDkchXJIQ",
     "title": "Go Runtime Monitoring",
