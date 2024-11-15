@@ -1,0 +1,3 @@
+# @instana-integration/go
+
+go
