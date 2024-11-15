@@ -650,7 +650,7 @@ function printDirectoryTree(dirPath: string, rootLabel: string, indent: string =
 // Function to handle init logic
 async function handleInit() {
     const packageName = await input({
-        message: `Enter integration package name: (e.g.: @ibm-instana/self-monitoring, my-awesome-xyz-monitoring): `,
+        message: `Enter integration package name: (e.g.: @instana-integration/nodejs, my-awesome-xyz-integration): `,
         validate: (input: string) => input ? true : 'Package name is required'
     });
 
