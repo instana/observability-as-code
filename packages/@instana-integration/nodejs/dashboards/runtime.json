@@ -1,6 +1,6 @@
 {
   "id": "nxWxPhYWRIufJ8z8FDqk8w",
-  "title": "NodeJS Runtime Monitoring",
+  "title": "Node.js Runtime Monitoring",
   "accessRules": [
     {
       "accessType": "READ_WRITE",

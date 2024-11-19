@@ -1,19 +1,20 @@
 # @instana-integration/nodejs
 
-The integration package is used to support NodeJS monitoring. Once you import this package into your Instana environment, you will be able to monitor NodeJS runtime and the applications on various aspects by checking the dashboards, alerts, etc. included in this integration package.
+The Instana integration package used to support Node.js monitoring. Once you import this package into your Instana environment, you will be able to monitor Node.js runtime and the applications on various aspects by checking the dashboards, alerts, etc. included in this integration package.
 
 ## Dashboards
 
+Below are the dashboards that are currently supported by this integration package.
 
-| Dashboard Name    | Description                    |    
+| Dashboard Title    | Description                    |    
 |----------------------------|-----------------------|
-| Runtime metrics   | Instana customer dashboard that displays runtime metrics of a NodeJS application |
+| Node.js Runtime Metrics   | Instana custom dashboard that displays runtime metrics for Node.js application |
 
-### NodeJS Runtime Metrics
+### Node.js Runtime Metrics
 
-### Semantic Conventions for NodeJS Runtime Metrics
+### Semantic Conventions for  Node.js Runtime Metrics
 
-The NodeJS runtime metrics are obtained by opentelemetry auto-instrumentation:
+The Node.js runtime metrics are obtained by OpenTelemetry auto-instrumentation:
 
 ```
 const {RuntimeNodeInstrumentation} = require('@opentelemetry/instrumentation-runtime-node')
@@ -31,6 +32,7 @@ const sdk = new NodeSDK({
 sdk.start()
 ```
 
+Below are the Node.js runtime metrics that are currently supported by this integration package.
 
 | Metrics Name               | Description                   | Unit   | 
 |----------------------------|-------------------------------|--------|
@@ -45,7 +47,9 @@ sdk.start()
 | eventloop.delay.stddev  | Event loop standard deviation delay   | s |
 
 
-### Resource attributes for NodeJS application
+### Resource Attributes for Node.js Application
+
+Below are the resource attributes that are currently supported by this integration package.
 
 | Attribute Key              | Type |  Description           | 
 |----------------------------|-------|------------------------|

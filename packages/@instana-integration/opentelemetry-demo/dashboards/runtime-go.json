@@ -1,6 +1,6 @@
 {
   "id": "OtKL5QGCTzGlQKIrFgTTig",
-  "title": "Otel Demo GO Runtime metrics",
+  "title": "OpenTelemetry Demo - Go Runtime Metrics",
   "accessRules": [
     {
       "accessType": "READ_WRITE",

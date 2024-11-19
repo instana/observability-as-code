@@ -1,6 +1,6 @@
 {
   "id": "YIpKp1mfT3S1wgP6T0H4kA",
-  "title": "Otel Demo JS Runtime metrics",
+  "title": "OpenTelemetry Demo - Node.js Runtime Metrics",
   "accessRules": [
     {
       "accessType": "READ_WRITE",

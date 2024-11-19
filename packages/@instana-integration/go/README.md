@@ -1,20 +1,20 @@
 # @instana-integration/go
 
-
-The integration package is used to support Go monitoring. Once you import this package into your Instana environment, you will be able to monitor Go runtime and the applications on various aspects by checking the dashboards, alerts, etc. included in this integration package.
+The Instana integration package used to support Go monitoring. Once you import this package into your Instana environment, you will be able to monitor Go runtime and the applications on various aspects by checking the dashboards, alerts, etc. included in this integration package.
 
 ## Dashboards
 
+Below are the dashboards that are currently supported by this integration package.
 
-| Dashboard Name    | Description                    |    
+| Dashboard Title    | Description                    |    
 |----------------------------|-----------------------|
-| Runtime metrics   | Instana customer dashboard that displays runtime metrics of a Go application |
+| Go Runtime Metrics   | Instana custom dashboard that displays runtime metrics for Go application |
 
 ### Go Runtime Metrics
 
 ### Semantic Conventions for Go Runtime Metrics
 
-The go runtime metrics are obtained by opentelemetry auto-instrumentation:
+The Go runtime metrics are obtained by OpenTelemetry auto-instrumentation:
 
 ```
 import "go.opentelemetry.io/contrib/instrumentation/runtime"
@@ -24,6 +24,7 @@ if err != nil {
 }
 ```
 
+Below are the Go runtime metrics that are currently supported by this integration package.
 
 | Metrics Name               | Description                   | Unit   | 
 |----------------------------|-------------------------------|--------|
@@ -35,7 +36,9 @@ if err != nil {
 | process.runtime.go.goroutines       | Executed Goroutines  | NUMBER |
 
 
-### Resource attributes for Go application
+### Resource Attributes for Go Application
+
+Below are the resource attributes that are currently supported by this integration package.
 
 | Attribute Key              | Type |  Description           | 
 |----------------------------|-------|------------------------|
