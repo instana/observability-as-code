@@ -1,0 +1,835 @@
+{
+  "id": "nxWxPhYWRIufJ8z8FDqk8w",
+  "title": "NodeJS Runtime Monitoring",
+  "accessRules": [
+    {
+      "accessType": "READ_WRITE",
+      "relationType": "GLOBAL",
+      "relatedId": ""
+    }
+  ],
+  "widgets": [
+    {
+      "id": "WnbMPKhbL9lFyc5W",
+      "title": "GC duration",
+      "width": 12,
+      "height": 13,
+      "x": 0,
+      "y": 4,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "millis.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Incremantal",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "openTelemetry",
+              "metricPath": [
+                "Others",
+                "OpenTelemetry SDK"
+              ],
+              "formatter": "number.detailed",
+              "unit": "second",
+              "metric": "metrics.histograms.@opentelemetry/instrumentation-runtime-node/v8js.gc.duration",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Other"
+                        },
+                        {
+                          "label": "otel.attribute.service.name"
+                        }
+                      ],
+                      "name": "otel.attribute.service.name",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "name": "otel.attribute.service.name",
+                    "type": "TAG_FILTER",
+                    "value": "{{ servicename }}",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  },
+                  {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Other"
+                        },
+                        {
+                          "label": "otel.attribute.service.instance.id"
+                        }
+                      ],
+                      "name": "otel.attribute.service.instance.id",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "name": "otel.attribute.service.instance.id",
+                    "type": "TAG_FILTER",
+                    "value": "{{ serviceinstanceid }}",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  },
+                  {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Other"
+                        },
+                        {
+                          "label": "metric.tag.v8js.gc.type"
+                        }
+                      ],
+                      "name": "metric.tag.v8js.gc.type",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "name": "metric.tag.v8js.gc.type",
+                    "type": "TAG_FILTER",
+                    "value": "incremental",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "OpenTelemetry histogram @opentelemetry/instrumentation-runtime-node/v8js.gc.duration",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Major",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "openTelemetry",
+              "metricPath": [
+                "Others",
+                "OpenTelemetry SDK"
+              ],
+              "formatter": "number.detailed",
+              "unit": "second",
+              "metric": "metrics.histograms.@opentelemetry/instrumentation-runtime-node/v8js.gc.duration",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Other"
+                        },
+                        {
+                          "label": "otel.attribute.service.name"
+                        }
+                      ],
+                      "name": "otel.attribute.service.name",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "name": "otel.attribute.service.name",
+                    "type": "TAG_FILTER",
+                    "value": "{{ servicename }}",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  },
+                  {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Other"
+                        },
+                        {
+                          "label": "otel.attribute.service.instance.id"
+                        }
+                      ],
+                      "name": "otel.attribute.service.instance.id",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "name": "otel.attribute.service.instance.id",
+                    "type": "TAG_FILTER",
+                    "value": "{{ serviceinstanceid }}",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  },
+                  {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Other"
+                        },
+                        {
+                          "label": "metric.tag.v8js.gc.type"
+                        }
+                      ],
+                      "name": "metric.tag.v8js.gc.type",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "name": "metric.tag.v8js.gc.type",
+                    "type": "TAG_FILTER",
+                    "value": "major",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "OpenTelemetry histogram @opentelemetry/instrumentation-runtime-node/v8js.gc.duration",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Minor",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "openTelemetry",
+              "metricPath": [
+                "Others",
+                "OpenTelemetry SDK"
+              ],
+              "formatter": "number.detailed",
+              "unit": "second",
+              "metric": "metrics.histograms.@opentelemetry/instrumentation-runtime-node/v8js.gc.duration",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Other"
+                        },
+                        {
+                          "label": "otel.attribute.service.name"
+                        }
+                      ],
+                      "name": "otel.attribute.service.name",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "name": "otel.attribute.service.name",
+                    "type": "TAG_FILTER",
+                    "value": "{{ servicename }}",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  },
+                  {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Other"
+                        },
+                        {
+                          "label": "otel.attribute.service.instance.id"
+                        }
+                      ],
+                      "name": "otel.attribute.service.instance.id",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "name": "otel.attribute.service.instance.id",
+                    "type": "TAG_FILTER",
+                    "value": "{{ serviceinstanceid }}",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  },
+                  {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Other"
+                        },
+                        {
+                          "label": "metric.tag.v8js.gc.type"
+                        }
+                      ],
+                      "name": "metric.tag.v8js.gc.type",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "name": "metric.tag.v8js.gc.type",
+                    "type": "TAG_FILTER",
+                    "value": "minor",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "OpenTelemetry histogram @opentelemetry/instrumentation-runtime-node/v8js.gc.duration",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "eNcG5ILdt2AhqPoF",
+      "title": "Event Loop",
+      "width": 12,
+      "height": 13,
+      "x": 0,
+      "y": 35,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "millis.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Event loop maximum delay",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "openTelemetry",
+              "metricPath": [
+                "Others",
+                "OpenTelemetry SDK"
+              ],
+              "formatter": "number.detailed",
+              "unit": "second",
+              "metric": "metrics.gauges.@opentelemetry/instrumentation-runtime-node/nodejs.eventloop.delay.max",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Other"
+                        },
+                        {
+                          "label": "otel.attribute.service.name"
+                        }
+                      ],
+                      "name": "otel.attribute.service.name",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "name": "otel.attribute.service.name",
+                    "type": "TAG_FILTER",
+                    "value": "{{ servicename }}",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  },
+                  {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Other"
+                        },
+                        {
+                          "label": "otel.attribute.service.instance.id"
+                        }
+                      ],
+                      "name": "otel.attribute.service.instance.id",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "name": "otel.attribute.service.instance.id",
+                    "type": "TAG_FILTER",
+                    "value": "{{ serviceinstanceid }}",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "OpenTelemetry gauge @opentelemetry/instrumentation-runtime-node/nodejs.eventloop.delay.max",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Event loop mean delay",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "openTelemetry",
+              "metricPath": [
+                "Others",
+                "OpenTelemetry SDK"
+              ],
+              "formatter": "number.detailed",
+              "unit": "second",
+              "metric": "metrics.gauges.@opentelemetry/instrumentation-runtime-node/nodejs.eventloop.delay.mean",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Other"
+                        },
+                        {
+                          "label": "otel.attribute.service.name"
+                        }
+                      ],
+                      "name": "otel.attribute.service.name",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "name": "otel.attribute.service.name",
+                    "type": "TAG_FILTER",
+                    "value": "{{ servicename }}",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  },
+                  {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Other"
+                        },
+                        {
+                          "label": "otel.attribute.service.instance.id"
+                        }
+                      ],
+                      "name": "otel.attribute.service.instance.id",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "name": "otel.attribute.service.instance.id",
+                    "type": "TAG_FILTER",
+                    "value": "{{ serviceinstanceid }}",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "OpenTelemetry gauge @opentelemetry/instrumentation-runtime-node/nodejs.eventloop.delay.mean",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Event loop minimum delay",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "openTelemetry",
+              "metricPath": [
+                "Others",
+                "OpenTelemetry SDK"
+              ],
+              "formatter": "number.detailed",
+              "unit": "second",
+              "metric": "metrics.gauges.@opentelemetry/instrumentation-runtime-node/nodejs.eventloop.delay.min",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Other"
+                        },
+                        {
+                          "label": "otel.attribute.service.name"
+                        }
+                      ],
+                      "name": "otel.attribute.service.name",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "name": "otel.attribute.service.name",
+                    "type": "TAG_FILTER",
+                    "value": "{{ servicename }}",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  },
+                  {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Other"
+                        },
+                        {
+                          "label": "otel.attribute.service.instance.id"
+                        }
+                      ],
+                      "name": "otel.attribute.service.instance.id",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "name": "otel.attribute.service.instance.id",
+                    "type": "TAG_FILTER",
+                    "value": "{{ serviceinstanceid }}",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "OpenTelemetry gauge @opentelemetry/instrumentation-runtime-node/nodejs.eventloop.delay.min",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "millis.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Standard deviation delay",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "openTelemetry",
+              "metricPath": [
+                "Others",
+                "OpenTelemetry SDK"
+              ],
+              "formatter": "number.detailed",
+              "unit": "second",
+              "metric": "metrics.gauges.@opentelemetry/instrumentation-runtime-node/nodejs.eventloop.delay.stddev",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Other"
+                        },
+                        {
+                          "label": "otel.attribute.service.name"
+                        }
+                      ],
+                      "name": "otel.attribute.service.name",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "name": "otel.attribute.service.name",
+                    "type": "TAG_FILTER",
+                    "value": "{{ servicename }}",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  },
+                  {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Other"
+                        },
+                        {
+                          "label": "otel.attribute.service.instance.id"
+                        }
+                      ],
+                      "name": "otel.attribute.service.instance.id",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "name": "otel.attribute.service.instance.id",
+                    "type": "TAG_FILTER",
+                    "value": "{{ serviceinstanceid }}",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "OpenTelemetry gauge @opentelemetry/instrumentation-runtime-node/nodejs.eventloop.delay.stddev",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ]
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "HzxZWeRcMTt5mE0C",
+      "title": "Heap Spaces",
+      "width": 12,
+      "height": 18,
+      "x": 0,
+      "y": 17,
+      "type": "table",
+      "config": {
+        "showGroupsWithMissingTags": false,
+        "tagFilterExpression": {
+          "logicalOperator": "AND",
+          "elements": [
+            {
+              "tagDefinition": {
+                "path": [
+                  {
+                    "label": "Other"
+                  },
+                  {
+                    "label": "otel.attribute.service.name"
+                  }
+                ],
+                "name": "otel.attribute.service.name",
+                "availability": [],
+                "type": "STRING"
+              },
+              "name": "otel.attribute.service.name",
+              "type": "TAG_FILTER",
+              "value": "{{ servicename }}",
+              "entity": "NOT_APPLICABLE",
+              "operator": "EQUALS"
+            },
+            {
+              "tagDefinition": {
+                "path": [
+                  {
+                    "label": "Other"
+                  },
+                  {
+                    "label": "otel.attribute.service.instance.id"
+                  }
+                ],
+                "name": "otel.attribute.service.instance.id",
+                "availability": [],
+                "type": "STRING"
+              },
+              "name": "otel.attribute.service.instance.id",
+              "type": "TAG_FILTER",
+              "value": "{{ serviceinstanceid }}",
+              "entity": "NOT_APPLICABLE",
+              "operator": "EQUALS"
+            }
+          ],
+          "type": "EXPRESSION"
+        },
+        "entityType": "openTelemetry",
+        "sorting": {
+          "by": "label",
+          "direction": "ASC"
+        },
+        "tableSize": 10,
+        "countGroup": true,
+        "source": "INFRASTRUCTURE_METRICS",
+        "datasets": {
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Available",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "openTelemetry",
+              "metricPath": [],
+              "required": false,
+              "formatter": "number.detailed",
+              "unit": "byte",
+              "metric": "metrics.gauges.@opentelemetry/instrumentation-runtime-node/v8js.memory.heap.space.available_size",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "OpenTelemetry gauge @opentelemetry/instrumentation-runtime-node/v8js.memory.heap.space.available_size",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Current",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "openTelemetry",
+              "metricPath": [],
+              "required": false,
+              "formatter": "number.detailed",
+              "unit": "byte",
+              "metric": "metrics.gauges.@opentelemetry/instrumentation-runtime-node/v8js.memory.heap.limit",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "OpenTelemetry gauge @opentelemetry/instrumentation-runtime-node/v8js.memory.heap.limit",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Physical",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "openTelemetry",
+              "metricPath": [],
+              "required": false,
+              "formatter": "number.detailed",
+              "unit": "byte",
+              "metric": "metrics.gauges.@opentelemetry/instrumentation-runtime-node/v8js.memory.heap.space.physical_size",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "OpenTelemetry gauge @opentelemetry/instrumentation-runtime-node/v8js.memory.heap.space.physical_size",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "openTelemetry",
+              "metricPath": [],
+              "required": false,
+              "formatter": "number.detailed",
+              "unit": "byte",
+              "metric": "metrics.gauges.@opentelemetry/instrumentation-runtime-node/v8js.memory.heap.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "OpenTelemetry gauge @opentelemetry/instrumentation-runtime-node/v8js.memory.heap.used",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ]
+        },
+        "grouping": [
+          {
+            "tagDefinition": {
+              "path": [
+                {
+                  "label": "Other"
+                },
+                {
+                  "label": "metric.tag.v8js.heap.space.name"
+                }
+              ],
+              "name": "metric.tag.v8js.heap.space.name",
+              "availability": [],
+              "type": "STRING"
+            },
+            "tagType": "STRING",
+            "groupbyTag": "metric.tag.v8js.heap.space.name"
+          }
+        ]
+      }
+    }
+  ],
+  "ownerId": "6736887984c8b059ec4b1ad2",
+  "writable": true
+}

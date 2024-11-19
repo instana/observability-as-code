@@ -1,0 +1,14 @@
+{
+  "name": "@instana-integration/opentelemetry-demo",
+  "version": "1.0.1",
+  "description": "The instana customer dashboard package for opentelemetry demo",
+  "author": "IBM",
+  "license": "MIT",
+  "scripts": {},
+  "keywords": [
+    "ibm",
+    "instana",
+    "opentelemetry",
+    "demo"
+  ]
+}
