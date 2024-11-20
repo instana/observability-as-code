@@ -38,13 +38,13 @@ Below are the Node.js runtime metrics that are currently supported by this integ
 |----------------------------|-------------------------------|--------|
 | v8js.gc.duration   | Garbage collection duration by kind, one of major, minor, incremental or weakcb.            | s |
 | memory.heap.limit  | Total heap memory size pre-allocated. | Byte |
-| memory.heap.used  | Heap Memory size allocated| Byte |
-| memory.heap.space.available_size  | Heap space available size | Byte |
-| memory.heap.space.physical_size  |Committed size of a heap space | Byte |
-| eventloop.delay.min  | Event loop minimum delay | s |
-| eventloop.delay.max  | Event loop maximum delay | s |
-| eventloop.delay.mean  | Event loop mean delay   | s |
-| eventloop.delay.stddev  | Event loop standard deviation delay   | s |
+| memory.heap.used  | Heap memory size allocated. | Byte |
+| memory.heap.space.available_size  | Heap space available size. | Byte |
+| memory.heap.space.physical_size  | Committed size of a heap space. | Byte |
+| eventloop.delay.min  | Event loop minimum delay. | s |
+| eventloop.delay.max  | Event loop maximum delay. | s |
+| eventloop.delay.mean  | Event loop mean delay.   | s |
+| eventloop.delay.stddev  | Event loop standard deviation delay. | s |
 
 
 ### Resource Attributes for Node.js Application

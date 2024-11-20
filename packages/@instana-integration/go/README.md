@@ -28,12 +28,12 @@ Below are the Go runtime metrics that are currently supported by this integratio
 
 | Metrics Name               | Description                   | Unit   | 
 |----------------------------|-------------------------------|--------|
-| process.runtime.go.mem.heap_inuse   | Heap Used            | NUMBER |
-| process.runtime.go.mem.heap.alloc   | Allocated Memory     | Byte   |
-| process.runtime.go.mem.heap.sys     | System Heap          | Byte   |
-| process.runtime.go.mem.heap.inuse   | Used Heap            | Byte   |
+| process.runtime.go.mem.heap_inuse   | Heap used            | Number |
+| process.runtime.go.mem.heap.alloc   | Allocated memory     | Byte   |
+| process.runtime.go.mem.heap.sys     | System heap          | Byte   |
+| process.runtime.go.mem.heap.inuse   | Used heap            | Byte   |
 | process.runtime.go.mem.heap.objects | Objects              | Byte   |
-| process.runtime.go.goroutines       | Executed Goroutines  | NUMBER |
+| process.runtime.go.goroutines       | Executed goroutines  | Number |
 
 
 ### Resource Attributes for Go Application
