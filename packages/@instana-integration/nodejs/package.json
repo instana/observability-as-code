@@ -1,0 +1,16 @@
+{
+  "name": "@instana-integration/nodejs",
+  "version": "1.0.0",
+  "description": "The integration package is used to support Node.js monitoring. Once you import this package into your Instana environment, you will be able to monitor Node.js runtime and the applications on various aspects by checking the dashboards, alerts, etc. included in this integration package.",
+  "author": "IBM",
+  "license": "MIT",
+  "scripts": {},
+  "keywords": [
+    "ibm",
+    "instana",
+    "customer dashboard",
+    "opentelemetry",
+    "nodejs",
+    "monitoring"
+  ]
+}
