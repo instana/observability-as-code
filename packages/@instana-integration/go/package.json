@@ -1,5 +1,5 @@
 {
-  "name": "@instana-intergragration/go",
+  "name": "@instana-integration/go",
   "version": "1.0.2",
   "description": "The integration package is used to support Go monitoring. Once you import this package into your Instana environment, you will be able to monitor Go runtime and the applications on various aspects by checking the dashboards, alerts, etc. included in this integration package.",
   "author": "IBM",
