@@ -10,7 +10,7 @@ Below are the dashboards that are currently supported by this integration packag
 |----------------------------|-----------------------|
 | Node.js Runtime Metrics   | Instana custom dashboard that displays runtime metrics for Node.js application |
 
-### Node.js Runtime Metrics
+## Node.js Runtime Metrics
 
 ### Semantic Conventions for  Node.js Runtime Metrics
 
@@ -55,3 +55,23 @@ Below are the resource attributes that are currently supported by this integrati
 |----------------------------|-------|------------------------|
 | service.name               | string  | This attribute is used to describe the entity name.    |
 | service.instance.id        | string  | This attribute is used to describe the entity ID of the current object.  |
+
+### Installation and Usage
+
+With Instana CLI [stanctl-integration](https://github.com/instana/observability-as-code) for integration package management, you can manage the lifecycle of this package by downloading and importing into Instana.
+
+Downloading the package:
+
+```shell
+$ stanctl-integration download --package @instana-integration/nodejs
+```
+
+Importing the dashboard into Instana:
+
+```shell
+$ stanctl-integration import --package @instana-integration/nodejs \
+  --server $INSTANA_SERVER \
+  --token $API_TOKEN \
+  --set servicename=$SERVICE_NAME \
+  --set serviceinstanceid=$SERVICE_INSTANCE_ID
+```

@@ -11,3 +11,21 @@ Below are the dashboards that are currently supported by this integration packag
 | OpenTelemetry Demo - Go Runtime Metrics   | checkout | Go          |
 | OpenTelemetry Demo - Node.js Runtime Metrics   | payment | Node.js   |
 
+## Installation and Usage
+
+With Instana CLI [stanctl-integration](https://github.com/instana/observability-as-code) for integration package management, you can manage the lifecycle of this package by downloading and importing into Instana.
+
+Downloading the package:
+
+```shell
+$ stanctl-integration download --package @instana-integration/opentelemetry-demo
+```
+
+Importing the dashboard into Instana:
+
+```shell
+$ stanctl-integration import --package @instana-integration/opentelemetry-demo \
+  --server $INSTANA_SERVER \
+  --token $API_TOKEN \
+  --set serviceinstanceid=$SERVICE_INSTANCE_ID
+```
