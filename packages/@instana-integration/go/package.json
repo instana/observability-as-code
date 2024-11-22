@@ -1,6 +1,6 @@
 {
   "name": "@instana-integration/go",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "The integration package is used to support Go monitoring. Once you import this package into your Instana environment, you will be able to monitor Go runtime and the applications on various aspects by checking the dashboards, alerts, etc. included in this integration package.",
   "author": "IBM",
   "license": "MIT",
@@ -8,7 +8,7 @@
   "keywords": [
     "ibm",
     "instana",
-    "customer dashboard",
+    "custom dashboard",
     "opentelemetry",
     "go",
     "monitoring"
