@@ -47,7 +47,7 @@ Below are the resource attributes that are currently supported by this integrati
 
 ### Installation and Usage
 
-With Instana CLI [stanctl-integration](https://github.com/instana/observability-as-code) for integration package management, you can manage the lifecycle of this package by downloading and importing into Instana.
+With [Instana CLI for integration package management](https://github.com/instana/observability-as-code?tab=readme-ov-file#instana-cli-for-integration-package-management), you can manage the lifecycle of this package by downloading and importing into Instana.
 
 Downloading the package:
 
