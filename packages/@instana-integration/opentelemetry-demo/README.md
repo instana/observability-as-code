@@ -29,3 +29,6 @@ $ stanctl-integration import --package @instana-integration/opentelemetry-demo \
   --token $API_TOKEN \
   --set serviceinstanceid=$SERVICE_INSTANCE_ID
 ```
+
+- INSTANA_SERVER: This is the base URL of a tenant unit, e.g. https://test-example.instana.io. This is the same URL that is used to access the Instana user interface.
+- API_TOKEN: Requests against the Instana API require valid API tokens. An initial API token can be generated via the Instana user interface. Any additional API tokens can be generated via the API itself.
