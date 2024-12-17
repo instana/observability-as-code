@@ -11,7 +11,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: tools/integration/srs
+        working-directory: tools/integration/src
 
     steps:
       - name: Checkout repository
