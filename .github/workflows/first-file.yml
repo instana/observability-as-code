@@ -3,7 +3,7 @@ name: first try file
 on:
   push:
     branches:
-      - main
+      - test-environment
 
 jobs:
   publish:
