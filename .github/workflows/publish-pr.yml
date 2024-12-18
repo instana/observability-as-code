@@ -1,0 +1,33 @@
+name: Pipeline on PR Merge
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - test-environment
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+      - name: pull request check
+        if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
+        run: echo "Working!"
