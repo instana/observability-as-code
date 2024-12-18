@@ -2,8 +2,8 @@ name: Pipeline on PR Merge
 
 on:
   pull_request:
-    types:
-      - closed
+#    types:
+#      - closed
     branches:
       - test-environment
 
