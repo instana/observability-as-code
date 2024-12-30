@@ -1,5 +1,5 @@
 {
-  "name": "@instana/stanctl-integration",
+  "name": "@disha-148/stanctl-integration",
   "version": "1.2.0",
   "description": "The Instana CLI for integration package management",
   "main": "./dist/index.js",
