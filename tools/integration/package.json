@@ -54,5 +54,8 @@
     "@types/node": "^20.14.2",
     "@types/winston": "^2.4.4",
     "@types/yargs": "^17.0.32"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
