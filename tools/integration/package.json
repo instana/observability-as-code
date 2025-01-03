@@ -1,10 +1,11 @@
 {
   "name": "@disha-148/test-package",
-  "version": "1.2.0",
+  "version": "1.0.0",
   "description": "Testing",
+  "license": "MIT",
   "main": "./dist/index.js",
   "scripts": {
-    "debug": "ts-node  src/index.ts  export --server sample.instana.io --token **TOKEN**  --include annotation='SHARED' ",
+    "debug": "ts-node src/index.ts export --server sample.instana.io --token **TOKEN** --include annotation='SHARED'",
     "build": "tsc",
     "pkg": "pkg . --output dist/stanctl-integration"
   },
@@ -24,23 +25,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/instana/observability-as-code.git"
+    "url": "git+https://github.com/disha-148/test-package.git"
   },
   "keywords": [
-    "instana",
     "cli",
     "observability",
-    "as",
     "code",
     "integration",
     "package"
   ],
-  "author": "morningspace",
-  "license": "ISC",
+  "author": "disha-148",
   "bugs": {
-    "url": "https://github.com/instana/observability-as-code/issues"
+    "url": "https://github.com/disha-148/test-package/issues"
   },
-  "homepage": "https://github.com/instana/observability-as-code#readme",
+  "homepage": "https://github.com/disha-148/test-package#readme",
   "dependencies": {
     "@inquirer/prompts": "^5.0.7",
     "axios": "^1.7.2",
