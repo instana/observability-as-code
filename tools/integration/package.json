@@ -1,7 +1,7 @@
 {
   "name": "@disha-148/test-package",
   "version": "1.0.0",
-  "description": "Testing on npm",
+  "description": "Testing on npmjs",
   "license": "MIT",
   "main": "./dist/index.js",
   "scripts": {
