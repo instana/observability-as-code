@@ -1,6 +1,7 @@
 {
   "name": "@disha-148/observability-as-code",
-  "version": "1.0.1",
+  "version": "1.0.2",
+  "private": true,
   "workspaces": [
     "*"
   ],
