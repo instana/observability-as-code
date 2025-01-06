@@ -1,5 +1,6 @@
 {
-  "name": "root",
+  "name": "observability-as-code",
+  "version": "1.0.0",
   "workspaces": [
     "*"
   ],
