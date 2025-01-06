@@ -1,5 +1,5 @@
 {
-  "name": "observability-as-code",
+  "name": "@disha-148/observability-as-code",
   "version": "1.0.1",
   "workspaces": [
     "*"
