@@ -1,6 +1,6 @@
 {
-  "name": "@instana-integration/llm",
-  "version": "0.0.2",
+  "name": "@disha-148/llm",
+  "version": "0.0.3",
   "description": "IBM Instana integration package for large language model",
   "author": "IBM Instana",
   "license": "ISC",

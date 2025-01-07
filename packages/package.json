@@ -1,9 +1,10 @@
 {
-  "name": "root",
-  "version": "1.0.2",
+  "name": "@disha-148/packages",
+  "version": "1.0.4",
   "license": "MIT",
+  "private": "true",
   "workspaces": [
-    "*"
+    "@instana-integration/*"
   ],
   "dependencies": {
     "lerna": "^8.1.3"

@@ -1,6 +1,6 @@
 {
-  "name": "@instana-integration/opentelemetry-demo",
-  "version": "1.0.3",
+  "name": "@disha-148/opentelemetry-demo",
+  "version": "1.0.4",
   "description": "The instana integration package used to demonstrate the monitoring of the OpenTelemetry demo application.",
   "author": "IBM",
   "license": "MIT",
@@ -11,5 +11,8 @@
     "opentelemetry",
     "custom dashboard",
     "demo"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }
