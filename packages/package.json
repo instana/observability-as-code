@@ -1,5 +1,5 @@
 {
-  "name": "@disha-148/observability-as-code",
+  "name": "root",
   "version": "1.0.2",
   "license": "MIT",
   "workspaces": [
@@ -15,3 +15,5 @@
     "access": "public"
   }
 }
+
+

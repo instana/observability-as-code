@@ -1,0 +1,4 @@
+{
+    "packages": ["@instana-integration/*"],
+    "version": "independent"
+}
