@@ -1,6 +1,6 @@
 {
   "name": "@disha-148/opentelemetry-demo",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "The instana integration package used to demonstrate the monitoring of the OpenTelemetry demo application.",
   "author": "IBM",
   "license": "MIT",
