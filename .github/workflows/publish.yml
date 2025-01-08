@@ -1,13 +1,16 @@
-name: Publish to npmjs
+name: Publish to npmjs on PR merge
 
 on:
-  push:
+  pull_request:
+    types:
+      - closed
     branches:
       - main
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
 
     defaults:
       run:
@@ -20,7 +23,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '18' 
+          node-version: '18'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
@@ -28,7 +31,7 @@ jobs:
 
       - name: Configure npm for lerna
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
-      
+
       - name: Set up Git user
         run: |
           git config --global user.name "github-actions[bot]"
@@ -38,7 +41,7 @@ jobs:
       #   run: npx lerna bootstrap
 
       # - name: Run testsnpx lerna bootstrap
-      #   run: npx lerna run test 
+      #   run: npx lerna run test
 
       - name: Publish packages
         run: npx lerna publish from-package --yes
