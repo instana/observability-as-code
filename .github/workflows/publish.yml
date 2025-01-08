@@ -1,4 +1,4 @@
-name: Publish to npmjs
+name: Publish to npmjs on PR merge
 
 on:
   pull_request:
