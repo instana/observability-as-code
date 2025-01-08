@@ -37,12 +37,6 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      # - name: Bootstrap packages
-      #   run: npx lerna bootstrap
-
-      # - name: Run testsnpx lerna bootstrap
-      #   run: npx lerna run test
-
       - name: Publish packages
         run: npx lerna publish from-package --yes
         env:
