@@ -1,0 +1,625 @@
+{
+  "id": "68E3r78RSBeNxi8JuGY_Yw",
+  "title": "Python Monitoring",
+  "accessRules": [
+    {
+      "accessType": "READ",
+      "relationType": "GLOBAL",
+      "relatedId": "65f8b4cb26bf170001cd42bf"
+    }
+  ],
+  "widgets": [
+    {
+      "id": "HkIWcDQv_ksHuNBY",
+      "title": "Thread",
+      "width": 6,
+      "height": 13,
+      "x": 0,
+      "y": 14,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "System Thread Count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "openTelemetry",
+              "metricPath": [
+                "Others",
+                "OpenTelemetry SDK"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.gauges.opentelemetry.instrumentation.system_metrics/system.thread_count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Other"
+                    },
+                    {
+                      "label": "otel.attribute.service.name"
+                    }
+                  ],
+                  "name": "otel.attribute.service.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "otel.attribute.service.name",
+                "type": "TAG_FILTER",
+                "value": "{{service name}}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "OpenTelemetry gauge opentelemetry.instrumentation.system_metrics/system.thread_count",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Python Runtime Thread Count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "openTelemetry",
+              "metricPath": [
+                "Others",
+                "OpenTelemetry SDK"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.sums.opentelemetry.instrumentation.system_metrics/process.runtime.cpython.thread_count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Other"
+                    },
+                    {
+                      "label": "otel.attribute.service.name"
+                    }
+                  ],
+                  "name": "otel.attribute.service.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "otel.attribute.service.name",
+                "type": "TAG_FILTER",
+                "value": "{{service name}}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "OpenTelemetry sums opentelemetry.instrumentation.system_metrics/process.runtime.cpython.thread_count",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "Sb3pQhZo8JTOE6pH",
+      "title": "GC Count",
+      "width": 6,
+      "height": 14,
+      "x": 0,
+      "y": 0,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "gc_count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "openTelemetry",
+              "metricPath": [
+                "Others",
+                "OpenTelemetry SDK"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.sums.opentelemetry.instrumentation.system_metrics/process.runtime.cpython.gc_count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Other"
+                    },
+                    {
+                      "label": "otel.attribute.service.name"
+                    }
+                  ],
+                  "name": "otel.attribute.service.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "otel.attribute.service.name",
+                "type": "TAG_FILTER",
+                "value": "{{service name}}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "OpenTelemetry sums opentelemetry.instrumentation.system_metrics/process.runtime.cpython.gc_count",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "jmxXuYJQzbfvKHVA",
+      "title": "CPU Utilization",
+      "width": 6,
+      "height": 13,
+      "x": 6,
+      "y": 14,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "System CPU Utilization",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "openTelemetry",
+              "metricPath": [
+                "Others",
+                "OpenTelemetry SDK"
+              ],
+              "formatter": "number.detailed",
+              "unit": "percentage100",
+              "metric": "metrics.gauges.opentelemetry.instrumentation.system_metrics/system.cpu.utilization",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Other"
+                    },
+                    {
+                      "label": "otel.attribute.service.name"
+                    }
+                  ],
+                  "name": "otel.attribute.service.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "otel.attribute.service.name",
+                "type": "TAG_FILTER",
+                "value": "{{service name}}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "OpenTelemetry gauge opentelemetry.instrumentation.system_metrics/system.cpu.utilization",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Python CPU Utilization",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "openTelemetry",
+              "metricPath": [
+                "Others",
+                "OpenTelemetry SDK"
+              ],
+              "formatter": "number.detailed",
+              "unit": "percentage100",
+              "metric": "metrics.gauges.opentelemetry.instrumentation.system_metrics/process.runtime.cpython.cpu.utilization",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Other"
+                    },
+                    {
+                      "label": "otel.attribute.service.name"
+                    }
+                  ],
+                  "name": "otel.attribute.service.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "otel.attribute.service.name",
+                "type": "TAG_FILTER",
+                "value": "{{service name}}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "OpenTelemetry gauge opentelemetry.instrumentation.system_metrics/process.runtime.cpython.cpu.utilization",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "6PhFrJRtRCfCrCZQ",
+      "title": "Context Switching",
+      "width": 6,
+      "height": 13,
+      "x": 0,
+      "y": 27,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "INCREASE",
+              "label": "Context Switches",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "openTelemetry",
+              "metricPath": [
+                "Others",
+                "OpenTelemetry SDK"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.sums.opentelemetry.instrumentation.system_metrics/process.runtime.cpython.context_switches",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Other"
+                    },
+                    {
+                      "label": "otel.attribute.service.name"
+                    }
+                  ],
+                  "name": "otel.attribute.service.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "otel.attribute.service.name",
+                "type": "TAG_FILTER",
+                "value": "{{service name}}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "OpenTelemetry sums opentelemetry.instrumentation.system_metrics/process.runtime.cpython.context_switches",
+              "crossSeriesAggregation": "SUM"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "1eeFd-jvxxe3MV0v",
+      "title": "Memory",
+      "width": 6,
+      "height": 14,
+      "x": 6,
+      "y": 0,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "bytes.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "System Memory Usage",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "openTelemetry",
+              "metricPath": [
+                "Others",
+                "OpenTelemetry SDK"
+              ],
+              "formatter": "number.detailed",
+              "unit": "byte",
+              "metric": "metrics.gauges.opentelemetry.instrumentation.system_metrics/system.memory.usage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Other"
+                    },
+                    {
+                      "label": "otel.attribute.service.name"
+                    }
+                  ],
+                  "name": "otel.attribute.service.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "otel.attribute.service.name",
+                "type": "TAG_FILTER",
+                "value": "{{service name}}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "OpenTelemetry gauge opentelemetry.instrumentation.system_metrics/system.memory.usage",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Python Memory",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "openTelemetry",
+              "metricPath": [
+                "Others",
+                "OpenTelemetry SDK"
+              ],
+              "formatter": "number.detailed",
+              "unit": "bits",
+              "metric": "metrics.sums.opentelemetry.instrumentation.system_metrics/process.runtime.cpython.memory",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Other"
+                    },
+                    {
+                      "label": "otel.attribute.service.name"
+                    }
+                  ],
+                  "name": "otel.attribute.service.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "otel.attribute.service.name",
+                "type": "TAG_FILTER",
+                "value": "{{service name}}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "OpenTelemetry sums opentelemetry.instrumentation.system_metrics/process.runtime.cpython.memory",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "c08TLE4BhpLtnvUv",
+      "title": "CPU Time",
+      "width": 6,
+      "height": 13,
+      "x": 6,
+      "y": 27,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "millis.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "cLightBlue",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "System CPU Time",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "openTelemetry",
+              "metricPath": [
+                "Others",
+                "OpenTelemetry SDK"
+              ],
+              "formatter": "number.detailed",
+              "unit": "milisecond",
+              "metric": "metrics.sums.opentelemetry.instrumentation.system_metrics/system.cpu.time",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Other"
+                    },
+                    {
+                      "label": "otel.attribute.service.name"
+                    }
+                  ],
+                  "name": "otel.attribute.service.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "otel.attribute.service.name",
+                "type": "TAG_FILTER",
+                "value": "{{service name}}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "OpenTelemetry sums opentelemetry.instrumentation.system_metrics/system.cpu.time",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "cTeal",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Python CPU Time",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "openTelemetry",
+              "metricPath": [
+                "Others",
+                "OpenTelemetry SDK"
+              ],
+              "formatter": "number.detailed",
+              "unit": "milisecond",
+              "metric": "metrics.sums.opentelemetry.instrumentation.system_metrics/process.runtime.cpython.cpu_time",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Other"
+                    },
+                    {
+                      "label": "otel.attribute.service.name"
+                    }
+                  ],
+                  "name": "otel.attribute.service.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "otel.attribute.service.name",
+                "type": "TAG_FILTER",
+                "value": "{{service name}}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "OpenTelemetry sums opentelemetry.instrumentation.system_metrics/process.runtime.cpython.cpu_time",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    }
+  ],
+  "ownerId": "65f8b4cb26bf170001cd42bf",
+  "writable": true
+}
