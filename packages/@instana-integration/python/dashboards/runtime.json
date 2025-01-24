@@ -3,9 +3,9 @@
   "title": "Python Monitoring",
   "accessRules": [
     {
-      "accessType": "READ",
+      "accessType": "READ_WRITE",
       "relationType": "GLOBAL",
-      "relatedId": "65f8b4cb26bf170001cd42bf"
+      "relatedId": ""
     }
   ],
   "widgets": [
