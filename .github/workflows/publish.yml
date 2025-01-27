@@ -38,6 +38,6 @@ jobs:
             git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Publish packages
-        run: npx lerna publish from-package --yes --ignore @instana-integration/llm
+        run: npx lerna publish from-package --yes --ignore-changes @instana-integration/llm
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
