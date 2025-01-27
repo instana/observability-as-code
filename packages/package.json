@@ -3,7 +3,7 @@
   "license": "MIT",
   "private": "true",
   "workspaces": [
-    "@instana-integration/*"
+    "*"
   ],
   "dependencies": {
     "lerna": "^8.1.3"
