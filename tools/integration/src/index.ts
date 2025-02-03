@@ -319,6 +319,13 @@ async function handleLint(argv: any) {
 	if (!readmeContent) {
         console.error('README.md file content is empty or missing.');
         missingFiles.push('README.md');
+    } else {
+        try {
+            validateReadmeContent(readmeContent, packageData.name);
+        } catch (error) {
+            console.error(error);
+            return;
+        }
     }
 	if (missingFiles.length > 0) {
     	console.error(`Missing required files or folders: ${missingFiles.join(', ')}`);
@@ -358,8 +365,8 @@ async function validatePackageJson(packageData: any): Promise<void> {
     // Fetch the currently published version from npm
     try{
 		const response = await axios.get(`https://registry.npmjs.org/${packageData.name}`);
-
-
+		const publishedVersion = response.data['dist-tags']?.latest;
+		
 	}
 	catch (error) {
 		throw new Error(`Failed to fetch the published version for package.`);
@@ -424,6 +431,25 @@ function validateAccessRulesInDashboards(dashboardsPath: string): void {
 		throw new Error('Access rule validation failed for one or more files.');
     }
 }
+
+// Helper function to validate Readme content
+function validateReadmeContent(readmeContent: string, packageName: string): void {
+    const requiredSections = [
+        packageName,
+        'Dashboards',
+        'Go Runtime Metrics',
+        'Semantic Conventions for Go Runtime Metrics'
+    ];
+
+    const missingSections = requiredSections.filter(section => !readmeContent.includes(section));
+
+    if (missingSections.length > 0) {
+        throw new Error(`README.md is missing required sections: ${missingSections.join(', ')}`);
+    }
+
+    console.log('README.md contains all required sections.');
+}
+
 
 // Function to handle download logic
 async function handleDownload(argv: any) {
