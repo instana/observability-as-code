@@ -112,14 +112,14 @@ const readPackageJson = (filePath: string) => {
 const readReadmeFile = (directoryPath: string) : string | null => {
 	const readmeFilePath = path.join(directoryPath, 'README.md');
 	try {
-		if(fs.existsSync(readmeFilePath)){
-			return fs.readFileSync(readmeFilePath, 'utf8');
-		} else {
-			logger.error('README.md is missing in the directory: ${directoryPath}');
-            return null;
-		}
+	    if(fs.existsSync(readmeFilePath)){
+		return fs.readFileSync(readmeFilePath, 'utf8');
+	    } else {
+		logger.error('README.md is missing in the directory: ${directoryPath}');
+            	return null;
+	    }
 	} catch (error){
-		logger.error('Failed to read README.md:');
+	    logger.error('Failed to read README.md:');
         return null;
 	}
 };
