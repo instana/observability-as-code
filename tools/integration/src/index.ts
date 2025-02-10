@@ -2,7 +2,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import https from 'https';
 import yargs from 'yargs';
 import { globSync } from 'glob';
@@ -11,6 +11,7 @@ import logger from './logger'; // Import the logger
 import { exec, spawn } from 'child_process';
 import { promisify } from 'util';
 import { input, checkbox, password, Separator } from '@inquirer/prompts';
+import semver from 'semver';
 
 const execAsync = promisify(exec);
 
@@ -295,6 +296,13 @@ yargs
                 type: 'string',
                 demandOption: false
             })
+			.option('debug', {
+            	alias: 'd',
+            	describe: 'Enable debug mode to show detailed logs',
+                type: 'boolean',
+                demandOption: false,
+                default: false
+            });
     }, handleLint)
     .demandCommand(1, 'You need at least one command before moving on')
     .help()
@@ -304,152 +312,176 @@ yargs
 // Function to handle lint logic
 async function handleLint(argv: any) {
     const currentDirectory = process.cwd();
-    console.log(`Current working directory: ${currentDirectory}`);
+    const errors: string[] = [];
+    const warnings: string[] = [];
+    const successMessages: string[] = [];
 
     const readmeContent = readReadmeFile(currentDirectory);
     const packageData = readPackageJson(currentDirectory);
     const dashboardsPath = path.join(currentDirectory, 'dashboards');
 
-    // Check if required files exist
-    const missingFiles: string[] = [];
-    if (!packageData) missingFiles.push('package.json');
-    if (!fs.existsSync(dashboardsPath) || !fs.statSync(dashboardsPath).isDirectory()) {
-    	missingFiles.push('dashboards folder');
-    }
-	if (!readmeContent) {
-        console.error('README.md file content is empty or missing.');
-        missingFiles.push('README.md');
-    } else {
-        try {
-            validateReadmeContent(readmeContent, packageData.name);
+    // Check README file
+    if (readmeContent) {
+		try {
+			validateReadmeContent(readmeContent, packageData.name, errors, warnings, successMessages);
         } catch (error) {
-            console.error(error);
-            return;
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            errors.push(errorMessage);
+        }
+    } else {
+        errors.push('README.md is missing or empty.');
+    }
+    try {
+        await validatePackageJson(packageData, errors, warnings, successMessages);
+        validateDashboardFiles(dashboardsPath, errors, warnings, successMessages);
+    } catch (error) {
+        errors.push(`Linting failed: ${error}`);
+    }
+
+    // Check if debug is enabled
+    const isDebug = argv.debug;
+
+    if (isDebug) {
+        // Output success messages if debug mode is enabled
+        successMessages.forEach((message) => {
+            logger.info(message);
+        });
+
+        if (warnings.length > 0) {
+            logger.warn(`Warnings encountered during linting:`);
+            warnings.forEach((warning) => {
+                logger.warn(warning);
+            });
+        }
+
+        if (errors.length > 0) {
+            logger.error(`Linting failed with the following errors:`);
+            errors.forEach((error) => {
+                logger.error(error);
+            });
         }
     }
-	if (missingFiles.length > 0) {
-    	console.error(`Missing required files or folders: ${missingFiles.join(', ')}`);
-        return;
-    }
-	console.log('All required files and folders exist.');
 
-    try {
-        // Validate `package.json` content
-        await validatePackageJson(packageData);
-
-        // Validate access rules in JSON files within the `dashboards` folder
-        validateAccessRulesInDashboards(dashboardsPath);
-
-        console.log('Linting completed successfully.');
-    } catch (error) {
-        console.error(`Linting failed:`, error);
+    if (errors.length > 0) {
+        logger.error(`Linting failed.`);
+        process.exit(-1);
+    } else {
+        if (!isDebug) {
+            logger.info('Linting completed successfully.');
+        }
+        process.exit(0);
     }
 }
 
-// Function to validate `package.json`
-async function validatePackageJson(packageData: any): Promise<void> {
+// Helper function to validate `package.json`
+async function validatePackageJson(packageData: any, errors: string[], warnings: string[], successMessages: string[]): Promise<void> {
     // Validate `name`
     const namePattern = /^@instana-integration\/[a-zA-Z0-9-_]+$/;
     if (!namePattern.test(packageData.name)) {
-        throw new Error(`Invalid package name "${packageData.name}". The name must start with "@instana-integration/" followed by the package name.`);
+        warnings.push(`Warning: Package name "${packageData.name}" does not align with the IBM package naming convention.`);
+    } else {
+        successMessages.push('Field "name" is valid.');
     }
-    console.log('Package name is valid.');
 
     // Validate `version`
     const versionPattern = /^\d+\.\d+\.\d+$/;
     if (!versionPattern.test(packageData.version)) {
-        throw new Error(`Invalid version "${packageData.version}". The version must follow the format "x.x.x" (e.g., 1.0.0).`);
+        errors.push(`Invalid version "${packageData.version}". The version must follow the format "x.x.x".`);
+    } else {
+        successMessages.push('Field "version" format is valid.');
     }
-    console.log('Version is valid.');
 
-    // Fetch the currently published version from npm
-    try{
-		const response = await axios.get(`https://registry.npmjs.org/${packageData.name}`);
-		const publishedVersion = response.data['dist-tags']?.latest;
-		
-	}
-	catch (error) {
-		throw new Error(`Failed to fetch the published version for package.`);
-	}
+    // Fetch the currently published version from npm and compare
+    try {
+        const response = await axios.get(`https://registry.npmjs.org/${packageData.name}`);
+        const publishedVersion = response.data['dist-tags']?.latest || '1.0.0';
 
-    // Check for required fields
-    const requiredFields = ['name', 'version', 'author', 'license'];
+        if (semver.eq(packageData.version, publishedVersion)) {
+            errors.push(`Package version "${packageData.version}" is the same as the currently published version "${publishedVersion}". It must be greater than the currently published version`);
+        } else if (semver.lt(packageData.version, publishedVersion)) {
+            errors.push(`Invalid version "${packageData.version}". It must be greater than the currently published version "${publishedVersion}".`);
+        } else {
+            successMessages.push('Package version is valid and greater than the currently published version.');
+        }
+    } catch (error) {
+        if ((error as AxiosError).response?.status === 404) {
+			if (packageData.version === '1.0.0') {
+				warnings.push('Package not found on npmjs. It is a new package and the version is valid.');
+			} else {
+				errors.push('Package not found on npmjs.');
+            }
+        } else {
+            errors.push(error instanceof Error ? error.message : String(error));
+        }
+    }
+
+    // Check for required fields and description
+    const requiredFields = ['name', 'version', 'author', 'license', 'description'];
     for (const field of requiredFields) {
         if (!packageData[field]) {
-            throw new Error(`Missing required field "${field}" in package.json.`);
+            if (field === 'description') {
+                warnings.push('Warning: The "description" field is missing. Adding a description is recommended.');
+            } else {
+                errors.push(`Missing required field "${field}" in package.json.`);
+            }
+        } else {
+            successMessages.push(`Field "${field}" is present.`);
         }
-        console.log(`Required field "${field}" is present.`);
-    }
-
-    // Check for description
-    if (!packageData.description) {
-        console.warn('Warning: The "description" field is missing. Adding a description is recommended.');
-    } else {
-        console.log('Description is present.');
     }
 }
 
-// Helper function to validate access rules
-function validateAccessRulesInDashboards(dashboardsPath: string): void {
+// Helper function to validate dashboard files
+function validateDashboardFiles(dashboardsPath: string, errors: string[], warnings: string[], successMessages: string[]): void {
+    const files = fs.readdirSync(dashboardsPath);
+    const jsonFiles = files.filter(file => file.endsWith('.json'));
 
-	const files = fs.readdirSync(dashboardsPath);
-	const jsonFiles = files.filter(file => file.endsWith('.json'));
+    if (jsonFiles.length === 0) {
+        warnings.push('No JSON files found in the dashboards folder.');
+        return;
+    }
 
-	if(jsonFiles.length === 0){
-		throw new Error('No JSON files found in the dashboards folder.');
-	}
-
-	let hasErrors = false;
-
-	jsonFiles.forEach(file => {
-		const filePath = path.join(dashboardsPath, file);
-		console.log(`Validating access rules in file: ${file}`);
-		try{
-			const fileContent = fs.readFileSync(filePath, 'utf-8');
-			const dashboard = JSON.parse(fileContent);
-			const globalAccessRule = {
-            	accessType: 'READ_WRITE',
+    jsonFiles.forEach(file => {
+        const filePath = path.join(dashboardsPath, file);
+        try {
+            const fileContent = fs.readFileSync(filePath, 'utf-8');
+            const dashboard = JSON.parse(fileContent);
+            const globalAccessRule = {
+                accessType: 'READ_WRITE',
                 relationType: 'GLOBAL',
                 relatedId: ''
             };
             const globalAccessRuleExists = dashboard.accessRules?.some(
-            	(rule: AccessRule) =>
-                	rule.accessType === globalAccessRule.accessType &&
+                (rule: AccessRule) =>
+                    rule.accessType === globalAccessRule.accessType &&
                     rule.relationType === globalAccessRule.relationType
             );
             if (!globalAccessRuleExists) {
-            	throw new Error('Global access rule is missing in the dashboard.');
+                errors.push(`Global access rule is missing in the dashboard file: ${file}.`);
+            } else {
+                successMessages.push(`Global access rule is correctly defined in the dashboard file: ${file}.`);
             }
-			console.log(`Global access rule is correctly defined in file: ${file}`);
-            // console.log('Global access rule is correctly defined in the dashboard.');
-		} catch (error) {
-        	hasErrors = true;
-            console.error(`Error validating file ${file}:`, error);
+        } catch (error) {
+            errors.push(`Error validating file ${file}: ${error instanceof Error ? error.message : String(error)}`);
         }
-	});
-	if (hasErrors) {
-		throw new Error('Access rule validation failed for one or more files.');
-    }
+    });
 }
 
-// Helper function to validate Readme content
-function validateReadmeContent(readmeContent: string, packageName: string): void {
+// Helper function to validate README content
+function validateReadmeContent(readmeContent: string, packageName: string, errors: string[], warnings: string[], successMessages: string[]): void {
     const requiredSections = [
         packageName,
         'Dashboards',
         'Go Runtime Metrics',
         'Semantic Conventions for Go Runtime Metrics'
     ];
-
     const missingSections = requiredSections.filter(section => !readmeContent.includes(section));
 
     if (missingSections.length > 0) {
-        throw new Error(`README.md is missing required sections: ${missingSections.join(', ')}`);
+        errors.push(`README.md is missing required sections: ${missingSections.join(', ')}`);
+    } else {
+        successMessages.push('README.md contains all required sections.');
     }
-
-    console.log('README.md contains all required sections.');
 }
-
 
 // Function to handle download logic
 async function handleDownload(argv: any) {
