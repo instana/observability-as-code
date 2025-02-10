@@ -342,18 +342,15 @@ async function handleLint(argv: any) {
     const isDebug = argv.debug;
 
     if (isDebug) {
-        // Output success messages if debug mode is enabled
-        successMessages.forEach((message) => {
+	successMessages.forEach((message) => {
             logger.info(message);
         });
-
         if (warnings.length > 0) {
             logger.warn(`Warnings encountered during linting:`);
             warnings.forEach((warning) => {
                 logger.warn(warning);
             });
         }
-
         if (errors.length > 0) {
             logger.error(`Linting failed with the following errors:`);
             errors.forEach((error) => {
