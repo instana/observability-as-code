@@ -322,8 +322,8 @@ async function handleLint(argv: any) {
 
     // Check README file
     if (readmeContent) {
-		try {
-			validateReadmeContent(readmeContent, packageData.name, errors, warnings, successMessages);
+	try {
+	    validateReadmeContent(readmeContent, packageData.name, errors, warnings, successMessages);
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : String(error);
             errors.push(errorMessage);
@@ -405,10 +405,10 @@ async function validatePackageJson(packageData: any, errors: string[], warnings:
         }
     } catch (error) {
         if ((error as AxiosError).response?.status === 404) {
-			if (packageData.version === '1.0.0') {
-				warnings.push('Package not found on npmjs. It is a new package and the version is valid.');
-			} else {
-				errors.push('Package not found on npmjs.');
+	    if (packageData.version === '1.0.0') {
+	        warnings.push('Package not found on npmjs. It is a new package and the version is valid.');
+	    } else {
+	        errors.push('Package not found on npmjs.');
             }
         } else {
             errors.push(error instanceof Error ? error.message : String(error));
