@@ -110,18 +110,18 @@ const readPackageJson = (filePath: string) => {
 
 // Helper function to check and read README.md
 const readReadmeFile = (directoryPath: string) : string | null => {
-	const readmeFilePath = path.join(directoryPath, 'README.md');
-	try {
-	    if(fs.existsSync(readmeFilePath)){
-		return fs.readFileSync(readmeFilePath, 'utf8');
-	    } else {
-		logger.error('README.md is missing in the directory: ${directoryPath}');
-            	return null;
-	    }
-	} catch (error){
-	    logger.error('Failed to read README.md:');
-        return null;
+    const readmeFilePath = path.join(directoryPath, 'README.md');
+    try {
+        if(fs.existsSync(readmeFilePath)){
+	    return fs.readFileSync(readmeFilePath, 'utf8');
+	} else {
+	    logger.error('README.md is missing in the directory: ${directoryPath}');
+            return null;
 	}
+    } catch (error){
+        logger.error('Failed to read README.md:');
+        return null;
+    }
 };
 
 async function isUserLoggedIn() {
@@ -290,13 +290,13 @@ yargs
     }, handlePublish)
 	.command('lint', 'provides linting for package', (yargs) => {
     	return yargs
-        	.option('path', {
-        		alias: 'p',
+            .option('path', {
+        	alias: 'p',
                 describe: 'path of the package',
                 type: 'string',
                 demandOption: false
             })
-			.option('debug', {
+	    .option('debug', {
             	alias: 'd',
             	describe: 'Enable debug mode to show detailed logs',
                 type: 'boolean',
