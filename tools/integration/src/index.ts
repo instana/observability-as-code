@@ -292,7 +292,7 @@ yargs
     	return yargs
             .option('path', {
         	alias: 'p',
-                describe: 'path of the package',
+                describe: 'The path to the package',
                 type: 'string',
                 demandOption: false
             })
