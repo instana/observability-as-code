@@ -119,7 +119,7 @@ const readReadmeFile = (directoryPath: string) : string | null => {
             return null;
 	}
     } catch (error){
-        logger.error('Failed to read README.md:');
+        logger.error('Failed to read README.md.');
         return null;
     }
 };
