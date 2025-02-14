@@ -10,9 +10,9 @@ Below are the dashboards that are currently supported by this integration packag
 |----------------------------|-----------------------|
 | Node.js Runtime Metrics   | Instana custom dashboard that displays runtime metrics for Node.js application |
 
-## Node.js Runtime Metrics
+## Metrics
 
-### Semantic Conventions for  Node.js Runtime Metrics
+### Semantic Conventions
 
 The Node.js runtime metrics are obtained by OpenTelemetry auto-instrumentation:
 
