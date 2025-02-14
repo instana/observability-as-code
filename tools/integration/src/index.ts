@@ -290,14 +290,14 @@ yargs
     }, handlePublish)
     .command('lint', 'provides linting for package', (yargs) => {
     	return yargs
-        	.option('path', {
-				alias: 'p',
+            .option('path', {
+		alias: 'p',
                 describe: 'The path to the package',
                 type: 'string',
                 demandOption: false
             })
-			.option('debug', {
-				alias: 'd',
+	    .option('debug', {
+		alias: 'd',
                 describe: 'Enable debug mode',
                 type: 'boolean',
                 default: false
