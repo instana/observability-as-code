@@ -10,9 +10,9 @@ Below are the dashboards that are currently supported by this integration packag
 |----------------------------|-----------------------|
 | Python Runtime Metrics   | Instana custom dashboard that displays runtime metrics for Python application |
 
-## Python Runtime Metrics
+## Metrics
 
-### Semantic Conventions for Python Runtime Metrics
+### Semantic Conventions
 
 The Python runtime metrics are obtained by OpenTelemetry auto-instrumentation:
 
