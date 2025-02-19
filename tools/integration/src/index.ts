@@ -297,10 +297,9 @@ yargs
                 demandOption: false
             })
 	    .option('debug', {
-            	alias: 'd',
-            	describe: 'Enable debug mode to show detailed logs',
+		alias: 'd',
+                describe: 'Enable debug mode',
                 type: 'boolean',
-                demandOption: false,
                 default: false
             });
     }, handleLint)
@@ -391,25 +390,17 @@ async function validatePackageJson(packageData: any, errors: string[], warnings:
     // Fetch the currently published version from npm and compare
     try {
         const response = await axios.get(`https://registry.npmjs.org/${packageData.name}`);
-        const publishedVersion = response.data['dist-tags']?.latest || '1.0.0';
+        const publishedVersion = response.data['dist-tags']?.latest;
 
         if (semver.eq(packageData.version, publishedVersion)) {
-            errors.push(`Package version "${packageData.version}" is the same as the currently published version "${publishedVersion}". It must be greater than the currently published version`);
+            errors.push(`Package version "${packageData.version}" is the same as the currently published version "${publishedVersion}". It must be greater than the currently published version.`);
         } else if (semver.lt(packageData.version, publishedVersion)) {
             errors.push(`Invalid version "${packageData.version}". It must be greater than the currently published version "${publishedVersion}".`);
         } else {
             successMessages.push('Package version is valid and greater than the currently published version.');
         }
     } catch (error) {
-        if ((error as AxiosError).response?.status === 404) {
-	    if (packageData.version === '1.0.0') {
-	        warnings.push('Package not found on npmjs. It is a new package and the version is valid.');
-	    } else {
-	        errors.push('Package not found on npmjs.');
-            }
-        } else {
-            errors.push(error instanceof Error ? error.message : String(error));
-        }
+        errors.push(error instanceof Error ? error.message : String(error));
     }
 
     // Check for required fields and description
@@ -468,8 +459,8 @@ function validateReadmeContent(readmeContent: string, packageName: string, error
     const requiredSections = [
         packageName,
         'Dashboards',
-        'Go Runtime Metrics',
-        'Semantic Conventions for Go Runtime Metrics'
+        'Metrics',
+        'Semantic Conventions'
     ];
     const missingSections = requiredSections.filter(section => !readmeContent.includes(section));
 
