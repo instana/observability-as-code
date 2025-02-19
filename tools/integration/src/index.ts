@@ -291,13 +291,13 @@ yargs
     .command('lint', 'provides linting for package', (yargs) => {
     	return yargs
             .option('path', {
-		alias: 'p',
+			    alias: 'p',
                 describe: 'The path to the package',
                 type: 'string',
                 demandOption: false
             })
 	    .option('debug', {
-		alias: 'd',
+			    alias: 'd',
                 describe: 'Enable debug mode',
                 type: 'boolean',
                 default: false
