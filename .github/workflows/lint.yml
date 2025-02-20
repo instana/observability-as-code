@@ -33,15 +33,17 @@ jobs:
       - name: Get changed files
         id: changed-files
         run: |
+          # Fetch both the main and current branch (test-environment)
           git fetch origin main
-          CHANGED_FILES=$(git diff --name-only origin/main...${{ github.sha }} | grep '^packages/@instana-integration/')
+
+          # Get the list of changed files between the main branch and the current branch (test-environment)
+          CHANGED_FILES=$(git diff --name-only origin/main...HEAD | grep '^packages/@instana-integration/')
           echo "Changed files: $CHANGED_FILES"
           if [ -z "$CHANGED_FILES" ]; then
             echo "No files changed."
           else
             echo "changed-files=$CHANGED_FILES" >> $GITHUB_ENV
           fi
-      
 
       - name: Lint each package
         run: |
