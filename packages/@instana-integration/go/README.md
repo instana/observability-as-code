@@ -10,9 +10,9 @@ Below are the dashboards that are currently supported by this integration packag
 |----------------------------|-----------------------|
 | Go Runtime Metrics   | Instana custom dashboard that displays runtime metrics for Go application |
 
-## Go Runtime Metrics
+## Metrics
 
-### Semantic Conventions for Go Runtime Metrics
+### Semantic Conventions
 
 The Go runtime metrics are obtained by OpenTelemetry auto-instrumentation:
 
