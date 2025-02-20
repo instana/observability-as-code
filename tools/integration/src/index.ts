@@ -296,6 +296,12 @@ yargs
                 type: 'string',
                 demandOption: false
             })
+	    .option('strict-mode', {
+                alias: 's',
+                describe: 'Restricts the validations',
+                type: 'boolean',
+                demandOption: false
+            })
 	    .option('debug', {
 		alias: 'd',
                 describe: 'Enable debug mode',
@@ -331,7 +337,8 @@ async function handleLint(argv: any) {
         errors.push('README.md is missing or empty.');
     }
     try {
-        await validatePackageJson(packageData, errors, warnings, successMessages);
+	const strictMode = argv['strict-mode'];
+        await validatePackageJson(packageData, errors, warnings, successMessages, strictMode);
         validateDashboardFiles(dashboardsPath, errors, warnings, successMessages);
     } catch (error) {
         errors.push(`Linting failed: ${error}`);
@@ -370,11 +377,16 @@ async function handleLint(argv: any) {
 }
 
 // Helper function to validate `package.json`
-async function validatePackageJson(packageData: any, errors: string[], warnings: string[], successMessages: string[]): Promise<void> {
+async function validatePackageJson(packageData: any, errors: string[], warnings: string[], successMessages: string[], strictMode: boolean): Promise<void> {
     // Validate `name`
     const namePattern = /^@instana-integration\/[a-zA-Z0-9-_]+$/;
     if (!namePattern.test(packageData.name)) {
-        warnings.push(`Warning: Package name "${packageData.name}" does not align with the IBM package naming convention.`);
+        const warningMessage = `Warning: Package name "${packageData.name}" does not align with the IBM package naming convention.`;
+	if(strictMode) {
+	    errors.push(warningMessage);
+	} else {
+	    warnings.push(warningMessage);
+	}
     } else {
         successMessages.push('Field "name" is valid.');
     }
