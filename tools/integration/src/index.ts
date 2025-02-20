@@ -296,9 +296,9 @@ yargs
                 type: 'string',
                 demandOption: false
             })
-			.option('strict-mode', {
+	    .option('strict-mode', {
                 alias: 's',
-                describe: 'Restricted validations',
+                describe: 'Restricts the validations',
                 type: 'boolean',
                 demandOption: false
             })
@@ -337,7 +337,7 @@ async function handleLint(argv: any) {
         errors.push('README.md is missing or empty.');
     }
     try {
-		const strictMode = argv['strict-mode'];
+	const strictMode = argv['strict-mode'];
         await validatePackageJson(packageData, errors, warnings, successMessages, strictMode);
         validateDashboardFiles(dashboardsPath, errors, warnings, successMessages);
     } catch (error) {
@@ -381,12 +381,12 @@ async function validatePackageJson(packageData: any, errors: string[], warnings:
     // Validate `name`
     const namePattern = /^@instana-integration\/[a-zA-Z0-9-_]+$/;
     if (!namePattern.test(packageData.name)) {
-		const warningMessage = `Warning: Package name "${packageData.name}" does not align with the IBM package naming convention.`;
-		if(strictMode) {
-			errors.push(warningMessage);
-		} else {
-			warnings.push(warningMessage);
-		}
+        const warningMessage = `Warning: Package name "${packageData.name}" does not align with the IBM package naming convention.`;
+	if(strictMode) {
+	    errors.push(warningMessage);
+	} else {
+	    warnings.push(warningMessage);
+	}
     } else {
         successMessages.push('Field "name" is valid.');
     }
