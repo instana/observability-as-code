@@ -19,10 +19,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: '18'
           registry-url: 'https://registry.npmjs.org'
@@ -36,18 +36,22 @@ jobs:
           git fetch origin main
           CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^packages/@instana-integration/')
           echo "Changed files: $CHANGED_FILES"
-          echo "::set-output name=changed-files::$CHANGED_FILES"
+          echo "changed-files=$CHANGED_FILES" >> $GITHUB_ENV
 
       - name: Lint each package
         run: |
-          CHANGED_FILES="${{ steps.changed-files.outputs.changed-files }}"
+          CHANGED_FILES="${{ env.changed-files }}"
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "No changed files to lint."
+            exit 0
+          fi
           for file in $CHANGED_FILES; do
             PACKAGE_DIR=$(dirname "$file")
             if [ -d "$PACKAGE_DIR" ]; then
               echo "Linting package $PACKAGE_DIR"
               cd "$PACKAGE_DIR"
               if stanctl-integration lint; then
-                echo "Linting passed for $PACKAGE_DIR"
+                echo "Linting successful for $PACKAGE_DIR"
               else
                 echo "Linting failed for $PACKAGE_DIR"
               fi
