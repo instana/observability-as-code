@@ -47,7 +47,7 @@ Below are the Node.js runtime metrics that are currently supported by this integ
 | eventloop.delay.stddev  | Event loop standard deviation delay. | s |
 
 
-### Resource Attributes for Node.js Application
+### Resource Attributes
 
 Below are the resource attributes that are currently supported by this integration package.
 

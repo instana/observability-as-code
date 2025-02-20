@@ -115,7 +115,7 @@ const readReadmeFile = (directoryPath: string) : string | null => {
         if(fs.existsSync(readmeFilePath)){
 	    return fs.readFileSync(readmeFilePath, 'utf8');
 	} else {
-	    logger.error('README.md is missing in the directory: ${directoryPath}');
+	    logger.error(`README.md is missing in the directory: ${directoryPath}`);
             return null;
 	}
     } catch (error){
@@ -472,7 +472,8 @@ function validateReadmeContent(readmeContent: string, packageName: string, error
         packageName,
         'Dashboards',
         'Metrics',
-        'Semantic Conventions'
+        'Semantic Conventions',
+        'Resource Attributes'
     ];
     const missingSections = requiredSections.filter(section => !readmeContent.includes(section));
 
