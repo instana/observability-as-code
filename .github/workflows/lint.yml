@@ -33,8 +33,11 @@ jobs:
       - name: Get changed files
         id: changed-files
         run: |
-          # Get the list of changed files between the PR source branch and target branch (main)
-          CHANGED_FILES=$(git diff --name-only origin/main...${{ github.sha }} | grep '^packages/@instana-integration/')
+          # Fetch both the main and current branch (test-environment)
+          git fetch origin main
+
+          # Get the list of changed files between the main branch and the current branch (test-environment)
+          CHANGED_FILES=$(git diff --name-only origin/main...HEAD | grep '^packages/@instana-integration/')
           echo "Changed files: $CHANGED_FILES"
           if [ -z "$CHANGED_FILES" ]; then
             echo "No files changed."
