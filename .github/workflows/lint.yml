@@ -29,31 +29,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Get changed files
-        id: changed-files
-        run: |
-          git fetch origin main
-          CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^packages/@instana-integration/')
-          echo "Changed files: $CHANGED_FILES"
-          echo "changed-files=$CHANGED_FILES" >> $GITHUB_ENV
-
       - name: Lint each package
         run: |
-          CHANGED_FILES="${{ env.changed-files }}"
-          if [ -z "$CHANGED_FILES" ]; then
-            echo "No changed files to lint."
-            exit 0
-          fi
-          for file in $CHANGED_FILES; do
-            PACKAGE_DIR=$(dirname "$file")
-            if [ -d "$PACKAGE_DIR" ]; then
-              echo "Linting package $PACKAGE_DIR"
-              cd "$PACKAGE_DIR"
-              if stanctl-integration lint; then
-                echo "Linting successful for $PACKAGE_DIR"
-              else
-                echo "Linting failed for $PACKAGE_DIR"
-              fi
+          for dir in packages/@instana-integration/*; do
+            if [ -d "$dir" ]; then
+              echo "Linting $dir"
+              cd "$dir"
+              stanctl-integration lint
               cd -
             fi
           done
