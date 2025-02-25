@@ -47,7 +47,7 @@ jobs:
 #          file ~/stanctl-integration
 #          ~/stanctl-integration --help # Check if it runs
 
-      - name: Lint each package in @instana-integration
+      - name: Lint each package
         run: |
           for dir in packages/@instana-integration/*; do
             if [ -d "$dir" ]; then
