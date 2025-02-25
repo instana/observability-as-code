@@ -16,7 +16,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Fetch the base branch (main)
+      - name: Fetch the latest main branch
         run: git fetch origin main
 
       - name: Set up Node.js
@@ -43,16 +43,19 @@ jobs:
       - name: Add stanctl-integration to PATH
         run: echo "$HOME/stanctl-integration" >> "$GITHUB_PATH"
 
-      - name: Get changed directories
+      - name: Get changed files from the PR using GitHub API
         id: get-changes
         run: |
-          # Fetch the list of changed files in the pull request
-          CHANGED_FILES=$(git diff --name-only origin/main...${GITHUB_SHA})
+          # Get a list of changed files in the PR using the GitHub API
+          PR_FILES=$(curl -s \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files" | \
+            jq -r '.[].filename')
 
-          # Extract the directories with changes in the packages folder
-          CHANGED_DIRS=$(echo "$CHANGED_FILES" | grep '^packages/@instana-integration/' | cut -d'/' -f3 | sort -u)
+          # Extract the directories that changed under packages/@instana-integration/
+          CHANGED_DIRS=$(echo "$PR_FILES" | grep '^packages/@instana-integration/' | cut -d'/' -f3 | sort -u)
 
-          # Set the directories as output
+          # Set the changed directories as environment variable
           echo "changed_dirs=$CHANGED_DIRS" >> $GITHUB_ENV
 
       - name: Lint changed packages
