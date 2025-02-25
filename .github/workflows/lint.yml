@@ -40,12 +40,12 @@ jobs:
       - name: Add stanctl-integration to PATH
         run: echo "$HOME/stanctl-integration" >> "$GITHUB_PATH"
 
-      #- name: Verify stanctl-integration binary
-      #  run: |
-      #    echo "Checking if stanctl-integration exists"
-      #    ls -l ~/stanctl-integration
-      #    file ~/stanctl-integration
-      #    ~/stanctl-integration --help # Check if it runs
+#      - name: Verify stanctl-integration binary
+#        run: |
+#          echo "Checking if stanctl-integration exists"
+#          ls -l ~/stanctl-integration
+#          file ~/stanctl-integration
+#          ~/stanctl-integration --help # Check if it runs
 
       - name: Lint each package in @instana-integration
         run: |
