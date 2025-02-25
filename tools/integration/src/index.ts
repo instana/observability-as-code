@@ -124,6 +124,11 @@ const readReadmeFile = (directoryPath: string) : string | null => {
     }
 };
 
+// Helper function to check if the package is private
+function isPrivatePackage(packageData: any): boolean {
+    return packageData.private === true;
+}
+
 async function isUserLoggedIn() {
     const homeDir = process.env.HOME || process.env.USERPROFILE || '';
     const npmrcPath = path.join(homeDir, '.npmrc');
@@ -324,6 +329,11 @@ async function handleLint(argv: any) {
     const readmeContent = readReadmeFile(currentDirectory);
     const packageData = readPackageJson(currentDirectory);
     const dashboardsPath = path.join(currentDirectory, 'dashboards');
+
+    if (isPrivatePackage(packageData) || isUnsupportedPackage(packageData)) {
+        console.log(`Skipping linting for package: ${packageData.name} (Private or Unsupported)`);
+        process.exit(0);
+    }
 
     // Check README file
     if (readmeContent) {
