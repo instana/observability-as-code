@@ -16,9 +16,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Fetch the latest main branch
-        run: git fetch origin main
-
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
@@ -43,28 +40,14 @@ jobs:
       - name: Add stanctl-integration to PATH
         run: echo "$HOME/stanctl-integration" >> "$GITHUB_PATH"
 
-      - name: Get changed files from the PR using GitHub API
-        id: get-changes
+      - name: Lint each package
         run: |
-          # Get a list of changed files in the PR using the GitHub API
-          PR_FILES=$(curl -s \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files" | \
-            jq -r '.[].filename')
-
-          # Extract the directories that changed under packages/@instana-integration/
-          CHANGED_DIRS=$(echo "$PR_FILES" | grep '^packages/@instana-integration/' | cut -d'/' -f3 | sort -u)
-
-          # Set the changed directories as environment variable
-          echo "changed_dirs=$CHANGED_DIRS" >> $GITHUB_ENV
-
-      - name: Lint changed packages
-        run: |
-          for dir in ${{ env.changed_dirs }}; do
-            echo "Linting package: $dir"
-            cd "packages/@instana-integration/$dir"
-            echo "Current directory: $(pwd)"
-            ~/stanctl-integration lint --debug
-            cd -
+          for dir in packages/@instana-integration/*; do
+            if [ -d "$dir" ]; then
+              echo "Linting $dir"
+              cd "$dir"
+              echo "Current directory: $(pwd)"
+              ~/stanctl-integration lint --debug
+              cd -
+            fi
           done
-        if: ${{ env.changed_dirs }}
