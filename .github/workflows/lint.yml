@@ -9,12 +9,8 @@ on:
       - main
 
 jobs:
-  publish:
+  lint-packages:
     runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: packages/@instana-integration
 
     steps:
       - name: Checkout repository
@@ -26,16 +22,41 @@ jobs:
           node-version: '18'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Install dependencies
+      - name: Install dependencies for tools/integration
         run: npm ci
+        working-directory: tools/integration
 
-      - name: Lint each package
+      - name: Install pkg globally
+        run: npm install -g pkg
+
+      - name: Build stanctl-integration
+        run: |
+          npm run build
+          npm run pkg
+          mv dist/stanctl-integration-linux ~/stanctl-integration
+          chmod +x ~/stanctl-integration
+        working-directory: tools/integration
+
+      - name: Add stanctl-integration to PATH
+        run: echo "$HOME/stanctl-integration" >> "$GITHUB_PATH"
+
+      #- name: Verify stanctl-integration binary
+      #  run: |
+      #    echo "Checking if stanctl-integration exists"
+      #    ls -l ~/stanctl-integration
+      #    file ~/stanctl-integration
+      #    ~/stanctl-integration --help # Check if it runs
+
+      - name: Lint each package in @instana-integration
         run: |
           for dir in packages/@instana-integration/*; do
             if [ -d "$dir" ]; then
               echo "Linting $dir"
               cd "$dir"
-              stanctl-integration lint
+              echo "Current directory: $(pwd)"
+#              ls -l
+#              echo "Running lint command: ~/stanctl-integration lint"
+              ~/stanctl-integration lint --debug
               cd -
             fi
           done
