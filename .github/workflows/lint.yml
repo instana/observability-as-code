@@ -40,14 +40,26 @@ jobs:
       - name: Add stanctl-integration to PATH
         run: echo "$HOME/stanctl-integration" >> "$GITHUB_PATH"
 
-      - name: Lint each package
+      - name: Get changed directories
+        id: get-changes
         run: |
-          for dir in packages/@instana-integration/*; do
-            if [ -d "$dir" ]; then
-              echo "Linting $dir"
-              cd "$dir"
-              echo "Current directory: $(pwd)"
-              ~/stanctl-integration lint --debug
-              cd -
-            fi
+          # Get the list of files changed in the PR
+          CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+
+          # Extract the list of directories with changes
+          CHANGED_DIRS=$(echo "$CHANGED_FILES" | grep '^packages/@instana-integration/' | cut -d'/' -f3 | sort -u)
+
+          # Set the directories as output
+          echo "changed_dirs=$CHANGED_DIRS" >> $GITHUB_ENV
+
+      - name: Lint changed packages
+        run: |
+          for dir in ${{ env.changed_dirs }}; do
+            echo "Linting package: $dir"
+            cd "packages/@instana-integration/$dir"
+            echo "Current directory: $(pwd)"
+            ~/stanctl-integration lint --debug
+            cd -
           done
+        # Only run this step if there are changes in the specified directories
+        if: ${{ env.changed_dirs }}
