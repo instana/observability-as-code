@@ -43,8 +43,11 @@ jobs:
       - name: Get changed directories
         id: get-changes
         run: |
-          # Get the list of files changed in the PR
-          CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+          # Fetch the merge base commit for the PR
+          git fetch origin main
+
+          # Get the list of files changed in the PR compared to the base branch (main)
+          CHANGED_FILES=$(git diff --name-only origin/main...${GITHUB_SHA})
 
           # Extract the list of directories with changes
           CHANGED_DIRS=$(echo "$CHANGED_FILES" | grep '^packages/@instana-integration/' | cut -d'/' -f3 | sort -u)
