@@ -330,8 +330,8 @@ async function handleLint(argv: any) {
     const packageData = readPackageJson(currentDirectory);
     const dashboardsPath = path.join(currentDirectory, 'dashboards');
 
-    if (isPrivatePackage(packageData) || isUnsupportedPackage(packageData)) {
-        console.log(`Skipping linting for package: ${packageData.name} (Private or Unsupported)`);
+    if (isPrivatePackage(packageData)) {
+        console.log(`Skipping linting for package: ${packageData.name}`);
         process.exit(0);
     }
 
