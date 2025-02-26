@@ -43,15 +43,17 @@ jobs:
       - name: Get list of changed files
         id: get-changed-files
         run: |
-          # Fetch main branches to ensure we have the latest data
-          git fetch origin main
+          # Fetch all branches to ensure we have the latest data
+          git fetch --all
           
           # Check the branches being compared
           echo "Base branch: $GITHUB_BASE_REF"
           echo "Head branch: $GITHUB_HEAD_REF"
 
           # Get the list of changed files between the PR base and head branches
-          changed_files=$(git diff --name-only origin/$GITHUB_BASE_REF...origin/$GITHUB_HEAD_REF)
+          # changed_files=$(git diff --name-only origin/$GITHUB_BASE_REF...origin/$GITHUB_HEAD_REF)
+          changed_files=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
+
 
           # Debug: Print the list of changed files
           echo "Changed files: $changed_files"
