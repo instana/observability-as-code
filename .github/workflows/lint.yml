@@ -45,7 +45,7 @@ jobs:
         run: |
           # Fetch all branches to ensure we have the latest data
           git fetch --all
-
+          
           # Check the branches being compared
           echo "Base branch: $GITHUB_BASE_REF"
           echo "Head branch: $GITHUB_HEAD_REF"
@@ -77,7 +77,8 @@ jobs:
           for dir in packages/@instana-integration/*; do
             if [ -d "$dir" ]; then
               # Check if any file in the package directory has changed
-              if echo "$changed_files" | grep -q "^$dir"; then
+              # Only check for files within the package directory
+              if echo "$changed_files" | grep -q "$dir"; then
                 echo "Linting package: $dir"
                 cd "$dir"
                 echo "Current directory: $(pwd)"
