@@ -6,7 +6,7 @@ on:
       - opened
       - synchronize
     branches:
-      - '*'
+      - main
 
 jobs:
   lint-packages:
@@ -15,9 +15,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-        with:
-          # Ensure we're fetching all remotes, including upstream (if needed)
-          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -46,14 +43,14 @@ jobs:
       - name: Get list of changed files
         id: get-changed-files
         run: |
-          # Fetch all branches and remotes to ensure we have the latest data
+          # Fetch all branches to ensure we have the latest data
           git fetch --all
           
-          # Check the branches being compared (dynamically from PR)
+          # Check the branches being compared
           echo "Base branch: $GITHUB_BASE_REF"
           echo "Head branch: $GITHUB_HEAD_REF"
 
-          # Get the list of changed files between the base and head branches (from GitHub)
+          # Get the list of changed files between the PR base and head branches
           changed_files=$(git diff --name-only origin/$GITHUB_BASE_REF...origin/$GITHUB_HEAD_REF)
 
           # Debug: Print the list of changed files
@@ -76,10 +73,11 @@ jobs:
           # Debug: Print the environment variable
           echo "Changed files from environment variable: $changed_files"
 
-          # Loop over each package directory in the `packages/` folder
-          for dir in packages/*; do
+          # Loop over each directory and check if it has changes
+          for dir in packages/@instana-integration/*; do
             if [ -d "$dir" ]; then
               # Check if any file in the package directory has changed
+              # Only check for files within the package directory
               if echo "$changed_files" | grep -q "$dir"; then
                 echo "Linting package: $dir"
                 cd "$dir"
