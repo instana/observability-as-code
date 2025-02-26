@@ -43,49 +43,19 @@ jobs:
       - name: Get list of changed files
         id: get-changed-files
         run: |
-          # Fetch all branches to ensure we have the latest data
-          git fetch --all
-          
-          # Check the branches being compared
-          echo "Base branch: $GITHUB_BASE_REF"
-          echo "Head branch: $GITHUB_HEAD_REF"
-
-          # Get the list of changed files between the PR base and head branches
           changed_files=$(git diff --name-only origin/$GITHUB_BASE_REF...origin/$GITHUB_HEAD_REF)
-
-          # Debug: Print the list of changed files
-          echo "Changed files: $changed_files"
-
-          # Convert list of files to a single line, space-separated
-          changed_files=$(echo "$changed_files" | tr '\n' ' ')
-
-          # Debug: Print the space-separated list of changed files
-          echo "Space-separated changed files: $changed_files"
-
-          # Set it as an environment variable for later use
           echo "changed_files=$changed_files" >> $GITHUB_ENV
 
       - name: Lint only changed packages
         run: |
-          # Read the list of changed files from the environment variable
           changed_files="${{ env.changed_files }}"
-          
-          # Debug: Print the environment variable
-          echo "Changed files from environment variable: $changed_files"
-
-          # Loop over each directory and check if it has changes
           for dir in packages/@instana-integration/*; do
-            if [ -d "$dir" ]; then
-              # Check if any file in the package directory has changed
-              # Only check for files within the package directory
-              if echo "$changed_files" | grep -q "$dir"; then
-                echo "Linting package: $dir"
-                cd "$dir"
-                echo "Current directory: $(pwd)"
-                ~/stanctl-integration lint --debug
-                cd -
-              else
-                echo "No changes in $dir, skipping lint"
-              fi
+            if [ -d "$dir" ] && echo "$changed_files" | grep -q "$dir"; then
+              echo "Linting package: $dir"
+              cd "$dir"
+              ~/stanctl-integration lint --debug
+              cd -
+            else
+              echo "No changes in $dir, skipping lint"
             fi
           done
