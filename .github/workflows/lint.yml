@@ -49,16 +49,18 @@ jobs:
           # Get the list of changed files between the PR branch and main
           changed_files=$(git diff --name-only origin/main)
           echo "Changed files: $changed_files"
-          echo "::set-output name=changed_files::$changed_files"
+          echo "changed_files=$changed_files" >> $GITHUB_ENV
 
       - name: Lint only changed packages
         run: |
-          changed_files="${{ steps.get-changed-files.outputs.changed_files }}"
+          # Read the list of changed files from the environment variable
+          changed_files="${{ env.changed_files }}"
+          
           # Loop over each directory and check if it has changes
           for dir in packages/@instana-integration/*; do
             if [ -d "$dir" ]; then
               # Check if any file in the package directory has changed
-              if echo "$changed_files" | grep -q "^$dir/"; then
+              if echo "$changed_files" | grep -q "^$dir"; then
                 echo "Linting package: $dir"
                 cd "$dir"
                 echo "Current directory: $(pwd)"
