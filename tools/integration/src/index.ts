@@ -328,9 +328,9 @@ async function handleLint(argv: any) {
 
     const packageData = readPackageJson(currentDirectory);
     if (isPrivatePackage(packageData)) {
-		console.log(`Skipping linting for package: ${packageData.name}`);
-        process.exit(0);
-    }
+    	console.log(`Skipping linting for package: ${packageData.name}`);
+            process.exit(0);
+        }
 
     const readmeContent = readReadmeFile(currentDirectory);
     const dashboardsPath = path.join(currentDirectory, 'dashboards');
