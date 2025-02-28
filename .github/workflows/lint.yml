@@ -71,6 +71,7 @@ jobs:
                 echo "Linting package: $dir"
                 cd "$dir"
                 echo "Running lint command: ~/stanctl-integration lint --debug --strict-mode"
+                echo ~/stanctl-integration --version
                 ~/stanctl-integration lint --debug --strict-mode
                 if [ $? -eq 0 ]; then
                   echo "Linting successful for $dir"
