@@ -35,7 +35,8 @@ jobs:
       - name: Download stanctl-configuration binary (Linux)
         run: |
           # Download the correct binary file
-          wget https://github.com/instana/observability-as-code/releases/download/stanctl-configuration-v1.2.0/stanctl-integration-linux -O ~/stanctl-integration-linux
+          # wget https://github.com/instana/observability-as-code/releases/download/stanctl-configuration-v1.2.0/stanctl-integration-linux -O ~/stanctl-integration-linux
+          wget https://github.com/disha-148/observability-as-code/releases/tag/stanctl-configuration-v1.3.0/stanctl-integration-linux -O ~/stanctl-integration-linux
 
           # Make the downloaded binary executable
           chmod +x ~/stanctl-integration-linux
