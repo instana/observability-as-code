@@ -10,8 +10,10 @@ on:
 
 jobs:
   lint-packages:
-    runs-on: ubuntu-latest
-
+    runs-on: ubuntu-latest # Default for Linux
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]  # Define matrix to run on all platforms
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -32,19 +34,29 @@ jobs:
       - name: Download all pre-built stanctl-integration binaries
         run: |
           TAG_NAME="v1.0.0"
-          echo "Downloading binaries..."
-          curl -L "https://github.com/${{ github.repository }}/releases/download/${TAG_NAME}/stanctl-integration-linux" -o $HOME/stanctl-integration-linux
-          curl -L "https://github.com/${{ github.repository }}/releases/download/${TAG_NAME}/stanctl-integration-macos" -o $HOME/stanctl-integration-macos
-          curl -L "https://github.com/${{ github.repository }}/releases/download/${TAG_NAME}/stanctl-integration-win.exe" -o $HOME/stanctl-integration-win.exe
-          chmod +x $HOME/stanctl-integration-linux $HOME/stanctl-integration-macos
+          echo "Downloading binaries for $RUNNER_OS..."
+          
+          # Download binaries based on OS
+          if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
+            curl -L "https://github.com/${{ github.repository }}/releases/download/${TAG_NAME}/stanctl-integration-linux" -o $HOME/stanctl-integration-linux
+            chmod +x $HOME/stanctl-integration-linux
+          elif [ "${{ matrix.os }}" == "macos-latest" ]; then
+            curl -L "https://github.com/${{ github.repository }}/releases/download/${TAG_NAME}/stanctl-integration-macos" -o $HOME/stanctl-integration-macos
+            chmod +x $HOME/stanctl-integration-macos
+          elif [ "${{ matrix.os }}" == "windows-latest" ]; then
+            curl -L "https://github.com/${{ github.repository }}/releases/download/${TAG_NAME}/stanctl-integration-win.exe" -o $HOME/stanctl-integration-win.exe
+          else
+            echo "Unsupported OS"
+            exit 1
+          fi
 
       - name: Set Linter Binary Path
         run: |
-          if [ "${{ runner.os }}" == "Linux" ]; then
+          if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
             echo "LINTER_BINARY=$HOME/stanctl-integration-linux" >> $GITHUB_ENV
-          elif [ "${{ runner.os }}" == "macOS" ]; then
+          elif [ "${{ matrix.os }}" == "macos-latest" ]; then
             echo "LINTER_BINARY=$HOME/stanctl-integration-macos" >> $GITHUB_ENV
-          elif [ "${{ runner.os }}" == "Windows" ]; then
+          elif [ "${{ matrix.os }}" == "windows-latest" ]; then
             echo "LINTER_BINARY=$HOME/stanctl-integration-win.exe" >> $GITHUB_ENV
           else
             echo "Unsupported OS"
@@ -57,7 +69,6 @@ jobs:
           git fetch --all
           changed_files=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
           echo "Changed files: $changed_files"
-          # echo "changed_files=$changed_files" >> $GITHUB_ENV
           # Convert list of files to a single, space-separated line
           changed_files=$(echo "$changed_files" | tr '\n' ' ')
           
