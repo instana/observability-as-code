@@ -52,21 +52,35 @@ jobs:
           # Set it as an environment variable for later use
           echo "changed_files=$changed_files" >> $GITHUB_ENV
 
+      - name: debug - Check if the binary exists
+        run: |
+          ls -l ~/stanctl-integration
+          file ~/stanctl-integration
+
       - name: Lint packages
         run: |
           changed_files="${{ env.changed_files }}"
-          
+            
+          # Debug: Check the contents of the changed files
+          echo "Changed files: $changed_files"
+            
           # Loop over each directory and check if it has changes
           for dir in packages/@instana-integration/*; do
             if [ -d "$dir" ]; then
               if echo "$changed_files" | grep -q "$dir"; then
                 echo "Linting package: $dir"
                 cd "$dir"
-                # Use the downloaded and executable binary for linting
+                echo "Running lint command: ~/stanctl-integration lint --debug --strict-mode"
                 ~/stanctl-integration lint --debug --strict-mode
+                if [ $? -eq 0 ]; then
+                  echo "Linting successful for $dir"
+                else
+                  echo "Error: Linting failed for $dir"
+                fi
                 cd -
               else
                 echo "No changes in $dir, skipping lint"
               fi
             fi
           done
+
