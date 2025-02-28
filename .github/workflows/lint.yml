@@ -67,7 +67,7 @@ jobs:
               if echo "$changed_files" | grep -q "$dir"; then
                 echo "Linting package: $dir"
                 cd "$dir"
-                ~/stanctl-configuration lint --debug --strict-mode
+                ~/stanctl-integration lint --debug --strict-mode
                 cd -
               else
                 echo "No changes in $dir, skipping lint"
