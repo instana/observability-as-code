@@ -61,17 +61,14 @@ jobs:
       - name: Lint packages
         run: |
           changed_files="${{ env.changed_files }}"
-            
-            # Debug: Print the environment variable
-            # echo "Changed files from environment variable: $changed_files"
-            
-          # Loop over each directory and check if it has changes
+      
+          # Loop over all directories in packages/@instana-integration/
           for dir in packages/@instana-integration/*; do
             if [ -d "$dir" ]; then
-              if echo "$changed_files" | grep -q "$dir"; then
+              # Check if any changed file is inside this directory
+              if echo "$changed_files" | grep -q "^$dir"; then
                 echo "Linting package: $dir"
                 cd "$dir"
-                # echo "Current directory: $(pwd)"
                 ~/stanctl-integration-linux lint --debug --strict-mode
                 cd -
               else
@@ -79,3 +76,4 @@ jobs:
               fi
             fi
           done
+
