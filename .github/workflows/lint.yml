@@ -26,11 +26,19 @@ jobs:
         run: npm ci
         working-directory: tools/integration
 
+#      - name: Download stanctl-configuration binary (Linux)
+#        run: |
+#          wget https://github.com/instana/observability-as-code/releases/download/stanctl-configuration-v1.2.0/stanctl-configuration-linux -O ~/stanctl-configuration
+#          wget https://github.com/instana/observability-as-code/releases/download/stanctl-configuration-v1.2.0/stanctl-integration-linux
+#          chmod +x ~/stanctl-configuration
+
       - name: Download stanctl-configuration binary (Linux)
         run: |
-          #wget https://github.com/instana/observability-as-code/releases/download/stanctl-configuration-v1.2.0/stanctl-configuration-linux -O ~/stanctl-configuration
-          wget https://github.com/instana/observability-as-code/releases/download/stanctl-configuration-v1.2.0/stanctl-integration-linux
-          chmod +x ~/stanctl-configuration
+          # Download the correct binary file
+          wget https://github.com/instana/observability-as-code/releases/download/stanctl-configuration-v1.2.0/stanctl-integration-linux -O ~/stanctl-integration-linux
+
+          # Make the downloaded binary executable
+          chmod +x ~/stanctl-integration-linux
 
       - name: Add stanctl-configuration to PATH
         run: echo "$HOME" >> "$GITHUB_PATH"
