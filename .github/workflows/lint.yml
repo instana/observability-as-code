@@ -29,7 +29,7 @@ jobs:
       - name: Download stanctl-integration binary from release
         run: |
           # Download the appropriate binary for Linux from the release
-          wget https://github.com/instana/observability-as-code/releases/download/stanctl-configuration-v1.2.0/stanctl-integration-linux -O ~/stanctl-integration
+          wget https://github.com/disha-148/observability-as-code/releases/download/stanctl-configuration-v1.3.0/stanctl-integration-linux -O ~/stanctl-integration
 
           # Make the downloaded binary executable
           chmod +x ~/stanctl-integration
