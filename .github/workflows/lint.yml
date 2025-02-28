@@ -28,7 +28,7 @@ jobs:
 
       - name: Download stanctl-configuration binary (Linux)
         run: |
-          wget https://github.com/instana/observability-as-code/releases/download/v1.2.0/stanctl-configuration-linux -O ~/stanctl-configuration
+          wget https://github.com/instana/observability-as-code/releases/download/stanctl-configuration-v1.2.0/stanctl-configuration-linux -O ~/stanctl-configuration
           chmod +x ~/stanctl-configuration
 
       - name: Add stanctl-configuration to PATH
