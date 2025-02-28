@@ -26,19 +26,13 @@ jobs:
         run: npm ci
         working-directory: tools/integration
 
-      - name: Install pkg globally
-        run: npm install -g pkg
-
-      - name: Build stanctl-integration
+      - name: Download stanctl-configuration binary (Linux)
         run: |
-          npm run build
-          npm run pkg
-          mv dist/stanctl-integration-linux ~/stanctl-integration
-          chmod +x ~/stanctl-integration
-        working-directory: tools/integration
+          wget https://github.com/instana/observability-as-code/releases/download/v1.2.0/stanctl-configuration-linux -O ~/stanctl-configuration
+          chmod +x ~/stanctl-configuration
 
-      - name: Add stanctl-integration to PATH
-        run: echo "$HOME/stanctl-integration" >> "$GITHUB_PATH"
+      - name: Add stanctl-configuration to PATH
+        run: echo "$HOME" >> "$GITHUB_PATH"
 
       - name: Get list of changed files
         id: get-changed-files
@@ -46,7 +40,6 @@ jobs:
           git fetch --all
           echo "Base branch: $GITHUB_BASE_REF"
           echo "Head branch: $GITHUB_HEAD_REF"
-          # changed_files=$(git diff --name-only origin/$GITHUB_BASE_REF...origin/$GITHUB_HEAD_REF)
           changed_files=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
           echo "Changed files: $changed_files"
 
@@ -59,18 +52,13 @@ jobs:
       - name: Lint packages
         run: |
           changed_files="${{ env.changed_files }}"
-          
-          # Debug: Print the environment variable
-          # echo "Changed files from environment variable: $changed_files"
 
-          # Loop over each directory and check if it has changes
           for dir in packages/@instana-integration/*; do
             if [ -d "$dir" ]; then
               if echo "$changed_files" | grep -q "$dir"; then
                 echo "Linting package: $dir"
                 cd "$dir"
-                # echo "Current directory: $(pwd)"
-                ~/stanctl-integration lint --debug --strict-mode
+                ~/stanctl-configuration lint --debug --strict-mode
                 cd -
               else
                 echo "No changes in $dir, skipping lint"
