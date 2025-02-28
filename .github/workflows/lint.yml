@@ -57,7 +57,14 @@ jobs:
           git fetch --all
           changed_files=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
           echo "Changed files: $changed_files"
-          echo "changed_files=$changed_files" >> $GITHUB_ENV
+          # echo "changed_files=$changed_files" >> $GITHUB_ENV
+          # Convert list of files to a single, space-separated line
+          changed_files=$(echo "$changed_files" | tr '\n' ' ')
+          
+          # Safely store in GITHUB_ENV
+          echo "changed_files<<EOF" >> $GITHUB_ENV
+          echo "$changed_files" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       - name: Lint packages
         run: |
