@@ -61,7 +61,7 @@ jobs:
       - name: Debug Run the binary directly
         run: |
           echo "Running binary directly"
-          $HOME/stanctl-integration
+          $HOME/stanctl-integration || echo "Error: Failed to run the binary"
           $HOME/stanctl-integration --version || echo "Failed to get version"
           $HOME/stanctl-integration --help || echo "Failed to show help"
 
@@ -69,6 +69,7 @@ jobs:
         run: |
           echo "Running lint command: $HOME/stanctl-integration lint --debug --strict-mode"
           $HOME/stanctl-integration lint --debug --strict-mode || echo "Error executing lint command. Exit code: $?"
+
 
 
 #
