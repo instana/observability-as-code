@@ -32,13 +32,27 @@ jobs:
 #          wget https://github.com/instana/observability-as-code/releases/download/stanctl-configuration-v1.2.0/stanctl-integration-linux
 #          chmod +x ~/stanctl-configuration
 
-      - name: Download stanctl-configuration binary (Linux)
+      - name: Download stanctl-configuration binary (appropriate for OS)
         run: |
-          # Correct URL for downloading the binary file directly
-          wget https://github.com/instana/observability-as-code/releases/download/stanctl-configuration-v1.2.0/stanctl-integration-linux -O ~/stanctl-integration-linux
-
-          # Make the downloaded binary executable
-          chmod +x ~/stanctl-integration-linux
+          # Check if the operating system is macOS, then download the macOS binary
+          if [ "$(uname)" == "Darwin" ]; then
+            echo "Detected macOS. Downloading the macOS binary."
+            wget https://github.com/instana/observability-as-code/releases/download/stanctl-configuration-v1.2.0/stanctl-integration-macos -O $HOME/stanctl-integration-macos
+            chmod +x $HOME/stanctl-integration-macos
+          # Check if the operating system is Linux, then download the Linux binary
+          elif [ "$(uname)" == "Linux" ]; then
+            echo "Detected Linux. Downloading the Linux binary."
+            wget https://github.com/instana/observability-as-code/releases/download/stanctl-configuration-v1.2.0/stanctl-integration-linux -O $HOME/stanctl-integration-linux
+            chmod +x $HOME/stanctl-integration-linux
+          # Check if the operating system is Windows, then download the Windows binary
+          elif [ "$(uname -s)" == "MINGW"* ] || [ "$(uname -s)" == "CYGWIN"* ]; then
+            echo "Detected Windows. Downloading the Windows binary."
+            wget https://github.com/instana/observability-as-code/releases/download/stanctl-configuration-v1.2.0/stanctl-integration-win.exe -O $HOME/stanctl-integration-win.exe
+            chmod +x $HOME/stanctl-integration-win.exe
+          else
+            echo "Unsupported operating system: $(uname)"
+            exit 1
+          fi
 
       - name: Add stanctl-configuration to PATH
         run: echo "$HOME" >> "$GITHUB_PATH"
@@ -73,26 +87,40 @@ jobs:
       - name: Lint packages
         run: |
           changed_files="${{ env.changed_files }}"
-
+          
+          # Set the binary path based on the operating system
+          if [ "$(uname)" == "Darwin" ]; then
+            LINT_BINARY=$HOME/stanctl-integration-macos
+          elif [ "$(uname)" == "Linux" ]; then
+            LINT_BINARY=$HOME/stanctl-integration-linux
+          # For Windows, use the .exe binary
+          elif [ "$(uname -s)" == "MINGW"* ] || [ "$(uname -s)" == "CYGWIN"* ]; then
+            LINT_BINARY=$HOME/stanctl-integration-win.exe
+          else
+            echo "Unsupported operating system: $(uname)"
+            exit 1
+          fi
+          
           # Loop over all directories in packages/@instana-integration/
           for dir in packages/@instana-integration/*; do
             if [ -d "$dir" ]; then
               # Check if any changed file is inside this directory
               echo "Checking directory: $dir"
               echo "Changed files: $changed_files"
-
+          
               # Loop over each changed file and check if it's in the current directory
               for file in $(echo "$changed_files" | tr ' ' '\n'); do
                 if [[ "$file" == $dir/* ]]; then
                   echo "Linting package: $dir"
                   cd "$dir"
-                  ~/stanctl-integration-linux lint --debug --strict-mode
+                  $LINT_BINARY lint --debug --strict-mode
                   cd -
                   break
                 fi
               done
             fi
           done
+     
 
 
 
