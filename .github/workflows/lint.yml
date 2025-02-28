@@ -10,10 +10,8 @@ on:
 
 jobs:
   lint-packages:
-    runs-on: ubuntu-latest # Default for Linux
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]  # Define matrix to run on all platforms
+    runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -31,62 +29,48 @@ jobs:
       - name: Install pkg globally
         run: npm install -g pkg
 
-      - name: Download all pre-built stanctl-integration binaries
+      - name: Build stanctl-integration
         run: |
-          TAG_NAME="v1.0.0"
-          echo "Downloading binaries for $RUNNER_OS..."
-          
-          # Download binaries based on OS
-          if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
-            curl -L "https://github.com/${{ github.repository }}/releases/download/${TAG_NAME}/stanctl-integration-linux" -o $HOME/stanctl-integration-linux
-            chmod +x $HOME/stanctl-integration-linux
-          elif [ "${{ matrix.os }}" == "macos-latest" ]; then
-            curl -L "https://github.com/${{ github.repository }}/releases/download/${TAG_NAME}/stanctl-integration-macos" -o $HOME/stanctl-integration-macos
-            chmod +x $HOME/stanctl-integration-macos
-          elif [ "${{ matrix.os }}" == "windows-latest" ]; then
-            curl -L "https://github.com/${{ github.repository }}/releases/download/${TAG_NAME}/stanctl-integration-win.exe" -o $HOME/stanctl-integration-win.exe
-          else
-            echo "Unsupported OS"
-            exit 1
-          fi
+          npm run build
+          npm run pkg
+          mv dist/stanctl-integration-linux ~/stanctl-integration
+          chmod +x ~/stanctl-integration
+        working-directory: tools/integration
 
-      - name: Set Linter Binary Path
-        run: |
-          if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
-            echo "LINTER_BINARY=$HOME/stanctl-integration-linux" >> $GITHUB_ENV
-          elif [ "${{ matrix.os }}" == "macos-latest" ]; then
-            echo "LINTER_BINARY=$HOME/stanctl-integration-macos" >> $GITHUB_ENV
-          elif [ "${{ matrix.os }}" == "windows-latest" ]; then
-            echo "LINTER_BINARY=$HOME/stanctl-integration-win.exe" >> $GITHUB_ENV
-          else
-            echo "Unsupported OS"
-            exit 1
-          fi
+      - name: Add stanctl-integration to PATH
+        run: echo "$HOME/stanctl-integration" >> "$GITHUB_PATH"
 
       - name: Get list of changed files
         id: get-changed-files
         run: |
           git fetch --all
+          echo "Base branch: $GITHUB_BASE_REF"
+          echo "Head branch: $GITHUB_HEAD_REF"
+          # changed_files=$(git diff --name-only origin/$GITHUB_BASE_REF...origin/$GITHUB_HEAD_REF)
           changed_files=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
           echo "Changed files: $changed_files"
-          # Convert list of files to a single, space-separated line
+
+          # Convert list of files to a single line, space-separated
           changed_files=$(echo "$changed_files" | tr '\n' ' ')
-          
-          # Safely store in GITHUB_ENV
-          echo "changed_files<<EOF" >> $GITHUB_ENV
-          echo "$changed_files" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+
+          # Set it as an environment variable for later use
+          echo "changed_files=$changed_files" >> $GITHUB_ENV
 
       - name: Lint packages
         run: |
           changed_files="${{ env.changed_files }}"
+          
+          # Debug: Print the environment variable
+          # echo "Changed files from environment variable: $changed_files"
 
+          # Loop over each directory and check if it has changes
           for dir in packages/@instana-integration/*; do
             if [ -d "$dir" ]; then
-              if echo "$changed_files" | grep -q "$dir/"; then  # Ensure we match directory paths correctly
+              if echo "$changed_files" | grep -q "$dir"; then
                 echo "Linting package: $dir"
                 cd "$dir"
-                ${{ env.LINTER_BINARY }} lint --debug --strict-mode
+                # echo "Current directory: $(pwd)"
+                ~/stanctl-integration lint --debug --strict-mode
                 cd -
               else
                 echo "No changes in $dir, skipping lint"
