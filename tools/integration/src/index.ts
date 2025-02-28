@@ -293,7 +293,7 @@ yargs
                 demandOption: true
             });
     }, handlePublish)
-    .command('lint', 'provides linting for package', (yargs) => {
+    .command('lint', 'Provides linting for package', (yargs) => {
     	return yargs
             .option('path', {
         	alias: 'p',
