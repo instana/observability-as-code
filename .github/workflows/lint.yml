@@ -58,6 +58,19 @@ jobs:
           # Set it as an environment variable for later use
           echo "changed_files=$changed_files" >> $GITHUB_ENV
 
+      - name: Check if linting binary exists and is executable
+        run: |
+          if [ ! -f ~/stanctl-integration-linux ]; then
+            echo "Error: Linting binary not found!"
+            exit 1
+          fi
+          if [ ! -x ~/stanctl-integration-linux ]; then
+            echo "Error: Linting binary is not executable!"
+            exit 1
+          fi
+          echo "Linting binary is ready!"
+
+
       - name: Lint packages
         run: |
           changed_files="${{ env.changed_files }}"
