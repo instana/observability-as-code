@@ -29,16 +29,26 @@ jobs:
       - name: Install pkg globally
         run: npm install -g pkg
 
-      - name: Build stanctl-integration
+      #      - name: Build stanctl-integration
+      #        run: |
+      #          npm run build
+      #          npm run pkg
+      #          mv dist/stanctl-integration-linux ~/stanctl-integration
+      #          chmod +x ~/stanctl-integration
+      #        working-directory: tools/integration
+
+      - name: Download all pre-built stanctl-integration binaries
         run: |
-          npm run build
-          npm run pkg
-          mv dist/stanctl-integration-linux ~/stanctl-integration
-          chmod +x ~/stanctl-integration
-        working-directory: tools/integration
+          TAG_NAME="v1.0.0"
+          echo "Downloading binaries..."
+          curl -L "https://github.com/${{ github.repository }}/releases/download/${TAG_NAME}/stanctl-integration-linux" -o ~/stanctl-integration-linux
+          chmod +x ~/stanctl-integration-linux
+          curl -L "https://github.com/${{ github.repository }}/releases/download/${TAG_NAME}/stanctl-integration-macos" -o ~/stanctl-integration-macos
+          chmod +x ~/stanctl-integration-macos
+          curl -L "https://github.com/${{ github.repository }}/releases/download/${TAG_NAME}/stanctl-integration-windows.exe" -o ~/stanctl-integration-windows.exe
 
       - name: Add stanctl-integration to PATH
-        run: echo "$HOME/stanctl-integration" >> "$GITHUB_PATH"
+        run: echo "$HOME/stanctl-integration-linux" >> "$GITHUB_PATH"
 
       - name: Get list of changed files
         id: get-changed-files
@@ -63,14 +73,25 @@ jobs:
           # Debug: Print the environment variable
           # echo "Changed files from environment variable: $changed_files"
 
+          # Use the correct binary based on OS
+          if [ "${{ runner.os }}" == "Linux" ]; then
+            LINTER_BINARY=~/stanctl-integration-linux
+          elif [ "${{ runner.os }}" == "macOS" ]; then
+            LINTER_BINARY=~/stanctl-integration-macos
+          elif [ "${{ runner.os }}" == "Windows" ]; then
+            LINTER_BINARY=~/stanctl-integration-windows.exe
+          else
+            echo "Unsupported platform"
+            exit 1
+          fi
+
           # Loop over each directory and check if it has changes
           for dir in packages/@instana-integration/*; do
             if [ -d "$dir" ]; then
               if echo "$changed_files" | grep -q "$dir"; then
                 echo "Linting package: $dir"
                 cd "$dir"
-                # echo "Current directory: $(pwd)"
-                ~/stanctl-integration lint --debug --strict-mode
+                $LINTER_BINARY lint --debug --strict-mode
                 cd -
               else
                 echo "No changes in $dir, skipping lint"
