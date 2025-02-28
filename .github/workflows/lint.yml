@@ -60,16 +60,15 @@ jobs:
 
       - name: Check if linting binary exists and is executable
         run: |
-          if [ ! -f ~/stanctl-integration-linux ]; then
+          if [ ! -f $HOME/stanctl-integration-linux ]; then
             echo "Error: Linting binary not found!"
             exit 1
           fi
-          if [ ! -x ~/stanctl-integration-linux ]; then
+          if [ ! -x $HOME/stanctl-integration-linux ]; then
             echo "Error: Linting binary is not executable!"
             exit 1
           fi
           echo "Linting binary is ready!"
-
 
       - name: Lint packages
         run: |
