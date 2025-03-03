@@ -26,10 +26,10 @@ jobs:
         run: npm ci
         working-directory: tools/integration
 
-      - name: Download stanctl-integration binary from release
+      - name: Download stanctl-configuration binary for Linux
         run: |
-          # Download the appropriate binary for Linux from the release
-          wget https://github.com/disha-148/observability-as-code/releases/download/stanctl-configuration-v1.3.0/stanctl-integration-linux -O ~/stanctl-integration
+          # Download the appropriate binary for Linux from the release (no architecture suffix needed)
+          wget https://github.com/disha-148/observability-as-code/releases/download/stanctl-configuration-v1.3.0/stanctl-configuration-linux -O ~/stanctl-integration
 
           # Make the downloaded binary executable
           chmod +x ~/stanctl-integration
@@ -70,35 +70,31 @@ jobs:
           echo "Running lint command: $HOME/stanctl-integration lint --debug --strict-mode"
           $HOME/stanctl-integration lint --debug --strict-mode || echo "Error executing lint command. Exit code: $?"
 
+      - name: Lint packages 2
+        run: |
+          changed_files="${{ env.changed_files }}"
 
+          # Debug: Check the contents of the changed files
+          echo "Changed files: $changed_files"
 
-#
-#
-#      - name: Lint packages
-#        run: |
-#          changed_files="${{ env.changed_files }}"
-#
-#          # Debug: Check the contents of the changed files
-#          echo "Changed files: $changed_files"
-#
-#          # Loop over each directory and check if it has changes
-#          for dir in packages/@instana-integration/*; do
-#            if [ -d "$dir" ]; then
-#              if echo "$changed_files" | grep -q "$dir"; then
-#                echo "Linting package: $dir"
-#                cd "$dir"
-#                echo "Running lint command: ~/stanctl-integration lint --debug --strict-mode"
-#                echo ~/stanctl-integration --version
-#                ~/stanctl-integration lint --debug --strict-mode
-#                if [ $? -eq 0 ]; then
-#                  echo "Linting successful for $dir"
-#                else
-#                  echo "Error: Linting failed for $dir"
-#                fi
-#                cd -
-#              else
-#                echo "No changes in $dir, skipping lint"
-#              fi
-#            fi
-#          done
+          # Loop over each directory and check if it has changes
+          for dir in packages/@instana-integration/*; do
+            if [ -d "$dir" ]; then
+              if echo "$changed_files" | grep -q "$dir"; then
+                echo "Linting package: $dir"
+                cd "$dir"
+                echo "Running lint command: ~/stanctl-integration lint --debug --strict-mode"
+                echo ~/stanctl-integration --version
+                ~/stanctl-integration lint --debug --strict-mode
+                if [ $? -eq 0 ]; then
+                  echo "Linting successful for $dir"
+                else
+                  echo "Error: Linting failed for $dir"
+                fi
+                cd -
+              else
+                echo "No changes in $dir, skipping lint"
+              fi
+            fi
+          done
 
