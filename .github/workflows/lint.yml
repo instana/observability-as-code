@@ -28,8 +28,18 @@ jobs:
 
       - name: Download stanctl-integration binary from release
         run: |
-          # Download the appropriate binary for Linux from the release
-          wget https://github.com/disha-148/observability-as-code/releases/download/stanctl-configuration-v1.3.0/stanctl-integration-linux -O ~/stanctl-integration
+          # Check the architecture of the runner
+          ARCH=$(uname -m)
+
+          # Download the appropriate binary based on the architecture
+          if [ "$ARCH" == "x86_64" ]; then
+            wget https://github.com/disha-148/observability-as-code/releases/download/stanctl-configuration-v1.3.0/stanctl-integration-linux -O ~/stanctl-integration
+          elif [ "$ARCH" == "aarch64" ]; then
+            wget https://github.com/disha-148/observability-as-code/releases/download/stanctl-configuration-v1.3.0/stanctl-integration-linux-arm64 -O ~/stanctl-integration
+          else
+            echo "Unsupported architecture: $ARCH"
+            exit 1
+          fi
 
           # Make the downloaded binary executable
           chmod +x ~/stanctl-integration
