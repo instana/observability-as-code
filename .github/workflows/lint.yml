@@ -47,6 +47,11 @@ jobs:
       - name: Add stanctl-integration to PATH
         run: echo "$HOME" >> "$GITHUB_PATH"
 
+      - name: Debug with strace to see the commands being executed
+        run: |
+          # Use strace to trace the system calls of the binary and print the commands
+          strace ~/stanctl-integration --version
+
       - name: Get list of changed files
         id: get-changed-files
         run: |
