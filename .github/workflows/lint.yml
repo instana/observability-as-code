@@ -26,10 +26,10 @@ jobs:
         run: npm ci
         working-directory: tools/integration
 
-      - name: Download stanctl-configuration binary for Linux
+      - name: Download stanctl-integration binary from release
         run: |
-          # Download the appropriate binary for Linux from the release (no architecture suffix needed)
-          wget https://github.com/disha-148/observability-as-code/releases/download/stanctl-configuration-v1.3.0/stanctl-configuration-linux -O ~/stanctl-integration
+          # Download the appropriate binary for Linux from the release
+          wget https://github.com/disha-148/observability-as-code/releases/download/stanctl-configuration-v1.3.0/stanctl-integration-linux -O ~/stanctl-integration
 
           # Make the downloaded binary executable
           chmod +x ~/stanctl-integration
@@ -70,7 +70,7 @@ jobs:
           echo "Running lint command: $HOME/stanctl-integration lint --debug --strict-mode"
           $HOME/stanctl-integration lint --debug --strict-mode || echo "Error executing lint command. Exit code: $?"
 
-      - name: Lint packages 2
+      - name: Lint packages
         run: |
           changed_files="${{ env.changed_files }}"
 
