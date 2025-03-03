@@ -26,31 +26,14 @@ jobs:
         run: npm ci
         working-directory: tools/integration
 
-      - name: Download stanctl-integration binary from release
+      - name: Download stanctl-integration binary
         run: |
-          # Check the architecture of the runner
-          ARCH=$(uname -m)
-
-          # Download the appropriate binary based on the architecture
-          if [ "$ARCH" == "x86_64" ]; then
-            wget https://github.com/disha-148/observability-as-code/releases/download/stanctl-configuration-v1.3.0/stanctl-integration-linux -O ~/stanctl-integration
-          elif [ "$ARCH" == "aarch64" ]; then
-            wget https://github.com/disha-148/observability-as-code/releases/download/stanctl-configuration-v1.3.0/stanctl-integration-linux-arm64 -O ~/stanctl-integration
-          else
-            echo "Unsupported architecture: $ARCH"
-            exit 1
-          fi
-
-          # Make the downloaded binary executable
+          # Download the appropriate binary based on the OS (linux in this case)
+          curl -L https://github.com/disha-148/observability-as-code/releases/download/stanctl-configuration-v1.3.0/stanctl-configuration-linux -o ~/stanctl-integration
           chmod +x ~/stanctl-integration
 
       - name: Add stanctl-integration to PATH
-        run: echo "$HOME" >> "$GITHUB_PATH"
-
-      - name: Debug with strace to see the commands being executed
-        run: |
-          # Use strace to trace the system calls of the binary and print the commands
-          strace ~/stanctl-integration --version
+        run: echo "$HOME/stanctl-integration" >> "$GITHUB_PATH"
 
       - name: Get list of changed files
         id: get-changed-files
@@ -67,49 +50,20 @@ jobs:
           # Set it as an environment variable for later use
           echo "changed_files=$changed_files" >> $GITHUB_ENV
 
-      - name: Debug Check the binary location
-        run: |
-          echo "Path to binary: $HOME/stanctl-integration"
-          ls -l $HOME/stanctl-integration
-          file $HOME/stanctl-integration
-
-      - name: Debug Run the binary directly
-        run: |
-          echo "Running binary directly"
-          $HOME/stanctl-integration || echo "Error: Failed to run the binary"
-          $HOME/stanctl-integration --version || echo "Failed to get version"
-          $HOME/stanctl-integration --help || echo "Failed to show help"
-
-      - name: Lint packages
-        run: |
-          echo "Running lint command: $HOME/stanctl-integration lint --debug --strict-mode"
-          $HOME/stanctl-integration lint --debug --strict-mode || echo "Error executing lint command. Exit code: $?"
-
       - name: Lint packages
         run: |
           changed_files="${{ env.changed_files }}"
-
-          # Debug: Check the contents of the changed files
-          echo "Changed files: $changed_files"
-
+          
           # Loop over each directory and check if it has changes
           for dir in packages/@instana-integration/*; do
             if [ -d "$dir" ]; then
               if echo "$changed_files" | grep -q "$dir"; then
                 echo "Linting package: $dir"
                 cd "$dir"
-                echo "Running lint command: ~/stanctl-integration lint --debug --strict-mode"
-                echo ~/stanctl-integration --version
                 ~/stanctl-integration lint --debug --strict-mode
-                if [ $? -eq 0 ]; then
-                  echo "Linting successful for $dir"
-                else
-                  echo "Error: Linting failed for $dir"
-                fi
                 cd -
               else
                 echo "No changes in $dir, skipping lint"
               fi
             fi
           done
-
