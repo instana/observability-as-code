@@ -28,16 +28,18 @@ jobs:
 
       - name: Download stanctl-integration binary
         run: |
-          # Download the appropriate binary for linux
-          curl -L https://github.com/disha-148/observability-as-code/releases/download/stanctl-configuration-v1.3.0/stanctl-configuration-linux -o ~/stanctl-integration
-          chmod +x ~/stanctl-integration
+          # Download the correct binary for Linux
+          curl -L https://github.com/disha-148/observability-as-code/releases/download/stanctl-configuration-v1.3.0/stanctl-integration-linux -o ~/stanctl-integration
           
-          # Verify the binary and its type
+          # Verify the file type after download
           file ~/stanctl-integration
           ls -l ~/stanctl-integration
-          ./~/stanctl-integration --version  # Run to verify if it's working
+          
+          # Make sure the binary is executable
+          chmod +x ~/stanctl-integration
 
-        shell: bash
+          # Optionally test if the binary is working (uncomment to check version)
+          # ~/stanctl-integration --version
 
       - name: Add stanctl-integration to PATH
         run: echo "$HOME/stanctl-integration" >> "$GITHUB_PATH"
@@ -66,4 +68,11 @@ jobs:
             if [ -d "$dir" ]; then
               if echo "$changed_files" | grep -q "$dir"; then
                 echo "Linting package: $dir"
-                cd "$dir
+                cd "$dir"
+                ~/stanctl-integration lint --debug --strict-mode
+                cd -
+              else
+                echo "No changes in $dir, skipping lint"
+              fi
+            fi
+          done
