@@ -26,20 +26,31 @@ jobs:
         run: npm ci
         working-directory: tools/integration
 
-      - name: Download stanctl-integration binary
+      - name: Download the correct binary for Linux
         run: |
-          # Download the correct binary for Linux
-          curl -L https://github.com/disha-148/observability-as-code/releases/download/stanctl-configuration-v1.3.0/stanctl-integration-linux -o ~/stanctl-integration
-          
+          # Detect the architecture
+          arch=$(uname -m)
+          echo "Architecture detected: $arch"
+
+          # Download the binary for the correct architecture
+          if [ "$arch" == "x86_64" ]; then
+            curl -L https://github.com/disha-148/observability-as-code/releases/download/stanctl-configuration-v1.3.0/stanctl-integration-linux-x86_64 -o ~/stanctl-integration
+          elif [ "$arch" == "aarch64" ]; then
+            curl -L https://github.com/disha-148/observability-as-code/releases/download/stanctl-configuration-v1.3.0/stanctl-integration-linux-arm64 -o ~/stanctl-integration
+          else
+            echo "Unsupported architecture: $arch"
+            exit 1
+          fi
+
           # Verify the file type after download
           file ~/stanctl-integration
           ls -l ~/stanctl-integration
-          
+
           # Make sure the binary is executable
           chmod +x ~/stanctl-integration
 
           # Optionally test if the binary is working (uncomment to check version)
-          # ~/stanctl-integration --version
+          echo ~/stanctl-integration --version
 
       - name: Add stanctl-integration to PATH
         run: echo "$HOME/stanctl-integration" >> "$GITHUB_PATH"
