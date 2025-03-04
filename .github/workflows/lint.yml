@@ -39,7 +39,7 @@ jobs:
           chmod +x ~/stanctl-integration
 
           # Optionally test if the binary is working (uncomment to check version)
-          # ~/stanctl-integration --version
+          ~/stanctl-integration --version
 
       - name: Add stanctl-integration to PATH
         run: echo "$HOME/stanctl-integration" >> "$GITHUB_PATH"
