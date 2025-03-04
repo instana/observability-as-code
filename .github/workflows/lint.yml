@@ -10,7 +10,7 @@ on:
 
 jobs:
   lint-packages:
-    runs-on: macos-latest  # Change to macOS instead of Ubuntu
+    runs-on: macos-latest
 
     steps:
       - name: Checkout repository
