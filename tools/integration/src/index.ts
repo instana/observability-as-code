@@ -115,7 +115,7 @@ const readReadmeFile = (directoryPath: string) : string | null => {
         if(fs.existsSync(readmeFilePath)){
 	    return fs.readFileSync(readmeFilePath, 'utf8');
 	} else {
-	    logger.error('README.md is missing in the directory: ${directoryPath}');
+	    logger.error(`README.md is missing in the directory: ${directoryPath}`);
             return null;
 	}
     } catch (error){
@@ -123,6 +123,11 @@ const readReadmeFile = (directoryPath: string) : string | null => {
         return null;
     }
 };
+
+// Helper function to check if the package is private
+function isPrivatePackage(packageData: any): boolean {
+    return packageData.private === true;
+}
 
 async function isUserLoggedIn() {
     const homeDir = process.env.HOME || process.env.USERPROFILE || '';
@@ -288,7 +293,7 @@ yargs
                 demandOption: true
             });
     }, handlePublish)
-    .command('lint', 'provides linting for package', (yargs) => {
+    .command('lint', 'Provides linting for package', (yargs) => {
     	return yargs
             .option('path', {
         	alias: 'p',
@@ -321,8 +326,13 @@ async function handleLint(argv: any) {
     const warnings: string[] = [];
     const successMessages: string[] = [];
 
-    const readmeContent = readReadmeFile(currentDirectory);
     const packageData = readPackageJson(currentDirectory);
+    if (isPrivatePackage(packageData)) {
+    	console.log(`Skipping linting for package: ${packageData.name}`);
+        process.exit(0);
+    }
+
+    const readmeContent = readReadmeFile(currentDirectory);
     const dashboardsPath = path.join(currentDirectory, 'dashboards');
 
     // Check README file
@@ -472,7 +482,8 @@ function validateReadmeContent(readmeContent: string, packageName: string, error
         packageName,
         'Dashboards',
         'Metrics',
-        'Semantic Conventions'
+        'Semantic Conventions',
+        'Resource Attributes'
     ];
     const missingSections = requiredSections.filter(section => !readmeContent.includes(section));
 

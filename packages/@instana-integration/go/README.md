@@ -36,7 +36,7 @@ Below are the Go runtime metrics that are currently supported by this integratio
 | process.runtime.go.goroutines       | Executed goroutines  | Number |
 
 
-### Resource Attributes for Go Application
+### Resource Attributes
 
 Below are the resource attributes that are currently supported by this integration package.
 

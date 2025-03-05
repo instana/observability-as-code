@@ -1,0 +1,79 @@
+name: Lint Packages
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    branches:
+      - main
+
+jobs:
+  lint-packages:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies for tools/integration
+        run: npm ci
+        working-directory: tools/integration
+
+      - name: Download stanctl-integration binary
+        run: |
+          # Download the correct binary for macOS
+          curl -L https://github.com/disha-148/observability-as-code/releases/download/stanctl-configuration-v1.3.0/stanctl-integration-macos -o ~/stanctl-integration
+
+          # Verify the file type after download
+          file ~/stanctl-integration
+          ls -l ~/stanctl-integration
+
+          # Make sure the binary is executable
+          chmod +x ~/stanctl-integration
+
+          # Test if the binary is working and print the version
+          ~/stanctl-integration --version
+          ~/stanctl-integration --help
+
+      - name: Add stanctl-integration to PATH
+        run: echo "$HOME/stanctl-integration" >> "$GITHUB_PATH"
+
+      - name: Get list of changed files
+        id: get-changed-files
+        run: |
+          git fetch --all
+          echo "Base branch: $GITHUB_BASE_REF"
+          echo "Head branch: $GITHUB_HEAD_REF"
+          changed_files=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
+          echo "Changed files: $changed_files"
+
+          # Convert list of files to a single line, space-separated
+          changed_files=$(echo "$changed_files" | tr '\n' ' ')
+
+          # Set it as an environment variable for later use
+          echo "changed_files=$changed_files" >> $GITHUB_ENV
+
+      - name: Lint packages
+        run: |
+          changed_files="${{ env.changed_files }}"
+          
+          # Loop over each directory and check if it has changes
+          for dir in packages/@instana-integration/*; do
+            if [ -d "$dir" ]; then
+              if echo "$changed_files" | grep -q "$dir"; then
+                echo "Linting package: $dir"
+                cd "$dir"
+                ~/stanctl-integration lint --debug --strict-mode
+                cd -
+              else
+                echo "No changes in $dir, skipping lint"
+              fi
+            fi
+          done
