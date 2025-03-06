@@ -37,20 +37,10 @@ jobs:
       - name: Get list of changed files
         id: get-changed-files
         run: |
-          git fetch origin
-
-          # Check if upstream exists (forked repo) and add it if it doesn't exist
-          if ! git remote get-url upstream &>/dev/null; then
-            echo "Upstream not found, skipping upstream fetch"
-          else
-            git fetch upstream
-          fi
-
+          git fetch --all
           echo "Base branch: $GITHUB_BASE_REF"
           echo "Head branch: $GITHUB_HEAD_REF"
-
-          # Use the correct references to compare the base and head commits
-          changed_files=$(git diff --name-only origin/$GITHUB_BASE_REF...$GITHUB_HEAD_REF)
+          changed_files=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
           echo "Changed files: $changed_files"
 
           # Convert list of files to a single line, space-separated
@@ -58,11 +48,6 @@ jobs:
 
           # Set it as an environment variable for later use
           echo "changed_files=$changed_files" >> $GITHUB_ENV
-
-      - name: Verify base and head SHAs
-        run: |
-          git show ${{ github.event.pull_request.base.sha }}
-          git show ${{ github.event.pull_request.head.sha }}
 
       - name: Lint packages
         run: |
