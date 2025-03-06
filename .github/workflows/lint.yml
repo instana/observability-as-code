@@ -63,8 +63,11 @@ jobs:
           git show origin/$GITHUB_HEAD_REF || { echo "Head branch not found"; exit 1; }
           git show origin/$GITHUB_BASE_REF || { echo "Base branch not found"; exit 1; }
 
+          # Fetch all remote refs (including remote refs that may not have been fetched)
+          git fetch --all
+
           # Compare base branch (target branch) with head branch (source branch)
-          changed_files=$(git diff --name-only origin/$GITHUB_HEAD_REF...$GITHUB_BASE_REF)
+          changed_files=$(git diff --name-only origin/$GITHUB_HEAD_REF..origin/$GITHUB_BASE_REF)
           echo "Changed files: $changed_files"
 
           # Convert list of files to a single line, space-separated
