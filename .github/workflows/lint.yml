@@ -41,28 +41,20 @@ jobs:
           git fetch origin
 
           # Check if upstream is set (for cross-repo PRs)
-          if ! git remote get-url upstream &>/dev/null; then
-            echo "Upstream not found, skipping upstream fetch"
-          else
+          if git remote get-url upstream &>/dev/null; then
             # If it's a cross-repo PR, fetch from upstream
-            echo "Fetching from upstream (instana repo)..."
             git fetch upstream
           fi
 
           # Determine if it's a cross-fork PR (PR from disha-148/main to instana/main)
           if [[ "$GITHUB_HEAD_REF" == "main" && "$GITHUB_BASE_REF" == "main" && "$GITHUB_REPOSITORY" == "disha-148/observability-as-code" && "$GITHUB_HEAD_REF" != "$GITHUB_BASE_REF" ]]; then
             # It's a PR from disha-148/main to instana/main
-            echo "Fetching upstream main branch (from instana repo)"
             git fetch upstream main
           else
             # It's not a cross-repo PR, compare within the same repository
-            echo "Comparing changes within the same repository"
             git fetch origin $GITHUB_BASE_REF
             git fetch origin $GITHUB_HEAD_REF
           fi
-
-          echo "Base branch: $GITHUB_BASE_REF"
-          echo "Head branch: $GITHUB_HEAD_REF"
 
           # Make sure the branches are valid before proceeding with the diff
           git show origin/$GITHUB_HEAD_REF || { echo "Head branch not found"; exit 1; }
@@ -73,13 +65,13 @@ jobs:
 
           # Compare base branch (target branch) with head branch (source branch)
           changed_files=$(git diff --name-only origin/$GITHUB_HEAD_REF..origin/$GITHUB_BASE_REF)
-          echo "Changed files: $changed_files"
 
           # Convert list of files to a single line, space-separated
           changed_files=$(echo "$changed_files" | tr '\n' ' ')
 
           # Set it as an environment variable for later use
           echo "changed_files=$changed_files" >> $GITHUB_ENV
+
 
       - name: Lint packages
         run: |
