@@ -45,7 +45,7 @@ jobs:
             git remote add upstream https://github.com/instana/observability-as-code.git
           fi
 
-          # Determine if it's a cross-fork PR or same-repo PR
+          # Ensure we have the base and head branches from the correct remotes
           if [[ "$GITHUB_BASE_REF" == "main" && "$GITHUB_HEAD_REF" == *"test-environment"* ]]; then
             # Same repo PR (same fork)
             git fetch origin $GITHUB_BASE_REF
@@ -58,6 +58,10 @@ jobs:
 
           echo "Base branch: $GITHUB_BASE_REF"
           echo "Head branch: $GITHUB_HEAD_REF"
+
+          # Make sure the branches are valid before proceeding with the diff
+          git show origin/$GITHUB_HEAD_REF || { echo "Head branch not found"; exit 1; }
+          git show origin/$GITHUB_BASE_REF || { echo "Base branch not found"; exit 1; }
 
           # Compare base branch (target branch) with head branch (source branch)
           changed_files=$(git diff --name-only origin/$GITHUB_HEAD_REF...$GITHUB_BASE_REF)
