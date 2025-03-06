@@ -37,27 +37,22 @@ jobs:
       - name: Get list of changed files
         id: get-changed-files
         run: |
-          # Fetch from the origin (your repo) first
           git fetch origin
 
-          # Check if upstream is set (for cross-repo PRs)
+          # Check if upstream exists, if not, add it
           if ! git remote get-url upstream &>/dev/null; then
-            echo "Upstream not found, skipping upstream fetch"
-          else
-            # If it's a cross-repo PR, fetch from upstream
-            echo "Fetching from upstream (instana repo)..."
-            git fetch upstream
+            echo "Upstream not found, adding upstream"
+            git remote add upstream https://github.com/instana/observability-as-code.git
           fi
 
-          # Determine if it's a cross-fork PR (PR from disha-148/main to instana/main)
-          if [[ "$GITHUB_HEAD_REF" == "main" && "$GITHUB_BASE_REF" == "main" && "$GITHUB_REPOSITORY" == "disha-148/observability-as-code" && "$GITHUB_HEAD_REF" != "$GITHUB_BASE_REF" ]]; then
-            # It's a PR from disha-148/main to instana/main
-            echo "Fetching upstream main branch (from instana repo)"
-            git fetch upstream main
-          else
-            # It's not a cross-repo PR, compare within the same repository
-            echo "Comparing changes within the same repository"
+          # Ensure we have the base and head branches from the correct remotes
+          if [[ "$GITHUB_BASE_REF" == "main" && "$GITHUB_HEAD_REF" == *"test-environment"* ]]; then
+            # Same repo PR (same fork)
             git fetch origin $GITHUB_BASE_REF
+            git fetch origin $GITHUB_HEAD_REF
+          else
+            # Cross-repo PR (fork to upstream)
+            git fetch upstream $GITHUB_BASE_REF
             git fetch origin $GITHUB_HEAD_REF
           fi
 
@@ -80,7 +75,6 @@ jobs:
 
           # Set it as an environment variable for later use
           echo "changed_files=$changed_files" >> $GITHUB_ENV
-
 
       - name: Verify base and head SHAs
         run: |
