@@ -38,23 +38,21 @@ jobs:
         id: get-changed-files
         run: |
           git fetch origin
-
-          # Check if upstream exists (forked repo) and add it if it doesn't exist
+          # Check if upstream exists, if not, add it
           if ! git remote get-url upstream &>/dev/null; then
-            echo "Upstream not found, skipping upstream fetch"
-          else
-            git fetch upstream
+            echo "Upstream not found, adding upstream"
+            git remote add upstream https://github.com/instana/observability-as-code.git
           fi
+          
+          # Fetch both the base and head branches from upstream and origin
+          git fetch origin $GITHUB_HEAD_REF
+          git fetch upstream $GITHUB_BASE_REF
 
           echo "Base branch: $GITHUB_BASE_REF"
           echo "Head branch: $GITHUB_HEAD_REF"
 
-          # Fetch both base and head branches to ensure they exist
-          git fetch origin $GITHUB_BASE_REF
-          git fetch origin $GITHUB_HEAD_REF
-
           # Use the correct references to compare the base and head commits
-          changed_files=$(git diff --name-only origin/$GITHUB_BASE_REF...origin/$GITHUB_HEAD_REF)
+          changed_files=$(git diff --name-only upstream/$GITHUB_BASE_REF...origin/$GITHUB_HEAD_REF)
           echo "Changed files: $changed_files"
 
           # Convert list of files to a single line, space-separated
@@ -62,6 +60,11 @@ jobs:
 
           # Set it as an environment variable for later use
           echo "changed_files=$changed_files" >> $GITHUB_ENV
+
+      - name: Verify base and head SHAs
+        run: |
+          git show ${{ github.event.pull_request.base.sha }}
+          git show ${{ github.event.pull_request.head.sha }}
 
       - name: Lint packages
         run: |
