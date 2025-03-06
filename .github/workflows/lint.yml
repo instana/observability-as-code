@@ -63,11 +63,6 @@ jobs:
           # Set it as an environment variable for later use
           echo "changed_files=$changed_files" >> $GITHUB_ENV
 
-      - name: Verify base and head SHAs
-        run: |
-          git show ${{ github.event.pull_request.base.sha }}
-          git show ${{ github.event.pull_request.head.sha }}
-
       - name: Lint packages
         run: |
           changed_files="${{ env.changed_files }}"
