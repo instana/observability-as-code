@@ -10,7 +10,7 @@ on:
 
 jobs:
   lint-packages:
-    runs-on: windows-latest
+    runs-on: windows-latest  # Run on Windows
 
     steps:
       - name: Checkout repository
@@ -28,24 +28,19 @@ jobs:
 
       - name: Download stanctl-integration binary
         run: |
-          # Download the correct binary for macOS
-          # curl -L https://github.com/disha-148/observability-as-code/releases/download/stanctl-configuration-v1.3.0/stanctl-integration-macos -o ~/stanctl-integration
-          # curl -L https://github.com/disha-148/observability-as-code/releases/download/stanctl-configuration-v1.3.0/stanctl-integration-linux -o ~/stanctl-integration
-          curl -L https://github.com/disha-148/observability-as-code/releases/download/stanctl-configuration-v1.3.0/stanctl-integration-win.exe -o ~/stanctl-integration
+          # Download the correct binary for Windows
+          curl -L https://github.com/disha-148/observability-as-code/releases/download/stanctl-configuration-v1.3.0/stanctl-integration-win.exe -o $env:USERPROFILE\stanctl-integration.exe
 
           # Verify the file type after download
-          file ~/stanctl-integration
-          ls -l ~/stanctl-integration
-
-          # Make sure the binary is executable
-          chmod +x ~/stanctl-integration
-
+          dir $env:USERPROFILE\stanctl-integration.exe
+          
           # Test if the binary is working and print the version
-          ~/stanctl-integration --version
-          ~/stanctl-integration --help
+          & $env:USERPROFILE\stanctl-integration.exe --version
+          & $env:USERPROFILE\stanctl-integration.exe --help
 
       - name: Add stanctl-integration to PATH
-        run: echo "$HOME/stanctl-integration" >> "$GITHUB_PATH"
+        run: |
+          echo "$env:USERPROFILE\stanctl-integration.exe" >> $env:GITHUB_PATH
 
       - name: Get list of changed files
         id: get-changed-files
@@ -60,22 +55,21 @@ jobs:
           changed_files=$(echo "$changed_files" | tr '\n' ' ')
 
           # Set it as an environment variable for later use
-          echo "changed_files=$changed_files" >> $GITHUB_ENV
+          echo "changed_files=$changed_files" >> $env:GITHUB_ENV
 
       - name: Lint packages
         run: |
           changed_files="${{ env.changed_files }}"
           
           # Loop over each directory and check if it has changes
-          for dir in packages/@instana-integration/*; do
-            if [ -d "$dir" ]; then
-              if echo "$changed_files" | grep -q "$dir"; then
-                echo "Linting package: $dir"
-                cd "$dir"
-                ~/stanctl-integration lint --debug --strict-mode
-                cd -
-              else
-                echo "No changes in $dir, skipping lint"
-              fi
-            fi
-          done
+          foreach ($dir in Get-ChildItem -Directory "packages\@instana-integration") {
+            if (echo $changed_files | Select-String $dir.FullName) {
+              Write-Output "Linting package: $dir"
+              Set-Location -Path $dir.FullName
+              & $env:USERPROFILE\stanctl-integration.exe lint --debug --strict-mode
+              Set-Location -Path $env:OLDPWD
+            } else {
+              Write-Output "No changes in $dir, skipping lint"
+            }
+          }
+
