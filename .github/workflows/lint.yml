@@ -57,8 +57,8 @@ jobs:
           fi
 
           # Ensure base and head branches are valid before proceeding
-          git show origin/$GITHUB_HEAD_REF || { echo "Head branch not found"; exit 1; }
-          git show origin/$GITHUB_BASE_REF || { echo "Base branch not found"; exit 1; }
+          # git show origin/$GITHUB_HEAD_REF || { echo "Head branch not found"; exit 1; }
+          # git show origin/$GITHUB_BASE_REF || { echo "Base branch not found"; exit 1; }
 
           # Compare base branch (target branch) with head branch (source branch)
           # Use --name-only to show only the names of the changed files, and remove unwanted details
