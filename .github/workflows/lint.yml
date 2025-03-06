@@ -38,21 +38,29 @@ jobs:
         id: get-changed-files
         run: |
           git fetch origin
+
           # Check if upstream exists, if not, add it
           if ! git remote get-url upstream &>/dev/null; then
             echo "Upstream not found, adding upstream"
             git remote add upstream https://github.com/instana/observability-as-code.git
           fi
-          
-          # Fetch both the base and head branches from upstream and origin
-          git fetch origin $GITHUB_HEAD_REF
-          git fetch upstream $GITHUB_BASE_REF
+
+          # Determine if it's a cross-fork PR or same-repo PR
+          if [[ "$GITHUB_BASE_REF" == "main" && "$GITHUB_HEAD_REF" == *"test-environment"* ]]; then
+            # Same repo PR (same fork)
+            git fetch origin $GITHUB_BASE_REF
+            git fetch origin $GITHUB_HEAD_REF
+          else
+            # Cross-repo PR (fork to upstream)
+            git fetch upstream $GITHUB_BASE_REF
+            git fetch origin $GITHUB_HEAD_REF
+          fi
 
           echo "Base branch: $GITHUB_BASE_REF"
           echo "Head branch: $GITHUB_HEAD_REF"
 
-          # Use the correct references to compare the base and head commits
-          changed_files=$(git diff --name-only upstream/$GITHUB_BASE_REF...origin/$GITHUB_HEAD_REF)
+          # Compare base branch (target branch) with head branch (source branch)
+          changed_files=$(git diff --name-only origin/$GITHUB_HEAD_REF...$GITHUB_BASE_REF)
           echo "Changed files: $changed_files"
 
           # Convert list of files to a single line, space-separated
