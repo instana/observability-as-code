@@ -64,6 +64,7 @@ jobs:
           git fetch --all
 
           # Compare base branch (target branch) with head branch (source branch)
+          # Use --name-only to show only the names of the changed files
           changed_files=$(git diff --name-only origin/$GITHUB_HEAD_REF..origin/$GITHUB_BASE_REF)
 
           # Convert list of files to a single line, space-separated
@@ -71,7 +72,6 @@ jobs:
 
           # Set it as an environment variable for later use
           echo "changed_files=$changed_files" >> $GITHUB_ENV
-
 
       - name: Lint packages
         run: |
