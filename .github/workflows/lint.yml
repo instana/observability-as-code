@@ -36,35 +36,22 @@ jobs:
 
       - name: Get list of changed files
         id: get-changed-files
-        run: |
-          # Fetch from the origin (your repo) first
+        run: |          
           git fetch origin
 
-          # Check if upstream is set (for cross-repo PRs)
           if git remote get-url upstream &>/dev/null; then
-            # If it's a cross-repo PR, fetch from upstream
             git fetch upstream
           fi
 
-          # Determine if it's a cross-fork PR (PR from disha-148/main to instana/main)
           if [[ "$GITHUB_HEAD_REF" == "main" && "$GITHUB_BASE_REF" == "main" && "$GITHUB_REPOSITORY" == "disha-148/observability-as-code" && "$GITHUB_HEAD_REF" != "$GITHUB_BASE_REF" ]]; then
-            # It's a PR from disha-148/main to instana/main
             git fetch upstream main
           else
-            # It's not a cross-repo PR, compare within the same repository
             git fetch origin $GITHUB_BASE_REF
             git fetch origin $GITHUB_HEAD_REF
           fi
-
-          # Ensure base and head branches are valid before proceeding
-          # git show origin/$GITHUB_HEAD_REF || { echo "Head branch not found"; exit 1; }
-          # git show origin/$GITHUB_BASE_REF || { echo "Base branch not found"; exit 1; }
-
-          # Compare base branch (target branch) with head branch (source branch)
-          # Use --name-only to show only the names of the changed files, and remove unwanted details
+          
           changed_files=$(git diff --name-only origin/$GITHUB_HEAD_REF..origin/$GITHUB_BASE_REF)
 
-          # If there are no changes, return a default message
           if [ -z "$changed_files" ]; then
             echo "No changes found."
             changed_files="No changes"
@@ -73,7 +60,6 @@ jobs:
           # Convert list of files to a single line, space-separated
           changed_files=$(echo "$changed_files" | tr '\n' ' ')
 
-          # Echo base branch, head branch, and changed files
           echo "Base branch: $GITHUB_BASE_REF"
           echo "Head branch: $GITHUB_HEAD_REF"
           echo "Changed files: $changed_files"
