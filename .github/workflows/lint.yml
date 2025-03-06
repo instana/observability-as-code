@@ -10,7 +10,7 @@ on:
 
 jobs:
   lint-packages:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
@@ -29,7 +29,8 @@ jobs:
       - name: Download stanctl-integration binary
         run: |
           # Download the correct binary for macOS
-          curl -L https://github.com/disha-148/observability-as-code/releases/download/stanctl-configuration-v1.3.0/stanctl-integration-macos -o ~/stanctl-integration
+          # curl -L https://github.com/disha-148/observability-as-code/releases/download/stanctl-configuration-v1.3.0/stanctl-integration-macos -o ~/stanctl-integration
+          curl -L https://github.com/disha-148/observability-as-code/releases/download/stanctl-configuration-v1.3.0/stanctl-integration-linux -o ~/stanctl-integration
 
           # Verify the file type after download
           file ~/stanctl-integration
