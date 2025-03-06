@@ -61,8 +61,14 @@ jobs:
           git show origin/$GITHUB_BASE_REF || { echo "Base branch not found"; exit 1; }
 
           # Compare base branch (target branch) with head branch (source branch)
-          # Use --name-only to show only the names of the changed files
+          # Use --name-only to show only the names of the changed files, and remove unwanted details
           changed_files=$(git diff --name-only origin/$GITHUB_HEAD_REF..origin/$GITHUB_BASE_REF)
+
+          # If there are no changes, return a default message
+          if [ -z "$changed_files" ]; then
+            echo "No changes found."
+            changed_files="No changes"
+          fi
 
           # Convert list of files to a single line, space-separated
           changed_files=$(echo "$changed_files" | tr '\n' ' ')
