@@ -389,6 +389,7 @@ async function handleLint(argv: any) {
 // Helper function to validate `package.json`
 async function validatePackageJson(packageData: any, errors: string[], warnings: string[], successMessages: string[], strictMode: boolean): Promise<void> {
     // Validate `name`
+    console.log("test message");
     const namePattern = /^@instana-integration\/[a-zA-Z0-9-_]+$/;
     if (!namePattern.test(packageData.name)) {
         const warningMessage = `Warning: Package name "${packageData.name}" does not align with the IBM package naming convention.`;
