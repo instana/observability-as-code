@@ -35,26 +35,30 @@ jobs:
         run: echo "$HOME/stanctl-integration" >> "$GITHUB_PATH"
 
       - name: Get list of changed files
+        id: get-changed-files
         run: |
           git fetch --all
           echo "Base branch: $GITHUB_BASE_REF"
           echo "Head branch: $GITHUB_HEAD_REF"
-            
-          # Correct logic to detect whether the PR is within the same repository
-          if [[ "$GITHUB_REPOSITORY" != "${{ github.event.pull_request.head.repo.full_name }}" ]]; then
-            # PR is from a different repository, so we exit with an error
-            echo "Error: PR is from a different repository. This workflow doesn't support cross-repository PRs."
-            exit 1
-          else
-            # PR is from the same repository, so diff between base and head branches in the same repo
+
+          # Check if PR is from the same repository or a different repository
+          if [[ "${GITHUB_REPOSITORY}" == "${{ github.event.pull_request.head.repo.owner.login }}/${{ github.event.pull_request.head.repo.name }}" ]]; then
+            # PR is from the same repository
+            echo "PR is from the same repository. Comparing changes between base and head branches."
             changed_files=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }} origin/${{ github.event.pull_request.head.ref }})
+          else
+            # PR is from a different repository
+            echo "PR is from a different repository. Fetching changes from the external repository."
+            # Fetch the external repository changes
+            git fetch https://github.com/${{ github.event.pull_request.head.repo.full_name }} ${{ github.event.pull_request.head.ref }}
+            changed_files=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }} FETCH_HEAD)
           fi
-            
+
           echo "Changed files: $changed_files"
-            
+
           # Convert list of files to a single line, space-separated
           changed_files=$(echo "$changed_files" | tr '\n' ' ')
-            
+
           # Set it as an environment variable for later use
           echo "changed_files=$changed_files" >> $GITHUB_ENV
 
