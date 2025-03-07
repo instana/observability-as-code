@@ -43,16 +43,10 @@ jobs:
           
           # If the PR is from the same repository
           if [[ "$GITHUB_REPOSITORY" == "$GITHUB_EVENT_PULLREQUEST_HEAD_REPO" ]]; then
-            changed_files=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
+            changed_files=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }} origin/${{ github.event.pull_request.head.ref }})
           else
-            # PR is from another repo
-            echo "Fetching from external repository"
-            # Add the external repository to the remotes
-            git remote add other-repo https://github.com/other-repo/other-repo.git
-            git fetch other-repo
-          
-            # Fetch the changes from the specific branch in the external repo
-            changed_files=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }} other-repo/${{ github.event.pull_request.head.ref }})
+            echo "Error: This shouldn't happen for same-repository PRs."
+            exit 1
           fi
 
           echo "Changed files: $changed_files"
