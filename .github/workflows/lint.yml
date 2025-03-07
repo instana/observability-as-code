@@ -28,7 +28,7 @@ jobs:
 
       - name: Download stanctl-integration binary
         run: |
-          curl -f -L https://github.com/instana/observability-as-code/releases/download/stanctl-configuration-v1.3.0/stanctl-integration-linux -o ~/stanctl-integration   
+          curl -f -L https://github.com/disha-148/observability-as-code/releases/download/stanctl-configuration-v1.3.0/stanctl-integration-linux -o ~/stanctl-integration   
           # Check if the file was downloaded successfully
           if [ ! -f ~/stanctl-integration ]; then
             echo "Error: stanctl-integration binary not found!"
