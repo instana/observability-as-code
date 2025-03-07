@@ -34,7 +34,7 @@ Below are the Python runtime metrics that are currently supported by this integr
 | system.network.io       | Events  | Number |
 
 
-### Resource Attributes for Python Application
+### Resource Attributes
 
 Below are the resource attributes that are currently supported by this integration package.
 
