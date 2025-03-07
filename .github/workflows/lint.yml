@@ -1,0 +1,83 @@
+name: Lint Packages
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    branches:
+      - main
+
+jobs:
+  lint-packages:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies for tools/integration
+        run: npm ci
+        working-directory: tools/integration
+
+      - name: Download stanctl-integration binary
+        run: |
+          curl -f -L https://github.com/instana/observability-as-code/releases/download/stanctl-configuration-v1.3.0/stanctl-integration-linux -o ~/stanctl-integration   
+          # Check if the file was downloaded successfully
+          if [ ! -f ~/stanctl-integration ]; then
+            echo "Error: stanctl-integration binary not found!"
+            exit 1
+          fi
+          chmod +x ~/stanctl-integration
+
+      - name: Add stanctl-integration to PATH
+        run: echo "$HOME/stanctl-integration" >> "$GITHUB_PATH"
+
+      - name: Get list of changed files
+        id: get-changed-files
+        run: |
+          git fetch --all
+          echo "Base branch: $GITHUB_BASE_REF"
+          echo "Head branch: $GITHUB_HEAD_REF"
+
+          # Check if PR is from the same repository or a different repository
+          if [[ "${GITHUB_REPOSITORY}" == "${{ github.event.pull_request.head.repo.owner.login }}/${{ github.event.pull_request.head.repo.name }}" ]]; then
+            # PR is from the same repository
+            changed_files=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }} origin/${{ github.event.pull_request.head.ref }})
+          else
+            # PR is from a different repository and Fetch the changes
+            git fetch https://github.com/${{ github.event.pull_request.head.repo.full_name }} ${{ github.event.pull_request.head.ref }}
+            changed_files=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }} FETCH_HEAD)
+          fi
+
+          echo "Changed files: $changed_files"
+
+          # Convert list of files to a single line, space-separated
+          changed_files=$(echo "$changed_files" | tr '\n' ' ')
+
+          # Set it as an environment variable for later use
+          echo "changed_files=$changed_files" >> $GITHUB_ENV
+
+      - name: Lint packages
+        run: |
+          changed_files="${{ env.changed_files }}"
+
+          # Loop over each directory and check if it has changes
+          for dir in packages/@instana-integration/*; do
+            if [ -d "$dir" ]; then
+              if echo "$changed_files" | grep -q "$dir"; then
+                echo "Linting package: $dir"
+                cd "$dir"
+                ~/stanctl-integration lint --debug --strict-mode
+                cd -
+              else
+                echo "No changes in $dir, skipping lint"
+              fi
+            fi
+          done

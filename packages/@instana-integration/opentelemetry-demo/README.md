@@ -11,7 +11,11 @@ Below are the dashboards that are currently supported by this integration packag
 | OpenTelemetry Demo - Go Runtime Metrics   | checkout | Go          |
 | OpenTelemetry Demo - Node.js Runtime Metrics   | payment | Node.js   |
 
-### Resource Attributes for Node.js Application
+## Metrics
+
+### Semantic Conventions
+
+### Resource Attributes
 
 Below are the resource attributes that are currently supported by this integration package.
 

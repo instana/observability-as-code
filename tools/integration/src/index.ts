@@ -2,7 +2,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import https from 'https';
 import yargs from 'yargs';
 import { globSync } from 'glob';
@@ -11,6 +11,7 @@ import logger from './logger'; // Import the logger
 import { exec, spawn } from 'child_process';
 import { promisify } from 'util';
 import { input, checkbox, password, Separator } from '@inquirer/prompts';
+import semver from 'semver';
 
 const execAsync = promisify(exec);
 
@@ -106,6 +107,27 @@ const readPackageJson = (filePath: string) => {
         return null;
     }
 };
+
+// Helper function to check and read README.md
+const readReadmeFile = (directoryPath: string) : string | null => {
+    const readmeFilePath = path.join(directoryPath, 'README.md');
+    try {
+        if(fs.existsSync(readmeFilePath)){
+	    return fs.readFileSync(readmeFilePath, 'utf8');
+	} else {
+	    logger.error(`README.md is missing in the directory: ${directoryPath}`);
+            return null;
+	}
+    } catch (error){
+        logger.error('Failed to read README.md.');
+        return null;
+    }
+};
+
+// Helper function to check if the package is private
+function isPrivatePackage(packageData: any): boolean {
+    return packageData.private === true;
+}
 
 async function isUserLoggedIn() {
     const homeDir = process.env.HOME || process.env.USERPROFILE || '';
@@ -271,10 +293,206 @@ yargs
                 demandOption: true
             });
     }, handlePublish)
+    .command('lint', 'Provides linting for package', (yargs) => {
+    	return yargs
+            .option('path', {
+        	alias: 'p',
+                describe: 'The path to the package',
+                type: 'string',
+                demandOption: false
+            })
+	    .option('strict-mode', {
+                alias: 's',
+                describe: 'Restricts the validations',
+                type: 'boolean',
+                demandOption: false
+            })
+	    .option('debug', {
+		alias: 'd',
+                describe: 'Enable debug mode',
+                type: 'boolean',
+                default: false
+            });
+    }, handleLint)
     .demandCommand(1, 'You need at least one command before moving on')
     .help()
     .alias('help', 'h')
     .argv;
+
+// Function to handle lint logic
+async function handleLint(argv: any) {
+    const currentDirectory = process.cwd();
+    const errors: string[] = [];
+    const warnings: string[] = [];
+    const successMessages: string[] = [];
+
+    const packageData = readPackageJson(currentDirectory);
+    if (isPrivatePackage(packageData)) {
+    	console.log(`Skipping linting for package: ${packageData.name}`);
+        process.exit(0);
+    }
+
+    const readmeContent = readReadmeFile(currentDirectory);
+    const dashboardsPath = path.join(currentDirectory, 'dashboards');
+
+    // Check README file
+    if (readmeContent) {
+	try {
+	    validateReadmeContent(readmeContent, packageData.name, errors, warnings, successMessages);
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            errors.push(errorMessage);
+        }
+    } else {
+        errors.push('README.md is missing or empty.');
+    }
+    try {
+	const strictMode = argv['strict-mode'];
+        await validatePackageJson(packageData, errors, warnings, successMessages, strictMode);
+        validateDashboardFiles(dashboardsPath, errors, warnings, successMessages);
+    } catch (error) {
+        errors.push(`Linting failed: ${error}`);
+    }
+
+    // Check if debug is enabled
+    const isDebug = argv.debug;
+
+    if (isDebug) {
+	successMessages.forEach((message) => {
+            logger.info(message);
+        });
+        if (warnings.length > 0) {
+            logger.warn(`Warnings encountered during linting:`);
+            warnings.forEach((warning) => {
+                logger.warn(warning);
+            });
+        }
+        if (errors.length > 0) {
+            logger.error(`Linting failed with the following errors:`);
+            errors.forEach((error) => {
+                logger.error(error);
+            });
+        }
+    }
+
+    if (errors.length > 0) {
+        logger.error(`Linting failed.`);
+        process.exit(-1);
+    } else {
+        if (!isDebug) {
+            logger.info('Linting completed successfully.');
+        }
+        process.exit(0);
+    }
+}
+
+// Helper function to validate `package.json`
+async function validatePackageJson(packageData: any, errors: string[], warnings: string[], successMessages: string[], strictMode: boolean): Promise<void> {
+    // Validate `name`
+    const namePattern = /^@instana-integration\/[a-zA-Z0-9-_]+$/;
+    if (!namePattern.test(packageData.name)) {
+        const warningMessage = `Warning: Package name "${packageData.name}" does not align with the IBM package naming convention.`;
+	if(strictMode) {
+	    errors.push(warningMessage);
+	} else {
+	    warnings.push(warningMessage);
+	}
+    } else {
+        successMessages.push('Field "name" is valid.');
+    }
+
+    // Validate `version`
+    const versionPattern = /^\d+\.\d+\.\d+$/;
+    if (!versionPattern.test(packageData.version)) {
+        errors.push(`Invalid version "${packageData.version}". The version must follow the format "x.y.z".`);
+    } else {
+        successMessages.push('Field "version" format is valid.');
+    }
+
+    // Fetch the currently published version from npm and compare
+    try {
+        const response = await axios.get(`https://registry.npmjs.org/${packageData.name}`);
+        const publishedVersion = response.data['dist-tags']?.latest;
+
+        if (semver.eq(packageData.version, publishedVersion)) {
+            errors.push(`Package version "${packageData.version}" is the same as the currently published version "${publishedVersion}". It must be greater than the currently published version.`);
+        } else if (semver.lt(packageData.version, publishedVersion)) {
+            errors.push(`Invalid version "${packageData.version}". It must be greater than the currently published version "${publishedVersion}".`);
+        } else {
+            successMessages.push('Package version is valid and greater than the currently published version.');
+        }
+    } catch (error) {
+        errors.push(error instanceof Error ? error.message : String(error));
+    }
+
+    // Check for required fields and description
+    const requiredFields = ['name', 'version', 'author', 'license', 'description'];
+    for (const field of requiredFields) {
+        if (!packageData[field]) {
+            if (field === 'description') {
+                warnings.push('Warning: The "description" field is missing. Adding a description is recommended.');
+            } else {
+                errors.push(`Missing required field "${field}" in package.json.`);
+            }
+        } else {
+            successMessages.push(`Field "${field}" is present.`);
+        }
+    }
+}
+
+// Helper function to validate dashboard files
+function validateDashboardFiles(dashboardsPath: string, errors: string[], warnings: string[], successMessages: string[]): void {
+    const files = fs.readdirSync(dashboardsPath);
+    const jsonFiles = files.filter(file => file.endsWith('.json'));
+
+    if (jsonFiles.length === 0) {
+        warnings.push('No JSON files found in the dashboards folder.');
+        return;
+    }
+
+    jsonFiles.forEach(file => {
+        const filePath = path.join(dashboardsPath, file);
+        try {
+            const fileContent = fs.readFileSync(filePath, 'utf-8');
+            const dashboard = JSON.parse(fileContent);
+            const globalAccessRule = {
+                accessType: 'READ_WRITE',
+                relationType: 'GLOBAL',
+                relatedId: ''
+            };
+            const globalAccessRuleExists = dashboard.accessRules?.some(
+                (rule: AccessRule) =>
+                    rule.accessType === globalAccessRule.accessType &&
+                    rule.relationType === globalAccessRule.relationType
+            );
+            if (!globalAccessRuleExists) {
+                errors.push(`Global access rule is missing in the dashboard file: ${file}.`);
+            } else {
+                successMessages.push(`Global access rule is correctly defined in the dashboard file: ${file}.`);
+            }
+        } catch (error) {
+            errors.push(`Error validating file ${file}: ${error instanceof Error ? error.message : String(error)}`);
+        }
+    });
+}
+
+// Helper function to validate README content
+function validateReadmeContent(readmeContent: string, packageName: string, errors: string[], warnings: string[], successMessages: string[]): void {
+    const requiredSections = [
+        packageName,
+        'Dashboards',
+        'Metrics',
+        'Semantic Conventions',
+        'Resource Attributes'
+    ];
+    const missingSections = requiredSections.filter(section => !readmeContent.includes(section));
+
+    if (missingSections.length > 0) {
+        errors.push(`README.md is missing required sections: ${missingSections.join(', ')}`);
+    } else {
+        successMessages.push('README.md contains all required sections.');
+    }
+}
 
 // Function to handle download logic
 async function handleDownload(argv: any) {
