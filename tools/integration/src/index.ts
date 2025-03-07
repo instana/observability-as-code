@@ -398,7 +398,7 @@ async function validatePackageJson(packageData: any, errors: string[], warnings:
 	    warnings.push(warningMessage);
 	}
     } else {
-        successMessages.push('Field "name" is valid. Disha');
+        successMessages.push('Field "name" is valid.');
     }
 
     // Validate `version`
