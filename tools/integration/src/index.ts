@@ -404,7 +404,7 @@ async function validatePackageJson(packageData: any, errors: string[], warnings:
     // Validate `version`
     const versionPattern = /^\d+\.\d+\.\d+$/;
     if (!versionPattern.test(packageData.version)) {
-        errors.push(`Invalid version "${packageData.version}". The version must follow the format "x.x.x".`);
+        errors.push(`Invalid version "${packageData.version}". The version must follow the format "x.y.z".`);
     } else {
         successMessages.push('Field "version" format is valid.');
     }
