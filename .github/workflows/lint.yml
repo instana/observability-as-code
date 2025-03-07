@@ -35,42 +35,33 @@ jobs:
         run: echo "$HOME/stanctl-integration" >> "$GITHUB_PATH"
 
       - name: Get list of changed files
-        id: get-changed-files
-        run: |          
-          git fetch origin
-
-          if git remote get-url upstream &>/dev/null; then
-            git fetch upstream
-          fi
-
-          if [[ "$GITHUB_HEAD_REF" == "main" && "$GITHUB_BASE_REF" == "main" && "$GITHUB_REPOSITORY" == "disha-148/observability-as-code" && "$GITHUB_HEAD_REF" != "$GITHUB_BASE_REF" ]]; then
-            git fetch upstream main
-          else
-            git fetch origin $GITHUB_BASE_REF
-            git fetch origin $GITHUB_HEAD_REF
-          fi
-          
-          changed_files=$(git diff --name-only origin/$GITHUB_HEAD_REF..origin/$GITHUB_BASE_REF)
-
-          if [ -z "$changed_files" ]; then
-            echo "No changes found."
-            changed_files="No changes"
-          fi
-
-          # Convert list of files to a single line, space-separated
-          changed_files=$(echo "$changed_files" | tr '\n' ' ')
-
+        run: |
+          git fetch --all
           echo "Base branch: $GITHUB_BASE_REF"
           echo "Head branch: $GITHUB_HEAD_REF"
+            
+          # Correct logic to detect whether the PR is within the same repository
+          if [[ "$GITHUB_REPOSITORY" != "${{ github.event.pull_request.head.repo.full_name }}" ]]; then
+            # PR is from a different repository, so we exit with an error
+            echo "Error: PR is from a different repository. This workflow doesn't support cross-repository PRs."
+            exit 1
+          else
+            # PR is from the same repository, so diff between base and head branches in the same repo
+            changed_files=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }} origin/${{ github.event.pull_request.head.ref }})
+          fi
+            
           echo "Changed files: $changed_files"
-
+            
+          # Convert list of files to a single line, space-separated
+          changed_files=$(echo "$changed_files" | tr '\n' ' ')
+            
           # Set it as an environment variable for later use
           echo "changed_files=$changed_files" >> $GITHUB_ENV
 
       - name: Lint packages
         run: |
           changed_files="${{ env.changed_files }}"
-          
+
           # Loop over each directory and check if it has changes
           for dir in packages/@instana-integration/*; do
             if [ -d "$dir" ]; then
