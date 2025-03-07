@@ -398,7 +398,7 @@ async function validatePackageJson(packageData: any, errors: string[], warnings:
 	    warnings.push(warningMessage);
 	}
     } else {
-        successMessages.push('Field "name" is valid.');
+        successMessages.push('Field "name" is valid. Disha');
     }
 
     // Validate `version`
@@ -422,7 +422,12 @@ async function validatePackageJson(packageData: any, errors: string[], warnings:
             successMessages.push('Package version is valid and greater than the currently published version.');
         }
     } catch (error) {
-        errors.push(error instanceof Error ? error.message : String(error));
+        if ((error as AxiosError).response?.status === 404) {
+            successMessages.push(`Package "${packageData.name}" not found on npm. You can safely publish this version.`);
+        } else {
+            const axiosError = error as AxiosError;
+            errors.push(axiosError.message || String(error));
+        }
     }
 
     // Check for required fields and description
