@@ -40,17 +40,18 @@ jobs:
           git fetch --all
           echo "Base branch: $GITHUB_BASE_REF"
           echo "Head branch: $GITHUB_HEAD_REF"
-          
-          # If the PR is from the same repository
-          if [[ "$GITHUB_REPOSITORY" == "$GITHUB_EVENT_PULLREQUEST_HEAD_REPO" ]]; then
+
+          # Correct logic to detect whether the PR is within the same repository
+          if [[ "$GITHUB_REPOSITORY" == "${{ github.event.pull_request.head.repo.full_name }}" ]]; then
+            # PR is from the same repository, so diff between base and head branches in the same repo
             changed_files=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }} origin/${{ github.event.pull_request.head.ref }})
           else
-            echo "Error: This shouldn't happen for same-repository PRs."
+            echo "Error: This should not happen for same-repository PRs."
             exit 1
           fi
 
           echo "Changed files: $changed_files"
-          
+
           # Convert list of files to a single line, space-separated
           changed_files=$(echo "$changed_files" | tr '\n' ' ')
 
@@ -60,7 +61,7 @@ jobs:
       - name: Lint packages
         run: |
           changed_files="${{ env.changed_files }}"
-          
+
           # Loop over each directory and check if it has changes
           for dir in packages/@instana-integration/*; do
             if [ -d "$dir" ]; then
