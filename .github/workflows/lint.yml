@@ -12,7 +12,6 @@ jobs:
   lint-packages:
     runs-on: ubuntu-latest
 
-    #test
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
