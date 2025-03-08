@@ -424,7 +424,7 @@ async function validatePackageJson(packageData: any, errors: string[], warnings:
         }
     } catch (error) {
         if ((error as AxiosError).response?.status === 404) {
-            successMessages.push(`Package "${packageData.name}" not found on npmjs. This is a new branch.`);
+            successMessages.push(`Package "${packageData.name}" not found on npm. This is a new branch.`);
         } else {
             const axiosError = error as AxiosError;
             errors.push(axiosError.message || String(error));
