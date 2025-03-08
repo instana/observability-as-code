@@ -1,17 +1,18 @@
 #!/usr/bin/env node
 
-import fs from 'fs';
-import path from 'path';
+import { Separator, checkbox, input, password } from '@inquirer/prompts';
 import axios, { AxiosError } from 'axios';
-import https from 'https';
-import yargs from 'yargs';
-import { globSync } from 'glob';
-import Handlebars from 'handlebars';
-import logger from './logger'; // Import the logger
 import { exec, spawn } from 'child_process';
+
+import Handlebars from 'handlebars';
+import fs from 'fs';
+import { globSync } from 'glob';
+import https from 'https';
+import logger from './logger'; // Import the logger
+import path from 'path';
 import { promisify } from 'util';
-import { input, checkbox, password, Separator } from '@inquirer/prompts';
 import semver from 'semver';
+import yargs from 'yargs';
 
 const execAsync = promisify(exec);
 
@@ -423,7 +424,7 @@ async function validatePackageJson(packageData: any, errors: string[], warnings:
         }
     } catch (error) {
         if ((error as AxiosError).response?.status === 404) {
-            successMessages.push(`Package "${packageData.name}" not found on npm. You can safely publish this version.`);
+            successMessages.push(`Package "${packageData.name}" not found on npm. This is a new branch.`);
         } else {
             const axiosError = error as AxiosError;
             errors.push(axiosError.message || String(error));
