@@ -30,7 +30,7 @@ jobs:
         run: npm ci
 
       - name: Configure npm for lerna
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_PUBLISHING_TOKEN }}" > ~/.npmrc
 
       - name: Set up Git user
         run: |
@@ -40,4 +40,4 @@ jobs:
       - name: Publish packages
         run: npx lerna publish from-package --yes
         env:
-          NODE_AUTH_TOKEN: ABC123
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISHING_TOKEN }}
