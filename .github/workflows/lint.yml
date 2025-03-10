@@ -67,8 +67,7 @@ jobs:
       - name: Lint packages
         run: |
           changed_files="${{ env.changed_files }}"
-
-          # Loop over each directory and check if it has changes
+          
           for dir in packages/@instana-integration/*; do
             if [ -d "$dir" ]; then
               if echo "$changed_files" | grep -q "$dir"; then
