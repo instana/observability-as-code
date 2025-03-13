@@ -937,7 +937,7 @@ async function handleInit() {
         license: string;
         scripts: object;
         publishConfig: {
-		access: string;
+	    access: string;
         };
     } = {
         name: packageName,
@@ -947,7 +947,7 @@ async function handleInit() {
         license: packageLicense,
         scripts: {},
         publishConfig: {
-        access: 'public'
+            access: 'public'
         }
     };
 
@@ -1035,4 +1035,3 @@ $ stanctl-integration import --package ${packageName} \\
     fs.writeFileSync(readmeFilePath, readmeContent);
     logger.info(`Created the package README file at ${readmeFilePath}`);
 }
-
