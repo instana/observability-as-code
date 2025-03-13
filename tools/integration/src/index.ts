@@ -937,7 +937,7 @@ async function handleInit() {
         license: string;
         scripts: object;
         publishConfig: {
-        	access: string;
+	    access: string;
         };
     } = {
         name: packageName,
@@ -947,7 +947,7 @@ async function handleInit() {
         license: packageLicense,
         scripts: {},
         publishConfig: {
-        	access: 'public'
+            access: 'public'
         }
     };
 
@@ -959,7 +959,7 @@ async function handleInit() {
     logger.info(`Created the package.json file`);
 
     // Generate README file
-	generateReadme(packagePath, packageName);
+    generateReadme(packagePath, packageName);
 
     logger.info(`Initialized new integration package at ${packagePath}`);
 
@@ -1029,10 +1029,9 @@ $ stanctl-integration import --package ${packageName} \\
 - SERVICE_NAME: Logical name of the service.
 - SERVICE_INSTANCE_ID: The string ID of the service instance. The ID helps to distinguish instances of the same service that exist at the same time (e.g. instances of a horizontally scaled service).
 
-	`;
+    `;
 
     const readmeFilePath = path.join(packagePath, 'README.md');
     fs.writeFileSync(readmeFilePath, readmeContent);
     logger.info(`Created the package README file at ${readmeFilePath}`);
 }
-
