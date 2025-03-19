@@ -971,13 +971,13 @@ async function handleInit() {
 function generateReadme(packagePath: string, packageName: string) {
     const readmeContent = `# ${packageName}
 
-** Write your package description here. **
+(Note: Write your package description here.)
 
 ## Dashboards
 
 Below are the dashboards that are currently supported by this integration package.
 
-** Below are the sample dashboards. Please replace these with your own actual dashboards. **
+(Note: Below are the sample dashboards. Please replace these with your own actual dashboards.)
 | Dashboard Title    | Description                    |
 |--------------------|-----------------------|
 | Runtime Metrics    | Instana custom dashboard that displays runtime metrics for application |
@@ -988,7 +988,7 @@ Below are the dashboards that are currently supported by this integration packag
 
 Below are the runtime metrics that are currently supported by this integration package.
 
-** Below are the sample runtime metrics. Please replace these with your own actual metrics. **
+(Note: Below are the sample runtime metrics. Please replace these with your own actual metrics.)
 | Metrics Name               | Description                       | Unit    |
 |----------------------------|-----------------------------------|---------|
 | <metric.name.heap_inuse>   | Heap used            			 | Number  |
@@ -998,7 +998,7 @@ Below are the runtime metrics that are currently supported by this integration p
 
 Below are the resource attributes that are currently supported by this integration package.
 
-** Below are the sample resource attributes. Please replace these with your own actual resource attributes. **
+(Note: Below are the sample resource attributes. Please replace these with your own actual resource attributes.)
 | Attribute Key                  | Type   |  Description           |
 |--------------------------------|--------|------------------------|
 | <resource.service.name>        | string | This attribute is used to describe the entity name. |
