@@ -1,0 +1,20 @@
+{
+	"description": "The golang application runtime memory is too high",
+	"enabled": true,
+	"entityType": "openTelemetry",
+	"expirationTime": "60000",
+	"name": "Golang Runtime Memory Event",
+	"query": null,
+	"rules": [{
+		"aggregation": "max",
+		"conditionOperator": ">=",
+		"conditionValue": 1000.0,
+		"metricName": "metrics.sums.go.opentelemetry.io/contrib/instrumentation/runtime/process.runtime.go.mem.heap_inuse{}",
+		"metricPattern": null,
+		"rollup": 0,
+		"ruleType": "threshold",
+		"severity": 5,
+		"window": 3600000
+	}],
+	"triggering": false
+}
