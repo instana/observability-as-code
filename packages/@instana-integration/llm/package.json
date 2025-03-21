@@ -4,8 +4,5 @@
   "description": "IBM Instana integration package for large language model",
   "author": "IBM Instana",
   "license": "ISC",
-  "private": true,
-  "publishConfig": {
-    "access": "public"
-  }
+  "private": true
 }

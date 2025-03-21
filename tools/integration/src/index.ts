@@ -936,6 +936,9 @@ async function handleInit() {
         author: string;
         license: string;
         scripts: object;
+        publishConfig: {
+	    access: string;
+        };
     } = {
         name: packageName,
         version: packageVersion,
@@ -943,6 +946,9 @@ async function handleInit() {
         author: packageAuthor,
         license: packageLicense,
         scripts: {},
+        publishConfig: {
+            access: 'public'
+        }
     };
 
     if (keywords.length > 0) {
@@ -953,12 +959,79 @@ async function handleInit() {
     logger.info(`Created the package.json file`);
 
     // Generate README file
-    const readmeContent = `# ${packageName}\n\n${packageDescription}`;
-    fs.writeFileSync(path.join(packagePath, 'README.md'), readmeContent);
-    logger.info(`Created the package README file`);
+    generateReadme(packagePath, packageName);
 
     logger.info(`Initialized new integration package at ${packagePath}`);
 
     logger.info(`The following contents are created:`);
     printDirectoryTree(packagePath, packageName)
+}
+
+//function to generate README.md file content
+function generateReadme(packagePath: string, packageName: string) {
+    const readmeContent = `# ${packageName}
+
+(Note: Write your package description here.)
+
+## Dashboards
+
+Below are the dashboards that are currently supported by this integration package.
+
+(Note: Below are the sample dashboards. Please replace these with your own actual dashboards.)
+| Dashboard Title    | Description                    |
+|--------------------|-----------------------|
+| Runtime Metrics    | Instana custom dashboard that displays runtime metrics for application |
+
+## Metrics
+
+### Semantic Conventions
+
+Below are the runtime metrics that are currently supported by this integration package.
+
+(Note: Below are the sample runtime metrics. Please replace these with your own actual metrics.)
+| Metrics Name               | Description                       | Unit    |
+|----------------------------|-----------------------------------|---------|
+| <metric.name.heap_inuse>   | Heap used            			 | Number  |
+| <metric.name.heap.alloc>   | Allocated memory     			 | Byte    |
+
+### Resource Attributes
+
+Below are the resource attributes that are currently supported by this integration package.
+
+(Note: Below are the sample resource attributes. Please replace these with your own actual resource attributes.)
+| Attribute Key                  | Type   |  Description           |
+|--------------------------------|--------|------------------------|
+| <resource.service.name>        | string | This attribute is used to describe the entity name. |
+| <resource.service.instance.id> | string | This attribute is used to describe the entity ID of the current object. |
+
+### Installation and Usage
+
+With [Instana CLI for integration package management](https://github.com/instana/observability-as-code?tab=readme-ov-file#instana-cli-for-integration-package-management), you can manage the lifecycle of this package, such as downloading the package and importing it into Instana. You can find the available binaries for the CLI on different platforms on the [release page of this project](https://github.com/instana/observability-as-code/releases). Select the binary from the latest release that matches your platform to download, then rename it to stanctl-integration. You should now be able to run it on your local machine.
+
+Downloading the package:
+
+\`\`\`shell
+$ stanctl-integration download --package ${packageName}
+\`\`\`
+
+Importing the package into Instana:
+
+\`\`\`shell
+$ stanctl-integration import --package ${packageName} \\
+  --server $INSTANA_SERVER \\
+  --token $API_TOKEN \\
+  --set servicename=$SERVICE_NAME \\
+  --set serviceinstanceid=$SERVICE_INSTANCE_ID
+\`\`\`
+
+- INSTANA_SERVER: This is the base URL of an Instana tenant unit, e.g. https://test-example.instana.io, which is used by the CLI to communicate with Instana server for package lifecycle management.
+- API_TOKEN: Requests against the Instana API require valid API tokens. The API token can be generated via the Instana user interface. For more information, please refer to [Instana documentation](https://www.ibm.com/docs/en/instana-observability/current?topic=apis-instana-rest-api#usage-of-api-token).
+- SERVICE_NAME: Logical name of the service.
+- SERVICE_INSTANCE_ID: The string ID of the service instance. The ID helps to distinguish instances of the same service that exist at the same time (e.g. instances of a horizontally scaled service).
+
+    `;
+
+    const readmeFilePath = path.join(packagePath, 'README.md');
+    fs.writeFileSync(readmeFilePath, readmeContent);
+    logger.info(`Created the package README file at ${readmeFilePath}`);
 }
