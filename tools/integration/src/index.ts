@@ -646,6 +646,7 @@ async function handleImport(argv: any) {
     }
 
     const defaultFolders = ['dashboards'];
+    const defaultEventsFolders = ['events'];
 
     // Create an axios instance with a custom httpsAgent to ignore self-signed certificate errors
     const axiosInstance = axios.create({
@@ -654,7 +655,7 @@ async function handleImport(argv: any) {
         })
     });
 
-    async function importIntegration(searchPattern: string) {
+    async function importIntegration(searchPattern: string, apiPath: string) {
         const files = globSync(searchPattern);
 
         logger.info(`Start to import the integration package from ${searchPattern}`);
@@ -694,10 +695,12 @@ async function handleImport(argv: any) {
                     continue; // Continue with the next file
                 }
 
-                ensureAccessRules(jsonContent)
+                if (apiPath === 'api/custom-dashboard') {
+                  ensureAccessRules(jsonContent)
+                }
 
                 try {
-                    const url = `https://${server}/api/custom-dashboard`
+                    const url = `https://${server}/${apiPath}`
                     logger.info(`Applying the dashboard to ${url} ...`);
 
                     const response = await axiosInstance.post(url, jsonContent, {
@@ -727,11 +730,15 @@ async function handleImport(argv: any) {
 
     if (includePattern) {
         const searchPattern = path.join(packagePath, includePattern);
-        await importIntegration(searchPattern);
+        await importIntegration(searchPattern, "api/custom-dashboard");
     } else {
         for (const defaultFolder of defaultFolders) {
             const searchPattern = path.join(packagePath, defaultFolder, '**/*.json');
-            await importIntegration(searchPattern);
+            await importIntegration(searchPattern, "api/custom-dashboard");
+        }
+        for (const defaultFolder of defaultEventsFolders) {
+            const searchPattern = path.join(packagePath, defaultFolder, '**/*.json');
+            await importIntegration(searchPattern, "api/events/settings/event-specifications/custom");
         }
     }
 }
