@@ -1,0 +1,17 @@
+{
+    "name": "@instana-integration/wxd-presto",
+    "version": "1.0.0",
+    "description": "The Instana integration package is designed to showcase observability features in Instana, specifically for monitoring the Watsonx.data Presto Engine.",
+    "author": "IBM",
+    "license": "MIT",
+    "scripts": {},
+    "keywords": [
+      "ibm",
+      "instana",
+      "opentelemetry",
+      "custom dashboard",
+      "watsonx.data",
+      "presto",
+      "jmx metrics"
+    ]
+  }
