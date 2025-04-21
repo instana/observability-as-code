@@ -1,4 +1,4 @@
-# @instana-integration/wxd-
+# @instana-integration/wxd-milvus
 
 The Instana integration package is designed to showcase observability capabilities within Instana by monitoring the Watsonx.data Milvus Engine. Milvus exposes metrics through OpenTelemetry, which can be effectively leveraged to track real-time metrics using the provided dashboards.
 
@@ -29,13 +29,13 @@ With [Instana CLI for integration package management](https://github.com/instana
 Downloading the package:
 
 ```shell
-$ stanctl-integration download --package @instana-integration/opentelemetry-demo
+$ stanctl-integration download --package @instana-integration/wxd-milvus
 ```
 
 Importing the package into Instana:
 
 ```shell
-$ stanctl-integration import --package @instana-integration/opentelemetry-demo \
+$ stanctl-integration import --package @instana-integration/wxd-milvus \
   --server $INSTANA_SERVER \
   --token $API_TOKEN \
   --set serviceinstanceid=$SERVICE_INSTANCE_ID

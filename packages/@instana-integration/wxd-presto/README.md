@@ -29,13 +29,13 @@ With [Instana CLI for integration package management](https://github.com/instana
 Downloading the package:
 
 ```shell
-$ stanctl-integration download --package @instana-integration/opentelemetry-demo
+$ stanctl-integration download --package @instana-integration/wxd-presto
 ```
 
 Importing the package into Instana:
 
 ```shell
-$ stanctl-integration import --package @instana-integration/opentelemetry-demo \
+$ stanctl-integration import --package @instana-integration/wxd-presto\
   --server $INSTANA_SERVER \
   --token $API_TOKEN \
   --set serviceinstanceid=$SERVICE_INSTANCE_ID
