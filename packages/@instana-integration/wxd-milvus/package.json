@@ -1,5 +1,5 @@
 {
-    "name": "@instana-integration/wxd-presto",
+    "name": "@instana-integration/wxd-milvus",
     "version": "1.0.0",
     "description": "The Instana integration package is designed to showcase observability features in Instana, specifically for monitoring the Watsonx.data Milvus Engine.",
     "author": "IBM",
