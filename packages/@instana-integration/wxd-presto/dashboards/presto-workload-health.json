@@ -3,7 +3,7 @@
   "title": "presto-workload-health",
   "accessRules": [
     {
-      "accessType": "READ",
+      "accessType": "READ_WRITE",
       "relationType": "GLOBAL",
       "relatedId": ""
     }

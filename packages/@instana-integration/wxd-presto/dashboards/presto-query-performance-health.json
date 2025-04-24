@@ -3,7 +3,7 @@
     "title": "presto-query-performance-health",
     "accessRules": [
       {
-        "accessType": "READ",
+        "accessType": "READ_WRITE",
         "relationType": "GLOBAL",
         "relatedId": ""
       }

@@ -13,6 +13,10 @@ Below are the dashboards that are currently supported by this integration packag
 | milvus-data-metadata-health
 | milvus-workload-health
 
+## Metrics
+
+### Semantic Conventions
+
 ### Resource Attributes
 
 Below resource attributes can be used to narrow down the data to focus on a specific engine within an instance 
