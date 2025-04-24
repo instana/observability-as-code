@@ -11,7 +11,7 @@
     "widgets": [
       {
         "id": "6JcvE5mgKoXel7dv",
-        "title": "Requests per Second",
+        "title": "Request Rate",
         "width": 12,
         "height": 13,
         "x": 0,
@@ -273,7 +273,7 @@
       },
       {
         "id": "DO1tPegtku8ifGNU",
-        "title": "Error Rate Underload",
+        "title": "Error Rates",
         "width": 12,
         "height": 13,
         "x": 0,
@@ -393,7 +393,7 @@
       },
       {
         "id": "k5niSx3gNUn_6IEr",
-        "title": "Data Processed per Second",
+        "title": "Data Transfer Rates",
         "width": 12,
         "height": 13,
         "x": 0,

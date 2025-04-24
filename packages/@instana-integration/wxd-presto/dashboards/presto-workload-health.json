@@ -11,7 +11,7 @@
   "widgets": [
     {
       "id": "rBS4fIHqK5m4dKrZ",
-      "title": "Workload Count",
+      "title": "Query Count",
       "width": 6,
       "height": 13,
       "x": 6,
