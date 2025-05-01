@@ -23,56 +23,6 @@ interface IdObject {
     annotations: string[];
 }
 
-function filterDashboardsBy(idObjects: IdObject[], include: string[]): IdObject[] {
-    return idObjects.filter(obj => {
-        return include.every(condition => {
-            const [key, value] = condition.split('=');
-            if (key === 'title') {
-                const regex = new RegExp(value);
-                return regex.test(obj.title);
-            } else if (key === 'ownerid') {
-                const regex = new RegExp(value);
-                return regex.test(obj.ownerId);
-            } else if (key === 'annotation') {
-                const annotations = value.split(' ');
-                return annotations.every(annotation => obj.annotations.includes(annotation));
-            }
-            return false;
-        });
-    });
-}
-
-function getValueByKeyFromArray(array: string[], key: string): string | undefined {
-    const prefix = `${key}=`;
-    for (const item of array) {
-        if (item.startsWith(prefix)) {
-            return item.substring(prefix.length);
-        }
-    }
-    return undefined;
-}
-
-// Function to sanitize dashboard titles
-function sanitizeDashboardTitles(idObjects: IdObject[]): IdObject[] {
-    const titleMap: { [key: string]: number } = {};
-
-    return idObjects.map((obj) => {
-        let originalTitle = obj.title.replace(/[^a-z0-9-]/gi, '_').toLowerCase(); // sanitize title;
-        let newTitle = originalTitle;
-
-        if (titleMap[originalTitle]) {
-            // If title exists, append a counter
-            titleMap[originalTitle]++;
-            newTitle = `${originalTitle}_${titleMap[originalTitle]}`;
-        } else {
-            // First time this title is encountered
-            titleMap[originalTitle] = 1;
-        }
-
-        // Update the title in the object
-        return { ...obj, title: newTitle };
-    });
-}
 
 // Helper function to promisify spawn
 const spawnAsync = (command: any, args: any, options: any) => {
@@ -335,11 +285,12 @@ async function handleLint(argv: any) {
 
     const readmeContent = readReadmeFile(currentDirectory);
     const dashboardsPath = path.join(currentDirectory, 'dashboards');
+    const eventsPath = path.join(currentDirectory, 'events');
 
     // Check README file
     if (readmeContent) {
 	try {
-	    validateReadmeContent(readmeContent, packageData.name, errors, warnings, successMessages);
+	    validateReadmeContent(readmeContent, packageData.name, currentDirectory, errors, warnings, successMessages);
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : String(error);
             errors.push(errorMessage);
@@ -350,7 +301,13 @@ async function handleLint(argv: any) {
     try {
 	const strictMode = argv['strict-mode'];
         await validatePackageJson(packageData, errors, warnings, successMessages, strictMode);
-        validateDashboardFiles(dashboardsPath, errors, warnings, successMessages);
+        if(fs.existsSync(dashboardsPath)){
+        	validateDashboardFiles(dashboardsPath, errors, warnings, successMessages);
+        }
+        if(fs.existsSync(eventsPath)){
+        	validateEventFiles(eventsPath, errors, warnings, successMessages);
+        }
+
     } catch (error) {
         errors.push(`Linting failed: ${error}`);
     }
@@ -399,7 +356,7 @@ async function validatePackageJson(packageData: any, errors: string[], warnings:
 	    warnings.push(warningMessage);
 	}
     } else {
-        successMessages.push('Field "name" is valid.');
+        successMessages.push('The package name is correctly defined.');
     }
 
     // Validate `version`
@@ -407,7 +364,7 @@ async function validatePackageJson(packageData: any, errors: string[], warnings:
     if (!versionPattern.test(packageData.version)) {
         errors.push(`Invalid version "${packageData.version}". The version must follow the format "x.y.z".`);
     } else {
-        successMessages.push('Field "version" format is valid.');
+        successMessages.push('The package version format is valid and follows the correct format.');
     }
 
     // Fetch the currently published version from npm and compare
@@ -416,15 +373,15 @@ async function validatePackageJson(packageData: any, errors: string[], warnings:
         const publishedVersion = response.data['dist-tags']?.latest;
 
         if (semver.eq(packageData.version, publishedVersion)) {
-            errors.push(`Package version "${packageData.version}" is the same as the currently published version "${publishedVersion}". It must be greater than the currently published version.`);
+            errors.push(`The package version "${packageData.version}" is the same as the currently published version "${publishedVersion}". It must be greater than the currently published version.`);
         } else if (semver.lt(packageData.version, publishedVersion)) {
-            errors.push(`Invalid version "${packageData.version}". It must be greater than the currently published version "${publishedVersion}".`);
+            errors.push(`The package version "${packageData.version}" is in valid. It must be greater than the currently published version "${publishedVersion}".`);
         } else {
-            successMessages.push('Package version is valid and greater than the currently published version.');
+            successMessages.push('The package version is valid and greater than the currently published version.');
         }
     } catch (error) {
         if ((error as AxiosError).response?.status === 404) {
-            successMessages.push(`Package "${packageData.name}" not found on npm. This is a new package.`);
+            successMessages.push(`The package "${packageData.name}" not found on npm. This is a new package.`);
         } else {
             const axiosError = error as AxiosError;
             errors.push(axiosError.message || String(error));
@@ -434,14 +391,14 @@ async function validatePackageJson(packageData: any, errors: string[], warnings:
     // Check for required fields and description
     const requiredFields = ['name', 'version', 'author', 'license', 'description'];
     for (const field of requiredFields) {
-        if (!packageData[field]) {
+        if (packageData[field] === undefined || packageData[field] === null || packageData[field] === '') {
             if (field === 'description') {
-                warnings.push('Warning: The "description" field is missing. Adding a description is recommended.');
+                warnings.push('Warning: The package description is missing. Adding a description is recommended.');
             } else {
-                errors.push(`Missing required field "${field}" in package.json.`);
+                errors.push(`The package is missing required field ${field}.`);
             }
         } else {
-            successMessages.push(`Field "${field}" is present.`);
+            successMessages.push(`The package ${field} is present.`);
         }
     }
 }
@@ -482,15 +439,75 @@ function validateDashboardFiles(dashboardsPath: string, errors: string[], warnin
     });
 }
 
+// Helper function to validate event files
+function validateEventFiles(eventsPath: string, errors: string[], warnings: string[], successMessages: string[]): void {
+    const files = fs.readdirSync(eventsPath);
+    const jsonFiles = files.filter(file => file.endsWith('.json'));
+
+    if (jsonFiles.length === 0) {
+        warnings.push('No JSON files found in the events folder.');
+        return;
+    }
+
+    jsonFiles.forEach(file => {
+        const filePath = path.join(eventsPath, file);
+        try {
+            const fileContent = fs.readFileSync(filePath, 'utf-8');
+            const event = JSON.parse(fileContent);
+            let allEventFieldsValid = true;
+            const requiredEventFields = ['name', 'entityType', 'rules'];
+
+            // check for required fields
+            for (const field of requiredEventFields) {
+                if (event[field] === undefined || event[field] === null || event[field] === '') {
+                    errors.push(`The package is missing required field ${field}.`);
+                    allEventFieldsValid = false;
+                } else {
+                    successMessages.push(`The event ${field} is present in the file: ${file}.`);
+                }
+            }
+
+			// check rules are not empty
+            if (event.rules.length === 0) {
+            	errors.push(`The rules array is empty in file: ${file}.`);
+                allEventFieldsValid = false;
+            } else if (event.rules.some((rule: object) => Object.keys(rule).length === 0)) {
+				errors.push(`No rules are defined in: ${file}.`);
+                allEventFieldsValid = false;
+            }
+
+            if (allEventFieldsValid) {
+                successMessages.push(`Event is correctly defined in the file: ${file}.`);
+            } else {
+                errors.push(`Event is not correctly defined in the file: ${file}.`);
+            }
+        } catch (error) {
+            errors.push(`Error validating file ${file}: ${error instanceof Error ? error.message : String(error)}.`);
+        }
+    });
+}
+
+
 // Helper function to validate README content
-function validateReadmeContent(readmeContent: string, packageName: string, errors: string[], warnings: string[], successMessages: string[]): void {
-    const requiredSections = [
-        packageName,
-        'Dashboards',
-        'Metrics',
-        'Semantic Conventions',
-        'Resource Attributes'
-    ];
+function validateReadmeContent(readmeContent: string, packageName: string, currentDirectory: string, errors: string[], warnings: string[], successMessages: string[]): void {
+
+    const dashboardsExist = fs.existsSync(path.join(currentDirectory, 'dashboards'));
+    const eventsExist = fs.existsSync(path.join(currentDirectory, 'events'));
+    const requiredSections = [packageName];
+    if(dashboardsExist){
+		requiredSections.push('Dashboards');
+	}
+	requiredSections.push('Metrics', 'Semantic Conventions', 'Resource Attributes');
+	if(eventsExist){
+		requiredSections.push('Events');
+	}
+//     const requiredSections = [
+//         packageName,
+//         'Dashboards',
+//         'Metrics',
+//         'Semantic Conventions',
+//         'Resource Attributes'
+//     ];
     const missingSections = requiredSections.filter(section => !readmeContent.includes(section));
 
     if (missingSections.length > 0) {
@@ -745,9 +762,8 @@ async function handleImport(argv: any) {
 
 // Function to handle export logic
 async function handleExport(argv: any) {
-    const { server, token, location, include: includePattern, debug } = argv;
+    const { server, token, location, include: includeRaw, debug } = argv;
 
-    // Set log level to debug if the debug flag is set
     if (debug) {
         logger.level = 'debug';
     }
@@ -758,124 +774,316 @@ async function handleExport(argv: any) {
         })
     });
 
-    async function exportDashboard(dashboardId: string): Promise<any> {
-        try {
-            const url = `https://${server}/api/custom-dashboard/${dashboardId}`
-            logger.info(`Start to get the dashboard(id=${dashboardId}) from ${url}`);
+    const includes = Array.isArray(includeRaw) ? includeRaw : (includeRaw ? [includeRaw] : []);
+    const parsedIncludes = includes.map(item => {
+        const parts = parseIncludeItem(item);
+        const typePart = parts.find((p: string) => p.startsWith("type="));
+        const type = typePart ? typePart.split("=")[1] : "all";
 
-            const response = await axiosInstance.get(url, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `apiToken ${token}`
-                }
-            });
-            logger.info(`Successfully got the dashboard(id=${dashboardId}): ${response.status}`);
-            if (logger.isDebugEnabled()) {
-                logger.debug(`Response data: \n${JSON.stringify(response.data)}`);
-            }
-            return response.data;
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                logger.error(`Failed to get the dashboard(id=${dashboardId}): ${error.message}`);
-                if (error.response) {
-                    logger.error(`Response data: ${JSON.stringify(error.response.data)}`);
-                    logger.error(`Response status: ${error.response.status}`);
-                    logger.error(`Response headers: ${JSON.stringify(error.response.headers)}`);
-                }
-            } else {
-                logger.error(`Failed to get the dashboard(id=${dashboardId}): ${String(error)}`);
-            }
-            return null;
+        const conditions = parts.filter((p: string) => !p.startsWith("type="));
+        if (!typePart) {
+            logger.warn(`'type=' missing in include clause "${item}", interpreting as type=all`);
         }
-    }
 
-    async function getDashboardList(): Promise<any> {
-        try {
-            const url = `https://${server}/api/custom-dashboard`
-            logger.info(`Start to get the dashboard list from ${url}`);
+        return { type, conditions };
+    });
 
-            const response = await axiosInstance.get(url, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `apiToken ${token}`
-                }
-            });
-            logger.info(`Successfully got the dashboard list: ${response.status}`);
-            if (logger.isDebugEnabled()) {
-                logger.debug(`Response data: \n${JSON.stringify(response.data)}`);
-            }
-        return response.data;
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                logger.error(`Failed to get the dashboard list: ${error.message}`);
-                if (error.response) {
-                    logger.error(`Response data: ${JSON.stringify(error.response.data)}`);
-                    logger.error(`Response status: ${error.response.status}`);
-                    logger.error(`Response headers: ${JSON.stringify(error.response.headers)}`);
-                }
-            } else {
-                logger.error(`Failed to get the dashboard list: ${String(error)}`);
-            }
-        }
-    }
+    const dashboardIncludes = parsedIncludes
+        .filter(inc => inc.type === "dashboard" || inc.type === "all")
+        .flatMap(inc => inc.conditions);
 
-    async function saveDashboard(dir: string, id: string, title: string, dashboard: string) {
-        try {
-            const filename = `${title}.json`
-            const filepath = path.join(dir, filename)
-            logger.info(`Saving the dashboard(id=${id}) into ${filepath} ...`);
-            fs.writeFileSync(filepath, JSON.stringify(dashboard));
-            logger.info(`Dashboard(id=${id}) saved successfully`)
-        } catch (error) {
-            logger.error(`Error saving the dashboard(id=${id}):`, error);
-        }
-    }
+    const eventIncludes = parsedIncludes
+        .filter(inc => inc.type === "event" || inc.type === "all")
+        .flatMap(inc => inc.conditions);
 
-    const includeConditions = Array.isArray(argv.include) ? argv.include : ( argv.include ? [argv.include] : []);
-
-    const dashboardId = getValueByKeyFromArray(includeConditions, "id");
     const dashboardsPath = path.join(location, "dashboards");
+    const eventsPath = path.join(location, "events");
     fs.mkdirSync(dashboardsPath, { recursive: true });
-    if (dashboardId) {
-        const dashboard = await exportDashboard(dashboardId);
-        saveDashboard(dashboardsPath, dashboardId, dashboard.title, dashboard)
-    } else {
-        const idObjects = await getDashboardList();
+    fs.mkdirSync(eventsPath, { recursive: true });
 
-        const filteredIdObjects = filterDashboardsBy(idObjects, includeConditions);
-        const sanitizedIdObjects = sanitizeDashboardTitles(filteredIdObjects)
+    // Dashboard export
+    const dashboardId = getValueByKeyFromArray(dashboardIncludes, "id");
 
-        for (const obj of sanitizedIdObjects) {
-            const dashboard = await exportDashboard(obj.id);
-            saveDashboard(dashboardsPath, obj.id, obj.title, dashboard)
+    if (parsedIncludes.some(inc => inc.type === "dashboard")) {
+        if (dashboardId) {
+            const dashboard = await exportDashboard(server, token, dashboardId, axiosInstance);
+            if (dashboard) {
+                saveDashboard(dashboardsPath, dashboardId, dashboard.title, dashboard);
+            }
+        } else {
+            const idObjects = await getDashboardList(server, token, axiosInstance);
+            const filtered = filterDashboardsBy(idObjects, dashboardIncludes);
+            const sanitized = sanitizeDashboardTitles(filtered);
+            for (const obj of sanitized) {
+                const dashboard = await exportDashboard(server, token, obj.id, axiosInstance);
+                if (dashboard) {
+                    saveDashboard(dashboardsPath, obj.id, obj.title, dashboard);
+                }
+            }
+            logger.info(`Total dashboard(s) processed: ${sanitized.length}`);
         }
+    }
 
-        logger.info(`Total dashboard(s) processed: ${sanitizedIdObjects.length}`)
+    // Event export
+    const eventId = getValueByKeyFromArray(eventIncludes, "eventId");
+
+    if (parsedIncludes.some(inc => inc.type === "event")) {
+        if (eventId) {
+            const event = await exportEvent(server, token, eventId, axiosInstance);
+            if (event) {
+                saveEvent(eventsPath, eventId, sanitizeFileName(event.title || `event-${eventId}`), event);
+            }
+        } else {
+            const allEvents = await getEventList(server, token, axiosInstance);
+            const filtered = filterEventsBy(allEvents, eventIncludes);
+            const sanitized = sanitizeEventTitles(filtered);
+            for (const evt of sanitized) {
+                const event = await exportEvent(server, token, evt.id, axiosInstance);
+                if (event) {
+                    saveEvent(eventsPath, evt.id, evt.title, event);
+                }
+            }
+            logger.info(`Total custom event(s) processed: ${sanitized.length}`);
+        }
     }
 }
 
-function printDirectoryTree(dirPath: string, rootLabel: string, indent: string = ''): void {
-    const isRoot = indent === '';
-    if (isRoot) {
-      logger.info(rootLabel);
+// Helper functions for dashboard export
+async function exportDashboard(server: string, token: string, dashboardId: string, axiosInstance: any): Promise<any> {
+    try {
+        const url = `https://${server}/api/custom-dashboard/${dashboardId}`;
+        logger.info(`Getting dashboard (id=${dashboardId}) from ${url}`);
+
+        const response = await axiosInstance.get(url, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `apiToken ${token}`
+            }
+        });
+
+        logger.info(`Successfully got dashboard (id=${dashboardId}): ${response.status}`);
+        if (logger.isDebugEnabled()) {
+            logger.debug(`Response data: \n${JSON.stringify(response.data)}`);
+        }
+
+        return response.data;
+    } catch (error) {
+        handleAxiosError(error, `dashboard (id=${dashboardId})`);
+        return null;
+    }
+}
+
+async function getDashboardList(server: string, token: string, axiosInstance: any): Promise<any[]> {
+    try {
+        const url = `https://${server}/api/custom-dashboard`;
+        logger.info(`Getting dashboard list from ${url}`);
+
+        const response = await axiosInstance.get(url, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `apiToken ${token}`
+            }
+        });
+
+        logger.info(`Successfully got dashboard list: ${response.status}`);
+        if (logger.isDebugEnabled()) {
+            logger.debug(`Response data: \n${JSON.stringify(response.data)}`);
+        }
+
+        return response.data;
+    } catch (error) {
+        handleAxiosError(error, `dashboard list`);
+        return [];
+    }
+}
+
+function saveDashboard(dir: string, id: string, title: string, dashboard: any) {
+    try {
+        const filename = `${title}.json`;
+        const filepath = path.join(dir, filename);
+        logger.info(`Saving dashboard (id=${id}) to ${filepath}`);
+        fs.writeFileSync(filepath, JSON.stringify(dashboard, null, 2));
+        logger.info(`Dashboard (id=${id}) saved successfully`);
+    } catch (error) {
+        logger.error(`Error saving dashboard (id=${id}):`, error);
+    }
+}
+
+function filterDashboardsBy(idObjects: IdObject[], include: string[]): IdObject[] {
+    return idObjects.filter(obj => {
+        return include.every(condition => {
+            const [key, rawValue] = condition.split('=');
+            const value = rawValue?.replace(/^"|"$/g, '');
+            if (key === 'title') {
+                return new RegExp(value, 'i').test(obj.title);
+            } else if (key === 'ownerid') {
+                return new RegExp(value, 'i').test(obj.ownerId ?? '');
+            } else if (key === 'annotation') {
+                return (obj.annotations ?? []).includes(value);
+            }
+            return false;
+        });
+    });
+}
+
+function sanitizeDashboardTitles(idObjects: IdObject[]): IdObject[] {
+    const titleMap: { [key: string]: number } = {};
+    return idObjects.map(obj => {
+        let originalTitle = sanitizeFileName(obj.title);
+        let newTitle = originalTitle;
+        if (titleMap[originalTitle]) {
+            titleMap[originalTitle]++;
+            newTitle = `${originalTitle}_${titleMap[originalTitle]}`;
+        } else {
+            titleMap[originalTitle] = 1;
+        }
+        return { ...obj, title: newTitle };
+    });
+}
+
+// Helper functions for event export
+function parseIncludeItem(item: string): string[] {
+    const result: string[] = [];
+    let buffer = '';
+    let inQuotes = false;
+
+    for (let i = 0; i < item.length; i++) {
+        const char = item[i];
+
+        if (char === '"') {
+            inQuotes = !inQuotes;
+        } else if (char === ' ' && !inQuotes) {
+            if (buffer.length > 0) {
+                result.push(buffer);
+                buffer = '';
+            }
+        } else {
+            buffer += char;
+        }
     }
 
-    const files = fs.readdirSync(dirPath);
-    const lastIndex = files.length - 1;
+    if (buffer.length > 0) {
+        result.push(buffer);
+    }
 
-    files.forEach((file, index) => {
-      const fullPath = path.join(dirPath, file);
-      const isDirectory = fs.statSync(fullPath).isDirectory();
-      const isLast = index === lastIndex;
-      const prefix = isLast ? '└── ' : '├── ';
+    return result;
+}
 
-      logger.info(indent + prefix + file);
+async function exportEvent(server: string, token: string, eventId: string, axiosInstance: any): Promise<any> {
+    try {
+        const url = `https://${server}/api/events/settings/event-specifications/custom/${eventId}`;
+        logger.info(`Getting event (id=${eventId}) from ${url}`);
 
-      if (isDirectory) {
-        const newIndent = indent + (isLast ? '    ' : '│   ');
-        printDirectoryTree(fullPath, rootLabel, newIndent);
-      }
+        const response = await axiosInstance.get(url, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `apiToken ${token}`
+            }
+        });
+
+        logger.info(`Successfully got event (id=${eventId}): ${response.status}`);
+        if (logger.isDebugEnabled()) {
+            logger.debug(`Response data: \n${JSON.stringify(response.data)}`);
+        }
+
+        return response.data;
+    } catch (error) {
+        handleAxiosError(error, `event (id=${eventId})`);
+        return null;
+    }
+}
+
+async function getEventList(server: string, token: string, axiosInstance: any): Promise<any[]> {
+    try {
+        const url = `https://${server}/api/events/settings/event-specifications/custom`;
+        logger.info(`Getting event list from ${url}`);
+
+        const response = await axiosInstance.get(url, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `apiToken ${token}`
+            }
+        });
+
+        logger.info(`Successfully got event list: ${response.status}`);
+        if (logger.isDebugEnabled()) {
+            logger.debug(`Response data: \n${JSON.stringify(response.data)}`);
+        }
+
+        return response.data;
+    } catch (error) {
+        handleAxiosError(error, `event list`);
+        return [];
+    }
+}
+
+function saveEvent(dir: string, id: string, name: string, event: any) {
+    try {
+        const filename = `${name}.json`;
+        const filepath = path.join(dir, filename);
+        logger.info(`Saving event (id=${id}) to ${filepath}`);
+        fs.writeFileSync(filepath, JSON.stringify(event, null, 2));
+        logger.info(`Event (id=${id}) saved successfully`);
+    } catch (error) {
+        logger.error(`Error saving event (id=${id}):`, error);
+    }
+}
+
+function filterEventsBy(idObjects: any[], include: string[]): any[] {
+    return idObjects.filter(obj => {
+        return include.every(condition => {
+            const [key, rawValue] = condition.split('=');
+            const value = rawValue?.replace(/^"|"$/g, '');
+
+            if (key === 'name' || key === 'title') {
+                return new RegExp(value, 'i').test(obj.name ?? '');
+            } else if (key === 'id') {
+                return obj.id === value;
+            }
+
+            return false;
+        });
     });
+}
+
+function sanitizeEventTitles(idObjects: any[]): any[] {
+    const titleMap: { [key: string]: number } = {};
+    return idObjects.map(obj => {
+        const fallback = obj.name || `event-${obj.id}`;
+        let originalTitle = sanitizeFileName(obj.title || fallback);
+        let newTitle = originalTitle;
+        if (titleMap[originalTitle]) {
+            titleMap[originalTitle]++;
+            newTitle = `${originalTitle}_${titleMap[originalTitle]}`;
+        } else {
+            titleMap[originalTitle] = 1;
+        }
+        return { ...obj, title: newTitle };
+    });
+}
+
+// Helpers for export
+function sanitizeFileName(name: string): string {
+    if (!name) return 'untitled'; // fallback
+    return name.replace(/[^a-z0-9-_]/gi, '_').toLowerCase();
+}
+
+function getValueByKeyFromArray(array: string[], key: string): string | undefined {
+    const prefix = `${key}=`;
+    return array.find(item => item.startsWith(prefix))?.substring(prefix.length);
+}
+
+function handleAxiosError(error: any, context: string) {
+    if (axios.isAxiosError(error)) {
+        logger.error(`Failed to get ${context}: ${error.message}`);
+        if (error.response) {
+            logger.error(`Response data: ${JSON.stringify(error.response.data)}`);
+            logger.error(`Response status: ${error.response.status}`);
+            logger.error(`Response headers: ${JSON.stringify(error.response.headers)}`);
+        }
+    } else {
+        logger.error(`Failed to get ${context}: ${String(error)}`);
+    }
 }
 
 // Function to handle init logic
@@ -915,8 +1123,8 @@ async function handleInit() {
         message: 'Select the types of integration elements to be included in the package:',
         choices: [
             { name: 'dashboards', value: 'dashboards', checked: true },
+            { name: 'events', value: 'events'},
             new Separator('-- Below items are not supported yet --'),
-            { name: 'alerts', value: 'alerts', disabled: true, },
             { name: 'entities', value: 'entities', disabled: true, },
             { name: 'collector configs', value: 'collector-configs', disabled: true, },
         ],
@@ -966,7 +1174,7 @@ async function handleInit() {
     logger.info(`Created the package.json file`);
 
     // Generate README file
-    generateReadme(packagePath, packageName);
+    generateReadme(packagePath, packageName, configTypes);
 
     logger.info(`Initialized new integration package at ${packagePath}`);
 
@@ -974,12 +1182,38 @@ async function handleInit() {
     printDirectoryTree(packagePath, packageName)
 }
 
+function printDirectoryTree(dirPath: string, rootLabel: string, indent: string = ''): void {
+    const isRoot = indent === '';
+    if (isRoot) {
+      logger.info(rootLabel);
+    }
+
+    const files = fs.readdirSync(dirPath);
+    const lastIndex = files.length - 1;
+
+    files.forEach((file, index) => {
+      const fullPath = path.join(dirPath, file);
+      const isDirectory = fs.statSync(fullPath).isDirectory();
+      const isLast = index === lastIndex;
+      const prefix = isLast ? '└── ' : '├── ';
+
+      logger.info(indent + prefix + file);
+
+      if (isDirectory) {
+        const newIndent = indent + (isLast ? '    ' : '│   ');
+        printDirectoryTree(fullPath, rootLabel, newIndent);
+      }
+    });
+}
+
 //function to generate README.md file content
-function generateReadme(packagePath: string, packageName: string) {
-    const readmeContent = `# ${packageName}
+function generateReadme(packagePath: string, packageName: string, configTypes: string[]) {
+    let readmeContent = `# ${packageName}
 
 (Note: Write your package description here.)
-
+`;
+    if (configTypes.includes('dashboards')) {
+        readmeContent += `
 ## Dashboards
 
 Below are the dashboards that are currently supported by this integration package.
@@ -988,7 +1222,10 @@ Below are the dashboards that are currently supported by this integration packag
 | Dashboard Title    | Description                    |
 |--------------------|-----------------------|
 | Runtime Metrics    | Instana custom dashboard that displays runtime metrics for application |
+`;
+    }
 
+    readmeContent += `
 ## Metrics
 
 ### Semantic Conventions
@@ -1010,8 +1247,24 @@ Below are the resource attributes that are currently supported by this integrati
 |--------------------------------|--------|------------------------|
 | <resource.service.name>        | string | This attribute is used to describe the entity name. |
 | <resource.service.instance.id> | string | This attribute is used to describe the entity ID of the current object. |
+`;
 
-### Installation and Usage
+    if (configTypes.includes('events')) {
+        readmeContent += `
+## Events
+
+Below are the events that are currently supported by this integration package.
+
+(Note: Below are the sample events. Please replace these with your own actual events.)
+| Event Name                 | Description                       | Unit    |
+|----------------------------|-----------------------------------|---------|
+| <event.name.heap_inuse>    | Heap used            			 | Number  |
+| <event.name.heap.alloc>    | Allocated memory     			 | Byte    |
+`;
+    }
+
+    readmeContent += `
+## Installation and Usage
 
 With [Instana CLI for integration package management](https://github.com/instana/observability-as-code?tab=readme-ov-file#instana-cli-for-integration-package-management), you can manage the lifecycle of this package, such as downloading the package and importing it into Instana. You can find the available binaries for the CLI on different platforms on the [release page of this project](https://github.com/instana/observability-as-code/releases). Select the binary from the latest release that matches your platform to download, then rename it to stanctl-integration. You should now be able to run it on your local machine.
 
@@ -1035,10 +1288,10 @@ $ stanctl-integration import --package ${packageName} \\
 - API_TOKEN: Requests against the Instana API require valid API tokens. The API token can be generated via the Instana user interface. For more information, please refer to [Instana documentation](https://www.ibm.com/docs/en/instana-observability/current?topic=apis-instana-rest-api#usage-of-api-token).
 - SERVICE_NAME: Logical name of the service.
 - SERVICE_INSTANCE_ID: The string ID of the service instance. The ID helps to distinguish instances of the same service that exist at the same time (e.g. instances of a horizontally scaled service).
-
-    `;
+`;
 
     const readmeFilePath = path.join(packagePath, 'README.md');
     fs.writeFileSync(readmeFilePath, readmeContent);
     logger.info(`Created the package README file at ${readmeFilePath}`);
 }
+
