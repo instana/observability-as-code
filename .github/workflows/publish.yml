@@ -6,7 +6,6 @@ on:
       - closed
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
   publish:
@@ -31,7 +30,7 @@ jobs:
         run: npm ci
 
       - name: Configure npm for lerna
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_PUBLISHING_TOKEN }}" > ~/.npmrc
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NEW_TOKEN_CREATED }}" > ~/.npmrc
 
       - name: Set up Git user
         run: |
@@ -44,4 +43,4 @@ jobs:
           export DEBUG=lerna:*
           npx lerna publish from-package --yes --loglevel verbose
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISHING_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NEW_TOKEN_CREATED }}
