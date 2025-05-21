@@ -30,7 +30,7 @@ jobs:
         run: npm ci
 
       - name: Configure npm for lerna
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NEW_TOKEN_CREATED }}" > ~/.npmrc
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_PUBLISHING_TOKEN }}" > ~/.npmrc
 
       - name: Set up Git user
         run: |
@@ -38,9 +38,6 @@ jobs:
             git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Publish packages
-        run: |
-          export npm_config_loglevel=silly 
-          export DEBUG=lerna:*
-          npx lerna publish from-package --yes --loglevel verbose
+        run: npx lerna publish from-package --yes --loglevel verbose
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NEW_TOKEN_CREATED }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISHING_TOKEN }}
