@@ -408,9 +408,9 @@ async function validatePackageJson(packageData: any, errors: string[], warnings:
         }
     }
 
-	// Check for publishConfig.access = "public"
+    // Check for publishConfig.access = "public"
     if (!packageData.publishConfig || packageData.publishConfig.access !== "public") {
-        errors.push(`Warning: "publishConfig.access" is missing or not set to "public". It is recommended to include "publishConfig": { "access": "public" } for public packages.`);
+        errors.push(`"publishConfig.access" is missing or not set to "public". It is mandatory to include "publishConfig": { "access": "public" } for public packages.`);
     } else {
         successMessages.push(`The "publishConfig.access" is correctly set to "public".`);
     }
