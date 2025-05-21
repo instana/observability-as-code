@@ -409,10 +409,7 @@ async function validatePackageJson(packageData: any, errors: string[], warnings:
     }
 
 	// Check for publishConfig.access = "public"
-    if (
-        !packageData.publishConfig ||
-        packageData.publishConfig.access !== "public"
-    ) {
+    if (!packageData.publishConfig || packageData.publishConfig.access !== "public") {
         errors.push(`Warning: "publishConfig.access" is missing or not set to "public". It is recommended to include "publishConfig": { "access": "public" } for public packages.`);
     } else {
         successMessages.push(`The "publishConfig.access" is correctly set to "public".`);
@@ -510,12 +507,12 @@ function validateEventFiles(eventsPath: string, errors: string[], warnings: stri
                 }
             }
 
-			// check rules are not empty
+	    // check rules are not empty
             if (event.rules.length === 0) {
             	errors.push(`The rules array is empty in file: ${file}.`);
                 allEventFieldsValid = false;
             } else if (event.rules.some((rule: object) => Object.keys(rule).length === 0)) {
-				errors.push(`No rules are defined in: ${file}.`);
+		errors.push(`No rules are defined in: ${file}.`);
                 allEventFieldsValid = false;
             }
 
@@ -538,14 +535,13 @@ function validateReadmeContent(readmeContent: string, packageName: string, curre
     const eventsExist = fs.existsSync(path.join(currentDirectory, 'events'));
     const requiredSections = [packageName];
     if(dashboardsExist){
-		requiredSections.push('Dashboards');
-	}
-	requiredSections.push('Metrics', 'Semantic Conventions', 'Resource Attributes');
-	if(eventsExist){
-		requiredSections.push('Events');
-	}
+	requiredSections.push('Dashboards');
+    }
+    requiredSections.push('Metrics', 'Semantic Conventions', 'Resource Attributes');
+    if(eventsExist){
+	requiredSections.push('Events');
+    }
     const missingSections = requiredSections.filter(section => !readmeContent.includes(section));
-
     if (missingSections.length > 0) {
         errors.push(`README.md is missing required sections: ${missingSections.join(', ')}`);
     } else {
@@ -781,7 +777,7 @@ async function handleImport(argv: any) {
         logger.info(`Total file(s) processed: ${files.length}`)
     }
 
-	if (includePattern) {
+    if (includePattern) {
         const searchPattern = path.join(packagePath, includePattern);
         if (includePattern.includes('events')) {
             await importIntegration(searchPattern, "api/events/settings/event-specifications/custom");
@@ -798,7 +794,6 @@ async function handleImport(argv: any) {
             await importIntegration(searchPattern, "api/events/settings/event-specifications/custom");
         }
     }
-
 }
 
 // Function to handle export logic
