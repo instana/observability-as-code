@@ -110,13 +110,15 @@ Examples:
 
 Import integration package with parameters replaced:
   ${execName} import --package my-package --server example.com --include "dashboards/**/test-*.json" --set key1=value1 --set key2=value2
+  ${execName} import --package my-package --server example.com --include "events/**/*.json"
 `;
 
 const examplesForExport = `
 Examples:
 
 Export integration elements:
-  ${execName} export --server example.com --include title="foo.*" --location ./my-package
+  ${execName} export --server example.com --include 'type=dashboard title="Runtime.*"' --location ./my-package
+  ${execName} export --server example.com --include 'type=event id=exampleid' --location ./my-package
 `;
 
 // Configure yargs to parse command-line arguments with subcommands
@@ -303,9 +305,13 @@ async function handleLint(argv: any) {
         await validatePackageJson(packageData, errors, warnings, successMessages, strictMode);
         if(fs.existsSync(dashboardsPath)){
         	validateDashboardFiles(dashboardsPath, errors, warnings, successMessages);
+        } else {
+        	logger.info('No dashboards folder found for this package.');
         }
         if(fs.existsSync(eventsPath)){
         	validateEventFiles(eventsPath, errors, warnings, successMessages);
+        } else {
+            logger.info('No events folder found for this package.');
         }
 
     } catch (error) {
@@ -375,7 +381,7 @@ async function validatePackageJson(packageData: any, errors: string[], warnings:
         if (semver.eq(packageData.version, publishedVersion)) {
             errors.push(`The package version "${packageData.version}" is the same as the currently published version "${publishedVersion}". It must be greater than the currently published version.`);
         } else if (semver.lt(packageData.version, publishedVersion)) {
-            errors.push(`The package version "${packageData.version}" is in valid. It must be greater than the currently published version "${publishedVersion}".`);
+            errors.push(`The package version "${packageData.version}" is invalid. It must be greater than the currently published version "${publishedVersion}".`);
         } else {
             successMessages.push('The package version is valid and greater than the currently published version.');
         }
@@ -401,6 +407,17 @@ async function validatePackageJson(packageData: any, errors: string[], warnings:
             successMessages.push(`The package ${field} is present.`);
         }
     }
+
+	// Check for publishConfig.access = "public"
+    if (
+        !packageData.publishConfig ||
+        packageData.publishConfig.access !== "public"
+    ) {
+        errors.push(`Warning: "publishConfig.access" is missing or not set to "public". It is recommended to include "publishConfig": { "access": "public" } for public packages.`);
+    } else {
+        successMessages.push(`The "publishConfig.access" is correctly set to "public".`);
+    }
+
 }
 
 // Helper function to validate dashboard files
@@ -418,23 +435,49 @@ function validateDashboardFiles(dashboardsPath: string, errors: string[], warnin
         try {
             const fileContent = fs.readFileSync(filePath, 'utf-8');
             const dashboard = JSON.parse(fileContent);
-            const globalAccessRule = {
+            const accessRules = dashboard.accessRules;
+
+            const requiredAccessRule = {
                 accessType: 'READ_WRITE',
                 relationType: 'GLOBAL',
                 relatedId: ''
             };
-            const globalAccessRuleExists = dashboard.accessRules?.some(
-                (rule: AccessRule) =>
-                    rule.accessType === globalAccessRule.accessType &&
-                    rule.relationType === globalAccessRule.relationType
-            );
-            if (!globalAccessRuleExists) {
-                errors.push(`Global access rule is missing in the dashboard file: ${file}.`);
-            } else {
-                successMessages.push(`Global access rule is correctly defined in the dashboard file: ${file}.`);
+
+            if (!Array.isArray(accessRules) || accessRules.length === 0) {
+                errors.push(`accessRules are missing in the dashboard file: ${file}.`);
+                return;
             }
+
+            if (accessRules.length !== 1) {
+                errors.push(`Exactly one accessRule must be defined in the dashboard file: ${file}. Found ${accessRules.length}.`);
+                return;
+            }
+
+            const rule = accessRules[0];
+
+            const hasAllRequiredFields =
+                'accessType' in rule &&
+                'relationType' in rule &&
+                'relatedId' in rule;
+
+            if (!hasAllRequiredFields) {
+                errors.push(`accessRules in the dashboard file: ${file} is missing one or more required fields (accessType, relationType, relatedId).`);
+                return;
+            }
+
+            const matchesRequired =
+                rule.accessType === requiredAccessRule.accessType &&
+                rule.relationType === requiredAccessRule.relationType &&
+                rule.relatedId === requiredAccessRule.relatedId;
+
+            if (!matchesRequired) {
+                errors.push(`accessRules in the dashboard file: ${file} is not correctly defined. It must exactly match: ${JSON.stringify(requiredAccessRule)}.`);
+            } else {
+                successMessages.push(`accessRules are correctly defined in the dashboard file: ${file}.`);
+            }
+
         } catch (error) {
-            errors.push(`Error validating file ${file}: ${error instanceof Error ? error.message : String(error)}`);
+            errors.push(`Error validating file ${file}: ${error instanceof Error ? error.message : String(error)}.`);
         }
     });
 }
@@ -463,7 +506,7 @@ function validateEventFiles(eventsPath: string, errors: string[], warnings: stri
                     errors.push(`The package is missing required field ${field}.`);
                     allEventFieldsValid = false;
                 } else {
-                    successMessages.push(`The event ${field} is present in the file: ${file}.`);
+                    successMessages.push(`The event field ${field} is present in the file: ${file}.`);
                 }
             }
 
@@ -501,13 +544,6 @@ function validateReadmeContent(readmeContent: string, packageName: string, curre
 	if(eventsExist){
 		requiredSections.push('Events');
 	}
-//     const requiredSections = [
-//         packageName,
-//         'Dashboards',
-//         'Metrics',
-//         'Semantic Conventions',
-//         'Resource Attributes'
-//     ];
     const missingSections = requiredSections.filter(section => !readmeContent.includes(section));
 
     if (missingSections.length > 0) {
@@ -745,9 +781,13 @@ async function handleImport(argv: any) {
         logger.info(`Total file(s) processed: ${files.length}`)
     }
 
-    if (includePattern) {
+	if (includePattern) {
         const searchPattern = path.join(packagePath, includePattern);
-        await importIntegration(searchPattern, "api/custom-dashboard");
+        if (includePattern.includes('events')) {
+            await importIntegration(searchPattern, "api/events/settings/event-specifications/custom");
+        } else {
+            await importIntegration(searchPattern, "api/custom-dashboard");
+        }
     } else {
         for (const defaultFolder of defaultFolders) {
             const searchPattern = path.join(packagePath, defaultFolder, '**/*.json');
@@ -758,6 +798,7 @@ async function handleImport(argv: any) {
             await importIntegration(searchPattern, "api/events/settings/event-specifications/custom");
         }
     }
+
 }
 
 // Function to handle export logic
@@ -808,24 +849,24 @@ async function handleExport(argv: any) {
         if (dashboardId) {
             const dashboard = await exportDashboard(server, token, dashboardId, axiosInstance);
             if (dashboard) {
-                saveDashboard(dashboardsPath, dashboardId, dashboard.title, dashboard);
+                saveDashboard(dashboardsPath, dashboardId, sanitizeFileName(dashboard.title), dashboard);
             }
         } else {
             const idObjects = await getDashboardList(server, token, axiosInstance);
             const filtered = filterDashboardsBy(idObjects, dashboardIncludes);
-            const sanitized = sanitizeDashboardTitles(filtered);
+            const sanitized = sanitizeTitles(filtered, "custom-dashboard");
             for (const obj of sanitized) {
                 const dashboard = await exportDashboard(server, token, obj.id, axiosInstance);
                 if (dashboard) {
                     saveDashboard(dashboardsPath, obj.id, obj.title, dashboard);
                 }
             }
-            logger.info(`Total dashboard(s) processed: ${sanitized.length}`);
+            logger.info(`Total custom dashboard(s) processed: ${sanitized.length}`);
         }
     }
 
     // Event export
-    const eventId = getValueByKeyFromArray(eventIncludes, "eventId");
+    const eventId = getValueByKeyFromArray(eventIncludes, "id");
 
     if (parsedIncludes.some(inc => inc.type === "event")) {
         if (eventId) {
@@ -836,7 +877,7 @@ async function handleExport(argv: any) {
         } else {
             const allEvents = await getEventList(server, token, axiosInstance);
             const filtered = filterEventsBy(allEvents, eventIncludes);
-            const sanitized = sanitizeEventTitles(filtered);
+            const sanitized = sanitizeTitles(filtered, "custom-event");
             for (const evt of sanitized) {
                 const event = await exportEvent(server, token, evt.id, axiosInstance);
                 if (event) {
@@ -852,7 +893,7 @@ async function handleExport(argv: any) {
 async function exportDashboard(server: string, token: string, dashboardId: string, axiosInstance: any): Promise<any> {
     try {
         const url = `https://${server}/api/custom-dashboard/${dashboardId}`;
-        logger.info(`Getting dashboard (id=${dashboardId}) from ${url}`);
+        logger.info(`Getting custom dashboard (id=${dashboardId}) from ${url} ...`);
 
         const response = await axiosInstance.get(url, {
             headers: {
@@ -861,7 +902,7 @@ async function exportDashboard(server: string, token: string, dashboardId: strin
             }
         });
 
-        logger.info(`Successfully got dashboard (id=${dashboardId}): ${response.status}`);
+        logger.info(`Successfully got custom dashboard (id=${dashboardId}): ${response.status}`);
         if (logger.isDebugEnabled()) {
             logger.debug(`Response data: \n${JSON.stringify(response.data)}`);
         }
@@ -876,7 +917,7 @@ async function exportDashboard(server: string, token: string, dashboardId: strin
 async function getDashboardList(server: string, token: string, axiosInstance: any): Promise<any[]> {
     try {
         const url = `https://${server}/api/custom-dashboard`;
-        logger.info(`Getting dashboard list from ${url}`);
+        logger.info(`Getting custom dashboard list from ${url} ...`);
 
         const response = await axiosInstance.get(url, {
             headers: {
@@ -885,7 +926,7 @@ async function getDashboardList(server: string, token: string, axiosInstance: an
             }
         });
 
-        logger.info(`Successfully got dashboard list: ${response.status}`);
+        logger.info(`Successfully got custom dashboard list: ${response.status}`);
         if (logger.isDebugEnabled()) {
             logger.debug(`Response data: \n${JSON.stringify(response.data)}`);
         }
@@ -901,11 +942,11 @@ function saveDashboard(dir: string, id: string, title: string, dashboard: any) {
     try {
         const filename = `${title}.json`;
         const filepath = path.join(dir, filename);
-        logger.info(`Saving dashboard (id=${id}) to ${filepath}`);
+        logger.info(`Saving custom dashboard (id=${id}) to ${filepath} ...`);
         fs.writeFileSync(filepath, JSON.stringify(dashboard, null, 2));
-        logger.info(`Dashboard (id=${id}) saved successfully`);
+        logger.info(`Custom dashboard (id=${id}) saved successfully`);
     } catch (error) {
-        logger.error(`Error saving dashboard (id=${id}):`, error);
+        logger.error(`Error saving custom dashboard (id=${id}):`, error);
     }
 }
 
@@ -923,21 +964,6 @@ function filterDashboardsBy(idObjects: IdObject[], include: string[]): IdObject[
             }
             return false;
         });
-    });
-}
-
-function sanitizeDashboardTitles(idObjects: IdObject[]): IdObject[] {
-    const titleMap: { [key: string]: number } = {};
-    return idObjects.map(obj => {
-        let originalTitle = sanitizeFileName(obj.title);
-        let newTitle = originalTitle;
-        if (titleMap[originalTitle]) {
-            titleMap[originalTitle]++;
-            newTitle = `${originalTitle}_${titleMap[originalTitle]}`;
-        } else {
-            titleMap[originalTitle] = 1;
-        }
-        return { ...obj, title: newTitle };
     });
 }
 
@@ -972,7 +998,7 @@ function parseIncludeItem(item: string): string[] {
 async function exportEvent(server: string, token: string, eventId: string, axiosInstance: any): Promise<any> {
     try {
         const url = `https://${server}/api/events/settings/event-specifications/custom/${eventId}`;
-        logger.info(`Getting event (id=${eventId}) from ${url}`);
+        logger.info(`Getting custom event (id=${eventId}) from ${url} ...`);
 
         const response = await axiosInstance.get(url, {
             headers: {
@@ -981,7 +1007,7 @@ async function exportEvent(server: string, token: string, eventId: string, axios
             }
         });
 
-        logger.info(`Successfully got event (id=${eventId}): ${response.status}`);
+        logger.info(`Successfully got custom event (id=${eventId}): ${response.status}`);
         if (logger.isDebugEnabled()) {
             logger.debug(`Response data: \n${JSON.stringify(response.data)}`);
         }
@@ -996,7 +1022,7 @@ async function exportEvent(server: string, token: string, eventId: string, axios
 async function getEventList(server: string, token: string, axiosInstance: any): Promise<any[]> {
     try {
         const url = `https://${server}/api/events/settings/event-specifications/custom`;
-        logger.info(`Getting event list from ${url}`);
+        logger.info(`Getting custom event list from ${url} ...`);
 
         const response = await axiosInstance.get(url, {
             headers: {
@@ -1005,7 +1031,7 @@ async function getEventList(server: string, token: string, axiosInstance: any): 
             }
         });
 
-        logger.info(`Successfully got event list: ${response.status}`);
+        logger.info(`Successfully got custom event list: ${response.status}`);
         if (logger.isDebugEnabled()) {
             logger.debug(`Response data: \n${JSON.stringify(response.data)}`);
         }
@@ -1021,11 +1047,11 @@ function saveEvent(dir: string, id: string, name: string, event: any) {
     try {
         const filename = `${name}.json`;
         const filepath = path.join(dir, filename);
-        logger.info(`Saving event (id=${id}) to ${filepath}`);
+        logger.info(`Saving custom event (id=${id}) to ${filepath} ...`);
         fs.writeFileSync(filepath, JSON.stringify(event, null, 2));
-        logger.info(`Event (id=${id}) saved successfully`);
+        logger.info(`Custom event (id=${id}) saved successfully`);
     } catch (error) {
-        logger.error(`Error saving event (id=${id}):`, error);
+        logger.error(`Error saving custom event (id=${id}):`, error);
     }
 }
 
@@ -1040,25 +1066,8 @@ function filterEventsBy(idObjects: any[], include: string[]): any[] {
             } else if (key === 'id') {
                 return obj.id === value;
             }
-
             return false;
         });
-    });
-}
-
-function sanitizeEventTitles(idObjects: any[]): any[] {
-    const titleMap: { [key: string]: number } = {};
-    return idObjects.map(obj => {
-        const fallback = obj.name || `event-${obj.id}`;
-        let originalTitle = sanitizeFileName(obj.title || fallback);
-        let newTitle = originalTitle;
-        if (titleMap[originalTitle]) {
-            titleMap[originalTitle]++;
-            newTitle = `${originalTitle}_${titleMap[originalTitle]}`;
-        } else {
-            titleMap[originalTitle] = 1;
-        }
-        return { ...obj, title: newTitle };
     });
 }
 
@@ -1084,6 +1093,27 @@ function handleAxiosError(error: any, context: string) {
     } else {
         logger.error(`Failed to get ${context}: ${String(error)}`);
     }
+}
+
+function sanitizeTitles<T extends { id: string; title?: string; name?: string }>(
+    idObjects: T[],
+    fallbackPrefix: string
+): T[] {
+    const titleMap: { [key: string]: number } = {};
+    return idObjects.map(obj => {
+        const fallback = obj.name || `${fallbackPrefix}-${obj.id}`;
+        const baseTitle = sanitizeFileName(obj.title || fallback);
+        let newTitle = baseTitle;
+
+        if (titleMap[baseTitle]) {
+            titleMap[baseTitle]++;
+            newTitle = `${baseTitle}_${titleMap[baseTitle]}`;
+        } else {
+            titleMap[baseTitle] = 1;
+        }
+
+        return { ...obj, title: newTitle };
+    });
 }
 
 // Function to handle init logic
@@ -1256,10 +1286,10 @@ Below are the resource attributes that are currently supported by this integrati
 Below are the events that are currently supported by this integration package.
 
 (Note: Below are the sample events. Please replace these with your own actual events.)
-| Event Name                 | Description                       | Unit    |
-|----------------------------|-----------------------------------|---------|
-| <event.name.heap_inuse>    | Heap used            			 | Number  |
-| <event.name.heap.alloc>    | Allocated memory     			 | Byte    |
+| Event Name                 | Description
+|----------------------------|-----------------------------------
+| <event.name.heap_inuse>    | Heap used
+| <event.name.heap.alloc>    | Allocated memory
 `;
     }
 
