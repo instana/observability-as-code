@@ -1,7 +1,7 @@
 {
   "name": "@instana-integration/llm",
-  "version": "0.0.1",
-  "description": "IBM Instana integration package for large language model",
+  "version": "0.0.3",
+  "description": "IBM Instana integration package for large language model...Testing",
   "author": "IBM Instana",
   "license": "ISC",
   "publishConfig": {
