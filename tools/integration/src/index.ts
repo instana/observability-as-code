@@ -1281,10 +1281,10 @@ Below are the resource attributes that are currently supported by this integrati
 Below are the events that are currently supported by this integration package.
 
 (Note: Below are the sample events. Please replace these with your own actual events.)
-| Event Name                 | Description
-|----------------------------|-----------------------------------
-| <event.name.heap_inuse>    | Heap used
-| <event.name.heap.alloc>    | Allocated memory
+| Event Name                 | Description                       |
+|----------------------------|-----------------------------------|
+| <event.name.heap_inuse>    | Heap used  |
+| <event.name.heap.alloc>    | Allocated memory  |
 `;
     }
 

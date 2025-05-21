@@ -6,6 +6,7 @@ on:
       - closed
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   publish:
@@ -38,6 +39,9 @@ jobs:
             git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Publish packages
-        run: npx lerna publish from-package --yes --loglevel verbose
+        run: |
+          export npm_config_loglevel=silly 
+          export DEBUG=lerna:*
+          npx lerna publish from-package --yes --loglevel verbose
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISHING_TOKEN }}
