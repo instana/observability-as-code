@@ -1,5 +1,5 @@
 {
-  "id": "90TAES3PT7qRlr65L5fwoA",
+  "id": "1S2AsT5WSo64qAyimi-Kew",
   "title": "milvus-query-performance-health",
   "accessRules": [
     {
@@ -10,22 +10,134 @@
   ],
   "widgets": [
     {
-      "id": "pOF5Yon_qnpkwtRp",
-      "title": "Data Processed ",
+      "id": "9NzCVQEbAn7Hpkoh",
+      "title": "No of concurrent reads",
       "width": 12,
       "height": 13,
       "x": 0,
-      "y": 41,
+      "y": 13,
       "type": "chart",
       "config": {
         "shareMaxAxisDomain": false,
         "y1": {
-          "formatter": "number.detailed",
+          "formatter": "number.compact",
           "renderer": "line",
           "metrics": [
             {
               "lastValue": false,
               "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "querynode read task concurrency",
+              "source": "INFRASTRUCTURE_METRICS",
+              "metricPath": [
+                "Others",
+                "Regex"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": true,
+              "metric": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_querynode_read_task_concurrency",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_querynode_read_task_concurrency",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "zox88CGAki8D4_SI",
+      "title": "Requests Count",
+      "width": 6,
+      "height": 13,
+      "x": 0,
+      "y": 0,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "cPurple",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "proxy request count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "metricPath": [
+                "Others",
+                "Regex"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": true,
+              "metric": "metrics\\.sums\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_proxy_req_count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "metrics\\.sums\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_proxy_req_count",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "FVmevJ6-MqJVQKsH",
+      "title": "Data Processed ",
+      "width": 6,
+      "height": 13,
+      "x": 6,
+      "y": 0,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "cMagenta",
               "compareToTimeShifted": false,
               "threshold": {
                 "critical": "",
@@ -86,119 +198,7 @@
               "crossSeriesAggregation": "MEAN"
             }
           ],
-          "formatterSelected": false
-        },
-        "y2": {
-          "formatter": "number.detailed",
-          "renderer": "line",
-          "metrics": []
-        },
-        "type": "TIME_SERIES"
-      }
-    },
-    {
-      "id": "901LaYyNHIH5MuqY",
-      "title": "Requests Count",
-      "width": 12,
-      "height": 13,
-      "x": 0,
-      "y": 28,
-      "type": "chart",
-      "config": {
-        "shareMaxAxisDomain": false,
-        "y1": {
-          "formatter": "number.detailed",
-          "renderer": "line",
-          "metrics": [
-            {
-              "lastValue": false,
-              "color": "",
-              "compareToTimeShifted": false,
-              "threshold": {
-                "critical": "",
-                "warning": "",
-                "thresholdEnabled": false,
-                "operator": ">="
-              },
-              "aggregation": "MEAN",
-              "label": "proxy request count",
-              "source": "INFRASTRUCTURE_METRICS",
-              "metricPath": [
-                "Others",
-                "Regex"
-              ],
-              "formatter": "number.detailed",
-              "unit": "number",
-              "regex": true,
-              "metric": "metrics\\.sums\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_proxy_req_count",
-              "timeShift": 0,
-              "tagFilterExpression": {
-                "logicalOperator": "AND",
-                "elements": [],
-                "type": "EXPRESSION"
-              },
-              "allowedCrossSeriesAggregations": [],
-              "metricLabel": "metrics\\.sums\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_proxy_req_count",
-              "crossSeriesAggregation": "MEAN"
-            }
-          ],
-          "formatterSelected": false
-        },
-        "y2": {
-          "formatter": "number.detailed",
-          "renderer": "line",
-          "metrics": []
-        },
-        "type": "TIME_SERIES"
-      }
-    },
-    {
-      "id": "Negblsj3NB1ekVkA",
-      "title": "No of concurrent reads",
-      "width": 12,
-      "height": 13,
-      "x": 0,
-      "y": 54,
-      "type": "chart",
-      "config": {
-        "shareMaxAxisDomain": false,
-        "y1": {
-          "formatter": "number.detailed",
-          "renderer": "line",
-          "metrics": [
-            {
-              "lastValue": false,
-              "color": "",
-              "compareToTimeShifted": false,
-              "threshold": {
-                "critical": "",
-                "warning": "",
-                "thresholdEnabled": false,
-                "operator": ">="
-              },
-              "aggregation": "MEAN",
-              "label": "querynode read task concurrency",
-              "source": "INFRASTRUCTURE_METRICS",
-              "metricPath": [
-                "Others",
-                "Regex"
-              ],
-              "formatter": "number.detailed",
-              "unit": "number",
-              "regex": true,
-              "metric": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_querynode_read_task_concurrency",
-              "timeShift": 0,
-              "tagFilterExpression": {
-                "logicalOperator": "AND",
-                "elements": [],
-                "type": "EXPRESSION"
-              },
-              "allowedCrossSeriesAggregations": [],
-              "metricLabel": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_querynode_read_task_concurrency",
-              "crossSeriesAggregation": "MEAN"
-            }
-          ],
-          "formatterSelected": false
+          "formatterSelected": true
         },
         "y2": {
           "formatter": "number.detailed",
@@ -209,6 +209,6 @@
       }
     }
   ],
-  "ownerId": "67dc0ee04bdbcf000124598d",
+  "ownerId": "5ee5195fbea6150001758c40",
   "writable": true
 }
