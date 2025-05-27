@@ -1,6 +1,6 @@
 {
     "id": "TFXsAg6TSWG4F7CGPphCGg",
-    "title": "serviceablity-milvus-workload-health",
+    "title": "milvus-workload-health",
     "accessRules": [
       {
         "accessType": "READ_WRITE",
@@ -9,62 +9,6 @@
       }
     ],
     "widgets": [
-      {
-        "id": "P2bXcXTKlkCMJ9G3",
-        "title": "Number of message stream objects",
-        "width": 6,
-        "height": 14,
-        "x": 6,
-        "y": 1,
-        "type": "chart",
-        "config": {
-          "shareMaxAxisDomain": false,
-          "y1": {
-            "formatter": "number.compact",
-            "renderer": "line",
-            "metrics": [
-              {
-                "lastValue": false,
-                "color": "cMagenta",
-                "compareToTimeShifted": false,
-                "threshold": {
-                  "critical": "",
-                  "warning": "",
-                  "thresholdEnabled": false,
-                  "operator": ">="
-                },
-                "aggregation": "MEAN",
-                "label": "rootcoord msgstream object number",
-                "source": "INFRASTRUCTURE_METRICS",
-                "metricPath": [
-                  "Others",
-                  "Regex"
-                ],
-                "formatter": "number.detailed",
-                "unit": "number",
-                "regex": true,
-                "metric": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_rootcoord_msgstream_obj_num",
-                "timeShift": 0,
-                "tagFilterExpression": {
-                  "logicalOperator": "AND",
-                  "elements": [],
-                  "type": "EXPRESSION"
-                },
-                "allowedCrossSeriesAggregations": [],
-                "metricLabel": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_rootcoord_msgstream_obj_num",
-                "crossSeriesAggregation": "MEAN"
-              }
-            ],
-            "formatterSelected": true
-          },
-          "y2": {
-            "formatter": "number.detailed",
-            "renderer": "line",
-            "metrics": []
-          },
-          "type": "TIME_SERIES"
-        }
-      },
       {
         "id": "l3PnImIpJkXATslD",
         "title": "Number of Partitions",
@@ -220,6 +164,62 @@
                 },
                 "allowedCrossSeriesAggregations": [],
                 "metricLabel": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_rootcoord_dml_channel_num",
+                "crossSeriesAggregation": "MEAN"
+              }
+            ],
+            "formatterSelected": true
+          },
+          "y2": {
+            "formatter": "number.detailed",
+            "renderer": "line",
+            "metrics": []
+          },
+          "type": "TIME_SERIES"
+        }
+      },
+      {
+        "id": "P2bXcXTKlkCMJ9G3",
+        "title": "Number of message stream objects",
+        "width": 6,
+        "height": 14,
+        "x": 6,
+        "y": 1,
+        "type": "chart",
+        "config": {
+          "shareMaxAxisDomain": false,
+          "y1": {
+            "formatter": "number.compact",
+            "renderer": "line",
+            "metrics": [
+              {
+                "lastValue": false,
+                "color": "cMagenta",
+                "compareToTimeShifted": false,
+                "threshold": {
+                  "critical": "",
+                  "warning": "",
+                  "thresholdEnabled": false,
+                  "operator": ">="
+                },
+                "aggregation": "MEAN",
+                "label": "rootcoord msgstream object number",
+                "source": "INFRASTRUCTURE_METRICS",
+                "metricPath": [
+                  "Others",
+                  "Regex"
+                ],
+                "formatter": "number.detailed",
+                "unit": "number",
+                "regex": true,
+                "metric": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_rootcoord_msgstream_obj_num",
+                "timeShift": 0,
+                "tagFilterExpression": {
+                  "logicalOperator": "AND",
+                  "elements": [],
+                  "type": "EXPRESSION"
+                },
+                "allowedCrossSeriesAggregations": [],
+                "metricLabel": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_rootcoord_msgstream_obj_num",
                 "crossSeriesAggregation": "MEAN"
               }
             ],
