@@ -10,392 +10,6 @@
   ],
   "widgets": [
     {
-      "id": "m7rlUL4RlqnAT1Jn",
-      "title": "Workload Count",
-      "width": 6,
-      "height": 13,
-      "x": 6,
-      "y": 13,
-      "type": "chart",
-      "config": {
-        "shareMaxAxisDomain": false,
-        "y1": {
-          "formatter": "number.compact",
-          "renderer": "line",
-          "metrics": [
-            {
-              "lastValue": false,
-              "color": "cPurple",
-              "compareToTimeShifted": false,
-              "threshold": {
-                "critical": "",
-                "warning": "",
-                "thresholdEnabled": false,
-                "operator": ">="
-              },
-              "aggregation": "SUM",
-              "label": "number of queries currently running in presto",
-              "source": "INFRASTRUCTURE_METRICS",
-              "type": "openTelemetry",
-              "metricPath": [
-                "Others",
-                "Regex"
-              ],
-              "formatter": "number.detailed",
-              "unit": "number",
-              "regex": true,
-              "metric": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_running_queries",
-              "timeShift": 0,
-              "tagFilterExpression": {
-                "logicalOperator": "AND",
-                "elements": [],
-                "type": "EXPRESSION"
-              },
-              "allowedCrossSeriesAggregations": [],
-              "metricLabel": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_running_queries",
-              "crossSeriesAggregation": "SUM"
-            }
-          ],
-          "formatterSelected": true
-        },
-        "y2": {
-          "formatter": "number.detailed",
-          "renderer": "line",
-          "metrics": []
-        },
-        "type": "TIME_SERIES"
-      }
-    },
-    {
-      "id": "jV8CcpRzMdgIST7N",
-      "title": "Status",
-      "width": 6,
-      "height": 13,
-      "x": 0,
-      "y": 0,
-      "type": "chart",
-      "config": {
-        "shareMaxAxisDomain": false,
-        "y1": {
-          "formatter": "number.compact",
-          "renderer": "line",
-          "metrics": [
-            {
-              "lastValue": false,
-              "color": "",
-              "compareToTimeShifted": false,
-              "threshold": {
-                "critical": "",
-                "warning": "",
-                "thresholdEnabled": false,
-                "operator": ">="
-              },
-              "aggregation": "MEAN",
-              "label": "completed queries five minute count",
-              "source": "INFRASTRUCTURE_METRICS",
-              "metricPath": [
-                "Others",
-                "Regex"
-              ],
-              "formatter": "number.detailed",
-              "unit": "number",
-              "regex": true,
-              "metric": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_completed_queries_five_minute_count",
-              "timeShift": 0,
-              "tagFilterExpression": {
-                "logicalOperator": "AND",
-                "elements": [],
-                "type": "EXPRESSION"
-              },
-              "allowedCrossSeriesAggregations": [],
-              "metricLabel": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_completed_queries_five_minute_count",
-              "crossSeriesAggregation": "MEAN"
-            },
-            {
-              "lastValue": false,
-              "color": "",
-              "compareToTimeShifted": false,
-              "threshold": {
-                "critical": "",
-                "warning": "",
-                "thresholdEnabled": false,
-                "operator": ">="
-              },
-              "aggregation": "MEAN",
-              "label": "abandoned queries five minute count",
-              "source": "INFRASTRUCTURE_METRICS",
-              "metricPath": [
-                "Others",
-                "Regex"
-              ],
-              "formatter": "number.detailed",
-              "unit": "number",
-              "regex": true,
-              "metric": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_abandoned_queries_five_minute_count",
-              "timeShift": 0,
-              "tagFilterExpression": {
-                "logicalOperator": "AND",
-                "elements": [],
-                "type": "EXPRESSION"
-              },
-              "allowedCrossSeriesAggregations": [],
-              "metricLabel": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_abandoned_queries_five_minute_count",
-              "crossSeriesAggregation": "MEAN"
-            },
-            {
-              "lastValue": false,
-              "color": "",
-              "compareToTimeShifted": false,
-              "threshold": {
-                "critical": "",
-                "warning": "",
-                "thresholdEnabled": false,
-                "operator": ">="
-              },
-              "aggregation": "MEAN",
-              "label": "canceled queries five minute count",
-              "source": "INFRASTRUCTURE_METRICS",
-              "metricPath": [
-                "Others",
-                "Regex"
-              ],
-              "formatter": "number.detailed",
-              "unit": "number",
-              "regex": true,
-              "metric": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_canceled_queries_five_minute_count",
-              "timeShift": 0,
-              "tagFilterExpression": {
-                "logicalOperator": "AND",
-                "elements": [],
-                "type": "EXPRESSION"
-              },
-              "allowedCrossSeriesAggregations": [],
-              "metricLabel": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_canceled_queries_five_minute_count",
-              "crossSeriesAggregation": "MEAN"
-            },
-            {
-              "lastValue": false,
-              "color": "",
-              "compareToTimeShifted": false,
-              "threshold": {
-                "critical": "",
-                "warning": "",
-                "thresholdEnabled": false,
-                "operator": ">="
-              },
-              "aggregation": "MEAN",
-              "label": "failed queries five minute count",
-              "source": "INFRASTRUCTURE_METRICS",
-              "metricPath": [
-                "Others",
-                "Regex"
-              ],
-              "formatter": "number.detailed",
-              "unit": "number",
-              "regex": true,
-              "metric": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_failed_queries_five_minute_count",
-              "timeShift": 0,
-              "tagFilterExpression": {
-                "logicalOperator": "AND",
-                "elements": [],
-                "type": "EXPRESSION"
-              },
-              "allowedCrossSeriesAggregations": [],
-              "metricLabel": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_failed_queries_five_minute_count",
-              "crossSeriesAggregation": "MEAN"
-            }
-          ],
-          "formatterSelected": true
-        },
-        "y2": {
-          "formatter": "number.detailed",
-          "renderer": "line",
-          "metrics": []
-        },
-        "type": "TIME_SERIES"
-      }
-    },
-    {
-      "id": "OoIuWU3w8X1tQT1T",
-      "title": "Error rates",
-      "width": 6,
-      "height": 13,
-      "x": 0,
-      "y": 13,
-      "type": "chart",
-      "config": {
-        "shareMaxAxisDomain": false,
-        "y1": {
-          "formatter": "number.compact",
-          "renderer": "line",
-          "metrics": [
-            {
-              "lastValue": false,
-              "color": "",
-              "compareToTimeShifted": false,
-              "threshold": {
-                "critical": "",
-                "warning": "",
-                "thresholdEnabled": false,
-                "operator": ">="
-              },
-              "aggregation": "MEAN",
-              "label": "user error failures five minute count",
-              "source": "INFRASTRUCTURE_METRICS",
-              "metricPath": [
-                "Others",
-                "Regex"
-              ],
-              "formatter": "number.detailed",
-              "unit": "number",
-              "regex": true,
-              "metric": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_user_error_failures_five_minute_count",
-              "timeShift": 0,
-              "tagFilterExpression": {
-                "logicalOperator": "AND",
-                "elements": [],
-                "type": "EXPRESSION"
-              },
-              "allowedCrossSeriesAggregations": [],
-              "metricLabel": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_user_error_failures_five_minute_count",
-              "crossSeriesAggregation": "MEAN"
-            },
-            {
-              "lastValue": false,
-              "color": "",
-              "compareToTimeShifted": false,
-              "threshold": {
-                "critical": "",
-                "warning": "",
-                "thresholdEnabled": false,
-                "operator": ">="
-              },
-              "aggregation": "MEAN",
-              "label": "failed queries five minute count",
-              "source": "INFRASTRUCTURE_METRICS",
-              "metricPath": [
-                "Others",
-                "Regex"
-              ],
-              "formatter": "number.detailed",
-              "unit": "number",
-              "regex": true,
-              "metric": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_failed_queries_five_minute_count",
-              "timeShift": 0,
-              "tagFilterExpression": {
-                "logicalOperator": "AND",
-                "elements": [],
-                "type": "EXPRESSION"
-              },
-              "allowedCrossSeriesAggregations": [],
-              "metricLabel": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_failed_queries_five_minute_count",
-              "crossSeriesAggregation": "MEAN"
-            },
-            {
-              "lastValue": false,
-              "color": "",
-              "compareToTimeShifted": false,
-              "threshold": {
-                "critical": "",
-                "warning": "",
-                "thresholdEnabled": false,
-                "operator": ">="
-              },
-              "aggregation": "MEAN",
-              "label": "external failures five minute count",
-              "source": "INFRASTRUCTURE_METRICS",
-              "metricPath": [
-                "Others",
-                "Regex"
-              ],
-              "formatter": "number.detailed",
-              "unit": "number",
-              "regex": true,
-              "metric": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_external_failures_five_minute_count",
-              "timeShift": 0,
-              "tagFilterExpression": {
-                "logicalOperator": "AND",
-                "elements": [],
-                "type": "EXPRESSION"
-              },
-              "allowedCrossSeriesAggregations": [],
-              "metricLabel": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_external_failures_five_minute_count",
-              "crossSeriesAggregation": "MEAN"
-            },
-            {
-              "lastValue": false,
-              "color": "",
-              "compareToTimeShifted": false,
-              "threshold": {
-                "critical": "",
-                "warning": "",
-                "thresholdEnabled": false,
-                "operator": ">="
-              },
-              "aggregation": "MEAN",
-              "label": "internal failures five minute count",
-              "source": "INFRASTRUCTURE_METRICS",
-              "metricPath": [
-                "Others",
-                "Regex"
-              ],
-              "formatter": "number.detailed",
-              "unit": "number",
-              "regex": true,
-              "metric": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_internal_failures_five_minute_count",
-              "timeShift": 0,
-              "tagFilterExpression": {
-                "logicalOperator": "AND",
-                "elements": [],
-                "type": "EXPRESSION"
-              },
-              "allowedCrossSeriesAggregations": [],
-              "metricLabel": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_internal_failures_five_minute_count",
-              "crossSeriesAggregation": "MEAN"
-            },
-            {
-              "lastValue": false,
-              "color": "",
-              "compareToTimeShifted": false,
-              "threshold": {
-                "critical": "",
-                "warning": "",
-                "thresholdEnabled": false,
-                "operator": ">="
-              },
-              "aggregation": "MEAN",
-              "label": "insufficient resources failures five minute count",
-              "source": "INFRASTRUCTURE_METRICS",
-              "metricPath": [
-                "Others",
-                "Regex"
-              ],
-              "formatter": "number.detailed",
-              "unit": "number",
-              "regex": true,
-              "metric": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_insufficient_resources_failures_five_minute_count",
-              "timeShift": 0,
-              "tagFilterExpression": {
-                "logicalOperator": "AND",
-                "elements": [],
-                "type": "EXPRESSION"
-              },
-              "allowedCrossSeriesAggregations": [],
-              "metricLabel": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_insufficient_resources_failures_five_minute_count",
-              "crossSeriesAggregation": "MEAN"
-            }
-          ],
-          "formatterSelected": true
-        },
-        "y2": {
-          "formatter": "number.detailed",
-          "renderer": "line",
-          "metrics": []
-        },
-        "type": "TIME_SERIES"
-      }
-    },
-    {
       "id": "J4X-U31nPCAQMFVk",
       "title": "Resource Utilisation",
       "width": 12,
@@ -583,6 +197,335 @@
       }
     },
     {
+      "id": "OoIuWU3w8X1tQT1T",
+      "title": "Error rates",
+      "width": 6,
+      "height": 13,
+      "x": 0,
+      "y": 13,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "user error failures five minute count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "metricPath": [
+                "Others",
+                "Regex"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": true,
+              "metric": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_user_error_failures_five_minute_count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_user_error_failures_five_minute_count",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "failed queries five minute count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "metricPath": [
+                "Others",
+                "Regex"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": true,
+              "metric": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_failed_queries_five_minute_count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_failed_queries_five_minute_count",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "external failures five minute count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "metricPath": [
+                "Others",
+                "Regex"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": true,
+              "metric": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_external_failures_five_minute_count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_external_failures_five_minute_count",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "internal failures five minute count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "metricPath": [
+                "Others",
+                "Regex"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": true,
+              "metric": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_internal_failures_five_minute_count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_internal_failures_five_minute_count",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "insufficient resources failures five minute count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "metricPath": [
+                "Others",
+                "Regex"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": true,
+              "metric": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_insufficient_resources_failures_five_minute_count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_insufficient_resources_failures_five_minute_count",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "jV8CcpRzMdgIST7N",
+      "title": "Status",
+      "width": 6,
+      "height": 13,
+      "x": 0,
+      "y": 0,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "completed queries five minute count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "metricPath": [
+                "Others",
+                "Regex"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": true,
+              "metric": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_completed_queries_five_minute_count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_completed_queries_five_minute_count",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "abandoned queries five minute count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "metricPath": [
+                "Others",
+                "Regex"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": true,
+              "metric": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_abandoned_queries_five_minute_count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_abandoned_queries_five_minute_count",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "canceled queries five minute count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "metricPath": [
+                "Others",
+                "Regex"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": true,
+              "metric": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_canceled_queries_five_minute_count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_canceled_queries_five_minute_count",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "failed queries five minute count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "metricPath": [
+                "Others",
+                "Regex"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": true,
+              "metric": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_failed_queries_five_minute_count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_failed_queries_five_minute_count",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
       "id": "zLkT1HjYXzDPfb6L",
       "title": "Request count",
       "width": 6,
@@ -659,6 +602,63 @@
               "allowedCrossSeriesAggregations": [],
               "metricLabel": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_queued_queries",
               "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "m7rlUL4RlqnAT1Jn",
+      "title": "Workload Count",
+      "width": 6,
+      "height": 13,
+      "x": 6,
+      "y": 13,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "cPurple",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "SUM",
+              "label": "number of queries currently running in presto",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "openTelemetry",
+              "metricPath": [
+                "Others",
+                "Regex"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": true,
+              "metric": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_running_queries",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "metrics\\.gauges\\.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_running_queries",
+              "crossSeriesAggregation": "SUM"
             }
           ],
           "formatterSelected": true
