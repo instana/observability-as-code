@@ -404,7 +404,7 @@ async function validatePackageJson(packageData: any, errors: string[], warnings:
                 errors.push(`The package is missing required field ${field}.`);
             }
         } else {
-            successMessages.push(`The package ${field} is present.`);
+            successMessages.push(`The package field ${field} is present.`);
         }
     }
 
@@ -509,10 +509,10 @@ function validateEventFiles(eventsPath: string, errors: string[], warnings: stri
 
 	    // check rules are not empty
             if (event.rules.length === 0) {
-            	errors.push(`The rules array is empty in file: ${file}.`);
+            	errors.push(`The event rules array is empty in file: ${file}.`);
                 allEventFieldsValid = false;
             } else if (event.rules.some((rule: object) => Object.keys(rule).length === 0)) {
-		errors.push(`No rules are defined in: ${file}.`);
+		errors.push(`No event rules are defined in: ${file}.`);
                 allEventFieldsValid = false;
             }
 
