@@ -289,7 +289,7 @@ async function handleLint(argv: any) {
     const dashboardsPath = path.join(currentDirectory, 'dashboards');
     const eventsPath = path.join(currentDirectory, 'events');
 
-    // Check README file
+    // Check README
     if (readmeContent) {
 	try {
 	    validateReadmeContent(readmeContent, packageData.name, currentDirectory, errors, warnings, successMessages);
@@ -749,8 +749,16 @@ async function handleImport(argv: any) {
                 }
 
                 try {
-                    const url = `https://${server}/${apiPath}`
-                    logger.info(`Applying the dashboard to ${url} ...`);
+                    const url = `https://${server}/${apiPath}`;
+
+                    function getTypeLabel(apiPath: String): String {
+						if(apiPath.includes('custom-dashboard')) return 'custom dashboard';
+						if(apiPath.includes('event-specifications')) return 'custom event';
+						return 'custom element';
+					}
+
+					const typeLabel = getTypeLabel(apiPath);
+					logger.info(`Applying the ${typeLabel} to ${url} ...`);
 
                     const response = await axiosInstance.post(url, jsonContent, {
                         headers: {
@@ -815,74 +823,129 @@ async function handleExport(argv: any) {
         const parts = parseIncludeItem(item);
         const typePart = parts.find((p: string) => p.startsWith("type="));
         const type = typePart ? typePart.split("=")[1] : "all";
-
         const conditions = parts.filter((p: string) => !p.startsWith("type="));
         if (!typePart) {
             logger.warn(`'type=' missing in include clause "${item}", interpreting as type=all`);
         }
-
-        return { type, conditions };
+        return { type, conditions, explicitlyTyped: !!typePart };
     });
-
-    const dashboardIncludes = parsedIncludes
-        .filter(inc => inc.type === "dashboard" || inc.type === "all")
-        .flatMap(inc => inc.conditions);
-
-    const eventIncludes = parsedIncludes
-        .filter(inc => inc.type === "event" || inc.type === "all")
-        .flatMap(inc => inc.conditions);
 
     const dashboardsPath = path.join(location, "dashboards");
     const eventsPath = path.join(location, "events");
     fs.mkdirSync(dashboardsPath, { recursive: true });
     fs.mkdirSync(eventsPath, { recursive: true });
 
-    // Dashboard export
-    const dashboardId = getValueByKeyFromArray(dashboardIncludes, "id");
+    let wasDashboardFound = false;
+    let wasEventFound = false;
 
-    if (parsedIncludes.some(inc => inc.type === "dashboard")) {
-        if (dashboardId) {
-            const dashboard = await exportDashboard(server, token, dashboardId, axiosInstance);
-            if (dashboard) {
-                saveDashboard(dashboardsPath, dashboardId, sanitizeFileName(dashboard.title), dashboard);
+    // Dashboard export
+    if (parsedIncludes.some(inc => inc.type === "dashboard" || inc.type === "all")) {
+        const allDashboards = await getDashboardList(server, token, axiosInstance);
+        let totalDashboardProcessed = 0;
+
+        for (const inc of parsedIncludes.filter(inc => inc.type === "dashboard" || inc.type === "all")) {
+            const matches = inc.conditions.filter(c => c.startsWith("id="));
+
+            let filtered;
+            if (matches.length && inc.explicitlyTyped) {
+                filtered = matches.map(idCond => {
+                    const id = idCond.split("=")[1]?.replace(/^"|"$/g, '');
+                    return { id };
+                });
+            } else if (matches.length) {
+                filtered = matches.map(idCond => {
+                    const id = idCond.split("=")[1]?.replace(/^"|"$/g, '');
+                    return allDashboards.find(d => d.id === id);
+                }).filter(Boolean);
+            } else {
+                filtered = filterDashboardsBy(allDashboards, inc.conditions);
             }
-        } else {
-            const idObjects = await getDashboardList(server, token, axiosInstance);
-            const filtered = filterDashboardsBy(idObjects, dashboardIncludes);
+
+            if (filtered.length === 0) {
+                const logFn = inc.explicitlyTyped ? logger.error : logger.debug;
+                logFn(`No custom dashboard(s) found matching: ${inc.conditions.join(', ')}`);
+                continue;
+            }
+			const enriched = filtered.map(item => ({
+            	...item,
+                name: item.name ?? `custom-dashboard-${item.id}`
+            }));
             const sanitized = sanitizeTitles(filtered, "custom-dashboard");
-            for (const obj of sanitized) {
-                const dashboard = await exportDashboard(server, token, obj.id, axiosInstance);
+            for (const dash of sanitized) {
+                const dashboard = await exportDashboard(server, token, dash.id, axiosInstance);
                 if (dashboard) {
-                    saveDashboard(dashboardsPath, obj.id, obj.title, dashboard);
+                    saveDashboard(dashboardsPath, dash.id, dash.title, dashboard);
+                    totalDashboardProcessed++;
+                    wasDashboardFound = true;
+                } else {
+                    const logFn = inc.explicitlyTyped ? logger.error : logger.debug;
+                    logFn(`Dashboard with id=${dash.id} not found or failed to export.`);
                 }
             }
-            logger.info(`Total custom dashboard(s) processed: ${sanitized.length}`);
         }
+
+        logger.info(`Total custom dashboard(s) processed: ${totalDashboardProcessed}`);
     }
 
     // Event export
-    const eventId = getValueByKeyFromArray(eventIncludes, "id");
+    if (parsedIncludes.some(inc => inc.type === "event" || inc.type === "all")) {
+        const allEvents = await getEventList(server, token, axiosInstance);
+        let totalEventProcessed = 0;
 
-    if (parsedIncludes.some(inc => inc.type === "event")) {
-        if (eventId) {
-            const event = await exportEvent(server, token, eventId, axiosInstance);
-            if (event) {
-                saveEvent(eventsPath, eventId, sanitizeFileName(event.title || `event-${eventId}`), event);
+        for (const inc of parsedIncludes.filter(inc => inc.type === "event" || inc.type === "all")) {
+            const matches = inc.conditions.filter(c => c.startsWith("id="));
+
+            let filtered;
+            if (matches.length && inc.explicitlyTyped) {
+                filtered = matches.map(idCond => {
+                    const id = idCond.split("=")[1]?.replace(/^"|"$/g, '');
+                    return { id };
+                });
+            } else if (matches.length) {
+                filtered = matches.map(idCond => {
+                    const id = idCond.split("=")[1]?.replace(/^"|"$/g, '');
+                    return allEvents.find(e => e.id === id);
+                }).filter(Boolean);
+            } else {
+                filtered = filterEventsBy(allEvents, inc.conditions);
             }
-        } else {
-            const allEvents = await getEventList(server, token, axiosInstance);
-            const filtered = filterEventsBy(allEvents, eventIncludes);
+
+            if (filtered.length === 0) {
+                const logFn = inc.explicitlyTyped ? logger.error : logger.debug;
+                logFn(`No custom event(s) found matching: ${inc.conditions.join(', ')}`);
+                continue;
+            }
+			const enriched = filtered.map(item => ({
+                ...item,
+                name: item.name ?? `custom-event-${item.id}`
+            }));
             const sanitized = sanitizeTitles(filtered, "custom-event");
             for (const evt of sanitized) {
                 const event = await exportEvent(server, token, evt.id, axiosInstance);
                 if (event) {
                     saveEvent(eventsPath, evt.id, evt.title, event);
+                    totalEventProcessed++;
+                    wasEventFound = true;
+                } else {
+                    const logFn = inc.explicitlyTyped ? logger.error : logger.debug;
+                    logFn(`Event with id=${evt.id} not found or failed to export.`);
                 }
             }
-            logger.info(`Total custom event(s) processed: ${sanitized.length}`);
         }
+
+        logger.info(`Total custom event(s) processed: ${totalEventProcessed}`);
+    }
+
+    // Final info
+    const isOnlyDashboard = parsedIncludes.every(inc => inc.type === "dashboard");
+    const isOnlyEvent = parsedIncludes.every(inc => inc.type === "event");
+    const isMixedOrUnspecified = parsedIncludes.some(inc => inc.type === "all") || (!isOnlyDashboard && !isOnlyEvent);
+
+    if (!wasDashboardFound && !wasEventFound && isMixedOrUnspecified) {
+        logger.error("No custom elements were found or exported.");
     }
 }
+
 
 // Helper functions for dashboard export
 async function exportDashboard(server: string, token: string, dashboardId: string, axiosInstance: any): Promise<any> {
@@ -1244,7 +1307,7 @@ function generateReadme(packagePath: string, packageName: string, configTypes: s
 Below are the dashboards that are currently supported by this integration package.
 
 (Note: Below are the sample dashboards. Please replace these with your own actual dashboards.)
-| Dashboard Title    | Description                    |
+| Dashboard Title    | Description           |
 |--------------------|-----------------------|
 | Runtime Metrics    | Instana custom dashboard that displays runtime metrics for application |
 `;
