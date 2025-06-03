@@ -752,13 +752,12 @@ async function handleImport(argv: any) {
                     const url = `https://${server}/${apiPath}`;
 
                     function getTypeLabel(apiPath: String): String {
-						if(apiPath.includes('custom-dashboard')) return 'custom dashboard';
-						if(apiPath.includes('event-specifications')) return 'custom event';
-						return 'custom element';
-					}
-
-					const typeLabel = getTypeLabel(apiPath);
-					logger.info(`Applying the ${typeLabel} to ${url} ...`);
+		    	if(apiPath.includes('custom-dashboard')) return 'custom dashboard';
+			if(apiPath.includes('event-specifications')) return 'custom event';
+			return 'custom element';
+		    }
+		    const typeLabel = getTypeLabel(apiPath);
+		    logger.info(`Applying the ${typeLabel} to ${url} ...`);
 
                     const response = await axiosInstance.post(url, jsonContent, {
                         headers: {
@@ -866,7 +865,7 @@ async function handleExport(argv: any) {
                 logFn(`No custom dashboard(s) found matching: ${inc.conditions.join(', ')}`);
                 continue;
             }
-			const enriched = filtered.map(item => ({
+		const enriched = filtered.map(item => ({
             	...item,
                 name: item.name ?? `custom-dashboard-${item.id}`
             }));
@@ -915,7 +914,7 @@ async function handleExport(argv: any) {
                 logFn(`No custom event(s) found matching: ${inc.conditions.join(', ')}`);
                 continue;
             }
-			const enriched = filtered.map(item => ({
+		const enriched = filtered.map(item => ({
                 ...item,
                 name: item.name ?? `custom-event-${item.id}`
             }));
