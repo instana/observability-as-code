@@ -304,12 +304,12 @@ async function handleLint(argv: any) {
 	const strictMode = argv['strict-mode'];
         await validatePackageJson(packageData, errors, warnings, successMessages, strictMode);
         if(fs.existsSync(dashboardsPath)){
-        	validateDashboardFiles(dashboardsPath, errors, warnings, successMessages);
+            validateDashboardFiles(dashboardsPath, errors, warnings, successMessages);
         } else {
-        	logger.info('No dashboards folder found for this package.');
+            logger.info('No dashboards folder found for this package.');
         }
         if(fs.existsSync(eventsPath)){
-        	validateEventFiles(eventsPath, errors, warnings, successMessages);
+            validateEventFiles(eventsPath, errors, warnings, successMessages);
         } else {
             logger.info('No events folder found for this package.');
         }
@@ -541,7 +541,15 @@ function validateReadmeContent(readmeContent: string, packageName: string, curre
     if(eventsExist){
 	requiredSections.push('Events');
     }
-    const missingSections = requiredSections.filter(section => !readmeContent.includes(section));
+    const readmeLines = readmeContent.split('\n');
+    const headingLines = readmeLines
+        .filter(line => /^#{1,6}\s+/.test(line.trim()))
+        .map(line => line.trim().replace(/^#{1,6}\s+/, '').trim());
+
+    const missingSections = requiredSections.filter(section =>
+        !headingLines.some(heading => heading.toLowerCase() === section.toLowerCase())
+    );
+
     if (missingSections.length > 0) {
         errors.push(`README.md is missing required sections: ${missingSections.join(', ')}`);
     } else {
@@ -752,13 +760,12 @@ async function handleImport(argv: any) {
                     const url = `https://${server}/${apiPath}`;
 
                     function getTypeLabel(apiPath: String): String {
-						if(apiPath.includes('custom-dashboard')) return 'custom dashboard';
-						if(apiPath.includes('event-specifications')) return 'custom event';
-						return 'custom element';
-					}
-
-					const typeLabel = getTypeLabel(apiPath);
-					logger.info(`Applying the ${typeLabel} to ${url} ...`);
+		    	if(apiPath.includes('custom-dashboard')) return 'custom dashboard';
+			if(apiPath.includes('event-specifications')) return 'custom event';
+			return 'custom element';
+		    }
+		    const typeLabel = getTypeLabel(apiPath);
+		    logger.info(`Applying the ${typeLabel} to ${url} ...`);
 
                     const response = await axiosInstance.post(url, jsonContent, {
                         headers: {
@@ -866,8 +873,8 @@ async function handleExport(argv: any) {
                 logFn(`No custom dashboard(s) found matching: ${inc.conditions.join(', ')}`);
                 continue;
             }
-			const enriched = filtered.map(item => ({
-            	...item,
+	    const enriched = filtered.map(item => ({
+                ...item,
                 name: item.name ?? `custom-dashboard-${item.id}`
             }));
             const sanitized = sanitizeTitles(filtered, "custom-dashboard");
@@ -915,7 +922,7 @@ async function handleExport(argv: any) {
                 logFn(`No custom event(s) found matching: ${inc.conditions.join(', ')}`);
                 continue;
             }
-			const enriched = filtered.map(item => ({
+	    const enriched = filtered.map(item => ({
                 ...item,
                 name: item.name ?? `custom-event-${item.id}`
             }));
@@ -1026,33 +1033,6 @@ function filterDashboardsBy(idObjects: IdObject[], include: string[]): IdObject[
 }
 
 // Helper functions for event export
-function parseIncludeItem(item: string): string[] {
-    const result: string[] = [];
-    let buffer = '';
-    let inQuotes = false;
-
-    for (let i = 0; i < item.length; i++) {
-        const char = item[i];
-
-        if (char === '"') {
-            inQuotes = !inQuotes;
-        } else if (char === ' ' && !inQuotes) {
-            if (buffer.length > 0) {
-                result.push(buffer);
-                buffer = '';
-            }
-        } else {
-            buffer += char;
-        }
-    }
-
-    if (buffer.length > 0) {
-        result.push(buffer);
-    }
-
-    return result;
-}
-
 async function exportEvent(server: string, token: string, eventId: string, axiosInstance: any): Promise<any> {
     try {
         const url = `https://${server}/api/events/settings/event-specifications/custom/${eventId}`;
@@ -1130,6 +1110,33 @@ function filterEventsBy(idObjects: any[], include: string[]): any[] {
 }
 
 // Helpers for export
+function parseIncludeItem(item: string): string[] {
+    const result: string[] = [];
+    let buffer = '';
+    let inQuotes = false;
+
+    for (let i = 0; i < item.length; i++) {
+        const char = item[i];
+
+        if (char === '"') {
+            inQuotes = !inQuotes;
+        } else if (char === ' ' && !inQuotes) {
+            if (buffer.length > 0) {
+                result.push(buffer);
+                buffer = '';
+            }
+        } else {
+            buffer += char;
+        }
+    }
+
+    if (buffer.length > 0) {
+        result.push(buffer);
+    }
+
+    return result;
+}
+
 function sanitizeFileName(name: string): string {
     if (!name) return 'untitled'; // fallback
     return name.replace(/[^a-z0-9-_]/gi, '_').toLowerCase();
