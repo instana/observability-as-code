@@ -1,5 +1,5 @@
 {
-  "id": "ntjEv8kZQfyIalWG48_QoA",
+  "id": "9Wji0cFhSVqTYMNb3kwFUg",
   "title": "milvus-system-health",
   "accessRules": [
     {
@@ -10,136 +10,17 @@
   ],
   "widgets": [
     {
-      "id": "dfwyiWgWCp7vVjbp",
-      "title": "Memory Usage",
-      "width": 6,
-      "height": 15,
-      "x": 6,
-      "y": 0,
-      "type": "pie",
-      "config": {
-        "shareMaxAxisDomain": false,
-        "y1": {
-          "formatter": "bytes.detailed",
-          "renderer": "pie",
-          "metrics": [
-            {
-              "lastValue": false,
-              "color": "",
-              "compareToTimeShifted": false,
-              "threshold": {
-                "critical": "",
-                "warning": "",
-                "thresholdEnabled": false,
-                "operator": ">="
-              },
-              "aggregation": "MEAN",
-              "label": "process resident memory bytes",
-              "source": "INFRASTRUCTURE_METRICS",
-              "type": "openTelemetry",
-              "metricPath": [
-                "Others",
-                "OpenTelemetry SDK"
-              ],
-              "formatter": "number.detailed",
-              "unit": "byte",
-              "metric": "metrics.gauges.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/process_resident_memory_bytes",
-              "timeShift": 0,
-              "tagFilterExpression": {
-                "logicalOperator": "AND",
-                "elements": [],
-                "type": "EXPRESSION"
-              },
-              "allowedCrossSeriesAggregations": [],
-              "metricLabel": "OpenTelemetry gauge github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/process_resident_memory_bytes",
-              "crossSeriesAggregation": "MEAN"
-            },
-            {
-              "lastValue": false,
-              "color": "",
-              "compareToTimeShifted": false,
-              "threshold": {
-                "critical": "",
-                "warning": "",
-                "thresholdEnabled": false,
-                "operator": ">="
-              },
-              "aggregation": "MEAN",
-              "label": "process virtual memory bytes",
-              "source": "INFRASTRUCTURE_METRICS",
-              "type": "openTelemetry",
-              "metricPath": [
-                "Others",
-                "OpenTelemetry SDK"
-              ],
-              "formatter": "number.detailed",
-              "unit": "byte",
-              "metric": "metrics.gauges.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/process_virtual_memory_bytes",
-              "timeShift": 0,
-              "tagFilterExpression": {
-                "logicalOperator": "AND",
-                "elements": [],
-                "type": "EXPRESSION"
-              },
-              "allowedCrossSeriesAggregations": [],
-              "metricLabel": "OpenTelemetry gauge github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/process_virtual_memory_bytes",
-              "crossSeriesAggregation": "MEAN"
-            }
-          ],
-          "formatterSelected": false
-        },
-        "y2": {
-          "formatter": "number.detailed",
-          "renderer": "line",
-          "metrics": []
-        }
-      }
-    },
-    {
-      "id": "2--HcSXK4uJ9umHk",
-      "title": "CPU Usage : Process cpu seconds total",
-      "width": 6,
-      "height": 15,
-      "x": 0,
-      "y": 0,
-      "type": "histogram",
-      "config": {
-        "formatter": "number.detailed",
-        "metricConfiguration": {
-          "formatter": "number.detailed",
-          "unit": "number",
-          "lastValue": false,
-          "metric": "metrics.sums.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/process_cpu_seconds_total",
-          "timeShift": 0,
-          "tagFilterExpression": {
-            "logicalOperator": "AND",
-            "elements": [],
-            "type": "EXPRESSION"
-          },
-          "allowedCrossSeriesAggregations": [],
-          "aggregation": "MEAN",
-          "source": "INFRASTRUCTURE_METRICS",
-          "crossSeriesAggregation": "MEAN",
-          "type": "openTelemetry",
-          "metricPath": [
-            "Others",
-            "OpenTelemetry SDK"
-          ]
-        }
-      }
-    },
-    {
-      "id": "RWYMEwZoGslpW-Ed",
+      "id": "aDuwqqFDeAFGWzyD",
       "title": "Disk I/O",
       "width": 6,
       "height": 15,
       "x": 0,
-      "y": 15,
+      "y": 13,
       "type": "pie",
       "config": {
         "shareMaxAxisDomain": false,
         "y1": {
-          "formatter": "number.detailed",
+          "formatter": "number.compact",
           "renderer": "pie",
           "metrics": [
             {
@@ -205,7 +86,7 @@
               "crossSeriesAggregation": "MEAN"
             }
           ],
-          "formatterSelected": false
+          "formatterSelected": true
         },
         "y2": {
           "formatter": "number.detailed",
@@ -215,12 +96,12 @@
       }
     },
     {
-      "id": "WCGcWKdsy7gMslty",
+      "id": "abX-5GfISdeZbU6s",
       "title": "Network Bandwidth",
       "width": 6,
       "height": 15,
       "x": 6,
-      "y": 15,
+      "y": 13,
       "type": "chart",
       "config": {
         "shareMaxAxisDomain": false,
@@ -300,8 +181,151 @@
         },
         "type": "TIME_SERIES"
       }
+    },
+    {
+      "id": "Fk5Pof4wxYerY6Vy",
+      "title": "CPU Usage",
+      "width": 6,
+      "height": 13,
+      "x": 0,
+      "y": 0,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "millis.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "process cpu seconds total",
+              "source": "INFRASTRUCTURE_METRICS",
+              "metricPath": [
+                "Others",
+                "Regex"
+              ],
+              "formatter": "number.detailed",
+              "unit": "second",
+              "regex": true,
+              "metric": "metrics\\.sums\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/process_cpu_seconds_total",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "metrics\\.sums\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/process_cpu_seconds_total",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "n584Awp_bzidi0B_",
+      "title": "Memory Usage",
+      "width": 6,
+      "height": 13,
+      "x": 6,
+      "y": 0,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "bytes.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "process resident memory bytes",
+              "source": "INFRASTRUCTURE_METRICS",
+              "metricPath": [
+                "Others",
+                "Regex"
+              ],
+              "formatter": "number.detailed",
+              "unit": "byte",
+              "regex": true,
+              "metric": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/process_resident_memory_bytes",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/process_resident_memory_bytes",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "process virtual memory bytes",
+              "source": "INFRASTRUCTURE_METRICS",
+              "metricPath": [
+                "Others",
+                "Regex"
+              ],
+              "formatter": "number.detailed",
+              "unit": "byte",
+              "regex": true,
+              "metric": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/process_virtual_memory_bytes",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/process_virtual_memory_bytes",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
     }
   ],
-  "ownerId": "677f7040fabd1d00013dada8",
+  "ownerId": "5ee5195fbea6150001758c40",
   "writable": true
 }
