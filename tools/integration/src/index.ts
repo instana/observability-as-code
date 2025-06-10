@@ -757,29 +757,27 @@ async function handleImport(argv: any) {
                 }
 
                 try {
-                        const url = `https://${server}/${apiPath}`;
-                        logger.info(`Applying the ${typeLabel} to ${url} ...`);
-
-                        const response = await axiosInstance.post(url, jsonContent, {
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': `apiToken ${token}`
-                            }
-                        });
-
-                        logger.info(`Successfully applied ${file}: ${response.status}`);
-                    } catch (error) {
-                        if (axios.isAxiosError(error)) {
-                            logger.error(`Failed to apply ${file}: ${error.message}`);
-                            if (error.response) {
-                                logger.error(`Response data: ${JSON.stringify(error.response.data)}`);
-                                logger.error(`Response status: ${error.response.status}`);
-                                logger.error(`Response headers: ${JSON.stringify(error.response.headers)}`);
-                            }
-                        } else {
-                            logger.error(`Failed to apply ${file}: ${String(error)}`);
+                    const url = `https://${server}/${apiPath}`;
+                    logger.info(`Applying the ${typeLabel} to ${url} ...`);
+                    const response = await axiosInstance.post(url, jsonContent, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `apiToken ${token}`
+			}
+                    });
+		    logger.info(`Successfully applied ${file}: ${response.status}`);
+                } catch (error) {
+                    if (axios.isAxiosError(error)) {
+                        logger.error(`Failed to apply ${file}: ${error.message}`);
+                        if (error.response) {
+                            logger.error(`Response data: ${JSON.stringify(error.response.data)}`);
+                            logger.error(`Response status: ${error.response.status}`);
+                            logger.error(`Response headers: ${JSON.stringify(error.response.headers)}`);
                         }
+                    } else {
+                        logger.error(`Failed to apply ${file}: ${String(error)}`);
                     }
+                }
             }
         }
 
@@ -819,7 +817,7 @@ async function handleExport(argv: any) {
         })
     });
 
-	const parsedIncludes = parseIncludesFromArgv(process.argv);
+    const parsedIncludes = parseIncludesFromArgv(process.argv);
 
     const dashboardsPath = path.join(location, "dashboards");
     const eventsPath = path.join(location, "events");
@@ -883,7 +881,7 @@ async function handleExport(argv: any) {
             const matches = inc.conditions.filter(c => c.startsWith("id="));
 
             let filtered;
-			if (matches.length) {
+	    if (matches.length) {
                 filtered = matches.map(idCond => {
                     const id = idCond.split("=")[1]?.replace(/^"|"$/g, '');
                     const found = allEvents.find(e => e.id === id);
