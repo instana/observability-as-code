@@ -117,8 +117,8 @@ const examplesForExport = `
 Examples:
 
 Export integration elements:
-  ${execName} export --server example.com --include 'type=dashboard title="Runtime.*"' --location ./my-package
-  ${execName} export --server example.com --include 'type=event id=exampleid' --location ./my-package
+  ${execName} export --server example.com --include type=dashboard title="Runtime.*" --location ./my-package
+  ${execName} export --server example.com --include type=event id=exampleid --location ./my-package
 `;
 
 // Configure yargs to parse command-line arguments with subcommands
@@ -712,7 +712,7 @@ async function handleImport(argv: any) {
         })
     });
 
-    async function importIntegration(searchPattern: string, apiPath: string) {
+    async function importIntegration(searchPattern: string, apiPath: string, typeLabel: string) {
         const files = globSync(searchPattern);
 
         logger.info(`Start to import the integration package from ${searchPattern}`);
@@ -757,35 +757,29 @@ async function handleImport(argv: any) {
                 }
 
                 try {
-                    const url = `https://${server}/${apiPath}`;
+                        const url = `https://${server}/${apiPath}`;
+                        logger.info(`Applying the ${typeLabel} to ${url} ...`);
 
-                    function getTypeLabel(apiPath: String): String {
-		    	if(apiPath.includes('custom-dashboard')) return 'custom dashboard';
-			if(apiPath.includes('event-specifications')) return 'custom event';
-			return 'custom element';
-		    }
-		    const typeLabel = getTypeLabel(apiPath);
-		    logger.info(`Applying the ${typeLabel} to ${url} ...`);
+                        const response = await axiosInstance.post(url, jsonContent, {
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `apiToken ${token}`
+                            }
+                        });
 
-                    const response = await axiosInstance.post(url, jsonContent, {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `apiToken ${token}`
+                        logger.info(`Successfully applied ${file}: ${response.status}`);
+                    } catch (error) {
+                        if (axios.isAxiosError(error)) {
+                            logger.error(`Failed to apply ${file}: ${error.message}`);
+                            if (error.response) {
+                                logger.error(`Response data: ${JSON.stringify(error.response.data)}`);
+                                logger.error(`Response status: ${error.response.status}`);
+                                logger.error(`Response headers: ${JSON.stringify(error.response.headers)}`);
+                            }
+                        } else {
+                            logger.error(`Failed to apply ${file}: ${String(error)}`);
                         }
-                    });
-                    logger.info(`Successfully applied ${file}: ${response.status}`);
-                } catch (error) {
-                    if (axios.isAxiosError(error)) {
-                        logger.error(`Failed to apply ${file}: ${error.message}`);
-                        if (error.response) {
-                            logger.error(`Response data: ${JSON.stringify(error.response.data)}`);
-                            logger.error(`Response status: ${error.response.status}`);
-                            logger.error(`Response headers: ${JSON.stringify(error.response.headers)}`);
-                        }
-                    } else {
-                        logger.error(`Failed to apply ${file}: ${String(error)}`);
                     }
-                }
             }
         }
 
@@ -795,18 +789,18 @@ async function handleImport(argv: any) {
     if (includePattern) {
         const searchPattern = path.join(packagePath, includePattern);
         if (includePattern.includes('events')) {
-            await importIntegration(searchPattern, "api/events/settings/event-specifications/custom");
+            await importIntegration(searchPattern, "api/events/settings/event-specifications/custom", "custom event");
         } else {
-            await importIntegration(searchPattern, "api/custom-dashboard");
+            await importIntegration(searchPattern, "api/custom-dashboard", "custom dashboard");
         }
     } else {
         for (const defaultFolder of defaultFolders) {
             const searchPattern = path.join(packagePath, defaultFolder, '**/*.json');
-            await importIntegration(searchPattern, "api/custom-dashboard");
+            await importIntegration(searchPattern, "api/custom-dashboard", "custom dashboard");
         }
         for (const defaultFolder of defaultEventsFolders) {
             const searchPattern = path.join(packagePath, defaultFolder, '**/*.json');
-            await importIntegration(searchPattern, "api/events/settings/event-specifications/custom");
+            await importIntegration(searchPattern, "api/events/settings/event-specifications/custom", "custom event");
         }
     }
 }
@@ -825,17 +819,7 @@ async function handleExport(argv: any) {
         })
     });
 
-    const includes = Array.isArray(includeRaw) ? includeRaw : (includeRaw ? [includeRaw] : []);
-    const parsedIncludes = includes.map(item => {
-        const parts = parseIncludeItem(item);
-        const typePart = parts.find((p: string) => p.startsWith("type="));
-        const type = typePart ? typePart.split("=")[1] : "all";
-        const conditions = parts.filter((p: string) => !p.startsWith("type="));
-        if (!typePart) {
-            logger.warn(`'type=' missing in include clause "${item}", interpreting as type=all`);
-        }
-        return { type, conditions, explicitlyTyped: !!typePart };
-    });
+	const parsedIncludes = parseIncludesFromArgv(process.argv);
 
     const dashboardsPath = path.join(location, "dashboards");
     const eventsPath = path.join(location, "events");
@@ -854,15 +838,11 @@ async function handleExport(argv: any) {
             const matches = inc.conditions.filter(c => c.startsWith("id="));
 
             let filtered;
-            if (matches.length && inc.explicitlyTyped) {
+            if (matches.length) {
                 filtered = matches.map(idCond => {
                     const id = idCond.split("=")[1]?.replace(/^"|"$/g, '');
-                    return { id };
-                });
-            } else if (matches.length) {
-                filtered = matches.map(idCond => {
-                    const id = idCond.split("=")[1]?.replace(/^"|"$/g, '');
-                    return allDashboards.find(d => d.id === id);
+                    const found = allDashboards.find(d => d.id === id);
+                    return found;
                 }).filter(Boolean);
             } else {
                 filtered = filterDashboardsBy(allDashboards, inc.conditions);
@@ -903,15 +883,11 @@ async function handleExport(argv: any) {
             const matches = inc.conditions.filter(c => c.startsWith("id="));
 
             let filtered;
-            if (matches.length && inc.explicitlyTyped) {
+			if (matches.length) {
                 filtered = matches.map(idCond => {
                     const id = idCond.split("=")[1]?.replace(/^"|"$/g, '');
-                    return { id };
-                });
-            } else if (matches.length) {
-                filtered = matches.map(idCond => {
-                    const id = idCond.split("=")[1]?.replace(/^"|"$/g, '');
-                    return allEvents.find(e => e.id === id);
+                    const found = allEvents.find(e => e.id === id);
+                    return found;
                 }).filter(Boolean);
             } else {
                 filtered = filterEventsBy(allEvents, inc.conditions);
@@ -944,15 +920,10 @@ async function handleExport(argv: any) {
     }
 
     // Final info
-    const isOnlyDashboard = parsedIncludes.every(inc => inc.type === "dashboard");
-    const isOnlyEvent = parsedIncludes.every(inc => inc.type === "event");
-    const isMixedOrUnspecified = parsedIncludes.some(inc => inc.type === "all") || (!isOnlyDashboard && !isOnlyEvent);
-
-    if (!wasDashboardFound && !wasEventFound && isMixedOrUnspecified) {
+    if (!wasDashboardFound && !wasEventFound) {
         logger.error("No custom elements were found or exported.");
     }
 }
-
 
 // Helper functions for dashboard export
 async function exportDashboard(server: string, token: string, dashboardId: string, axiosInstance: any): Promise<any> {
@@ -1110,6 +1081,40 @@ function filterEventsBy(idObjects: any[], include: string[]): any[] {
 }
 
 // Helpers for export
+function parseIncludesFromArgv(argv: string[]): { type: string, conditions: string[], explicitlyTyped: boolean }[] {
+  const includes: { type: string, conditions: string[], explicitlyTyped: boolean }[] = [];
+  let current: { type: string, conditions: string[], explicitlyTyped: boolean } | null = null;
+  let clauseParts: string[] = [];
+
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i];
+    if (arg === "--include") {
+      if (clauseParts.length && !current?.explicitlyTyped) {
+        logger.warn(`'type=' missing in include clause "${clauseParts.join(" ")}", interpreting as type=all`);
+      }
+      clauseParts = [];
+      const next = argv[i + 1];
+      const keyVal = next?.split("=");
+      if (keyVal?.[0] === "type") {
+        current = { type: keyVal[1], conditions: [], explicitlyTyped: true };
+        i++;
+        clauseParts.push(`type=${keyVal[1]}`);
+      } else {
+        current = { type: "all", conditions: [], explicitlyTyped: false };
+      }
+      includes.push(current);
+    } else if (current) {
+      current.conditions.push(arg);
+      clauseParts.push(arg);
+    }
+  }
+
+  if (clauseParts.length && !current?.explicitlyTyped) {
+    logger.warn(`'type=' missing in include clause "${clauseParts.join(" ")}", interpreting as type=all`);
+  }
+  return includes;
+}
+
 function parseIncludeItem(item: string): string[] {
     const result: string[] = [];
     let buffer = '';
