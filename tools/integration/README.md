@@ -30,7 +30,7 @@ Clone this project to your local machine and go into the CLI root directory:
 
 ```console
 git clone https://github.com/instana/observability-as-code.git
-cd tools/integration
+cd observability-as-code/tools/integration
 ```
 
 Install the prerequisites:
