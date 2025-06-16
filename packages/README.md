@@ -30,7 +30,7 @@ Under `packages/`, create a new directory (e.g. `@instana-integration/packagenam
    * Set access rules to GLOBAL in dashboards for public sharing
 
 ### 4. Create package.json:
-Create package.json file init command and include required fields
+Create `package.json` file by using the `init` command provided by the Instana CLI for Integration Package Management and include required fields.
 
    ```shell
    {
