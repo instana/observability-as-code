@@ -1,0 +1,18 @@
+{
+  "name": "[SREInfraSLO] Kafka node is approaching max open files [TF]",
+  "description": "A Kafka node has too many open files. This can result in a crash or restart of one or more kafka nodes in the cluster. Collect logs, check the kafka service on the host is running, and restart if necessary.",
+  "query": "entity.zone:Kafka",
+  "entityType": "host",
+  "expirationTime": 600000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "openFiles.used",
+      "aggregation": "avg",
+      "window": 600000,
+      "conditionOperator": ">",
+      "conditionValue": 0.9,
+      "severity": 10
+    }
+  ]
+}

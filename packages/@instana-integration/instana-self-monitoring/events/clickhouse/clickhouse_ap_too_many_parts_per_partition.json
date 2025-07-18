@@ -1,0 +1,23 @@
+{
+  "name": "ClickHouse - AP - Too many parts in one of the partitions of the XXX table [TF]",
+  "description": "https://www.notion.so/instana/ClickHouse-Too-many-parts-in-one-of-the-partitions-of-the-XXX-table-01b7add852d74a499ed0216115ed8804. ##Note: The 'conditionValue' (currently set to 830) is a sample reference for the variable 'active_parts_threshold'. Please adjust this value based on your specific environment.",
+  "query": "entity.type:clickhouse AND entity.zone:ClickHouse",
+  "entityType": "clickHouseDatabase",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "aggregation": "min",
+      "window": 60000,
+      "conditionOperator": ">=",
+      "conditionValue": 830,
+      "severity": 10,
+      "metricPattern": {
+        "prefix": "table_metric",
+        "postfix": "parts",
+        "operator": "any",
+        "placeholder": ""
+      }
+    }
+  ]
+}

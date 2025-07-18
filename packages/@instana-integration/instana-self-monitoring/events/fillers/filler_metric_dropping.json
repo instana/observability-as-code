@@ -1,0 +1,18 @@
+{
+  "name": "[SRETUSLO] filler is dropping metrics [TF]",
+  "description": "Metrics are being dropped before being published to Beeinstana and Cassandra. ## Consequences This will cause metrics not to be ingested. ## Remediation - If you see this error for several fillers in one region this indicates problems with the Kafka cluster. This is not valid for self-hosted installations. - Check the logs to see if any unexpected errors have occurred. - Check Beeinstana logs - Restart `filler` To get more context: [🔵](https://blue-instanaops.instana.io/#/customDashboards/view;dashboardId=C3eN96Z8RyOJ7ycpgHkK5Q) [🟢](https://green-instanaops.instana.io/#/customDashboards/view;dashboardId=NXPy2nCSSeOsiKS2Rd6O-g) [🔴](https://red-instanaops.instana.io/#/customDashboards/view;dashboardId=XvhTJitbRAmM3hhMOOKPbQ) [🟠](https://orange-instanaops.instana.io/#/customDashboards/view;dashboardId=4YntvQ3eSsaJ-BUXgoB2Wg)",
+  "query": "entity.jvm.app.name:filler AND NOT entity.kubernetes.deployment.name:techzone-observability-filler",
+  "entityType": "dropwizardApplicationContainer",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "metrics.gauges.KPI.processing.metric.error_rate",
+      "aggregation": "avg",
+      "window": 600000,
+      "conditionOperator": ">",
+      "conditionValue": 0.05,
+      "severity": 10
+    }
+  ]
+}

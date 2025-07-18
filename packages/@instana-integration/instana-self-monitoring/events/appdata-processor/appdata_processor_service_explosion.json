@@ -1,0 +1,18 @@
+{
+  "name": "appdata-processor - service explosion [TF]",
+  "description": "https://www.notion.so/instana/appdata-processor-Service-explosion-6794827fd9484a1cb557c06c7f7ce969",
+  "query": "entity.jvm.app.name:appdata-processor AND NOT entity.kubernetes.pod.label:\"instana.io/tenantUnit=cision-production\"",
+  "entityType": "dropwizardApplicationContainer",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "metrics.meters.com.instana.spanprocessing.stream.appdatagraph.ServiceExplosionSafeguard.rejected",
+      "aggregation": "sum",
+      "window": 60000,
+      "conditionOperator": ">",
+      "conditionValue": 100,
+      "severity": 5
+    }
+  ]
+}

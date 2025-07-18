@@ -1,0 +1,19 @@
+{
+  "name": "[DevSLO] synthetics-health-processor is dropping test results [TF]",
+  "description": "`synthetics-health-processor is dropping more than 10% of incoming test results.` `Action Item:`Check the internal dashboard for dropping, and whether this is just due to a general increase in incoming test results: - if `yes`: Ask SRE to scale-out - if `no`: Investigate whether a performance problem or bug was introduced",
+  "query": "entity.jvm.app.name:synthetics-health-processor",
+  "entityType": "dropwizardApplicationContainer",
+  "expirationTime": 600000,
+  "triggering": true,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "metrics.gauges.KPI.incoming.results.error_rate",
+      "aggregation": "avg",
+      "window": 60000,
+      "conditionOperator": ">",
+      "conditionValue": 0.10,
+      "severity": 10
+    }
+  ]
+}

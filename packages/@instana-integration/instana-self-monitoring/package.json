@@ -1,0 +1,18 @@
+{
+  "name": "@instana-integration/instana-self-monitoring",
+  "version": "1.0.0",
+  "description": "This integration package provides dashboards and event monitoring to support self-monitoring for Instana’s internal systems.",
+  "author": "IBM",
+  "license": "MIT",
+  "scripts": {},
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "instana self-monitoring",
+    "ibm",
+    "instana",
+    "custom dashboards",
+    "event definations"
+  ]
+}

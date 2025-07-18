@@ -1,0 +1,18 @@
+{
+  "name": "[SRESLO] Butler http thread is very busy [TF]",
+  "description": "The HTTP threads of this instance do not seem to be able to handle the number of incoming requests causing job queue to fill up. This may eventually result in OOPS page in web-UI. Potential cause for this is butler produce exceeded db access(queries) to PostgreSQL(butler) in rainbow. You might need to check the PostgreSQL in rainbow.",
+  "query": "entity.kubernetes.deployment.name:\"butler\"",
+  "entityType": "dropwizardApplicationContainer",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "metrics.gauges.org.eclipse.jetty.util.thread.QueuedThreadPool.dw.utilization-max",
+      "aggregation": "avg",
+      "window": 60000,
+      "conditionOperator": ">",
+      "conditionValue": 0.9,
+      "severity": 10
+    }
+  ]
+}
