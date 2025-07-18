@@ -14,69 +14,98 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
           registry-url: 'https://registry.npmjs.org'
+          cache: 'npm'
 
       - name: Install dependencies for tools/integration
         run: npm ci
         working-directory: tools/integration
 
-      - name: Download stanctl-integration binary
+      - name: Use local stanctl-integration binary
         run: |
-          curl -f -L https://github.com/instana/observability-as-code/releases/download/stanctl-configuration-v1.4.0/stanctl-integration-linux -o ~/stanctl-integration
-          # Check if the file was downloaded successfully
-          if [ ! -f ~/stanctl-integration ]; then
-            echo "Error: stanctl-integration binary not found!"
+          if [ -f "tools/integration/stanctl-integration-linux" ]; then
+            echo "Using local stanctl-integration binary"
+            cp tools/integration/stanctl-integration-linux ~/stanctl-integration
+            chmod +x ~/stanctl-integration
+          else
+            echo "Downloading stanctl-integration binary..."
+            curl -f -L https://github.com/instana/observability-as-code/releases/download/stanctl-configuration-v1.4.0/stanctl-integration-linux -o ~/stanctl-integration
+            chmod +x ~/stanctl-integration
+          fi
+          
+          # Verify the binary is executable
+          if [ ! -x ~/stanctl-integration ]; then
+            echo "Error: stanctl-integration binary is not executable!"
             exit 1
           fi
-          chmod +x ~/stanctl-integration
 
       - name: Add stanctl-integration to PATH
-        run: echo "$HOME/stanctl-integration" >> "$GITHUB_PATH"
+        run: echo "$HOME" >> $GITHUB_PATH
 
-      - name: Get list of changed files
+      - name: Get list of changed files in this PR only
         id: get-changed-files
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
         run: |
-          git fetch --all
-          echo "Base branch: $GITHUB_BASE_REF"
-          echo "Head branch: $GITHUB_HEAD_REF"
-
-          # Check if PR is from the same repository or a different repository
-          if [[ "${GITHUB_REPOSITORY}" == "${{ github.event.pull_request.head.repo.owner.login }}/${{ github.event.pull_request.head.repo.name }}" ]]; then
-            # PR is from the same repository
-            changed_files=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }} origin/${{ github.event.pull_request.head.ref }})
-          else
-            # PR is from a different repository and Fetch the changes
-            git fetch https://github.com/${{ github.event.pull_request.head.repo.full_name }} ${{ github.event.pull_request.head.ref }}
-            changed_files=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }} FETCH_HEAD)
-          fi
-
-          echo "Changed files: $changed_files"
-
-          # Convert list of files to a single line, space-separated
-          changed_files=$(echo "$changed_files" | tr '\n' ' ')
-
+          # Get the PR number from environment variable
+          echo "PR number: $PR_NUMBER"
+          
+          # Use curl with the token from environment variable
+          changed_files=$(curl -s -H "Authorization: token $GH_TOKEN" \
+            "https://api.github.com/repos/$REPO/pulls/$PR_NUMBER/files" \
+            | jq -r '.[].filename' | tr '\n' ' ')
+          
+          echo "Files changed in this PR:"
+          echo "$changed_files"
+          
           # Set it as an environment variable for later use
           echo "changed_files=$changed_files" >> $GITHUB_ENV
 
       - name: Lint packages
         run: |
           changed_files="${{ env.changed_files }}"
+          exit_code=0
+          
+          # Track if any packages need linting
+          packages_to_lint=false
           
           for dir in packages/@instana-integration/*; do
             if [ -d "$dir" ]; then
-              if echo "$changed_files" | grep -q "$dir"; then
-                echo "Linting package: $dir"
-                cd "$dir"
-                ~/stanctl-integration lint --debug --strict-mode
-                cd -
+              # Extract the package name from the directory path
+              package_name=$(basename "$dir")
+              
+              # Check if any files in this package were changed in the PR
+              if echo "$changed_files" | grep -q "packages/@instana-integration/$package_name/"; then
+                echo "Linting package: $dir (changed in this PR)"
+                packages_to_lint=true
+                pushd "$dir" > /dev/null
+                
+                # Run lint with error handling
+                if ! ~/stanctl-integration lint --debug --strict-mode; then
+                  echo "::error::Linting failed for $dir"
+                  exit_code=1
+                fi
+                
+                popd > /dev/null
               else
-                echo "No changes in $dir, skipping lint"
+                echo "No changes in $dir in this PR, skipping lint"
               fi
             fi
           done
+          
+          # If no packages needed linting, report it
+          if [ "$packages_to_lint" = false ]; then
+            echo "No packages were changed in this PR that require linting."
+          fi
+          
+          exit $exit_code

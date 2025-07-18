@@ -343,9 +343,7 @@ async function handleLint(argv: any) {
         logger.error(`Linting failed.`);
         process.exit(-1);
     } else {
-        if (!isDebug) {
-            logger.info('Linting completed successfully.');
-        }
+        logger.info('Linting completed successfully.');
         process.exit(0);
     }
 }
@@ -445,74 +443,84 @@ function validateDashboardFiles(dashboardsPath: string, errors: string[], warnin
                 return;
             }
 
-            if (accessRules.length !== 1) {
-                errors.push(`Exactly one accessRule must be defined in the dashboard file: ${file}. Found ${accessRules.length}.`);
-                return;
-            }
+		    const hasRequiredRule = accessRules.some(rule =>
+				rule.accessType === requiredAccessRule.accessType &&
+				rule.relationType === requiredAccessRule.relationType &&
+				rule.relatedId === requiredAccessRule.relatedId
+		  	);
 
-            const rule = accessRules[0];
+      		if (!hasRequiredRule) {
+        		errors.push(`Dashboard file ${file} must include the required accessRule: ${JSON.stringify(requiredAccessRule)}.`);
+		  	} else {
+				successMessages.push(`Dashboard file ${file} contains the required GLOBAL accessRule.`);
+		  	}
 
-            const hasAllRequiredFields =
-                'accessType' in rule &&
-                'relationType' in rule &&
-                'relatedId' in rule;
-
-            if (!hasAllRequiredFields) {
-                errors.push(`accessRules in the dashboard file: ${file} is missing one or more required fields (accessType, relationType, relatedId).`);
-                return;
-            }
-
-            const matchesRequired =
-                rule.accessType === requiredAccessRule.accessType &&
-                rule.relationType === requiredAccessRule.relationType &&
-                rule.relatedId === requiredAccessRule.relatedId;
-
-            if (!matchesRequired) {
-                errors.push(`accessRules in the dashboard file: ${file} is not correctly defined. It must exactly match: ${JSON.stringify(requiredAccessRule)}.`);
-            } else {
-                successMessages.push(`accessRules are correctly defined in the dashboard file: ${file}.`);
-            }
-
-        } catch (error) {
-            errors.push(`Error validating file ${file}: ${error instanceof Error ? error.message : String(error)}.`);
-        }
-    });
+    	} catch (error) {
+      		errors.push(`Error validating file ${file}: ${error instanceof Error ? error.message : String(error)}.`);
+    	}
+  	});
 }
 
 // Helper function to validate event files
+function getAllJsonFiles(dir: string): string[] {
+    let results: string[] = [];
+    const list = fs.readdirSync(dir);
+
+    list.forEach(file => {
+        const filePath = path.join(dir, file);
+        const stat = fs.statSync(filePath);
+
+        if (stat && stat.isDirectory()) {
+            results = results.concat(getAllJsonFiles(filePath));
+        } else if (file.endsWith('.json')) {
+            results.push(filePath);
+        }
+    });
+
+    return results;
+}
+
 function validateEventFiles(eventsPath: string, errors: string[], warnings: string[], successMessages: string[]): void {
-    const files = fs.readdirSync(eventsPath);
-    const jsonFiles = files.filter(file => file.endsWith('.json'));
+    const jsonFiles = getAllJsonFiles(eventsPath);
 
     if (jsonFiles.length === 0) {
         warnings.push('No JSON files found in the events folder.');
         return;
     }
 
-    jsonFiles.forEach(file => {
-        const filePath = path.join(eventsPath, file);
+    jsonFiles.forEach(filePath => {
+        const file = path.relative(eventsPath, filePath); // for cleaner output
         try {
             const fileContent = fs.readFileSync(filePath, 'utf-8');
             const event = JSON.parse(fileContent);
             let allEventFieldsValid = true;
             const requiredEventFields = ['name', 'entityType', 'rules'];
 
-            // check for required fields
+            const presentFields: string[] = [];
+            const missingFields: string[] = [];
+
             for (const field of requiredEventFields) {
                 if (event[field] === undefined || event[field] === null || event[field] === '') {
-                    errors.push(`The package is missing required field ${field}.`);
+                    missingFields.push(field);
                     allEventFieldsValid = false;
                 } else {
-                    successMessages.push(`The event field ${field} is present in the file: ${file}.`);
+                    presentFields.push(field);
                 }
             }
 
-	    // check rules are not empty
-            if (event.rules.length === 0) {
-            	errors.push(`The event rules array is empty in file: ${file}.`);
+            if (presentFields.length > 0) {
+                successMessages.push(`The event field(s) ${presentFields.join(', ')} are present in the file: ${file}.`);
+            }
+
+            if (missingFields.length > 0) {
+                errors.push(`The package is missing required field(s): ${missingFields.join(', ')} in file: ${file}.`);
+            }
+
+            if (!Array.isArray(event.rules) || event.rules.length === 0) {
+                errors.push(`The event rules array is empty in file: ${file}.`);
                 allEventFieldsValid = false;
             } else if (event.rules.some((rule: object) => Object.keys(rule).length === 0)) {
-		errors.push(`No event rules are defined in: ${file}.`);
+                errors.push(`No event rules are defined in: ${file}.`);
                 allEventFieldsValid = false;
             }
 
@@ -522,7 +530,7 @@ function validateEventFiles(eventsPath: string, errors: string[], warnings: stri
                 errors.push(`Event is not correctly defined in the file: ${file}.`);
             }
         } catch (error) {
-            errors.push(`Error validating file ${file}: ${error instanceof Error ? error.message : String(error)}.`);
+            errors.push(`Error validating file ${filePath}: ${error instanceof Error ? error.message : String(error)}.`);
         }
     });
 }
