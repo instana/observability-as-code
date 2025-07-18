@@ -456,7 +456,7 @@ function validateDashboardFiles(dashboardsPath: string, errors: string[], warnin
 	    }
 
     	} catch (error) {
-      		errors.push(`Error validating file ${file}: ${error instanceof Error ? error.message : String(error)}.`);
+      	    errors.push(`Error validating file ${file}: ${error instanceof Error ? error.message : String(error)}.`);
     	}
     });
 }
@@ -489,7 +489,7 @@ function validateEventFiles(eventsPath: string, errors: string[], warnings: stri
     }
 
     jsonFiles.forEach(filePath => {
-        const file = path.relative(eventsPath, filePath); // for cleaner output
+        const file = path.relative(eventsPath, filePath);
         try {
             const fileContent = fs.readFileSync(filePath, 'utf-8');
             const event = JSON.parse(fileContent);
