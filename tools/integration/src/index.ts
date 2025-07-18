@@ -443,22 +443,22 @@ function validateDashboardFiles(dashboardsPath: string, errors: string[], warnin
                 return;
             }
 
-		    const hasRequiredRule = accessRules.some(rule =>
-				rule.accessType === requiredAccessRule.accessType &&
-				rule.relationType === requiredAccessRule.relationType &&
-				rule.relatedId === requiredAccessRule.relatedId
-		  	);
+	    const hasRequiredRule = accessRules.some(rule =>
+	    	rule.accessType === requiredAccessRule.accessType &&
+		rule.relationType === requiredAccessRule.relationType &&
+		rule.relatedId === requiredAccessRule.relatedId
+	    );
 
-      		if (!hasRequiredRule) {
-        		errors.push(`Dashboard file ${file} must include the required accessRule: ${JSON.stringify(requiredAccessRule)}.`);
-		  	} else {
-				successMessages.push(`Dashboard file ${file} contains the required GLOBAL accessRule.`);
-		  	}
+      	    if (!hasRequiredRule) {
+            	errors.push(`Dashboard file ${file} must include the required accessRule: ${JSON.stringify(requiredAccessRule)}.`);
+	    } else {
+		successMessages.push(`Dashboard file ${file} contains the required GLOBAL accessRule.`);
+	    }
 
     	} catch (error) {
       		errors.push(`Error validating file ${file}: ${error instanceof Error ? error.message : String(error)}.`);
     	}
-  	});
+    });
 }
 
 // Helper function to validate event files
