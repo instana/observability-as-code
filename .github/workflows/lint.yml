@@ -26,7 +26,7 @@ jobs:
         run: npm ci
         working-directory: tools/integration
 
-      - name: Use local stanctl-integration binary
+      - name: Use local or download stanctl-integration binary
         run: |
           if [ -f "tools/integration/stanctl-integration-linux" ]; then
             echo "Using local stanctl-integration binary"
@@ -34,7 +34,7 @@ jobs:
             chmod +x ~/stanctl-integration
           else
             echo "Downloading stanctl-integration binary..."
-            curl -f -L https://github.com/instana/observability-as-code/releases/download/stanctl-configuration-v1.4.0/stanctl-integration-linux -o ~/stanctl-integration
+            curl -f -L https://github.com/instana/observability-as-code/releases/download/stanctl-configuration-v1.4.1/stanctl-integration-linux -o ~/stanctl-integration
             chmod +x ~/stanctl-integration
           fi
           
