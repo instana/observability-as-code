@@ -26,7 +26,7 @@ jobs:
         run: npm ci
         working-directory: tools/integration
 
-      - name: Use local or download stanctl-integration binary
+      - name: Use local stanctl-integration binary
         run: |
           if [ -f "tools/integration/stanctl-integration-linux" ]; then
             echo "Using local stanctl-integration binary"
