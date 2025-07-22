@@ -1,0 +1,18 @@
+{
+  "name": "[SRETUSLO] filler is dropping > 15% raw messages [TF]",
+  "description": "Raw messages, i.e. messages coming from agents, are being dropped. This is a sign that `filler` is running with too little resources or on a over-utilized host.  ## Consequences  This will cause gaps in metrics dashboards, broken alerting and permanent online/offline events.  ## Remediation  Steps to take _until remediation_  - Upsize the metrics profile for the TU. - Move this filler to the highperf nodepool. - Move off other high-load components running on the same worker. - Scale out the filler.  If all the above have been done, then the filler is likely hitting limits in the snapshot processing pipeline. The infra team is working on improving limits and performance for the snapshot processing pipeline, but please inform team infra for further investigations.  To get more context: [🔵](https://blue-instanaops.instana.io/#/customDashboards/view;dashboardId=C3eN96Z8RyOJ7ycpgHkK5Q) [🟢](https://green-instanaops.instana.io/#/customDashboards/view;dashboardId=NXPy2nCSSeOsiKS2Rd6O-g) [🔴](https://red-instanaops.instana.io/#/customDashboards/view;dashboardId=XvhTJitbRAmM3hhMOOKPbQ) [🟠](https://orange-instanaops.instana.io/#/customDashboards/view;dashboardId=4YntvQ3eSsaJ-BUXgoB2Wg)",
+  "query": "entity.jvm.app.name:filler AND NOT entity.kubernetes.deployment.name:techzone-observability-filler",
+  "entityType": "dropwizardApplicationContainer",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "metrics.gauges.KPI.incoming.raw_messages.error_rate",
+      "aggregation": "avg",
+      "window": 600000,
+      "conditionOperator": ">",
+      "conditionValue": 0.15,
+      "severity": 10
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "[EXPTUSLO] High ES Client Search Error Rate [TF]",
+  "description": "Searches from this component to ElasticSearch are failing at a high rate. ## Consequences - If this is a user facing component, users may be seeing errors on the UI - If this is a processing component, processing may not be proceeding as fast as necessary, or data may be out of sync, leading to incorrect information being shown on the UI ## Remediation - Check that ElasticSearch (NG) is healthy in this region. - Check that this component is able to connect to Elasticsearch - If the error rate is very high, and ES is otherwise healthy, a component restart may resolve the issue",
+  "query": "entity.dropwizard.gauge:com.instana.elastic.InstanaElasticsearchClient.SearchRequest.error_rate",
+  "entityType": "dropwizardApplicationContainer",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "metrics.gauges.com.instana.elastic.InstanaElasticsearchClient.SearchRequest.error_rate",
+      "aggregation": "avg",
+      "window": 600000,
+      "conditionOperator": ">",
+      "conditionValue": 0.05,
+      "severity": 5
+    }
+  ]
+}
