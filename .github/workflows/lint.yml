@@ -34,7 +34,7 @@ jobs:
             chmod +x ~/stanctl-integration
           else
             echo "Downloading stanctl-integration binary..."
-            curl -f -L https://github.com/instana/observability-as-code/releases/download/stanctl-configuration-v1.4.1/stanctl-integration-linux -o ~/stanctl-integration
+            curl -f -L https://github.com/instana/observability-as-code/releases/download/stanctl-configuration-v1.4.0/stanctl-integration-linux -o ~/stanctl-integration
             chmod +x ~/stanctl-integration
           fi
           
