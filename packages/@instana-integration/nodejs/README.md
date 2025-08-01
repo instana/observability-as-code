@@ -51,26 +51,26 @@ Below are the Node.js runtime metrics that are currently supported by this integ
 
 Below are the resource attributes that are currently supported by this integration package.
 
-| Attribute Key              | Type   | Description                                                             | 
-|----------------------------|--------|-------------------------------------------------------------------------|
-| service.name               | string | This attribute is used to describe the entity name.                     |
-| service.instance.id        | string | This attribute is used to describe the entity ID of the current object. |
+| Attribute Key        | Type   | Description                                                             | 
+|----------------------|--------|-------------------------------------------------------------------------|
+| service.name         | string | This attribute is used to describe the entity name.                     |
+| service.instance.id  | string | This attribute is used to describe the entity ID of the current object. |
 
 ## Events
 
 Below are the events that are currently supported by this integration package.
 
-| Event Name                           | Description       |
-|--------------------------------------|-------------------|
-| Frequent Major Garbage Collections   | —                 |
-| Heap Space Exhaustion                | —                 |
-| High Event Loop Delay                | —                 |
-| High Event Loop Lag Variance         | —                 |
-| High Garbage Collection Duration     | —                 |
-| High Heap Usage                      | —                 |
-| Memory Leak Detection                | —                 |
+Note: In each event definition, conditionValue represents a threshold used to trigger the event and is provided as a default or reference value. Please adjust this value based on your specific environment.
 
-Note: The conditionValue is a reference value in event definitions. Please adjust this value based on your specific environment.
+| Event Name                           | Description                                                                                                                                                                                |
+|--------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Frequent Major Garbage Collections   | Detects when a Node.js application is experiencing frequent major garbage collections, which can cause significant application pauses and performance degradation.                         |
+| Heap Space Exhaustion                | Detects when a Node.js application's heap space is nearly exhausted, which may lead to application crashes or out-of-memory errors.                                                        |
+| High Event Loop Delay                | Detects when a Node.js application's event loop is experiencing high delays, which may indicate CPU-intensive operations blocking the event loop and affecting application responsiveness. |
+| High Event Loop Lag Variance         | Detects when a Node.js application's event loop is experiencing inconsistent performance with high standard deviation in delay times, which may indicate intermittent blocking operations. |
+| High Garbage Collection Duration     | Detects when a Node.js application is experiencing long garbage collection pauses, which can cause application latency spikes and poor user experience.                                    |
+| High Heap Usage                      | Detects when a Node.js application is using a high percentage of its available heap memory, which may indicate memory leaks or inefficient memory usage.                                   |
+| Memory Leak Detection                | Detects potential memory leaks in Node.js applications by monitoring continuously increasing heap usage over time with minimal garbage collection impact.                                  |
 
 ## Installation and Usage
 
