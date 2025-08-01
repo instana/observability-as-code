@@ -1,0 +1,18 @@
+{
+  "name": "[EXPTUSLO] filler is not processing any snapshot data [TF]",
+  "description": "Filler is not processing any entity heartbeats, which means it is not processing any snapshots.  ## Consequences All reporting entities in this TU will go offline and there will effectively be no infrastructure monitoring.  ## Remediation - Restart `filler`  To get more context: [🔵](https://blue-instanaops.instana.io/#/customDashboards/view;dashboardId=R-BySNacQiGmIwSXpvAVqQ) [🟢](https://green-instanaops.instana.io/#/customDashboards/view;dashboardId=eppNF3E5SIGcUYw1-DCEUQ) [🔴](https://red-instanaops.instana.io/#/customDashboards/view;dashboardId=jDWDz6P_RU-5zwQ37IioFw) [🟠](https://orange-instanaops.instana.io/#/customDashboards/view;dashboardId=Ml9uzhNNRqu5_QJQ3AZoYQ)",
+  "query": "entity.jvm.app.name:filler AND NOT entity.kubernetes.deployment.name:techzone-observability-filler",
+  "entityType": "dropwizardApplicationContainer",
+  "expirationTime": 60000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "metrics.gauges.com.instana.filler.stream.FillerPipelineInitializer.heartbeats",
+      "aggregation": "sum",
+      "window": 120000,
+      "conditionOperator": "=",
+      "conditionValue": 0,
+      "severity": 5
+    }
+  ]
+}
