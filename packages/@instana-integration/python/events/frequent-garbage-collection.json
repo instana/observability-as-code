@@ -1,0 +1,18 @@
+{
+  "name": "Frequent Garbage Collection in Python Application",
+  "description": "Detects when a Python application is triggering garbage collection too frequently, which may indicate memory management issues or inefficient object creation and destruction patterns.",
+  "query": "entity.type:\"pythonRuntime\"",
+  "entityType": "openTelemetry",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "window": 300000,
+      "severity": 5,
+      "metricName": "metrics.sums.opentelemetry.instrumentation.system_metrics/process.runtime.cpython.gc_count",
+      "aggregation": "rate",
+      "conditionOperator": ">",
+      "conditionValue": 10
+    }
+  ]
+}
