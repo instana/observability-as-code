@@ -1,0 +1,18 @@
+{
+  "name": "Context Deadline Exceeded Errors",
+  "description": "Detects when Go applications are experiencing a high rate of context deadline exceeded errors, which may indicate timeouts in API calls, database operations, or other time-sensitive operations.",
+  "query": "entity.type:\"goLangRuntime\"",
+  "entityType": "openTelemetry",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "window": 300000,
+      "severity": 10,
+      "metricName": "metrics.sums.go.opentelemetry.io/contrib/instrumentation/runtime/process.runtime.go.errors.context_deadline_exceeded",
+      "aggregation": "sum",
+      "conditionOperator": ">",
+      "conditionValue": 5
+    }
+  ]
+}
