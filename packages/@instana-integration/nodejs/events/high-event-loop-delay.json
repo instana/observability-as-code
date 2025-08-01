@@ -1,0 +1,18 @@
+{
+  "name": "High Event Loop Delay",
+  "description": "Detects when a Node.js application's event loop is experiencing high delays, which may indicate CPU-intensive operations blocking the event loop and affecting application responsiveness.",
+  "query": "entity.type:\"nodeJsRuntime\"",
+  "entityType": "openTelemetry",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "window": 300000,
+      "severity": 10,
+      "metricName": "metrics.gauges.@opentelemetry/instrumentation-runtime-node/nodejs.eventloop.delay.max",
+      "aggregation": "avg",
+      "conditionOperator": ">",
+      "conditionValue": 0.1
+    }
+  ]
+}

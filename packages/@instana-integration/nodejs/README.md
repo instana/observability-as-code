@@ -6,9 +6,9 @@ The Instana integration package used to support Node.js monitoring. Once you imp
 
 Below are the dashboards that are currently supported by this integration package.
 
-| Dashboard Title    | Description                    |    
-|----------------------------|-----------------------|
-| Node.js Runtime Metrics   | Instana custom dashboard that displays runtime metrics for Node.js application |
+| Dashboard Title         | Description                                                                    |    
+|-------------------------|--------------------------------------------------------------------------------|
+| Node.js Runtime Metrics | Instana custom dashboard that displays runtime metrics for Node.js application |
 
 ## Metrics
 
@@ -34,29 +34,45 @@ sdk.start()
 
 Below are the Node.js runtime metrics that are currently supported by this integration package.
 
-| Metrics Name               | Description                   | Unit   | 
-|----------------------------|-------------------------------|--------|
-| v8js.gc.duration   | Garbage collection duration by kind, one of major, minor, incremental or weakcb.            | s |
-| memory.heap.limit  | Total heap memory size pre-allocated. | Byte |
-| memory.heap.used  | Heap memory size allocated. | Byte |
-| memory.heap.space.available_size  | Heap space available size. | Byte |
-| memory.heap.space.physical_size  | Committed size of a heap space. | Byte |
-| eventloop.delay.min  | Event loop minimum delay. | s |
-| eventloop.delay.max  | Event loop maximum delay. | s |
-| eventloop.delay.mean  | Event loop mean delay.   | s |
-| eventloop.delay.stddev  | Event loop standard deviation delay. | s |
+| Metrics Name                     | Description                                                                      | Unit | 
+|----------------------------------|----------------------------------------------------------------------------------|------|
+| v8js.gc.duration                 | Garbage collection duration by kind, one of major, minor, incremental or weakcb. | s    |
+| memory.heap.limit                | Total heap memory size pre-allocated.                                            | Byte |
+| memory.heap.used                 | Heap memory size allocated.                                                      | Byte |
+| memory.heap.space.available_size | Heap space available size.                                                       | Byte |
+| memory.heap.space.physical_size  | Committed size of a heap space.                                                  | Byte |
+| eventloop.delay.min              | Event loop minimum delay.                                                        | s    |
+| eventloop.delay.max              | Event loop maximum delay.                                                        | s    |
+| eventloop.delay.mean             | Event loop mean delay.                                                           | s    |
+| eventloop.delay.stddev           | Event loop standard deviation delay.                                             | s    |
 
 
 ### Resource Attributes
 
 Below are the resource attributes that are currently supported by this integration package.
 
-| Attribute Key              | Type |  Description           | 
-|----------------------------|-------|------------------------|
-| service.name               | string  | This attribute is used to describe the entity name.    |
-| service.instance.id        | string  | This attribute is used to describe the entity ID of the current object.  |
+| Attribute Key        | Type   | Description                                                             | 
+|----------------------|--------|-------------------------------------------------------------------------|
+| service.name         | string | This attribute is used to describe the entity name.                     |
+| service.instance.id  | string | This attribute is used to describe the entity ID of the current object. |
 
-### Installation and Usage
+## Events
+
+Below are the events that are currently supported by this integration package.
+
+Note: In each event definition, conditionValue represents a threshold used to trigger the event and is provided as a default or reference value. Please adjust this value based on your specific environment.
+
+| Event Name                           | Description                                                                                                                                                                                |
+|--------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Frequent Major Garbage Collections   | Detects when a Node.js application is experiencing frequent major garbage collections, which can cause significant application pauses and performance degradation.                         |
+| Heap Space Exhaustion                | Detects when a Node.js application's heap space is nearly exhausted, which may lead to application crashes or out-of-memory errors.                                                        |
+| High Event Loop Delay                | Detects when a Node.js application's event loop is experiencing high delays, which may indicate CPU-intensive operations blocking the event loop and affecting application responsiveness. |
+| High Event Loop Lag Variance         | Detects when a Node.js application's event loop is experiencing inconsistent performance with high standard deviation in delay times, which may indicate intermittent blocking operations. |
+| High Garbage Collection Duration     | Detects when a Node.js application is experiencing long garbage collection pauses, which can cause application latency spikes and poor user experience.                                    |
+| High Heap Usage                      | Detects when a Node.js application is using a high percentage of its available heap memory, which may indicate memory leaks or inefficient memory usage.                                   |
+| Memory Leak Detection                | Detects potential memory leaks in Node.js applications by monitoring continuously increasing heap usage over time with minimal garbage collection impact.                                  |
+
+## Installation and Usage
 
 With [Instana CLI for integration package management](https://github.com/instana/observability-as-code?tab=readme-ov-file#instana-cli-for-integration-package-management), you can manage the lifecycle of this package such as downloading the package and importing it into Instana.
 
