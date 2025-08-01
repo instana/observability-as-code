@@ -1,0 +1,18 @@
+{
+  "name": "High Goroutine Count",
+  "description": "Detects when a Go application has an unusually high number of goroutines, which may indicate goroutine leaks or excessive concurrency.",
+  "query": "entity.type:\"goLangRuntime\"",
+  "entityType": "openTelemetry",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "window": 300000,
+      "severity": 5,
+      "metricName": "metrics.sums.go.opentelemetry.io/contrib/instrumentation/runtime/process.runtime.go.goroutines",
+      "aggregation": "avg",
+      "conditionOperator": ">",
+      "conditionValue": 1000
+    }
+  ]
+}
