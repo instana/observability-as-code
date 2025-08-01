@@ -1,0 +1,18 @@
+{
+  "name": "Go Heap Allocation Spike",
+  "description": "Detects sudden spikes in heap allocations in Go applications, which may indicate inefficient memory usage patterns or unexpected workload increases.",
+  "query": "entity.type:\"goLangRuntime\"",
+  "entityType": "openTelemetry",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "window": 60000,
+      "severity": 10,
+      "metricName": "metrics.sums.go.opentelemetry.io/contrib/instrumentation/runtime/process.runtime.go.mem.heap_alloc",
+      "aggregation": "delta",
+      "conditionOperator": ">",
+      "conditionValue": 100000000
+    }
+  ]
+}

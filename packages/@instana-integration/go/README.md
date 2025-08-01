@@ -6,9 +6,9 @@ The Instana integration package used to support Go monitoring. Once you import t
 
 Below are the dashboards that are currently supported by this integration package.
 
-| Dashboard Title    | Description                    |    
-|----------------------------|-----------------------|
-| Go Runtime Metrics   | Instana custom dashboard that displays runtime metrics for Go application |
+| Dashboard Title       | Description                                                               |    
+|-----------------------|---------------------------------------------------------------------------|
+| Go Runtime Metrics    | Instana custom dashboard that displays runtime metrics for Go application |
 
 ## Metrics
 
@@ -26,8 +26,8 @@ if err != nil {
 
 Below are the Go runtime metrics that are currently supported by this integration package.
 
-| Metrics Name               | Description                   | Unit   | 
-|----------------------------|-------------------------------|--------|
+| Metrics Name                        | Description          | Unit   | 
+|-------------------------------------|----------------------|--------|
 | process.runtime.go.mem.heap_inuse   | Heap used            | Number |
 | process.runtime.go.mem.heap.alloc   | Allocated memory     | Byte   |
 | process.runtime.go.mem.heap.sys     | System heap          | Byte   |
@@ -40,12 +40,28 @@ Below are the Go runtime metrics that are currently supported by this integratio
 
 Below are the resource attributes that are currently supported by this integration package.
 
-| Attribute Key              | Type |  Description           | 
-|----------------------------|-------|------------------------|
-| service.name               | string  | This attribute is used to describe the entity name.    |
+| Attribute Key              | Type    |  Description                                                             | 
+|----------------------------|---------|--------------------------------------------------------------------------|
+| service.name               | string  | This attribute is used to describe the entity name.                      |
 | service.instance.id        | string  | This attribute is used to describe the entity ID of the current object.  |
 
-### Installation and Usage
+## Events
+
+Below are the events that are currently supported by this integration package.
+
+| Event Name                              | Description       |
+|-----------------------------------------|-------------------|
+| Context Deadline Exceeded Errors        | —                 |
+| Go Heap Allocation Spike                | —                 |
+| High CPU Utilization in Go Application  | —                 |
+| High Goroutine Count                    | —                 |
+| High Go Heap Usage                      | —                 |
+| HTTP Connection Pool Exhaustion         | —                 |
+| Go Memory Leak Detection                | —                 |
+
+Note: The conditionValue is a reference value in event definitions. Please adjust this value based on your specific environment.
+
+## Installation and Usage
 
 With [Instana CLI for integration package management](https://github.com/instana/observability-as-code?tab=readme-ov-file#instana-cli-for-integration-package-management), you can manage the lifecycle of this package such as downloading the package and importing it into Instana.
 
