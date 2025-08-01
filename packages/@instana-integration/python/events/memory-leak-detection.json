@@ -1,0 +1,18 @@
+{
+  "name": "Memory Leak Detection in Python Application",
+  "description": "Detects potential memory leaks in Python applications by monitoring continuously increasing memory usage over time with minimal garbage collection impact.",
+  "query": "entity.type:\"pythonRuntime\"",
+  "entityType": "openTelemetry",
+  "expirationTime": 600000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "window": 600000,
+      "severity": 10,
+      "metricName": "metrics.sums.opentelemetry.instrumentation.system_metrics/process.runtime.cpython.memory",
+      "aggregation": "rate",
+      "conditionOperator": ">",
+      "conditionValue": 1048576
+    }
+  ]
+}

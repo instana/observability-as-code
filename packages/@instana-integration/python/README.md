@@ -6,9 +6,9 @@ The Instana integration package used to support Python monitoring. Once you impo
 
 Below are the dashboards that are currently supported by this integration package.
 
-| Dashboard Title    | Description                    |
-|----------------------------|-----------------------|
-| Python Runtime Metrics   | Instana custom dashboard that displays runtime metrics for Python application |
+| Dashboard Title        | Description                                                                   |
+|------------------------|-------------------------------------------------------------------------------|
+| Python Runtime Metrics | Instana custom dashboard that displays runtime metrics for Python application |
 
 ## Metrics
 
@@ -22,28 +22,45 @@ pip install opentelemetry-instrumentation-system-metrics
 
 Below are the Python runtime metrics that are currently supported by this integration package.
 
-| Metrics Name               | Description                   | Unit   |
-|----------------------------|-------------------------------|--------|
-| process.runtime.cpython.context_switches   | Context switching            | Number |
-| process.runtime.cpython.cpu.utilization    | CPU utilization          | Percentage   |
-| process.runtime.cpython.thread_count       | Threads  | Number |
-| process.runtime.cpython.cpu_time   | Time Spent     | S   |
-| process.runtime.cpython.gc_count   | GC activity          | Number   |
-| process.runtime.cpython.memory | Memory usage              | Byte   |
-| system.disk.io       | I/O  | Number |
-| system.network.io       | Events  | Number |
+| Metrics Name                             | Description       | Unit       |
+|------------------------------------------|-------------------|------------|
+| process.runtime.cpython.context_switches | Context switching | Number     |
+| process.runtime.cpython.cpu.utilization  | CPU utilization   | Percentage |
+| process.runtime.cpython.thread_count     | Threads           | Number     |
+| process.runtime.cpython.cpu_time         | Time Spent        | S          |
+| process.runtime.cpython.gc_count         | GC activity       | Number     |
+| process.runtime.cpython.memory           | Memory usage      | Byte       |
+| system.disk.io                           | I/O               | Number     |
+| system.network.io                        | Events            | Number     |
 
 
 ### Resource Attributes
 
 Below are the resource attributes that are currently supported by this integration package.
 
-| Attribute Key              | Type |  Description           |
-|----------------------------|-------|------------------------|
-| service.name               | string  | This attribute is used to describe the entity name.    |
-| service.instance.id        | string  | This attribute is used to describe the entity ID of the current object.  |
+| Attribute Key              | Type   | Description                                                             |
+|----------------------------|--------|-------------------------------------------------------------------------|
+| service.name               | string | This attribute is used to describe the entity name.                     |
+| service.instance.id        | string | This attribute is used to describe the entity ID of the current object. |
 
-### Installation and Usage
+## Events
+
+Below are the events that are currently supported by this integration package.
+
+| Event Name                                        | Description       |
+|---------------------------------------------------|-------------------|
+| Excessive Context Switching in Python Application | —                 |
+| Frequent Garbage Collection in Python Application | —                 |
+| High CPU Utilization in Python Application        | —                 |
+| High Disk I/O in Python Application               | —                 |
+| High Memory Usage in Python Application           | —                 |
+| High Network I/O in Python Application            | —                 |
+| High Thread Count in Python Application           | —                 |
+| Memory Leak Detection in Python Application       | —                 |
+
+Note: The conditionValue is a reference value in event definitions. Please adjust this value based on your specific environment.
+
+## Installation and Usage
 
 With [Instana CLI for integration package management](https://github.com/instana/observability-as-code?tab=readme-ov-file#instana-cli-for-integration-package-management), you can manage the lifecycle of this package such as downloading the package and importing it into Instana.
 

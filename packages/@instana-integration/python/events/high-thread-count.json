@@ -1,0 +1,18 @@
+{
+  "name": "High Thread Count in Python Application",
+  "description": "Detects when a Python application is creating an unusually high number of threads, which may lead to resource contention, degraded performance, or system instability.",
+  "query": "entity.type:\"pythonRuntime\"",
+  "entityType": "openTelemetry",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "window": 300000,
+      "severity": 10,
+      "metricName": "metrics.sums.opentelemetry.instrumentation.system_metrics/process.runtime.cpython.thread_count",
+      "aggregation": "avg",
+      "conditionOperator": ">",
+      "conditionValue": 100
+    }
+  ]
+}
