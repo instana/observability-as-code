@@ -1,0 +1,18 @@
+{
+  "name": "High Event Loop Lag Variance",
+  "description": "Detects when a Node.js application's event loop is experiencing inconsistent performance with high standard deviation in delay times, which may indicate intermittent blocking operations.",
+  "query": "entity.type:\"nodeJsRuntime\"",
+  "entityType": "openTelemetry",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "window": 300000,
+      "severity": 5,
+      "metricName": "metrics.gauges.@opentelemetry/instrumentation-runtime-node/nodejs.eventloop.delay.stddev",
+      "aggregation": "avg",
+      "conditionOperator": ">",
+      "conditionValue": 0.05
+    }
+  ]
+}
