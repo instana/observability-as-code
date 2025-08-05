@@ -1,0 +1,18 @@
+{
+  "name": "Go Memory Leak Detection",
+  "description": "Detects potential memory leaks in Go applications by monitoring continuously increasing heap object count over time.",
+  "query": "entity.type:\"goLangRuntime\"",
+  "entityType": "openTelemetry",
+  "expirationTime": 600000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "window": 600000,
+      "severity": 10,
+      "metricName": "metrics.sums.go.opentelemetry.io/contrib/instrumentation/runtime/process.runtime.go.mem.heap_objects",
+      "aggregation": "rate",
+      "conditionOperator": ">",
+      "conditionValue": 1000
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "High CPU Utilization in Go Application",
+  "description": "Detects when a Go application is consuming an unusually high amount of CPU resources, which may indicate inefficient code, infinite loops, or excessive processing.",
+  "query": "entity.type:\"goLangRuntime\"",
+  "entityType": "openTelemetry",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "window": 300000,
+      "severity": 10,
+      "metricName": "metrics.sums.go.opentelemetry.io/contrib/instrumentation/runtime/process.runtime.go.cpu.time",
+      "aggregation": "avg",
+      "conditionOperator": ">",
+      "conditionValue": 0.8
+    }
+  ]
+}

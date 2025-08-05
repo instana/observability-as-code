@@ -1,0 +1,18 @@
+{
+  "name": "Memory Leak Detection",
+  "description": "Detects potential memory leaks in Node.js applications by monitoring continuously increasing heap usage over time with minimal garbage collection impact.",
+  "query": "entity.type:\"nodeJsRuntime\"",
+  "entityType": "openTelemetry",
+  "expirationTime": 600000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "window": 600000,
+      "severity": 10,
+      "metricName": "metrics.gauges.@opentelemetry/instrumentation-runtime-node/v8js.memory.heap.used",
+      "aggregation": "rate",
+      "conditionOperator": ">",
+      "conditionValue": 0.05
+    }
+  ]
+}

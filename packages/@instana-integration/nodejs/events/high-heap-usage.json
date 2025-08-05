@@ -1,0 +1,18 @@
+{
+  "name": "High Heap Usage",
+  "description": "Detects when a Node.js application is using a high percentage of its available heap memory, which may indicate memory leaks or inefficient memory usage.",
+  "query": "entity.type:\"nodeJsRuntime\"",
+  "entityType": "openTelemetry",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "window": 300000,
+      "severity": 10,
+      "metricName": "metrics.gauges.@opentelemetry/instrumentation-runtime-node/v8js.memory.heap.used",
+      "aggregation": "avg",
+      "conditionOperator": ">",
+      "conditionValue": 0.8
+    }
+  ]
+}

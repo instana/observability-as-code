@@ -1,0 +1,18 @@
+{
+  "name": "High Garbage Collection Duration",
+  "description": "Detects when a Node.js application is experiencing long garbage collection pauses, which can cause application latency spikes and poor user experience.",
+  "query": "entity.type:\"nodeJsRuntime\"",
+  "entityType": "openTelemetry",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "window": 300000,
+      "severity": 10,
+      "metricName": "metrics.histograms.@opentelemetry/instrumentation-runtime-node/v8js.gc.duration",
+      "aggregation": "avg",
+      "conditionOperator": ">",
+      "conditionValue": 0.1
+    }
+  ]
+}
