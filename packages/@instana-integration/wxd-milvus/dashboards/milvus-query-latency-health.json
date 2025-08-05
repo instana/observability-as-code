@@ -3,14 +3,14 @@
     "title": "milvus-query-latency-health",
     "accessRules": [
       {
-        "accessType": "READ",
-        "relationType": "GLOBAL",
-        "relatedId": ""
-      },
-      {
         "accessType": "READ_WRITE",
         "relationType": "USER",
         "relatedId": "5ee5195fbea6150001758c40"
+      },
+      {
+        "accessType": "READ_WRITE",
+        "relationType": "GLOBAL",
+        "relatedId": ""
       }
     ],
     "widgets": [
