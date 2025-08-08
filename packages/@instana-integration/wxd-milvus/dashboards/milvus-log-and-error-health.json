@@ -1,0 +1,625 @@
+{
+    "id": "Ky9KMo6KT_qJ_wGM3qfNxg",
+    "title": "milvus-log-and-error-health",
+    "accessRules": [
+      {
+        "accessType": "READ_WRITE",
+        "relationType": "GLOBAL",
+        "relatedId": ""
+      },
+      {
+        "accessType": "READ_WRITE",
+        "relationType": "USER",
+        "relatedId": "5ee5195fbea6150001758c40"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "M5FIIBd_N8qZbZBr",
+        "title": "Severity Level",
+        "width": 12,
+        "height": 14,
+        "x": 0,
+        "y": 0,
+        "type": "chart",
+        "config": {
+          "shareMaxAxisDomain": false,
+          "y1": {
+            "formatter": "millis.compact",
+            "renderer": "line",
+            "metrics": [
+              {
+                "lastValue": false,
+                "color": "",
+                "compareToTimeShifted": false,
+                "threshold": {
+                  "critical": "",
+                  "warning": "",
+                  "thresholdEnabled": false,
+                  "operator": ">="
+                },
+                "aggregation": "MEAN",
+                "label": "querynode search query request latency",
+                "source": "INFRASTRUCTURE_METRICS",
+                "type": "openTelemetry",
+                "metricPath": [
+                  "Others",
+                  "OpenTelemetry SDK"
+                ],
+                "formatter": "number.detailed",
+                "unit": "second",
+                "metric": "metrics.histograms.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_querynode_sq_req_latency",
+                "timeShift": 0,
+                "tagFilterExpression": {
+                  "logicalOperator": "AND",
+                  "elements": [],
+                  "type": "EXPRESSION"
+                },
+                "allowedCrossSeriesAggregations": [],
+                "metricLabel": "OpenTelemetry histogram github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_querynode_sq_req_latency",
+                "crossSeriesAggregation": "MEAN"
+              },
+              {
+                "lastValue": false,
+                "color": "",
+                "compareToTimeShifted": false,
+                "threshold": {
+                  "critical": "",
+                  "warning": "",
+                  "thresholdEnabled": false,
+                  "operator": ">="
+                },
+                "aggregation": "MEAN",
+                "label": "querynode search query queue latency",
+                "source": "INFRASTRUCTURE_METRICS",
+                "type": "openTelemetry",
+                "metricPath": [
+                  "Others",
+                  "OpenTelemetry SDK"
+                ],
+                "formatter": "number.detailed",
+                "unit": "second",
+                "metric": "metrics.histograms.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_querynode_sq_queue_latency",
+                "timeShift": 0,
+                "tagFilterExpression": {
+                  "logicalOperator": "AND",
+                  "elements": [],
+                  "type": "EXPRESSION"
+                },
+                "allowedCrossSeriesAggregations": [],
+                "metricLabel": "OpenTelemetry histogram github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_querynode_sq_queue_latency",
+                "crossSeriesAggregation": "MEAN"
+              },
+              {
+                "lastValue": false,
+                "color": "",
+                "compareToTimeShifted": false,
+                "threshold": {
+                  "critical": "",
+                  "warning": "",
+                  "thresholdEnabled": false,
+                  "operator": ">="
+                },
+                "aggregation": "MEAN",
+                "label": "querynode search query segment latency",
+                "source": "INFRASTRUCTURE_METRICS",
+                "type": "openTelemetry",
+                "metricPath": [
+                  "Others",
+                  "OpenTelemetry SDK"
+                ],
+                "formatter": "number.detailed",
+                "unit": "second",
+                "metric": "metrics.histograms.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_querynode_sq_segment_latency",
+                "timeShift": 0,
+                "tagFilterExpression": {
+                  "logicalOperator": "AND",
+                  "elements": [],
+                  "type": "EXPRESSION"
+                },
+                "allowedCrossSeriesAggregations": [],
+                "metricLabel": "OpenTelemetry histogram github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_querynode_sq_segment_latency",
+                "crossSeriesAggregation": "MEAN"
+              }
+            ],
+            "formatterSelected": true
+          },
+          "y2": {
+            "formatter": "number.detailed",
+            "renderer": "line",
+            "metrics": []
+          },
+          "type": "TIME_SERIES"
+        }
+      },
+      {
+        "id": "T37UyRaWeSIKb6fw",
+        "title": "Timestamp & Frequency",
+        "width": 12,
+        "height": 13,
+        "x": 0,
+        "y": 33,
+        "type": "chart",
+        "config": {
+          "shareMaxAxisDomain": false,
+          "y1": {
+            "formatter": "millis.compact",
+            "renderer": "line",
+            "metrics": [
+              {
+                "lastValue": false,
+                "color": "",
+                "compareToTimeShifted": false,
+                "threshold": {
+                  "critical": "",
+                  "warning": "",
+                  "thresholdEnabled": false,
+                  "operator": ">="
+                },
+                "aggregation": "MEAN",
+                "label": "process start time seconds",
+                "source": "INFRASTRUCTURE_METRICS",
+                "type": "openTelemetry",
+                "metricPath": [
+                  "Others",
+                  "Regex"
+                ],
+                "formatter": "number.detailed",
+                "unit": "second",
+                "regex": true,
+                "metric": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/process_start_time_seconds",
+                "timeShift": 0,
+                "tagFilterExpression": {
+                  "logicalOperator": "AND",
+                  "elements": [],
+                  "type": "EXPRESSION"
+                },
+                "allowedCrossSeriesAggregations": [],
+                "metricLabel": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/process_start_time_seconds",
+                "crossSeriesAggregation": "MEAN"
+              },
+              {
+                "lastValue": false,
+                "color": "",
+                "compareToTimeShifted": false,
+                "threshold": {
+                  "critical": "",
+                  "warning": "",
+                  "thresholdEnabled": false,
+                  "operator": ">="
+                },
+                "aggregation": "MEAN",
+                "label": "proxy tt lag ms",
+                "source": "INFRASTRUCTURE_METRICS",
+                "type": "openTelemetry",
+                "metricPath": [
+                  "Others",
+                  "Regex"
+                ],
+                "formatter": "number.detailed",
+                "unit": "milisecond",
+                "regex": true,
+                "metric": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_proxy_tt_lag_ms",
+                "timeShift": 0,
+                "tagFilterExpression": {
+                  "logicalOperator": "AND",
+                  "elements": [],
+                  "type": "EXPRESSION"
+                },
+                "allowedCrossSeriesAggregations": [],
+                "metricLabel": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_proxy_tt_lag_ms",
+                "crossSeriesAggregation": "MEAN"
+              },
+              {
+                "lastValue": false,
+                "color": "",
+                "compareToTimeShifted": false,
+                "threshold": {
+                  "critical": "",
+                  "warning": "",
+                  "thresholdEnabled": false,
+                  "operator": ">="
+                },
+                "aggregation": "MEAN",
+                "label": "datanode consume tt lag ms",
+                "source": "INFRASTRUCTURE_METRICS",
+                "type": "openTelemetry",
+                "metricPath": [
+                  "Others",
+                  "Regex"
+                ],
+                "formatter": "number.detailed",
+                "unit": "milisecond",
+                "regex": true,
+                "metric": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_datanode_consume_tt_lag_ms",
+                "timeShift": 0,
+                "tagFilterExpression": {
+                  "logicalOperator": "AND",
+                  "elements": [],
+                  "type": "EXPRESSION"
+                },
+                "allowedCrossSeriesAggregations": [],
+                "metricLabel": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_datanode_consume_tt_lag_ms",
+                "crossSeriesAggregation": "MEAN"
+              }
+            ],
+            "formatterSelected": true
+          },
+          "y2": {
+            "formatter": "number.detailed",
+            "renderer": "line",
+            "metrics": []
+          },
+          "type": "TIME_SERIES"
+        }
+      },
+      {
+        "id": "KiYOFSf-fA1ZYiwD",
+        "title": "Contextual Information",
+        "width": 12,
+        "height": 16,
+        "x": 0,
+        "y": 0,
+        "type": "chart",
+        "config": {
+          "shareMaxAxisDomain": false,
+          "y1": {
+            "formatter": "number.detailed",
+            "renderer": "line",
+            "metrics": [
+              {
+                "lastValue": false,
+                "color": "",
+                "compareToTimeShifted": false,
+                "threshold": {
+                  "critical": "",
+                  "warning": "",
+                  "thresholdEnabled": false,
+                  "operator": ">="
+                },
+                "aggregation": "MEAN",
+                "label": "rootcoord proxy number",
+                "source": "INFRASTRUCTURE_METRICS",
+                "type": "openTelemetry",
+                "metricPath": [
+                  "Others",
+                  "Regex"
+                ],
+                "formatter": "number.detailed",
+                "unit": "number",
+                "regex": true,
+                "metric": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_rootcoord_proxy_num",
+                "timeShift": 0,
+                "tagFilterExpression": {
+                  "logicalOperator": "AND",
+                  "elements": [],
+                  "type": "EXPRESSION"
+                },
+                "allowedCrossSeriesAggregations": [],
+                "metricLabel": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_rootcoord_proxy_num",
+                "crossSeriesAggregation": "MEAN"
+              },
+              {
+                "lastValue": false,
+                "color": "",
+                "compareToTimeShifted": false,
+                "threshold": {
+                  "critical": "",
+                  "warning": "",
+                  "thresholdEnabled": false,
+                  "operator": ">="
+                },
+                "aggregation": "MEAN",
+                "label": "querycoord querynode number",
+                "source": "INFRASTRUCTURE_METRICS",
+                "type": "openTelemetry",
+                "metricPath": [
+                  "Others",
+                  "Regex"
+                ],
+                "formatter": "number.detailed",
+                "unit": "number",
+                "regex": true,
+                "metric": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_querycoord_querynode_num",
+                "timeShift": 0,
+                "tagFilterExpression": {
+                  "logicalOperator": "AND",
+                  "elements": [],
+                  "type": "EXPRESSION"
+                },
+                "allowedCrossSeriesAggregations": [],
+                "metricLabel": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_querycoord_querynode_num",
+                "crossSeriesAggregation": "MEAN"
+              },
+              {
+                "lastValue": false,
+                "color": "",
+                "compareToTimeShifted": false,
+                "threshold": {
+                  "critical": "",
+                  "warning": "",
+                  "thresholdEnabled": false,
+                  "operator": ">="
+                },
+                "aggregation": "MEAN",
+                "label": "datacoord datanode number",
+                "source": "INFRASTRUCTURE_METRICS",
+                "type": "openTelemetry",
+                "metricPath": [
+                  "Others",
+                  "Regex"
+                ],
+                "formatter": "number.detailed",
+                "unit": "number",
+                "regex": true,
+                "metric": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_datacoord_datanode_num",
+                "timeShift": 0,
+                "tagFilterExpression": {
+                  "logicalOperator": "AND",
+                  "elements": [],
+                  "type": "EXPRESSION"
+                },
+                "allowedCrossSeriesAggregations": [],
+                "metricLabel": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_datacoord_datanode_num",
+                "crossSeriesAggregation": "MEAN"
+              },
+              {
+                "lastValue": false,
+                "color": "",
+                "compareToTimeShifted": false,
+                "threshold": {
+                  "critical": "",
+                  "warning": "",
+                  "thresholdEnabled": false,
+                  "operator": ">="
+                },
+                "aggregation": "MEAN",
+                "label": "datacoord index node number",
+                "source": "INFRASTRUCTURE_METRICS",
+                "type": "openTelemetry",
+                "metricPath": [
+                  "Others",
+                  "Regex"
+                ],
+                "formatter": "number.detailed",
+                "unit": "number",
+                "regex": true,
+                "metric": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_datacoord_index_node_num",
+                "timeShift": 0,
+                "tagFilterExpression": {
+                  "logicalOperator": "AND",
+                  "elements": [],
+                  "type": "EXPRESSION"
+                },
+                "allowedCrossSeriesAggregations": [],
+                "metricLabel": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_datacoord_index_node_num",
+                "crossSeriesAggregation": "MEAN"
+              }
+            ],
+            "formatterSelected": false
+          },
+          "y2": {
+            "formatter": "number.detailed",
+            "renderer": "line",
+            "metrics": []
+          },
+          "type": "TIME_SERIES"
+        }
+      },
+      {
+        "id": "2uEmGgbPg6jl99ER",
+        "title": "Service/Component Affected",
+        "width": 12,
+        "height": 13,
+        "x": 0,
+        "y": 46,
+        "type": "chart",
+        "config": {
+          "shareMaxAxisDomain": false,
+          "y1": {
+            "formatter": "number.compact",
+            "renderer": "line",
+            "metrics": [
+              {
+                "lastValue": false,
+                "color": "",
+                "compareToTimeShifted": false,
+                "threshold": {
+                  "critical": "",
+                  "warning": "",
+                  "thresholdEnabled": false,
+                  "operator": ">="
+                },
+                "aggregation": "MEAN",
+                "label": "querycoord release request count",
+                "source": "INFRASTRUCTURE_METRICS",
+                "metricPath": [
+                  "Others",
+                  "Regex"
+                ],
+                "formatter": "number.detailed",
+                "unit": "number",
+                "regex": true,
+                "metric": "metrics\\.sums\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_querycoord_release_req_count",
+                "timeShift": 0,
+                "tagFilterExpression": {
+                  "tagDefinition": {
+                    "path": [
+                      {
+                        "label": "Other"
+                      },
+                      {
+                        "label": "metric.tag"
+                      }
+                    ],
+                    "name": "metric.tag",
+                    "availability": [],
+                    "type": "KEY_VALUE_PAIR"
+                  },
+                  "name": "metric.tag",
+                  "type": "TAG_FILTER",
+                  "value": "success",
+                  "key": "status",
+                  "entity": "NOT_APPLICABLE",
+                  "operator": "NOT_EQUAL"
+                },
+                "allowedCrossSeriesAggregations": [],
+                "metricLabel": "metrics\\.sums\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_querycoord_release_req_count",
+                "crossSeriesAggregation": "MEAN"
+              },
+              {
+                "lastValue": false,
+                "color": "",
+                "compareToTimeShifted": false,
+                "threshold": {
+                  "critical": "",
+                  "warning": "",
+                  "thresholdEnabled": false,
+                  "operator": ">="
+                },
+                "aggregation": "MEAN",
+                "label": "proxy request count",
+                "source": "INFRASTRUCTURE_METRICS",
+                "metricPath": [
+                  "Others",
+                  "Regex"
+                ],
+                "formatter": "number.detailed",
+                "unit": "number",
+                "regex": true,
+                "metric": "metrics\\.sums\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_proxy_req_count",
+                "timeShift": 0,
+                "tagFilterExpression": {
+                  "tagDefinition": {
+                    "path": [
+                      {
+                        "label": "Other"
+                      },
+                      {
+                        "label": "metric.tag"
+                      }
+                    ],
+                    "name": "metric.tag",
+                    "availability": [],
+                    "type": "KEY_VALUE_PAIR"
+                  },
+                  "name": "metric.tag",
+                  "type": "TAG_FILTER",
+                  "value": "success",
+                  "key": "status",
+                  "entity": "NOT_APPLICABLE",
+                  "operator": "NOT_EQUAL"
+                },
+                "allowedCrossSeriesAggregations": [],
+                "metricLabel": "metrics\\.sums\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_proxy_req_count",
+                "crossSeriesAggregation": "MEAN"
+              },
+              {
+                "lastValue": false,
+                "color": "",
+                "compareToTimeShifted": false,
+                "threshold": {
+                  "critical": "",
+                  "warning": "",
+                  "thresholdEnabled": false,
+                  "operator": ">="
+                },
+                "aggregation": "MEAN",
+                "label": "datacoord index request count",
+                "source": "INFRASTRUCTURE_METRICS",
+                "metricPath": [
+                  "Others",
+                  "Regex"
+                ],
+                "formatter": "number.detailed",
+                "unit": "number",
+                "regex": true,
+                "metric": "metrics\\.sums\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_datacoord_index_req_count",
+                "timeShift": 0,
+                "tagFilterExpression": {
+                  "tagDefinition": {
+                    "path": [
+                      {
+                        "label": "Other"
+                      },
+                      {
+                        "label": "metric.tag"
+                      }
+                    ],
+                    "name": "metric.tag",
+                    "availability": [],
+                    "type": "KEY_VALUE_PAIR"
+                  },
+                  "name": "metric.tag",
+                  "type": "TAG_FILTER",
+                  "value": "success",
+                  "key": "status",
+                  "entity": "NOT_APPLICABLE",
+                  "operator": "NOT_EQUAL"
+                },
+                "allowedCrossSeriesAggregations": [],
+                "metricLabel": "metrics\\.sums\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_datacoord_index_req_count",
+                "crossSeriesAggregation": "MEAN"
+              },
+              {
+                "lastValue": false,
+                "color": "",
+                "compareToTimeShifted": false,
+                "threshold": {
+                  "critical": "",
+                  "warning": "",
+                  "thresholdEnabled": false,
+                  "operator": ">="
+                },
+                "aggregation": "MEAN",
+                "label": "querycoord load request count",
+                "source": "INFRASTRUCTURE_METRICS",
+                "metricPath": [
+                  "Others",
+                  "Regex"
+                ],
+                "formatter": "number.detailed",
+                "unit": "number",
+                "regex": true,
+                "metric": "metrics\\.sums\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_querycoord_load_req_count",
+                "timeShift": 0,
+                "tagFilterExpression": {
+                  "tagDefinition": {
+                    "path": [
+                      {
+                        "label": "Other"
+                      },
+                      {
+                        "label": "metric.tag"
+                      }
+                    ],
+                    "name": "metric.tag",
+                    "availability": [],
+                    "type": "KEY_VALUE_PAIR"
+                  },
+                  "name": "metric.tag",
+                  "type": "TAG_FILTER",
+                  "value": "success",
+                  "key": "status",
+                  "entity": "NOT_APPLICABLE",
+                  "operator": "NOT_EQUAL"
+                },
+                "allowedCrossSeriesAggregations": [],
+                "metricLabel": "metrics\\.sums\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/milvus_querycoord_load_req_count",
+                "crossSeriesAggregation": "MEAN"
+              }
+            ],
+            "formatterSelected": true
+          },
+          "y2": {
+            "formatter": "number.detailed",
+            "renderer": "line",
+            "metrics": []
+          },
+          "type": "TIME_SERIES"
+        }
+      }
+    ],
+    "ownerId": "5ee5195fbea6150001758c40",
+    "writable": true
+  }

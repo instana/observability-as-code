@@ -1,0 +1,318 @@
+{
+    "id": "roPwsV9_QFqy4k1Fiz0LqQ",
+    "title": "presto-query-latency-health",
+    "accessRules": [
+      {
+        "accessType": "READ_WRITE",
+        "relationType": "USER",
+        "relatedId": "5ee5195fbea6150001758c40"
+      },
+      {
+        "accessType": "READ_WRITE",
+        "relationType": "GLOBAL",
+        "relatedId": ""
+      }
+    ],
+    "widgets": [
+      {
+        "id": "wWm8Xd7ryEVa1yxB",
+        "title": "Request Volume",
+        "width": 12,
+        "height": 14,
+        "x": 0,
+        "y": 15,
+        "type": "chart",
+        "config": {
+          "shareMaxAxisDomain": false,
+          "y1": {
+            "formatter": "millis.compact",
+            "renderer": "line",
+            "metrics": [
+              {
+                "lastValue": false,
+                "color": "",
+                "compareToTimeShifted": false,
+                "threshold": {
+                  "critical": "",
+                  "warning": "",
+                  "thresholdEnabled": false,
+                  "operator": ">="
+                },
+                "aggregation": "MEAN",
+                "label": "task executor split queued time five minutes count",
+                "source": "INFRASTRUCTURE_METRICS",
+                "metricPath": [
+                  "Others",
+                  "Regex"
+                ],
+                "formatter": "number.detailed",
+                "unit": "milisecond",
+                "regex": true,
+                "metric": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_task_executor_split_queued_time_five_minutes_count",
+                "timeShift": 0,
+                "tagFilterExpression": {
+                  "logicalOperator": "AND",
+                  "elements": [],
+                  "type": "EXPRESSION"
+                },
+                "allowedCrossSeriesAggregations": [],
+                "metricLabel": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_task_executor_split_queued_time_five_minutes_count",
+                "crossSeriesAggregation": "MEAN"
+              },
+              {
+                "lastValue": false,
+                "color": "",
+                "compareToTimeShifted": false,
+                "threshold": {
+                  "critical": "",
+                  "warning": "",
+                  "thresholdEnabled": false,
+                  "operator": ">="
+                },
+                "aggregation": "MEAN",
+                "label": "split scheduler stats get split time five minutes p99",
+                "source": "INFRASTRUCTURE_METRICS",
+                "metricPath": [
+                  "Others",
+                  "Regex"
+                ],
+                "formatter": "number.detailed",
+                "unit": "milisecond",
+                "regex": true,
+                "metric": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_split_scheduler_stats_get_split_time_five_minutes_p99",
+                "timeShift": 0,
+                "tagFilterExpression": {
+                  "logicalOperator": "AND",
+                  "elements": [],
+                  "type": "EXPRESSION"
+                },
+                "allowedCrossSeriesAggregations": [],
+                "metricLabel": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_split_scheduler_stats_get_split_time_five_minutes_p99",
+                "crossSeriesAggregation": "MEAN"
+              },
+              {
+                "lastValue": false,
+                "color": "",
+                "compareToTimeShifted": false,
+                "threshold": {
+                  "critical": "",
+                  "warning": "",
+                  "thresholdEnabled": false,
+                  "operator": ">="
+                },
+                "aggregation": "MEAN",
+                "label": "task executor split wall time five minutes count",
+                "source": "INFRASTRUCTURE_METRICS",
+                "metricPath": [
+                  "Others",
+                  "Regex"
+                ],
+                "formatter": "number.detailed",
+                "unit": "milisecond",
+                "regex": true,
+                "metric": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_task_executor_split_wall_time_five_minutes_count",
+                "timeShift": 0,
+                "tagFilterExpression": {
+                  "logicalOperator": "AND",
+                  "elements": [],
+                  "type": "EXPRESSION"
+                },
+                "allowedCrossSeriesAggregations": [],
+                "metricLabel": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_task_executor_split_wall_time_five_minutes_count",
+                "crossSeriesAggregation": "MEAN"
+              }
+            ],
+            "formatterSelected": true
+          },
+          "y2": {
+            "formatter": "number.detailed",
+            "renderer": "line",
+            "metrics": []
+          },
+          "type": "TIME_SERIES"
+        }
+      },
+      {
+        "id": "XrTCDn1Pi_tzYs5l",
+        "title": "Latency",
+        "width": 12,
+        "height": 15,
+        "x": 0,
+        "y": 0,
+        "type": "chart",
+        "config": {
+          "shareMaxAxisDomain": false,
+          "y1": {
+            "formatter": "millis.compact",
+            "renderer": "line",
+            "metrics": [
+              {
+                "lastValue": false,
+                "color": "",
+                "compareToTimeShifted": false,
+                "threshold": {
+                  "critical": "",
+                  "warning": "",
+                  "thresholdEnabled": false,
+                  "operator": ">="
+                },
+                "aggregation": "MEAN",
+                "label": "query manager execution time five minutes p99",
+                "source": "INFRASTRUCTURE_METRICS",
+                "metricPath": [
+                  "Others",
+                  "Regex"
+                ],
+                "formatter": "number.detailed",
+                "unit": "milisecond",
+                "regex": true,
+                "metric": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_execution_time_five_minutes_p99",
+                "timeShift": 0,
+                "tagFilterExpression": {
+                  "logicalOperator": "AND",
+                  "elements": [],
+                  "type": "EXPRESSION"
+                },
+                "allowedCrossSeriesAggregations": [],
+                "metricLabel": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_query_manager_execution_time_five_minutes_p99",
+                "crossSeriesAggregation": "MEAN"
+              },
+              {
+                "lastValue": false,
+                "color": "",
+                "compareToTimeShifted": false,
+                "threshold": {
+                  "critical": "",
+                  "warning": "",
+                  "thresholdEnabled": false,
+                  "operator": ">="
+                },
+                "aggregation": "MEAN",
+                "label": "task executor split wall time one minute max",
+                "source": "INFRASTRUCTURE_METRICS",
+                "metricPath": [
+                  "Others",
+                  "Regex"
+                ],
+                "formatter": "number.detailed",
+                "unit": "milisecond",
+                "regex": true,
+                "metric": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_task_executor_split_wall_time_one_minute_max",
+                "timeShift": 0,
+                "tagFilterExpression": {
+                  "logicalOperator": "AND",
+                  "elements": [],
+                  "type": "EXPRESSION"
+                },
+                "allowedCrossSeriesAggregations": [],
+                "metricLabel": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_task_executor_split_wall_time_one_minute_max",
+                "crossSeriesAggregation": "MEAN"
+              },
+              {
+                "lastValue": false,
+                "color": "",
+                "compareToTimeShifted": false,
+                "threshold": {
+                  "critical": "",
+                  "warning": "",
+                  "thresholdEnabled": false,
+                  "operator": ">="
+                },
+                "aggregation": "MEAN",
+                "label": "task executor split wall time fifteen minutes max",
+                "source": "INFRASTRUCTURE_METRICS",
+                "metricPath": [
+                  "Others",
+                  "Regex"
+                ],
+                "formatter": "number.detailed",
+                "unit": "milisecond",
+                "regex": true,
+                "metric": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_task_executor_split_wall_time_fifteen_minutes_max",
+                "timeShift": 0,
+                "tagFilterExpression": {
+                  "logicalOperator": "AND",
+                  "elements": [],
+                  "type": "EXPRESSION"
+                },
+                "allowedCrossSeriesAggregations": [],
+                "metricLabel": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_task_executor_split_wall_time_fifteen_minutes_max",
+                "crossSeriesAggregation": "MEAN"
+              },
+              {
+                "lastValue": false,
+                "color": "",
+                "compareToTimeShifted": false,
+                "threshold": {
+                  "critical": "",
+                  "warning": "",
+                  "thresholdEnabled": false,
+                  "operator": ">="
+                },
+                "aggregation": "MEAN",
+                "label": "task executor split wall time all time p99",
+                "source": "INFRASTRUCTURE_METRICS",
+                "metricPath": [
+                  "Others",
+                  "Regex"
+                ],
+                "formatter": "number.detailed",
+                "unit": "milisecond",
+                "regex": true,
+                "metric": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_task_executor_split_wall_time_all_time_p99",
+                "timeShift": 0,
+                "tagFilterExpression": {
+                  "logicalOperator": "AND",
+                  "elements": [],
+                  "type": "EXPRESSION"
+                },
+                "allowedCrossSeriesAggregations": [],
+                "metricLabel": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_task_executor_split_wall_time_all_time_p99",
+                "crossSeriesAggregation": "MEAN"
+              },
+              {
+                "lastValue": false,
+                "color": "",
+                "compareToTimeShifted": false,
+                "threshold": {
+                  "critical": "",
+                  "warning": "",
+                  "thresholdEnabled": false,
+                  "operator": ">="
+                },
+                "aggregation": "MEAN",
+                "label": "task executor leaf split wall time p99",
+                "source": "INFRASTRUCTURE_METRICS",
+                "metricPath": [
+                  "Others",
+                  "Regex"
+                ],
+                "formatter": "number.detailed",
+                "unit": "milisecond",
+                "regex": true,
+                "metric": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_task_executor_leaf_split_wall_time_p99",
+                "timeShift": 0,
+                "tagFilterExpression": {
+                  "logicalOperator": "AND",
+                  "elements": [],
+                  "type": "EXPRESSION"
+                },
+                "allowedCrossSeriesAggregations": [],
+                "metricLabel": "metrics\\.gauges\\.github\\.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver/watsonx_data_presto_task_executor_leaf_split_wall_time_p99",
+                "crossSeriesAggregation": "MEAN"
+              }
+            ],
+            "formatterSelected": true
+          },
+          "y2": {
+            "formatter": "number.detailed",
+            "renderer": "line",
+            "metrics": []
+          },
+          "type": "TIME_SERIES"
+        }
+      }
+    ],
+    "ownerId": "5ee5195fbea6150001758c40",
+    "writable": true
+  }
