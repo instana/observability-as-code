@@ -1,0 +1,4647 @@
+{
+  "id": "cSuGFLJaSBaNfTa3C_uB9g",
+  "title": "Self Monitoring: scale high perf metrics down",
+  "accessRules": [
+    {
+      "accessType": "READ_WRITE",
+      "relationType": "GLOBAL",
+      "relatedId": ""
+    },
+    {
+      "accessType": "READ_WRITE",
+      "relationType": "USER",
+      "relatedId": "6745ceced26b6f000181586b"
+    }
+  ],
+  "widgets": [
+    {
+      "id": "GIKreYfAmX7fdcxD",
+      "title": "metrics_xxxl CPU total (top 50)",
+      "width": 3,
+      "height": 18,
+      "x": 6,
+      "y": 60,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "containerd",
+              "metricPath": [
+                "Container",
+                "Containerd Container",
+                "CPU"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 50,
+                  "by": {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Other"
+                        },
+                        {
+                          "label": "tag.instana.io/tenantUnit"
+                        }
+                      ],
+                      "name": "tag.instana.io/tenantUnit",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "groupbyTag": "tag.instana.io/tenantUnit",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "percentage",
+              "metric": "cpu.total_usage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_xxxl",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Total",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "idlyHX5tTK7OMXaF",
+      "title": "metrics_xxl (24GB) profile mem",
+      "width": 3,
+      "height": 17,
+      "x": 0,
+      "y": 99,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.compact",
+          "renderer": "line",
+          "min": 0,
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "containerd",
+              "metricPath": [
+                "Container",
+                "Containerd Container",
+                "Memory"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 50,
+                  "by": {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Other"
+                        },
+                        {
+                          "label": "tag.instana.io/tenantUnit"
+                        }
+                      ],
+                      "name": "tag.instana.io/tenantUnit",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "groupbyTag": "tag.instana.io/tenantUnit",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "formatter": "bytes.detailed",
+              "unit": "percentage",
+              "metric": "memory.used_percentage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_xxl",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used Percentage",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "c1hUuk8Q3_FHw9pK",
+      "title": "metrics_xxxl TU Raw message dropping > 15%",
+      "width": 3,
+      "height": 15,
+      "x": 6,
+      "y": 45,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "min": 0.15,
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 20,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.KPI.incoming.raw_messages.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_xxxl",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "tag.instanaGroup",
+                    "type": "TAG_FILTER",
+                    "value": "tenantUnitHighperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge KPI.incoming.raw_messages.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ]
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "hDaZ4zQ8eEWgcmbE",
+      "title": "metrics_xl pod count",
+      "width": 3,
+      "height": 16,
+      "x": 9,
+      "y": 137,
+      "type": "topList",
+      "config": {
+        "formatter": "number.compact",
+        "metricConfiguration": {
+          "lastValue": false,
+          "aggregation": "MEAN",
+          "source": "INFRASTRUCTURE_METRICS",
+          "type": "kubernetesPod",
+          "metricPath": [
+            "Kubernetes",
+            "Kubernetes Pod"
+          ],
+          "grouping": [
+            {
+              "maxResults": 50,
+              "by": {
+                "groupbyTag": "tag.instana.io/tenantUnit",
+                "groupbyTagEntity": "NOT_APPLICABLE",
+                "groupbyTagSecondLevelKey": ""
+              },
+              "includeOthers": false,
+              "direction": "DESC"
+            }
+          ],
+          "formatter": "number.compact",
+          "unit": "number",
+          "metric": "count",
+          "timeShift": 0,
+          "tagFilterExpression": {
+            "logicalOperator": "AND",
+            "elements": [
+              {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "filler",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-tenantunit-highperf",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              {
+                "name": "tag.instana.io/profile",
+                "type": "TAG_FILTER",
+                "value": "metrics_xl",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              }
+            ],
+            "type": "EXPRESSION"
+          },
+          "allowedCrossSeriesAggregations": [
+            "DISTINCT_COUNT"
+          ],
+          "crossSeriesAggregation": "DISTINCT_COUNT"
+        },
+        "formatterSelected": false
+      }
+    },
+    {
+      "id": "HxgiIovbOXZ8rclH",
+      "title": "Custom Profile",
+      "width": 12,
+      "height": 6,
+      "x": 0,
+      "y": 0,
+      "type": "markdown",
+      "config": "_______________________________________________"
+    },
+    {
+      "id": "qF4wpeXuni6m_HFB",
+      "title": "TU Raw message dropping > 15%",
+      "width": 3,
+      "height": 15,
+      "x": 6,
+      "y": 6,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "min": 0.15,
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.KPI.incoming.raw_messages.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "NOT_CONTAIN"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge KPI.incoming.raw_messages.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ]
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "iZkCLjJFcmmganRS",
+      "title": "metrics_l TU Raw message dropping > 15%",
+      "width": 3,
+      "height": 15,
+      "x": 6,
+      "y": 159,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "min": 0.15,
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 50,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.KPI.incoming.raw_messages.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_l",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Other"
+                        },
+                        {
+                          "label": "zone"
+                        }
+                      ],
+                      "name": "zone",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge KPI.incoming.raw_messages.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ]
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "pxUM8pCpwEjiUJZS",
+      "title": "metrics_xl TU Raw message dropping > 15%",
+      "width": 3,
+      "height": 15,
+      "x": 6,
+      "y": 122,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "min": 0.15,
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.KPI.incoming.raw_messages.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_xl",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "tag.instanaGroup",
+                    "type": "TAG_FILTER",
+                    "value": "tenantUnitHighperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge KPI.incoming.raw_messages.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ]
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "08oAX4hXquZ5mMOa",
+      "title": "metrics_xl bottom 10 metric count per pod (max 900k metrics [coral])",
+      "width": 3,
+      "height": 15,
+      "x": 0,
+      "y": 122,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 10,
+                  "by": {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Kubernetes"
+                        },
+                        {
+                          "label": "pod"
+                        },
+                        {
+                          "label": "name"
+                        }
+                      ],
+                      "name": "kubernetes.pod.name",
+                      "type": "STRING"
+                    },
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "ASC"
+                }
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "metrics.meters.com.instana.filler.service.processingstatistics.ProcessingStatistics.metrics",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_xl",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "tag.instanaGroup",
+                    "type": "TAG_FILTER",
+                    "value": "tenantUnitHighperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard meter com.instana.filler.service.processingstatistics.ProcessingStatistics.metrics",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "kor8PuXeI_FZGtVH",
+      "title": "metrics_xl JVM mem used %",
+      "width": 3,
+      "height": 16,
+      "x": 3,
+      "y": 137,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "filler xl JVM mem",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "jvmRuntimePlatform",
+              "metricPath": [
+                "Others",
+                "JVM",
+                "Memory"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "ASC"
+                }
+              ],
+              "formatter": "bytes.detailed",
+              "unit": "number",
+              "metric": "memory.usedPercentage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "kubernetes.pod.label.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_xl",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Memory Used Percentage",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "tJ0-i92l75mDg7Vi",
+      "title": "metrics_xxxl Profile",
+      "width": 12,
+      "height": 6,
+      "x": 0,
+      "y": 39,
+      "type": "markdown",
+      "config": "_______________________________________________"
+    },
+    {
+      "id": "UkxicvTqfeiaiKMg",
+      "title": "metrics_xl Metrics Processing",
+      "width": 3,
+      "height": 15,
+      "x": 3,
+      "y": 122,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "metrics_xl Metrics Processing",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 10,
+                  "by": {
+                    "groupbyTag": "kubernetes.deployment.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.meters.com.instana.filler.service.processingstatistics.ProcessingStatistics.metrics",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "kubernetes.pod.label.app",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  },
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_xl",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.node.label.instanaGroup",
+                    "type": "TAG_FILTER",
+                    "value": "tenantUnitHighperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard meter com.instana.filler.service.processingstatistics.ProcessingStatistics.metrics",
+              "crossSeriesAggregation": "SUM"
+            }
+          ]
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "NnkqJutcuZO67_HH",
+      "title": "metrics_xl Raw message lag > 5s",
+      "width": 3,
+      "height": 15,
+      "x": 9,
+      "y": 122,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "min": 5000,
+          "max": 100000,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "P99",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 10,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.timers.com.instana.filler.topology.RawMessagesStreamInitializer.time-difference.99th",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_xl",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "tag.instanaGroup",
+                    "type": "TAG_FILTER",
+                    "value": "tenantUnitHighperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard timer com.instana.filler.topology.RawMessagesStreamInitializer.time-difference 99th percentile",
+              "crossSeriesAggregation": "P99"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "0o2jf9qNf-MC1y09",
+      "title": "metrics_l Profile",
+      "width": 12,
+      "height": 6,
+      "x": 0,
+      "y": 153,
+      "type": "markdown",
+      "config": "_______________________________________________"
+    },
+    {
+      "id": "LbSrbSrqfQFBNWM5",
+      "title": "metrics_xxl JVM mem used %",
+      "width": 3,
+      "height": 17,
+      "x": 3,
+      "y": 99,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "filler xxl JVM mem",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "jvmRuntimePlatform",
+              "metricPath": [
+                "Others",
+                "JVM",
+                "Memory"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "ASC"
+                }
+              ],
+              "formatter": "bytes.detailed",
+              "unit": "number",
+              "metric": "memory.usedPercentage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "kubernetes.pod.label.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_xxl",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Memory Used Percentage",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "9qe-hvr5FkmOAdgc",
+      "title": "metrics_xxxl JVM mem used %",
+      "width": 3,
+      "height": 18,
+      "x": 3,
+      "y": 60,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "filler xxxl JVM mem",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "jvmRuntimePlatform",
+              "metricPath": [
+                "Others",
+                "JVM",
+                "Memory"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "ASC"
+                }
+              ],
+              "formatter": "bytes.detailed",
+              "unit": "number",
+              "metric": "memory.usedPercentage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "kubernetes.pod.label.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_xxxl",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Memory Used Percentage",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "PBU0JXN09ye0dJ-S",
+      "title": "metrics_m CPU total (top 50)",
+      "width": 3,
+      "height": 19,
+      "x": 6,
+      "y": 212,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "containerd",
+              "metricPath": [
+                "Container",
+                "Containerd Container",
+                "CPU"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 50,
+                  "by": {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Other"
+                        },
+                        {
+                          "label": "tag.instana.io/tenantUnit"
+                        }
+                      ],
+                      "name": "tag.instana.io/tenantUnit",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "groupbyTag": "tag.instana.io/tenantUnit",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "percentage",
+              "metric": "cpu.total_usage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_m",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Total",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "GlfKxIQnYm1l3pxR",
+      "title": "metrics_xl (15.5 GB) profile mem",
+      "width": 3,
+      "height": 16,
+      "x": 0,
+      "y": 137,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.compact",
+          "renderer": "line",
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "containerd",
+              "metricPath": [
+                "Container",
+                "Containerd Container",
+                "Memory"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 50,
+                  "by": {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Other"
+                        },
+                        {
+                          "label": "tag.instana.io/tenantUnit"
+                        }
+                      ],
+                      "name": "tag.instana.io/tenantUnit",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "groupbyTag": "tag.instana.io/tenantUnit",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "formatter": "bytes.detailed",
+              "unit": "percentage",
+              "metric": "memory.used_percentage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_xl",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used Percentage",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "KUosBDSm4dtMmmoB",
+      "title": "metrics_s TOP 5 metric count per pod",
+      "width": 12,
+      "height": 13,
+      "x": 0,
+      "y": 236,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Kubernetes"
+                        },
+                        {
+                          "label": "pod"
+                        },
+                        {
+                          "label": "name"
+                        }
+                      ],
+                      "name": "kubernetes.pod.name",
+                      "type": "STRING"
+                    },
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "metrics.meters.com.instana.filler.service.processingstatistics.ProcessingStatistics.metrics",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_s",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "tag.instanaGroup",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard meter com.instana.filler.service.processingstatistics.ProcessingStatistics.metrics",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "7c8Oi4nOYeWLDQLZ",
+      "title": "custom profile mem",
+      "width": 3,
+      "height": 18,
+      "x": 0,
+      "y": 21,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.compact",
+          "renderer": "line",
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "containerd",
+              "metricPath": [
+                "Container",
+                "Containerd Container",
+                "Memory"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 50,
+                  "by": {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Other"
+                        },
+                        {
+                          "label": "tag.instana.io/tenantUnit"
+                        }
+                      ],
+                      "name": "tag.instana.io/tenantUnit",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "groupbyTag": "tag.instana.io/tenantUnit",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "formatter": "bytes.detailed",
+              "unit": "percentage",
+              "metric": "memory.used_percentage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "NOT_CONTAIN"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "spans_",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "NOT_CONTAIN"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used Percentage",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "d4j5kh2xpO0w19wu",
+      "title": "metrics_xxl Metrics Processing",
+      "width": 3,
+      "height": 15,
+      "x": 3,
+      "y": 84,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "metrics_xxl Metrics Processing",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 20,
+                  "by": {
+                    "groupbyTag": "kubernetes.deployment.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.meters.com.instana.filler.service.processingstatistics.ProcessingStatistics.metrics",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "kubernetes.pod.label.app",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  },
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_xxl",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.node.label.instanaGroup",
+                    "type": "TAG_FILTER",
+                    "value": "tenantUnitHighperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard meter com.instana.filler.service.processingstatistics.ProcessingStatistics.metrics",
+              "crossSeriesAggregation": "SUM"
+            }
+          ]
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "NK_pyEUgOpYJvibN",
+      "title": "metrics_xxl Profile",
+      "width": 12,
+      "height": 6,
+      "x": 0,
+      "y": 78,
+      "type": "markdown",
+      "config": "_______________________________________________"
+    },
+    {
+      "id": "zVNNv40o6je6oA-B",
+      "title": "metrics_xxl TU Raw message dropping > 15%",
+      "width": 3,
+      "height": 15,
+      "x": 6,
+      "y": 84,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "min": 0.15,
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.KPI.incoming.raw_messages.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_xxl",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "tag.instanaGroup",
+                    "type": "TAG_FILTER",
+                    "value": "tenantUnitHighperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge KPI.incoming.raw_messages.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ]
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "1ZFvdjD7vkvO5Fz2",
+      "title": "metrics_m Metrics Processing",
+      "width": 3,
+      "height": 15,
+      "x": 3,
+      "y": 196,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "metrics_m Metrics Processing",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 10,
+                  "by": {
+                    "groupbyTag": "kubernetes.deployment.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.meters.com.instana.filler.service.processingstatistics.ProcessingStatistics.metrics",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "kubernetes.pod.label.app",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  },
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_m",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.node.label.instanaGroup",
+                    "type": "TAG_FILTER",
+                    "value": "tenantUnitHighperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard meter com.instana.filler.service.processingstatistics.ProcessingStatistics.metrics",
+              "crossSeriesAggregation": "SUM"
+            }
+          ]
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "-zZxPJ1rEXpvQ9bA",
+      "title": "metrics_xxl pod count",
+      "width": 3,
+      "height": 17,
+      "x": 9,
+      "y": 99,
+      "type": "topList",
+      "config": {
+        "formatter": "number.compact",
+        "metricConfiguration": {
+          "lastValue": false,
+          "aggregation": "MEAN",
+          "source": "INFRASTRUCTURE_METRICS",
+          "type": "kubernetesPod",
+          "metricPath": [
+            "Kubernetes",
+            "Kubernetes Pod"
+          ],
+          "grouping": [
+            {
+              "maxResults": 50,
+              "by": {
+                "groupbyTag": "tag.instana.io/tenantUnit",
+                "groupbyTagEntity": "NOT_APPLICABLE",
+                "groupbyTagSecondLevelKey": ""
+              },
+              "includeOthers": false,
+              "direction": "DESC"
+            }
+          ],
+          "formatter": "number.compact",
+          "unit": "number",
+          "metric": "count",
+          "timeShift": 0,
+          "tagFilterExpression": {
+            "logicalOperator": "AND",
+            "elements": [
+              {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "filler",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-tenantunit-highperf",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              {
+                "name": "tag.instana.io/profile",
+                "type": "TAG_FILTER",
+                "value": "metrics_xxl",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              }
+            ],
+            "type": "EXPRESSION"
+          },
+          "allowedCrossSeriesAggregations": [
+            "DISTINCT_COUNT"
+          ],
+          "crossSeriesAggregation": "DISTINCT_COUNT"
+        },
+        "formatterSelected": false
+      }
+    },
+    {
+      "id": "GrAWlZc4Bg0WZDBe",
+      "title": "metrics_m bottom 10 metric count per pod",
+      "width": 3,
+      "height": 15,
+      "x": 0,
+      "y": 196,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 10,
+                  "by": {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Kubernetes"
+                        },
+                        {
+                          "label": "pod"
+                        },
+                        {
+                          "label": "name"
+                        }
+                      ],
+                      "name": "kubernetes.pod.name",
+                      "type": "STRING"
+                    },
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "ASC"
+                }
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "metrics.meters.com.instana.filler.service.processingstatistics.ProcessingStatistics.metrics",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_m",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "tag.instanaGroup",
+                    "type": "TAG_FILTER",
+                    "value": "tenantUnitHighperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard meter com.instana.filler.service.processingstatistics.ProcessingStatistics.metrics",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "VEuYmOsqlztgU7i6",
+      "title": "custom JVM mem used %",
+      "width": 3,
+      "height": 18,
+      "x": 3,
+      "y": 21,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "custom JVM mem",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "jvmRuntimePlatform",
+              "metricPath": [
+                "Others",
+                "JVM",
+                "Memory"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "ASC"
+                }
+              ],
+              "formatter": "bytes.detailed",
+              "unit": "number",
+              "metric": "memory.usedPercentage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "kubernetes.pod.label.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "NOT_CONTAIN"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "spans_",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "NOT_CONTAIN"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Memory Used Percentage",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "WkCf80peuGo_GHUj",
+      "title": "metrics_m Raw message lag > 5s",
+      "width": 3,
+      "height": 15,
+      "x": 9,
+      "y": 196,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "min": 5000,
+          "max": 100000,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "P99",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 10,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.timers.com.instana.filler.topology.RawMessagesStreamInitializer.time-difference.99th",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_m",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "tag.instanaGroup",
+                    "type": "TAG_FILTER",
+                    "value": "tenantUnitHighperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard timer com.instana.filler.topology.RawMessagesStreamInitializer.time-difference 99th percentile",
+              "crossSeriesAggregation": "P99"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "MgF7AXS90NK-x7Nx",
+      "title": "metrics_xxxl Raw message lag > 5s",
+      "width": 3,
+      "height": 15,
+      "x": 9,
+      "y": 45,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "min": 5000,
+          "max": 100000,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "P99",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 10,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.timers.com.instana.filler.topology.RawMessagesStreamInitializer.time-difference.99th",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_xxxl",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "tag.instanaGroup",
+                    "type": "TAG_FILTER",
+                    "value": "tenantUnitHighperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard timer com.instana.filler.topology.RawMessagesStreamInitializer.time-difference 99th percentile",
+              "crossSeriesAggregation": "P99"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "5QmcudkXEcd0E1t-",
+      "title": "metrics_xxl Raw message lag > 5s",
+      "width": 3,
+      "height": 15,
+      "x": 9,
+      "y": 84,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "min": 5000,
+          "max": 100000,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "P99",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 10,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.timers.com.instana.filler.topology.RawMessagesStreamInitializer.time-difference.99th",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_xxl",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "tag.instanaGroup",
+                    "type": "TAG_FILTER",
+                    "value": "tenantUnitHighperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard timer com.instana.filler.topology.RawMessagesStreamInitializer.time-difference 99th percentile",
+              "crossSeriesAggregation": "P99"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "MaZgN7aTveboetO7",
+      "title": "custom pod count",
+      "width": 3,
+      "height": 18,
+      "x": 9,
+      "y": 21,
+      "type": "topList",
+      "config": {
+        "formatter": "number.compact",
+        "metricConfiguration": {
+          "lastValue": false,
+          "aggregation": "MEAN",
+          "source": "INFRASTRUCTURE_METRICS",
+          "type": "kubernetesPod",
+          "metricPath": [
+            "Kubernetes",
+            "Kubernetes Pod"
+          ],
+          "grouping": [
+            {
+              "maxResults": 50,
+              "by": {
+                "groupbyTag": "tag.instana.io/tenantUnit",
+                "groupbyTagEntity": "NOT_APPLICABLE",
+                "groupbyTagSecondLevelKey": ""
+              },
+              "includeOthers": false,
+              "direction": "DESC"
+            }
+          ],
+          "formatter": "number.compact",
+          "unit": "number",
+          "metric": "count",
+          "timeShift": 0,
+          "tagFilterExpression": {
+            "logicalOperator": "AND",
+            "elements": [
+              {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "filler",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              {
+                "name": "tag.instana.io/profile",
+                "type": "TAG_FILTER",
+                "value": "metrics_",
+                "entity": "NOT_APPLICABLE",
+                "operator": "NOT_CONTAIN"
+              },
+              {
+                "name": "tag.instana.io/profile",
+                "type": "TAG_FILTER",
+                "value": "spans_",
+                "entity": "NOT_APPLICABLE",
+                "operator": "NOT_CONTAIN"
+              }
+            ],
+            "type": "EXPRESSION"
+          },
+          "allowedCrossSeriesAggregations": [
+            "DISTINCT_COUNT"
+          ],
+          "crossSeriesAggregation": "DISTINCT_COUNT"
+        },
+        "formatterSelected": false
+      }
+    },
+    {
+      "id": "SCUvrvH2SlEeMtIw",
+      "title": "metrics_l (7GB) profile mem",
+      "width": 3,
+      "height": 16,
+      "x": 0,
+      "y": 174,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.compact",
+          "renderer": "line",
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "containerd",
+              "metricPath": [
+                "Container",
+                "Containerd Container",
+                "Memory"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 50,
+                  "by": {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Other"
+                        },
+                        {
+                          "label": "tag.instana.io/tenantUnit"
+                        }
+                      ],
+                      "name": "tag.instana.io/tenantUnit",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "groupbyTag": "tag.instana.io/tenantUnit",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "formatter": "bytes.detailed",
+              "unit": "percentage",
+              "metric": "memory.used_percentage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_l",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used Percentage",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "tyTnZwGMqi7t9tdn",
+      "title": "metrics_m (4.6GB) profile mem",
+      "width": 3,
+      "height": 19,
+      "x": 0,
+      "y": 212,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "bytes.detailed",
+          "renderer": "line",
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "containerd",
+              "metricPath": [
+                "Others",
+                "Regex"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 50,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "formatter": "bytes.detailed",
+              "unit": "byte",
+              "regex": true,
+              "metric": "memory\\.used_percentage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_m",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "memory\\.used_percentage",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "oKT68HxEIyOXBBoK",
+      "title": "Custom bottom 10 metric count per pod",
+      "width": 3,
+      "height": 15,
+      "x": 0,
+      "y": 6,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 10,
+                  "by": {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Kubernetes"
+                        },
+                        {
+                          "label": "pod"
+                        },
+                        {
+                          "label": "name"
+                        }
+                      ],
+                      "name": "kubernetes.pod.name",
+                      "type": "STRING"
+                    },
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "ASC"
+                }
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "metrics.meters.com.instana.filler.service.processingstatistics.ProcessingStatistics.metrics",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "NOT_CONTAIN"
+                  },
+                  {
+                    "name": "tag.instanaGroup",
+                    "type": "TAG_FILTER",
+                    "value": "tenantUnitHighperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  },
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "spans_",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "NOT_CONTAIN"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard meter com.instana.filler.service.processingstatistics.ProcessingStatistics.metrics",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "Q4vKYxfynvNPCdy_",
+      "title": "custom CPU total (top 50)",
+      "width": 3,
+      "height": 18,
+      "x": 6,
+      "y": 21,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "containerd",
+              "metricPath": [
+                "Container",
+                "Containerd Container",
+                "CPU"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 50,
+                  "by": {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Other"
+                        },
+                        {
+                          "label": "tag.instana.io/tenantUnit"
+                        }
+                      ],
+                      "name": "tag.instana.io/tenantUnit",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "groupbyTag": "tag.instana.io/tenantUnit",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "percentage",
+              "metric": "cpu.total_usage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "NOT_CONTAIN"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "spans_",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "NOT_CONTAIN"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Total",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "_5gWfuIG0FdwOJRi",
+      "title": "metrics_xl CPU total (top 50)",
+      "width": 3,
+      "height": 16,
+      "x": 6,
+      "y": 137,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "containerd",
+              "metricPath": [
+                "Container",
+                "Containerd Container",
+                "CPU"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 50,
+                  "by": {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Other"
+                        },
+                        {
+                          "label": "tag.instana.io/tenantUnit"
+                        }
+                      ],
+                      "name": "tag.instana.io/tenantUnit",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "groupbyTag": "tag.instana.io/tenantUnit",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "percentage",
+              "metric": "cpu.total_usage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_xl",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Total",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "9rcsh_J2fw2wjGrZ",
+      "title": "metrics_l Raw message lag > 5s",
+      "width": 3,
+      "height": 15,
+      "x": 9,
+      "y": 159,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "min": 5000,
+          "max": 100000,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "P99",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 10,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.timers.com.instana.filler.topology.RawMessagesStreamInitializer.time-difference.99th",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_l",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "tag.instanaGroup",
+                    "type": "TAG_FILTER",
+                    "value": "tenantUnitHighperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard timer com.instana.filler.topology.RawMessagesStreamInitializer.time-difference 99th percentile",
+              "crossSeriesAggregation": "P99"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "URtdOOQgC8MPPOOP",
+      "title": "metrics_l bottom 10 metric count per pod (max 570k metrics [coral])",
+      "width": 3,
+      "height": 15,
+      "x": 0,
+      "y": 159,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 10,
+                  "by": {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Kubernetes"
+                        },
+                        {
+                          "label": "pod"
+                        },
+                        {
+                          "label": "name"
+                        }
+                      ],
+                      "name": "kubernetes.pod.name",
+                      "type": "STRING"
+                    },
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "ASC"
+                }
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "metrics.meters.com.instana.filler.service.processingstatistics.ProcessingStatistics.metrics",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_l",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "tag.instanaGroup",
+                    "type": "TAG_FILTER",
+                    "value": "tenantUnitHighperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard meter com.instana.filler.service.processingstatistics.ProcessingStatistics.metrics",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "LLQEk1OP73mLkgQ6",
+      "title": "metrics_m pod count",
+      "width": 3,
+      "height": 19,
+      "x": 9,
+      "y": 212,
+      "type": "topList",
+      "config": {
+        "formatter": "number.compact",
+        "metricConfiguration": {
+          "lastValue": false,
+          "aggregation": "MEAN",
+          "source": "INFRASTRUCTURE_METRICS",
+          "type": "kubernetesPod",
+          "metricPath": [
+            "Kubernetes",
+            "Kubernetes Pod"
+          ],
+          "grouping": [
+            {
+              "maxResults": 50,
+              "by": {
+                "groupbyTag": "tag.instana.io/tenantUnit",
+                "groupbyTagEntity": "NOT_APPLICABLE",
+                "groupbyTagSecondLevelKey": ""
+              },
+              "includeOthers": false,
+              "direction": "DESC"
+            }
+          ],
+          "formatter": "number.compact",
+          "unit": "number",
+          "metric": "count",
+          "timeShift": 0,
+          "tagFilterExpression": {
+            "logicalOperator": "AND",
+            "elements": [
+              {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "filler",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-tenantunit-highperf",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              {
+                "name": "tag.instana.io/profile",
+                "type": "TAG_FILTER",
+                "value": "metrics_m",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              }
+            ],
+            "type": "EXPRESSION"
+          },
+          "allowedCrossSeriesAggregations": [
+            "DISTINCT_COUNT"
+          ],
+          "crossSeriesAggregation": "DISTINCT_COUNT"
+        },
+        "formatterSelected": false
+      }
+    },
+    {
+      "id": "uWt2yg_l-lNfKTaw",
+      "title": "metrics_xxxl (40GB) profile mem",
+      "width": 3,
+      "height": 18,
+      "x": 0,
+      "y": 60,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.compact",
+          "renderer": "line",
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "containerd",
+              "metricPath": [
+                "Container",
+                "Containerd Container",
+                "Memory"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 50,
+                  "by": {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Other"
+                        },
+                        {
+                          "label": "tag.instana.io/tenantUnit"
+                        }
+                      ],
+                      "name": "tag.instana.io/tenantUnit",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "groupbyTag": "tag.instana.io/tenantUnit",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "formatter": "bytes.detailed",
+              "unit": "percentage",
+              "metric": "memory.used_percentage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_xxxl",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used Percentage",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "HwQo4rXOhKKnROJg",
+      "title": "metrics_m TU Raw message dropping  > 15%",
+      "width": 3,
+      "height": 15,
+      "x": 6,
+      "y": 196,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "min": 0.15,
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.KPI.incoming.raw_messages.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_m",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "tag.instanaGroup",
+                    "type": "TAG_FILTER",
+                    "value": "tenantUnitHighPerf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge KPI.incoming.raw_messages.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ]
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "BkF1VMx7JnIVxKRP",
+      "title": "metrics_xxl bottom 10 metric count per pod(max 900k metrics [coral])",
+      "width": 3,
+      "height": 15,
+      "x": 0,
+      "y": 84,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 10,
+                  "by": {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Kubernetes"
+                        },
+                        {
+                          "label": "pod"
+                        },
+                        {
+                          "label": "name"
+                        }
+                      ],
+                      "name": "kubernetes.pod.name",
+                      "type": "STRING"
+                    },
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "ASC"
+                }
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "metrics.meters.com.instana.filler.service.processingstatistics.ProcessingStatistics.metrics",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_xxl",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "tag.instanaGroup",
+                    "type": "TAG_FILTER",
+                    "value": "tenantUnitHighperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard meter com.instana.filler.service.processingstatistics.ProcessingStatistics.metrics",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "iZ14sB-o8jtVWFtT",
+      "title": "metrics_l CPU total (top 50)",
+      "width": 3,
+      "height": 16,
+      "x": 6,
+      "y": 174,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "containerd",
+              "metricPath": [
+                "Container",
+                "Containerd Container",
+                "CPU"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 50,
+                  "by": {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Other"
+                        },
+                        {
+                          "label": "tag.instana.io/tenantUnit"
+                        }
+                      ],
+                      "name": "tag.instana.io/tenantUnit",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "groupbyTag": "tag.instana.io/tenantUnit",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "percentage",
+              "metric": "cpu.total_usage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_l",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Total",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "q-oe2je-d5kYGNyQ",
+      "title": "metrics_xl Profile",
+      "width": 12,
+      "height": 6,
+      "x": 0,
+      "y": 116,
+      "type": "markdown",
+      "config": "_______________________________________________"
+    },
+    {
+      "id": "3obZqhaWsvdqLhEB",
+      "title": "metrics_m JVM mem used %",
+      "width": 3,
+      "height": 19,
+      "x": 3,
+      "y": 212,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "filler m JVM mem",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "jvmRuntimePlatform",
+              "metricPath": [
+                "Others",
+                "JVM",
+                "Memory"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "ASC"
+                }
+              ],
+              "formatter": "bytes.detailed",
+              "unit": "number",
+              "metric": "memory.usedPercentage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "kubernetes.pod.label.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_m",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Memory Used Percentage",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "4e25pwdB_Sc66GjF",
+      "title": "metrics_xxxl pod count",
+      "width": 3,
+      "height": 18,
+      "x": 9,
+      "y": 60,
+      "type": "topList",
+      "config": {
+        "formatter": "number.compact",
+        "metricConfiguration": {
+          "lastValue": false,
+          "aggregation": "MEAN",
+          "source": "INFRASTRUCTURE_METRICS",
+          "type": "kubernetesPod",
+          "metricPath": [
+            "Kubernetes",
+            "Kubernetes Pod"
+          ],
+          "grouping": [
+            {
+              "maxResults": 50,
+              "by": {
+                "groupbyTag": "tag.instana.io/tenantUnit",
+                "groupbyTagEntity": "NOT_APPLICABLE",
+                "groupbyTagSecondLevelKey": ""
+              },
+              "includeOthers": false,
+              "direction": "DESC"
+            }
+          ],
+          "formatter": "number.compact",
+          "unit": "number",
+          "metric": "count",
+          "timeShift": 0,
+          "tagFilterExpression": {
+            "logicalOperator": "AND",
+            "elements": [
+              {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "filler",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-tenantunit-highperf",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              {
+                "name": "tag.instana.io/profile",
+                "type": "TAG_FILTER",
+                "value": "metrics_xxxl",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              }
+            ],
+            "type": "EXPRESSION"
+          },
+          "allowedCrossSeriesAggregations": [
+            "DISTINCT_COUNT"
+          ],
+          "crossSeriesAggregation": "DISTINCT_COUNT"
+        },
+        "formatterSelected": false
+      }
+    },
+    {
+      "id": "6xmKLxvZA5Xdf5Q-",
+      "title": "custom Raw message lag > 5s",
+      "width": 3,
+      "height": 15,
+      "x": 9,
+      "y": 6,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "min": 5000,
+          "max": 100000,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "P99",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 10,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.timers.com.instana.filler.topology.RawMessagesStreamInitializer.time-difference.99th",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "NOT_CONTAIN"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard timer com.instana.filler.topology.RawMessagesStreamInitializer.time-difference 99th percentile",
+              "crossSeriesAggregation": "P99"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "YP5KXsmmAEoV1Cv2",
+      "title": "metrics_xxl CPU total (top 50)",
+      "width": 3,
+      "height": 17,
+      "x": 6,
+      "y": 99,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "containerd",
+              "metricPath": [
+                "Container",
+                "Containerd Container",
+                "CPU"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 50,
+                  "by": {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Other"
+                        },
+                        {
+                          "label": "tag.instana.io/tenantUnit"
+                        }
+                      ],
+                      "name": "tag.instana.io/tenantUnit",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "groupbyTag": "tag.instana.io/tenantUnit",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "percentage",
+              "metric": "cpu.total_usage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_xxl",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Total",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "h_3MmtZuLhM-OZZl",
+      "title": "metrics_xxxl bottom 10 metric count per pod(max 1.25M metrics [coral])",
+      "width": 3,
+      "height": 15,
+      "x": 0,
+      "y": 45,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 10,
+                  "by": {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Kubernetes"
+                        },
+                        {
+                          "label": "pod"
+                        },
+                        {
+                          "label": "name"
+                        }
+                      ],
+                      "name": "kubernetes.pod.name",
+                      "type": "STRING"
+                    },
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "ASC"
+                }
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "metrics.meters.com.instana.filler.service.processingstatistics.ProcessingStatistics.metrics",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_xxxl",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "tag.instanaGroup",
+                    "type": "TAG_FILTER",
+                    "value": "tenantUnitHighperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard meter com.instana.filler.service.processingstatistics.ProcessingStatistics.metrics",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "UueCAHOLUtmANkMy",
+      "title": "metrics_l pod count",
+      "width": 3,
+      "height": 16,
+      "x": 9,
+      "y": 174,
+      "type": "topList",
+      "config": {
+        "formatter": "number.compact",
+        "metricConfiguration": {
+          "lastValue": false,
+          "aggregation": "MEAN",
+          "source": "INFRASTRUCTURE_METRICS",
+          "type": "kubernetesPod",
+          "metricPath": [
+            "Kubernetes",
+            "Kubernetes Pod"
+          ],
+          "grouping": [
+            {
+              "maxResults": 50,
+              "by": {
+                "groupbyTag": "tag.instana.io/tenantUnit",
+                "groupbyTagEntity": "NOT_APPLICABLE",
+                "groupbyTagSecondLevelKey": ""
+              },
+              "includeOthers": false,
+              "direction": "DESC"
+            }
+          ],
+          "formatter": "number.compact",
+          "unit": "number",
+          "metric": "count",
+          "timeShift": 0,
+          "tagFilterExpression": {
+            "logicalOperator": "AND",
+            "elements": [
+              {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "filler",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-tenantunit-highperf",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              {
+                "name": "tag.instana.io/profile",
+                "type": "TAG_FILTER",
+                "value": "metrics_l",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              }
+            ],
+            "type": "EXPRESSION"
+          },
+          "allowedCrossSeriesAggregations": [
+            "DISTINCT_COUNT"
+          ],
+          "crossSeriesAggregation": "DISTINCT_COUNT"
+        },
+        "formatterSelected": false
+      }
+    },
+    {
+      "id": "jBLR2MXHw9p1z1TR",
+      "title": "metrics_s Profile",
+      "width": 12,
+      "height": 6,
+      "x": 0,
+      "y": 229,
+      "type": "markdown",
+      "config": "_______________________________________________"
+    },
+    {
+      "id": "1_WeADUuvUwc-xfO",
+      "title": "metrics_l Metrics Processing",
+      "width": 3,
+      "height": 15,
+      "x": 3,
+      "y": 159,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "metrics_l Metrics Processing",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 10,
+                  "by": {
+                    "groupbyTag": "kubernetes.deployment.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.meters.com.instana.filler.service.processingstatistics.ProcessingStatistics.metrics",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "kubernetes.pod.label.app",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  },
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_l",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.node.label.instanaGroup",
+                    "type": "TAG_FILTER",
+                    "value": "tenantUnitHighperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard meter com.instana.filler.service.processingstatistics.ProcessingStatistics.metrics",
+              "crossSeriesAggregation": "SUM"
+            }
+          ]
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "kgXscnrfzYIKzw-b",
+      "title": "Custom Metrics Processing",
+      "width": 3,
+      "height": 15,
+      "x": 3,
+      "y": 6,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "metrics_xxl Metrics Processing",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 20,
+                  "by": {
+                    "groupbyTag": "kubernetes.deployment.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.meters.com.instana.filler.service.processingstatistics.ProcessingStatistics.metrics",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "kubernetes.pod.label.app",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  },
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "NOT_CONTAIN"
+                  },
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "NOT_CONTAIN"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard meter com.instana.filler.service.processingstatistics.ProcessingStatistics.metrics",
+              "crossSeriesAggregation": "SUM"
+            }
+          ]
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "3lJ--lfAbi-thcDp",
+      "title": "metrics_m Profile",
+      "width": 12,
+      "height": 6,
+      "x": 0,
+      "y": 190,
+      "type": "markdown",
+      "config": "_______________________________________________"
+    },
+    {
+      "id": "smd_T-dO9UNoo27M",
+      "title": "metrics_xxxl Metrics Processing",
+      "width": 3,
+      "height": 15,
+      "x": 3,
+      "y": 45,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "metrics_xxxl Metrics Processing",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 20,
+                  "by": {
+                    "groupbyTag": "kubernetes.deployment.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.meters.com.instana.filler.service.processingstatistics.ProcessingStatistics.metrics",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "kubernetes.pod.label.app",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  },
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_xxxl",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.node.label.instanaGroup",
+                    "type": "TAG_FILTER",
+                    "value": "tenantUnitHighperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard meter com.instana.filler.service.processingstatistics.ProcessingStatistics.metrics",
+              "crossSeriesAggregation": "SUM"
+            }
+          ]
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "_qaW4_HXMgUsRlJu",
+      "title": "metrics_l JVM mem used %",
+      "width": 3,
+      "height": 16,
+      "x": 3,
+      "y": 174,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "filler l JVM mem",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "jvmRuntimePlatform",
+              "metricPath": [
+                "Others",
+                "JVM",
+                "Memory"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "ASC"
+                }
+              ],
+              "formatter": "bytes.detailed",
+              "unit": "number",
+              "metric": "memory.usedPercentage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "kubernetes.pod.label.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "metrics_l",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "filler",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Memory Used Percentage",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    }
+  ],
+  "ownerId": "6745ceced26b6f000181586b",
+  "writable": true
+}

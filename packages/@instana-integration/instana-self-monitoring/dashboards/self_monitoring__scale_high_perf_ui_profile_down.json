@@ -1,0 +1,1736 @@
+{
+  "id": "QL3cPEQ8TcaOABJlpDpHHg",
+  "title": "Self Monitoring: scale high perf ui profile down",
+  "accessRules": [
+    {
+      "accessType": "READ_WRITE",
+      "relationType": "GLOBAL",
+      "relatedId": ""
+    },
+    {
+      "accessType": "READ_WRITE",
+      "relationType": "USER",
+      "relatedId": "6745ceced26b6f000181586b"
+    }
+  ],
+  "widgets": [
+    {
+      "id": "CX4i8v_VJ6UeyeiA",
+      "title": "ui-backend m (3.9GB) profile mem",
+      "width": 3,
+      "height": 16,
+      "x": 0,
+      "y": 65,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "bytes.detailed",
+          "renderer": "line",
+          "max": 2400000000,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "containerd",
+              "metricPath": [
+                "Container",
+                "Containerd Container",
+                "Memory"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "ASC"
+                }
+              ],
+              "formatter": "bytes.detailed",
+              "unit": "number",
+              "metric": "memory.usage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "ui_m",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "ui-backend",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Memory Usage",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "Ju4Bib4BGmjCUmcg",
+      "title": "ui-backend m CPU total (bottom 5)",
+      "width": 3,
+      "height": 16,
+      "x": 3,
+      "y": 62,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "containerd",
+              "metricPath": [
+                "Container",
+                "Containerd Container",
+                "CPU"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "ASC"
+                }
+              ],
+              "unit": "number",
+              "metric": "cpu.total_usage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "ui_m",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "ui-backend",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Total",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "MbpT3WxcPcvrYw4d",
+      "title": "#xxl ui-backend pod ",
+      "width": 3,
+      "height": 16,
+      "x": 9,
+      "y": 17,
+      "type": "topList",
+      "config": {
+        "formatter": "number.compact",
+        "metricConfiguration": {
+          "lastValue": false,
+          "aggregation": "MEAN",
+          "source": "INFRASTRUCTURE_METRICS",
+          "type": "kubernetesPod",
+          "metricPath": [
+            "Kubernetes",
+            "Kubernetes Pod"
+          ],
+          "grouping": [
+            {
+              "maxResults": 50,
+              "by": {
+                "groupbyTag": "kubernetes.pod.label.instana.io/tenantUnit",
+                "groupbyTagEntity": "NOT_APPLICABLE",
+                "groupbyTagSecondLevelKey": ""
+              },
+              "includeOthers": false,
+              "direction": "DESC"
+            }
+          ],
+          "formatter": "number.compact",
+          "unit": "number",
+          "metric": "count",
+          "timeShift": 0,
+          "tagFilterExpression": {
+            "logicalOperator": "AND",
+            "elements": [
+              {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "ui-backend",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              {
+                "name": "tag.instana.io/profile",
+                "type": "TAG_FILTER",
+                "value": "ui_xxl",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-tenantunit-highperf",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              }
+            ],
+            "type": "EXPRESSION"
+          },
+          "allowedCrossSeriesAggregations": [
+            "DISTINCT_COUNT"
+          ],
+          "crossSeriesAggregation": "DISTINCT_COUNT"
+        },
+        "formatterSelected": false
+      }
+    },
+    {
+      "id": "CuHv-Y6ZqXnN7y42",
+      "title": "# ui-backend xl filler pod ",
+      "width": 3,
+      "height": 16,
+      "x": 9,
+      "y": 33,
+      "type": "topList",
+      "config": {
+        "formatter": "number.compact",
+        "metricConfiguration": {
+          "lastValue": false,
+          "aggregation": "MEAN",
+          "source": "INFRASTRUCTURE_METRICS",
+          "type": "kubernetesPod",
+          "metricPath": [
+            "Kubernetes",
+            "Kubernetes Pod"
+          ],
+          "grouping": [
+            {
+              "maxResults": 50,
+              "by": {
+                "groupbyTag": "kubernetes.pod.label.instana.io/tenantUnit",
+                "groupbyTagEntity": "NOT_APPLICABLE",
+                "groupbyTagSecondLevelKey": ""
+              },
+              "includeOthers": false,
+              "direction": "DESC"
+            }
+          ],
+          "formatter": "number.compact",
+          "unit": "number",
+          "metric": "count",
+          "timeShift": 0,
+          "tagFilterExpression": {
+            "logicalOperator": "AND",
+            "elements": [
+              {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "ui-backend",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              {
+                "name": "tag.instana.io/profile",
+                "type": "TAG_FILTER",
+                "value": "ui_xl",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-tenantunit-highperf",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              }
+            ],
+            "type": "EXPRESSION"
+          },
+          "allowedCrossSeriesAggregations": [
+            "DISTINCT_COUNT"
+          ],
+          "crossSeriesAggregation": "DISTINCT_COUNT"
+        },
+        "formatterSelected": false
+      }
+    },
+    {
+      "id": "EckneRcc6E_NHCZi",
+      "title": "ui-backend xxl JVM mem used %",
+      "width": 3,
+      "height": 16,
+      "x": 6,
+      "y": 17,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "filler xxl JVM mem",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "jvmRuntimePlatform",
+              "metricPath": [
+                "Others",
+                "JVM",
+                "Memory"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "ASC"
+                }
+              ],
+              "formatter": "bytes.detailed",
+              "unit": "number",
+              "metric": "memory.usedPercentage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "kubernetes.pod.label.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "ui_xxl",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "ui-backend",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Memory Used Percentage",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "yBEqGATv4cxy88Qn",
+      "title": "ui-backend_xxxl filler pod ",
+      "width": 3,
+      "height": 17,
+      "x": 9,
+      "y": 0,
+      "type": "topList",
+      "config": {
+        "formatter": "number.compact",
+        "metricConfiguration": {
+          "lastValue": false,
+          "aggregation": "MEAN",
+          "source": "INFRASTRUCTURE_METRICS",
+          "type": "kubernetesPod",
+          "metricPath": [
+            "Kubernetes",
+            "Kubernetes Pod"
+          ],
+          "grouping": [
+            {
+              "maxResults": 50,
+              "by": {
+                "groupbyTag": "kubernetes.pod.label.instana.io/tenantUnit",
+                "groupbyTagEntity": "NOT_APPLICABLE",
+                "groupbyTagSecondLevelKey": ""
+              },
+              "includeOthers": false,
+              "direction": "DESC"
+            }
+          ],
+          "formatter": "number.compact",
+          "unit": "number",
+          "metric": "count",
+          "timeShift": 0,
+          "tagFilterExpression": {
+            "logicalOperator": "AND",
+            "elements": [
+              {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "ui-backend",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              {
+                "name": "tag.instana.io/profile",
+                "type": "TAG_FILTER",
+                "value": "ui_xxxl",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-tenantunit-highperf",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              }
+            ],
+            "type": "EXPRESSION"
+          },
+          "allowedCrossSeriesAggregations": [
+            "DISTINCT_COUNT"
+          ],
+          "crossSeriesAggregation": "DISTINCT_COUNT"
+        },
+        "formatterSelected": false
+      }
+    },
+    {
+      "id": "2UdK_YdJ6CvjlCK9",
+      "title": "ui-backend_l filler pod ",
+      "width": 3,
+      "height": 16,
+      "x": 9,
+      "y": 49,
+      "type": "topList",
+      "config": {
+        "formatter": "number.compact",
+        "metricConfiguration": {
+          "lastValue": false,
+          "aggregation": "MEAN",
+          "source": "INFRASTRUCTURE_METRICS",
+          "type": "kubernetesPod",
+          "metricPath": [
+            "Kubernetes",
+            "Kubernetes Pod"
+          ],
+          "grouping": [
+            {
+              "maxResults": 50,
+              "by": {
+                "groupbyTag": "kubernetes.pod.label.instana.io/tenantUnit",
+                "groupbyTagEntity": "NOT_APPLICABLE",
+                "groupbyTagSecondLevelKey": ""
+              },
+              "includeOthers": false,
+              "direction": "DESC"
+            }
+          ],
+          "formatter": "number.compact",
+          "unit": "number",
+          "metric": "count",
+          "timeShift": 0,
+          "tagFilterExpression": {
+            "logicalOperator": "AND",
+            "elements": [
+              {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "ui-backend",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              {
+                "name": "tag.instana.io/profile",
+                "type": "TAG_FILTER",
+                "value": "ui_l",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-tenantunit-highperf",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              }
+            ],
+            "type": "EXPRESSION"
+          },
+          "allowedCrossSeriesAggregations": [
+            "DISTINCT_COUNT"
+          ],
+          "crossSeriesAggregation": "DISTINCT_COUNT"
+        },
+        "formatterSelected": false
+      }
+    },
+    {
+      "id": "BPdh_cDsSAp9PQ8q",
+      "title": "ui-backend xxxl (32GB) profile mem",
+      "width": 3,
+      "height": 17,
+      "x": 0,
+      "y": 0,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "bytes.detailed",
+          "renderer": "line",
+          "max": 22000000000,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "containerd",
+              "metricPath": [
+                "Container",
+                "Containerd Container",
+                "Memory"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "ASC"
+                }
+              ],
+              "formatter": "bytes.detailed",
+              "unit": "number",
+              "metric": "memory.usage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "ui_xxxl",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "ui-backend",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Memory Usage",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "ZsflKuafFpbTfwYX",
+      "title": "ui-backend l JVM mem used %",
+      "width": 3,
+      "height": 16,
+      "x": 6,
+      "y": 49,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "filler l JVM mem",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "jvmRuntimePlatform",
+              "metricPath": [
+                "Others",
+                "JVM",
+                "Memory"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "ASC"
+                }
+              ],
+              "formatter": "bytes.detailed",
+              "unit": "number",
+              "metric": "memory.usedPercentage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "kubernetes.pod.label.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "ui_l",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "ui-backend",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Memory Used Percentage",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "fn8s8XrI08eOSGlg",
+      "title": "ui-backend xxl (22GB) profile mem",
+      "width": 3,
+      "height": 16,
+      "x": 0,
+      "y": 17,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "bytes.detailed",
+          "renderer": "line",
+          "min": 0,
+          "max": 15500000000,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "containerd",
+              "metricPath": [
+                "Container",
+                "Containerd Container",
+                "Memory"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "ASC"
+                }
+              ],
+              "formatter": "bytes.detailed",
+              "unit": "number",
+              "metric": "memory.usage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "ui_xxl",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "ui-backend",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Memory Usage",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "TCL7-Pek8WqC_zt3",
+      "title": "ui-backend xl (11.5 GB) profile mem",
+      "width": 3,
+      "height": 16,
+      "x": 0,
+      "y": 33,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "bytes.detailed",
+          "renderer": "line",
+          "max": 7000000000,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "containerd",
+              "metricPath": [
+                "Container",
+                "Containerd Container",
+                "Memory"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "ASC"
+                }
+              ],
+              "formatter": "bytes.detailed",
+              "unit": "number",
+              "metric": "memory.usage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "ui_xl",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "ui-backend",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Memory Usage",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "qeUKjFD9968v4oAJ",
+      "title": "ui-backend m JVM mem used %",
+      "width": 3,
+      "height": 16,
+      "x": 6,
+      "y": 65,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "filler m JVM mem",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "jvmRuntimePlatform",
+              "metricPath": [
+                "Others",
+                "JVM",
+                "Memory"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "ASC"
+                }
+              ],
+              "formatter": "bytes.detailed",
+              "unit": "number",
+              "metric": "memory.usedPercentage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "kubernetes.pod.label.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "ui_m",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "ui-backend",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Memory Used Percentage",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "bzLLs4ZBhb1YjO2h",
+      "title": "ui-backend xxl CPU total (bottom 5)",
+      "width": 3,
+      "height": 16,
+      "x": 3,
+      "y": 17,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "containerd",
+              "metricPath": [
+                "Container",
+                "Containerd Container",
+                "CPU"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "ASC"
+                }
+              ],
+              "unit": "number",
+              "metric": "cpu.total_usage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "ui_xxl",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "ui-backend",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Total",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "BThS0RARafw8h-KB",
+      "title": "ui-backend l CPU total (bottom 5)",
+      "width": 3,
+      "height": 16,
+      "x": 3,
+      "y": 50,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "containerd",
+              "metricPath": [
+                "Container",
+                "Containerd Container",
+                "CPU"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "ASC"
+                }
+              ],
+              "unit": "number",
+              "metric": "cpu.total_usage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "ui_l",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "ui-backend",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Total",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "j5kWvT_YYx3v4z3G",
+      "title": "# metrics_m filler pod ",
+      "width": 3,
+      "height": 16,
+      "x": 9,
+      "y": 65,
+      "type": "topList",
+      "config": {
+        "formatter": "number.compact",
+        "metricConfiguration": {
+          "lastValue": false,
+          "aggregation": "MEAN",
+          "source": "INFRASTRUCTURE_METRICS",
+          "type": "kubernetesPod",
+          "metricPath": [
+            "Kubernetes",
+            "Kubernetes Pod"
+          ],
+          "grouping": [
+            {
+              "maxResults": 50,
+              "by": {
+                "groupbyTag": "kubernetes.pod.label.instana.io/tenantUnit",
+                "groupbyTagEntity": "NOT_APPLICABLE",
+                "groupbyTagSecondLevelKey": ""
+              },
+              "includeOthers": false,
+              "direction": "DESC"
+            }
+          ],
+          "formatter": "number.compact",
+          "unit": "number",
+          "metric": "count",
+          "timeShift": 0,
+          "tagFilterExpression": {
+            "logicalOperator": "AND",
+            "elements": [
+              {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "ui-backend",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              {
+                "name": "tag.instana.io/profile",
+                "type": "TAG_FILTER",
+                "value": "ui_m",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-tenantunit-highperf",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              }
+            ],
+            "type": "EXPRESSION"
+          },
+          "allowedCrossSeriesAggregations": [
+            "DISTINCT_COUNT"
+          ],
+          "crossSeriesAggregation": "DISTINCT_COUNT"
+        },
+        "formatterSelected": false
+      }
+    },
+    {
+      "id": "qBDbowRN1uIOcxsC",
+      "title": "ui-backend xxxl JVM mem used %",
+      "width": 3,
+      "height": 17,
+      "x": 6,
+      "y": 0,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "filler xxxl JVM mem",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "jvmRuntimePlatform",
+              "metricPath": [
+                "Others",
+                "JVM",
+                "Memory"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "ASC"
+                }
+              ],
+              "formatter": "bytes.detailed",
+              "unit": "number",
+              "metric": "memory.usedPercentage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "kubernetes.pod.label.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "ui_xxxl",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "ui-backend",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Memory Used Percentage",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "EWpJPio9UmrqjJ4G",
+      "title": "ui-backend xl CPU total (bottom 5)",
+      "width": 3,
+      "height": 16,
+      "x": 3,
+      "y": 33,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "containerd",
+              "metricPath": [
+                "Container",
+                "Containerd Container",
+                "CPU"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "ASC"
+                }
+              ],
+              "unit": "number",
+              "metric": "cpu.total_usage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "ui_xl",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "ui-backend",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Total",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "FtpWQIOb0O4WMYk_",
+      "title": "ui-backend xl JVM mem used %",
+      "width": 3,
+      "height": 16,
+      "x": 6,
+      "y": 33,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "filler xl JVM mem",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "jvmRuntimePlatform",
+              "metricPath": [
+                "Others",
+                "JVM",
+                "Memory"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "ASC"
+                }
+              ],
+              "formatter": "bytes.detailed",
+              "unit": "number",
+              "metric": "memory.usedPercentage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "kubernetes.pod.label.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "ui_xl",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "ui-backend",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Memory Used Percentage",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "6xo0KbDEngOlA3AQ",
+      "title": "ui-backend xxxl CPU total (bottom 5)",
+      "width": 3,
+      "height": 17,
+      "x": 3,
+      "y": 0,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "containerd",
+              "metricPath": [
+                "Container",
+                "Containerd Container",
+                "CPU"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "ASC"
+                }
+              ],
+              "unit": "number",
+              "metric": "cpu.total_usage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "ui_xxxl",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "ui-backend",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Total",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "xsBCVM-9chzCkGhg",
+      "title": "ui-backend l (7GB) profile mem",
+      "width": 3,
+      "height": 16,
+      "x": 0,
+      "y": 49,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "bytes.detailed",
+          "renderer": "line",
+          "max": 4600000000,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "containerd",
+              "metricPath": [
+                "Container",
+                "Containerd Container",
+                "Memory"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "ASC"
+                }
+              ],
+              "formatter": "bytes.detailed",
+              "unit": "number",
+              "metric": "memory.usage",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "tag.instana.io/profile",
+                    "type": "TAG_FILTER",
+                    "value": "ui_l",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "kubernetes.deployment.name",
+                    "type": "TAG_FILTER",
+                    "value": "ui-backend",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-tenantunit-highperf",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Memory Usage",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    }
+  ],
+  "ownerId": "6745ceced26b6f000181586b",
+  "writable": true
+}

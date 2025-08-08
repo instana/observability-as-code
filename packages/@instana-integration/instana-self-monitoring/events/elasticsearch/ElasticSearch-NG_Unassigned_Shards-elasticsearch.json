@@ -1,0 +1,18 @@
+{
+  "name": "[SREInfraSLO] Elasticsearch-NG has high number of unassigned shards [TF]",
+  "description": "Number of unassigned shards are increasing and is above 5. This can indicate underlying resource issue. There may not be enough elastic data nodes to assign the new shards.",
+  "query": "entity.service.name:elasticsearch",
+  "entityType": "elasticsearchCluster",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "unassigned_shards",
+      "aggregation": "avg",
+      "window": 1800000,
+      "conditionOperator": ">",
+      "conditionValue": 5,
+      "severity": 10
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "[SRETUSLO] filler stopped fetching raw messages [TF]",
+  "description": "Metrics may not have been flowing for several minutes.  ## Consequences If this condition persists, it will result in loss of metrics.  ## Remediation - If you see this error for several fillers in one region this indicates problems with the Kafka cluster. - Check the logs to see if any unexpected errors have occurred. - If the metric `com.instana.filler.raw-messages.processed` has dropped to zero, no messages are flowing in `filler`.   - Take a heap dump and inform team Infrastructure   - Restart `filler`  To get more context: [🔵](https://blue-instanaops.instana.io/#/customDashboards/view;dashboardId=C3eN96Z8RyOJ7ycpgHkK5Q) [🟢](https://green-instanaops.instana.io/#/customDashboards/view;dashboardId=NXPy2nCSSeOsiKS2Rd6O-g) [🔴](https://red-instanaops.instana.io/#/customDashboards/view;dashboardId=XvhTJitbRAmM3hhMOOKPbQ) [🟠](https://orange-instanaops.instana.io/#/customDashboards/view;dashboardId=4YntvQ3eSsaJ-BUXgoB2Wg)",
+  "query": "entity.jvm.app.name:filler AND NOT entity.kubernetes.deployment.name:techzone-observability-filler",
+  "entityType": "dropwizardApplicationContainer",
+  "expirationTime": 60000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "metrics.gauges.kafka-consumer.fetch-rate.rawmessages",
+      "aggregation": "avg",
+      "window": 600000,
+      "conditionOperator": "<",
+      "conditionValue": 0.10,
+      "severity": 10
+    }
+  ]
+}

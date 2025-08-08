@@ -1,0 +1,18 @@
+{
+  "name": "[SRETUSLO] filler is dropping > 10% Kafka rollups [TF]",
+  "description": "Rollups are being dropped before being written to Kafka. This can be caused by too high load on the worker node or high processing pressure on the filler.  ## Consequences  Alerting and live metrics viewing in the UI will be affected.  ## Remediation  - Increasing the TU toggle `config.rollup.kafka.downstream.threads` (Default is 1. Shouldn't be more than 4).  To get more context: [🔵](https://blue-instanaops.instana.io/#/customDashboards/view;dashboardId=R-BySNacQiGmIwSXpvAVqQ) [🟢](https://green-instanaops.instana.io/#/customDashboards/view;dashboardId=eppNF3E5SIGcUYw1-DCEUQ) [🔴](https://red-instanaops.instana.io/#/customDashboards/view;dashboardId=jDWDz6P_RU-5zwQ37IioFw) [🟠](https://orange-instanaops.instana.io/#/customDashboards/view;dashboardId=Ml9uzhNNRqu5_QJQ3AZoYQ)",
+  "query": "entity.jvm.app.name:filler AND NOT entity.kubernetes.deployment.name:techzone-observability-filler",
+  "entityType": "dropwizardApplicationContainer",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "metrics.gauges.KPI.processing.rollups.kafka.error_rate",
+      "aggregation": "avg",
+      "window": 1800000,
+      "conditionOperator": ">",
+      "conditionValue": 0.10,
+      "severity": 10
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "[SREInfraSLO] Kafka node has under replicated topic partitions [TF]",
+  "description": "There are under replicated topic partitions on a Kafka node for a longer period of time. This can indicate one or more Kafka nodes are down or the Kafka cluster is overloaded and followers can't catch up from leaders. In case of hardware failures, replace the node in questions. If it's cluster overloaded, consider to expand Kafka cluster. If the node is overloaded(significant topics on the node) instead of the whole cluster, try to balance the topics across the cluster.",
+  "query": "entity.zone:Kafka",
+  "entityType": "kafka",
+  "expirationTime": 60000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "broker.underReplicatedPartitions",
+      "aggregation": "avg",
+      "window": 600000,
+      "conditionOperator": ">",
+      "conditionValue": 0,
+      "severity": 10
+    }
+  ]
+}
