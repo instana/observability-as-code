@@ -1,0 +1,18 @@
+{
+  "name": "[SLO] Writes of health events to Kafka are failing [TF]",
+  "description": "Failed writes of health events to Kafka means loss of events in the events product area and loss of alerts send out to the alert channels. Check the logs and the network between this node and the Kafka nodes.",
+  "query": "entity.jvm.app.name:synthetics-health-processor",
+  "entityType": "dropwizardApplicationContainer",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "metrics.gauges.KPI.outgoing.events.error_rate",
+      "aggregation": "avg",
+      "window": 60000,
+      "conditionOperator": ">",
+      "conditionValue": 0.05,
+      "severity": 10
+    }
+  ]
+}

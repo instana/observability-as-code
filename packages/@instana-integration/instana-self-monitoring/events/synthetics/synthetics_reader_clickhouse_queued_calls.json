@@ -1,0 +1,18 @@
+{
+  "name": "[SRESLO] Synthetics Reader ClickHouse Queued Calls [TF]",
+  "description": "This indicates problems with the Synthetics Reader queuing calls to retrieve data from ClickHouse. ## Consequences This will cause Synthetics Tests and Locations pages to timeout without showing any data. ## Remediation - If the metric `metrics.gauges.clickHouse.clustered.queuedCalls` is high, the execution time of all calls will increase causing timeouts:  - Take a thread dump of the `synthetics-reader` pods and inform team Synthetics  - Restart `synthetics-reader`",
+  "query": "entity.kubernetes.deployment.name:\"synthetics-reader\"",
+  "entityType": "dropwizardApplicationContainer",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "metrics.gauges.clickHouse.clustered.queuedCalls",
+      "aggregation": "avg",
+      "window": 300000,
+      "conditionOperator": ">",
+      "conditionValue": 0.30,
+      "severity": 10
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "[EXPTUSLO] filler outdated snapshots [TF]",
+  "description": "There is a difference in the snapshot cache and the snapshot state from ElasticSearch.  ## Consequences If this condition persists, it could lead to outdated entities.  ## Remediation - Check ElasticSearch cluster load. - If this is specific to this tenant, possibly there are too many online snapshots.  To get more context: [🔵](https://blue-instanaops.instana.io/#/customDashboards/view;dashboardId=WgHDS_DRRSWjVYOzKoojeg) [🟢](https://green-instanaops.instana.io/#/customDashboards/view;dashboardId=gjymdolcRCmhsSBDYa9tEw) [🔴](https://red-instanaops.instana.io/#/customDashboards/view;dashboardId=d4cBzHW5Se-zzmtgQ9SLsw) [🟠](https://orange-instanaops.instana.io/#/customDashboards/view;dashboardId=OYEqU6yTTFmsdkhnuPNidQ)",
+  "query": "entity.jvm.app.name:filler AND NOT entity.kubernetes.deployment.name:techzone-observability-filler",
+  "entityType": "dropwizardApplicationContainer",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "metrics.meters.com.instana.filler.service.snapshot.cache.ConsistentSnapshotCacheImpl.failed-snapshot-refreshes",
+      "aggregation": "avg",
+      "window": 1800000,
+      "conditionOperator": ">",
+      "conditionValue": 0.1667,
+      "severity": 5
+    }
+  ]
+}

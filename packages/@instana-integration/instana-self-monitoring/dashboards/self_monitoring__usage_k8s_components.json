@@ -1,0 +1,3944 @@
+{
+  "id": "d0rSOV5eTtule-9xMQfxAA",
+  "title": "Self Monitoring: Usage k8s components",
+  "accessRules": [
+    {
+      "accessType": "READ_WRITE",
+      "relationType": "GLOBAL",
+      "relatedId": ""
+    },
+    {
+      "accessType": "READ_WRITE",
+      "relationType": "USER",
+      "relatedId": "6745ceced26b6f000181586b"
+    }
+  ],
+  "widgets": [
+    {
+      "id": "Du_4sxVlIEqSx5lx",
+      "title": "k8s-appdata-live-aggregator (8 x 16 GB)",
+      "width": 6,
+      "height": 13,
+      "x": 6,
+      "y": 52,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "CPU"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "cpu.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-appdata-live-aggregator",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Memory Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Memory"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "memory.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-appdata-live-aggregator",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Node count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Others"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-appdata-live-aggregator",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [
+                "DISTINCT_COUNT"
+              ],
+              "metricLabel": "Count",
+              "crossSeriesAggregation": "DISTINCT_COUNT"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU/node",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "cap_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-appdata-live-aggregator",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Capacity",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Request",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "required_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-appdata-live-aggregator",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Requests",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "mxeZGURHhxMiVC5A",
+      "title": "k8s-tenantunit-highperf (32 X 128 GB)",
+      "width": 6,
+      "height": 13,
+      "x": 6,
+      "y": 0,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "CPU"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "cpu.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-tenantunit-highperf",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Memory Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Memory"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "memory.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-tenantunit-highperf",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Node count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Others"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-tenantunit-highperf",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [
+                "DISTINCT_COUNT"
+              ],
+              "metricLabel": "Count",
+              "crossSeriesAggregation": "DISTINCT_COUNT"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU/node",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "cap_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-tenantunit-highperf",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Capacity",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Request",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "required_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-tenantunit-highperf",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Requests",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "EiGZURGXLbYv8Y7Z",
+      "title": "k8s-beeinstant-aggregator (16 x 128 GB)",
+      "width": 6,
+      "height": 13,
+      "x": 0,
+      "y": 26,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "CPU"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "cpu.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-beeinstant-aggregator",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Memory Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Memory"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "memory.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-beeinstant-aggregator",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Node count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Others"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-beeinstant-aggregator",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [
+                "DISTINCT_COUNT"
+              ],
+              "metricLabel": "Count",
+              "crossSeriesAggregation": "DISTINCT_COUNT"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU/node",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "cap_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-beeinstant-aggregator",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Capacity",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Request",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "required_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-beeinstant-aggregator",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Requests",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "FETo0f3o3YpUWjOL",
+      "title": "k8s-appdata-health-aggregator (8 x 16 GB)",
+      "width": 6,
+      "height": 13,
+      "x": 0,
+      "y": 52,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "CPU"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "cpu.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-appdata-health-aggregator",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Memory Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Memory"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "memory.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-appdata-health-aggregator",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Node count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Others"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-appdata-health-aggregator",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [
+                "DISTINCT_COUNT"
+              ],
+              "metricLabel": "Count",
+              "crossSeriesAggregation": "DISTINCT_COUNT"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU/node",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "cap_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-appdata-health-aggregator",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Capacity",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Request",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "required_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-appdata-health-aggregator",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Requests",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "Ddntp957Y0BlnVx6",
+      "title": "Node Capacity TenantUnits",
+      "width": 6,
+      "height": 13,
+      "x": 6,
+      "y": 13,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "max": 0,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Kubernetes"
+                        },
+                        {
+                          "label": "node"
+                        },
+                        {
+                          "label": "label.instanaGroup"
+                        }
+                      ],
+                      "name": "kubernetes.node.label.instanaGroup",
+                      "type": "STRING"
+                    },
+                    "groupbyTag": "kubernetes.node.label.instanaGroup",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "cap_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.node.label.instanaGroup",
+                "type": "TAG_FILTER",
+                "value": "tenantUnit",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Capacity",
+              "crossSeriesAggregation": "SUM"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "bytes.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Mem",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Kubernetes"
+                        },
+                        {
+                          "label": "node"
+                        },
+                        {
+                          "label": "label.instanaGroup"
+                        }
+                      ],
+                      "name": "kubernetes.node.label.instanaGroup",
+                      "type": "STRING"
+                    },
+                    "groupbyTag": "kubernetes.node.label.instanaGroup",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "cap_mem",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.node.label.instanaGroup",
+                "type": "TAG_FILTER",
+                "value": "tenantUnit",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Memory Capacity",
+              "crossSeriesAggregation": "SUM"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "HciVtbL5JxV1MlgT",
+      "title": "k8s-beeinstant-common (16 x 128 GB)",
+      "width": 6,
+      "height": 13,
+      "x": 6,
+      "y": 26,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "CPU"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "cpu.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-beeinstant-common",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Memory Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Memory"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "memory.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-beeinstant-common",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Node count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Others"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-beeinstant-common",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [
+                "DISTINCT_COUNT"
+              ],
+              "metricLabel": "Count",
+              "crossSeriesAggregation": "DISTINCT_COUNT"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU/node",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "cap_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-beeinstant-common",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Capacity",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Request",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "required_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-beeinstant-common",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Requests",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "PMAFTQMQbMe6Gvoj",
+      "title": "k8s-tenant-unit (32 x 256 GB)",
+      "width": 6,
+      "height": 13,
+      "x": 0,
+      "y": 0,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "CPU"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "cpu.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-tenantunit",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Memory Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Memory"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "memory.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-tenantunit",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Node count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Others"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-tenantunit",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [
+                "DISTINCT_COUNT"
+              ],
+              "metricLabel": "Count",
+              "crossSeriesAggregation": "DISTINCT_COUNT"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU/node",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "cap_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-tenantunit",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Capacity",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Request",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "required_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-tenantunit",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Requests",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "uKuTFkTiC_rK9q3c",
+      "title": "k8s-sli-calls-filter (16 x 16 GB)",
+      "width": 6,
+      "height": 13,
+      "x": 0,
+      "y": 104,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "CPU"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "cpu.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-sli-calls-filter",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Memory Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Memory"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "memory.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-sli-calls-filter",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Node count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Others"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-sli-calls-filter",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [
+                "DISTINCT_COUNT"
+              ],
+              "metricLabel": "Count",
+              "crossSeriesAggregation": "DISTINCT_COUNT"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU/node",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "cap_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-sli-calls-filter",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Capacity",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Request",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "required_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-sli-calls-filter",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Requests",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "DKRlG9xccRjyYtVw",
+      "title": "k8s-serverless-acceptor (4 x 16GB)",
+      "width": 6,
+      "height": 13,
+      "x": 6,
+      "y": 91,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "CPU"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "cpu.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-serverless-acceptor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Memory Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Memory"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "memory.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-serverless-acceptor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Node count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Others"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-serverless-acceptor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [
+                "DISTINCT_COUNT"
+              ],
+              "metricLabel": "Count",
+              "crossSeriesAggregation": "DISTINCT_COUNT"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU/node",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "cap_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-serverless-acceptor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Capacity",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Request",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "required_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-serverless-acceptor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Requests",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "LAP1FdTDjKxhiM5W",
+      "title": "k8s-acceptor (8 x 20GB)",
+      "width": 6,
+      "height": 13,
+      "x": 0,
+      "y": 39,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "CPU"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "cpu.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-acceptor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Memory Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Memory"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "memory.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-acceptor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Node Count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Others"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-acceptor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [
+                "DISTINCT_COUNT"
+              ],
+              "metricLabel": "Count",
+              "crossSeriesAggregation": "DISTINCT_COUNT"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU/node",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "cap_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "kubernetes.cluster.name",
+                    "type": "TAG_FILTER",
+                    "value": "saas-k8s-internal",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-acceptor",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Capacity",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Request",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "required_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "kubernetes.cluster.name",
+                    "type": "TAG_FILTER",
+                    "value": "saas-k8s-internal",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  },
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-acceptor",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Requests",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "K-II_hGvj9R05jeO",
+      "title": "k8s-tenantunit-highperf-XL (32 x 64 GB)",
+      "width": 6,
+      "height": 13,
+      "x": 0,
+      "y": 13,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "CPU"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "cpu.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-tenantunit-highperf-xl",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Memory Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Memory"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "memory.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-tenantunit-highperf-xl",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Node count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Others"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-tenantunit-highperf-xl",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [
+                "DISTINCT_COUNT"
+              ],
+              "metricLabel": "Count",
+              "crossSeriesAggregation": "DISTINCT_COUNT"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU/node",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "cap_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-tenantunit-highperf-xl",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Capacity",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Request",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "required_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-tenantunit-highperf-xl",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Requests",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "SQD_Ihw8KZJ4b94i",
+      "title": "k8s-bizops-writer (8 x 16 GB)",
+      "width": 6,
+      "height": 13,
+      "x": 0,
+      "y": 65,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "CPU"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "cpu.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-bizops-writer",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Memory Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Memory"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "memory.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-bizops-writer",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Node count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Others"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-bizops-writer",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [
+                "DISTINCT_COUNT"
+              ],
+              "metricLabel": "Count",
+              "crossSeriesAggregation": "DISTINCT_COUNT"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU/node",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "cap_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-bizops-writer",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Capacity",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Request",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "required_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-bizops-writer",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Requests",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "SIH4cIDBLKMpq8Ft",
+      "title": "Cluster Capacity",
+      "width": 6,
+      "height": 13,
+      "x": 6,
+      "y": 130,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "max": 0,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "cap_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.cluster.name",
+                "type": "TAG_FILTER",
+                "value": "saas-k8s-internal",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Capacity",
+              "crossSeriesAggregation": "SUM"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Requests",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "required_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.cluster.name",
+                "type": "TAG_FILTER",
+                "value": "saas-k8s-internal",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Requests",
+              "crossSeriesAggregation": "SUM"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "bytes.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Mem",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "cap_mem",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.cluster.name",
+                "type": "TAG_FILTER",
+                "value": "saas-k8s-internal",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Memory Capacity",
+              "crossSeriesAggregation": "SUM"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Mem Requests",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "required_mem",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.cluster.name",
+                "type": "TAG_FILTER",
+                "value": "saas-k8s-internal",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Memory Requests",
+              "crossSeriesAggregation": "SUM"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "AskpJ-opSVvdyaiz",
+      "title": "k8s-log-processor (8 x 32 GB)",
+      "width": 6,
+      "height": 13,
+      "x": 6,
+      "y": 78,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "CPU"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "cpu.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-log-processor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Memory Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Memory"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "memory.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-log-processor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Node count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Others"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-log-processor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [
+                "DISTINCT_COUNT"
+              ],
+              "metricLabel": "Count",
+              "crossSeriesAggregation": "DISTINCT_COUNT"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU/node",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "cap_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-log-processor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Capacity",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Request",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "required_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-log-processor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Requests",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "xGZlLDJdAuBRABoo",
+      "title": "k8s-sli-data-writer (8 X 18 GB)",
+      "width": 6,
+      "height": 13,
+      "x": 6,
+      "y": 104,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "CPU"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "cpu.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-sli-data-writer",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Memory Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Memory"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "memory.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-sli-data-writer",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Node count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Others"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-sli-data-writer",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [
+                "DISTINCT_COUNT"
+              ],
+              "metricLabel": "Count",
+              "crossSeriesAggregation": "DISTINCT_COUNT"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU/node",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "cap_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-sli-data-writer",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Capacity",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Request",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "required_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-sli-data-writer",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Requests",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "D-a8hbhfJGRHRGvk",
+      "title": "k8s-core (8 x 64GB)",
+      "width": 6,
+      "height": 13,
+      "x": 6,
+      "y": 65,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "CPU"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "cpu.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-core",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Memory Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Memory"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "memory.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-core",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Node count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Others"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-core",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [
+                "DISTINCT_COUNT"
+              ],
+              "metricLabel": "Count",
+              "crossSeriesAggregation": "DISTINCT_COUNT"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU/node",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "cap_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-core",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  },
+                  {
+                    "name": "kubernetes.cluster.name",
+                    "type": "TAG_FILTER",
+                    "value": "saas-k8s-internal",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Capacity",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Request",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "required_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "name": "zone",
+                    "type": "TAG_FILTER",
+                    "value": "k8s-core",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  },
+                  {
+                    "name": "kubernetes.cluster.name",
+                    "type": "TAG_FILTER",
+                    "value": "saas-k8s-internal",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "EQUALS"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Requests",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "RsJgwnLBnBTYu6Ns",
+      "title": "k8s-appdataWriter (16 x 64)",
+      "width": 6,
+      "height": 13,
+      "x": 6,
+      "y": 39,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "CPU"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "cpu.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-appdata-writer",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Memory Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Memory"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "memory.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-appdata-writer",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Node count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Others"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-appdata-writer",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [
+                "DISTINCT_COUNT"
+              ],
+              "metricLabel": "Count",
+              "crossSeriesAggregation": "DISTINCT_COUNT"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU/node",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "cap_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-appdata-writer",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Capacity",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Request",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "required_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-appdata-writer",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Requests",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "mN2Q2uGqWx8YcU06",
+      "title": "k8s-tag-processor(8 x 32 GB)",
+      "width": 6,
+      "height": 13,
+      "x": 0,
+      "y": 117,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "CPU"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "cpu.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-tag-processor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Memory Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Memory"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "memory.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-tag-processor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Node count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Others"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-tag-processor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [
+                "DISTINCT_COUNT"
+              ],
+              "metricLabel": "Count",
+              "crossSeriesAggregation": "DISTINCT_COUNT"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU/node",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "cap_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-tag-processor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Capacity",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Request",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "required_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-tag-processor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Requests",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "kNoDKz5dHPT1JhQ4",
+      "title": "k8s-eum-acceptor (16 X 20 GB)",
+      "width": 6,
+      "height": 13,
+      "x": 0,
+      "y": 78,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "CPU"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "cpu.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-eum-acceptor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Memory Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Memory"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "memory.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-eum-acceptor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Node count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Others"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-eum-acceptor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [
+                "DISTINCT_COUNT"
+              ],
+              "metricLabel": "Count",
+              "crossSeriesAggregation": "DISTINCT_COUNT"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU/node",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "cap_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-eum-acceptor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Capacity",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "required_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-eum-acceptor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Requests",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "xylK60bd8bn7jrR4",
+      "title": "k8s-log-writer (8 x 16 GB)",
+      "width": 6,
+      "height": 13,
+      "x": 0,
+      "y": 91,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "CPU"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "cpu.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-log-writer",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Memory Used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Memory"
+              ],
+              "formatter": "percentage.compact",
+              "unit": "number",
+              "metric": "memory.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-log-writer",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Node count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [
+                "Others",
+                "Host",
+                "Others"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-log-writer",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [
+                "DISTINCT_COUNT"
+              ],
+              "metricLabel": "Count",
+              "crossSeriesAggregation": "DISTINCT_COUNT"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU/node",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "cap_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-log-writer",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Capacity",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "CPU Request",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesNode",
+              "metricPath": [
+                "Kubernetes",
+                "Kubernetes Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "required_cpu",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "k8s-log-writer",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Requests",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "type": "TIME_SERIES"
+      }
+    }
+  ],
+  "ownerId": "6745ceced26b6f000181586b",
+  "writable": true
+}

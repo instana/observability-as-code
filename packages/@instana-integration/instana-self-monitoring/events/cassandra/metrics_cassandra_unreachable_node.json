@@ -1,0 +1,18 @@
+{
+  "name": "[SREInfraSLO] metrics-cassandra node unreachable for > 5m [TF]",
+  "description": "A node in the metrics-cassandra cluster is not reachable since 5 minutes. This usually indicates overall load problems in the cluster or a issue with the underlying cloud VM. Try restarting the process and investigate overall cluster load afterwards.",
+  "query": "(NOT entity.cassandra.cluster.name:\"*state*\") AND (NOT entity.cassandra.cluster.name:\"*profiles*\") AND (NOT entity.cassandra.cluster.name:\"*spans*\")",
+  "entityType": "cassandraCluster",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "unreachableNodeCount",
+      "aggregation": "min",
+      "window": 300000,
+      "conditionOperator": ">",
+      "conditionValue": 0,
+      "severity": 10
+    }
+  ]
+}

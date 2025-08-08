@@ -1,0 +1,18 @@
+{
+  "name": "[SRESLO] Synthetics Reader ClickHouse Select Failures [TF]",
+  "description": "This indicates problems with the Synthetics Reader retrieving data from ClickHouse.",
+  "query": "entity.kubernetes.deployment.name:\"synthetics-reader\"",
+  "entityType": "dropwizardApplicationContainer",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "metrics.gauges.clickHouse.clustered.select.error_rate",
+      "aggregation": "avg",
+      "window": 300000,
+      "conditionOperator": ">",
+      "conditionValue": 0.05,
+      "severity": 10
+    }
+  ]
+}

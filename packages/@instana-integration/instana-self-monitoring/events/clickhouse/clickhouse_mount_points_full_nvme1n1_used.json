@@ -1,0 +1,18 @@
+{
+  "name": "[SREInfraSLO] Clickhouse disk fs./dev/nvme1n1.used more than 85% full. [TF]",
+  "description": "This is a critical alert and if no action, the Clickhouse Cluster can go down. A disk attached to a Clickhouse server at fs./dev/nvme1n1.used is greater than 85%. This indicates that the disk is going to reach its maximum capacity. When triggered, please check the Clickhouse cluster capacity and coordinate with the rest of the team to decide to increase the disk or add more shards.",
+  "query": "entity.type:clickhouse AND entity.zone:ClickHouse",
+  "entityType": "host",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "fs./dev/nvme1n1.used",
+      "aggregation": "max",
+      "window": 300000,
+      "conditionOperator": ">=",
+      "conditionValue": 0.85,
+      "severity": 10
+    }
+  ]
+}
