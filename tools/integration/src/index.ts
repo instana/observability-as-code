@@ -288,6 +288,7 @@ async function handleLint(argv: any) {
     const readmeContent = readReadmeFile(currentDirectory);
     const dashboardsPath = path.join(currentDirectory, 'dashboards');
     const eventsPath = path.join(currentDirectory, 'events');
+    const entitiesPath = path.join(currentDirectory, 'entities');
 
     // Check README
     if (readmeContent) {
@@ -313,6 +314,11 @@ async function handleLint(argv: any) {
         } else {
             logger.info('No events folder found for this package.');
         }
+		if(fs.existsSync(entitiesPath)){
+			validateEntityFiles(entitiesPath, errors, warnings, successMessages);
+		} else{
+			logger.info('No entities folder found for this package.');
+		}
 
     } catch (error) {
         errors.push(`Linting failed: ${error}`);
@@ -373,24 +379,27 @@ async function validatePackageJson(packageData: any, errors: string[], warnings:
 
     // Fetch the currently published version from npm and compare
     try {
-        const response = await axios.get(`https://registry.npmjs.org/${packageData.name}`);
+		const response = await axios.get(`https://registry.npmjs.org/${packageData.name}`);
         const publishedVersion = response.data['dist-tags']?.latest;
-
-        if (semver.eq(packageData.version, publishedVersion)) {
-            errors.push(`The package version "${packageData.version}" is the same as the currently published version "${publishedVersion}". It must be greater than the currently published version.`);
-        } else if (semver.lt(packageData.version, publishedVersion)) {
-            errors.push(`The package version "${packageData.version}" is invalid. It must be greater than the currently published version "${publishedVersion}".`);
+        if (!publishedVersion) {
+    		successMessages.push(`The package "${packageData.name}" exists in the npm registry but has no published versions. Treating as a new package.`);
         } else {
-            successMessages.push('The package version is valid and greater than the currently published version.');
-        }
-    } catch (error) {
-        if ((error as AxiosError).response?.status === 404) {
-            successMessages.push(`The package "${packageData.name}" not found on npm. This is a new package.`);
+        	if (semver.eq(packageData.version, publishedVersion)) {
+    			errors.push(`The package version "${packageData.version}" is the same as the currently published version "${publishedVersion}". It must be greater than the currently published version.`);
+            } else if (semver.lt(packageData.version, publishedVersion)) {
+    			errors.push(`The package version "${packageData.version}" is invalid. It must be greater than the currently published version "${publishedVersion}".`);
+            } else {
+    			successMessages.push('The package version is valid and greater than the currently published version.');
+            }
+		}
+	} catch (error) {
+    	if ((error as AxiosError).response?.status === 404) {
+        	successMessages.push(`The package "${packageData.name}" not found on npm. This is a new package.`);
         } else {
-            const axiosError = error as AxiosError;
+        	const axiosError = error as AxiosError;
             errors.push(axiosError.message || String(error));
         }
-    }
+	}
 
     // Check for required fields and description
     const requiredFields = ['name', 'version', 'author', 'license', 'description'];
@@ -500,7 +509,10 @@ function validateEventFiles(eventsPath: string, errors: string[], warnings: stri
             const missingFields: string[] = [];
 
             for (const field of requiredEventFields) {
-                if (event[field] === undefined || event[field] === null || event[field] === '') {
+				const value = event[field];
+				const isEmptyArray = Array.isArray(value) && value.length === 0;
+                const isEmptyValue = value === undefined || value === null || value === '' || isEmptyArray;
+				if (isEmptyValue) {
                     missingFields.push(field);
                     allEventFieldsValid = false;
                 } else {
@@ -513,15 +525,7 @@ function validateEventFiles(eventsPath: string, errors: string[], warnings: stri
             }
 
             if (missingFields.length > 0) {
-                errors.push(`The package is missing required field(s): ${missingFields.join(', ')} in file: ${file}.`);
-            }
-
-            if (!Array.isArray(event.rules) || event.rules.length === 0) {
-                errors.push(`The event rules array is empty in file: ${file}.`);
-                allEventFieldsValid = false;
-            } else if (event.rules.some((rule: object) => Object.keys(rule).length === 0)) {
-                errors.push(`No event rules are defined in: ${file}.`);
-                allEventFieldsValid = false;
+                errors.push(`The event is missing required field(s): ${missingFields.join(', ')} in file: ${file}.`);
             }
 
             if (allEventFieldsValid) {
@@ -531,6 +535,61 @@ function validateEventFiles(eventsPath: string, errors: string[], warnings: stri
             }
         } catch (error) {
             errors.push(`Error validating file ${filePath}: ${error instanceof Error ? error.message : String(error)}.`);
+        }
+    });
+}
+
+// Helper function to validate entity files
+function validateEntityFiles(entitiesPath: string, errors: string[], warnings: string[], successMessages: string[]): void {
+	const jsonFiles = getAllJsonFiles(entitiesPath);
+	if(jsonFiles.length === 0){
+		warnings.push('No JSON files found in the events folder.');
+	}
+	jsonFiles.forEach((filePath) => {
+		const file = path.relative(entitiesPath, filePath);
+		try {
+			const fileContent = fs.readFileSync(filePath, 'utf-8');
+			const entity = JSON.parse(fileContent);
+            let allEntityFieldsValid = true;
+            const requiredEntityFields = ['label', 'identifiers', 'tagFilterExpression'];
+
+            const presentFields: string[] = [];
+            const missingFields: string[] = [];
+
+            if (!entity.data || typeof entity.data !== 'object'  || Object.keys(entity.data).length === 0) {
+            	errors.push(`Missing or invalid 'data' object in file: ${file}.`);
+                allEntityFieldsValid = false;
+                return;
+            }
+
+            for (const field of requiredEntityFields) {
+				const value = entity.data[field];
+              	const isEmptyArray = Array.isArray(value) && value.length === 0;
+              	const isEmptyObject = typeof value === 'object' && value !== null && !Array.isArray(value) && Object.keys(value).length === 0;
+              	const isEmptyValue = value === undefined || value === null || value === '' || isEmptyArray || isEmptyObject;
+              	if (isEmptyValue) {
+                	missingFields.push(field);
+                	allEntityFieldsValid = false;
+              	} else {
+                	presentFields.push(field);
+              	}
+            }
+
+			if (presentFields.length > 0) {
+				successMessages.push(`The entity field(s) ${presentFields.join(', ')} are present in the file: ${file}.`);
+			}
+            if (missingFields.length > 0) {
+            	errors.push(`The entity is missing required field(s): ${missingFields.join(', ')} in file: ${file}.`);
+            }
+
+			if(allEntityFieldsValid === true){
+				successMessages.push(`Entity is correctly defined in the file: ${file}.`);
+			} else {
+				errors.push(`Entity is not correctly defined in the file: ${file}.`);
+			}
+
+        } catch (error) {
+			errors.push(`Error validating file ${filePath}: ${error instanceof Error ? error.message : String(error)}.`);
         }
     });
 }
@@ -1230,8 +1289,8 @@ async function handleInit() {
         choices: [
             { name: 'dashboards', value: 'dashboards', checked: true },
             { name: 'events', value: 'events'},
+            { name: 'entities', value: 'entities'},
             new Separator('-- Below items are not supported yet --'),
-            { name: 'entities', value: 'entities', disabled: true, },
             { name: 'collector configs', value: 'collector-configs', disabled: true, },
         ],
         required: true
@@ -1324,10 +1383,11 @@ function generateReadme(packagePath: string, packageName: string, configTypes: s
 
 Below are the dashboards that are currently supported by this integration package.
 
-(Note: Below are the sample dashboards. Please replace these with your own actual dashboards.)
-| Dashboard Title    | Description           |
-|--------------------|-----------------------|
-| Runtime Metrics    | Instana custom dashboard that displays runtime metrics for application |
+(Note: Replace the sample entries below with actual dashboards defined in your package.)
+
+| Dashboard Title        | Description                                                |
+|------------------------|------------------------------------------------------------|
+| <dashboard_title>      | Brief description of what this dashboard displays.         |
 `;
     }
 
@@ -1338,21 +1398,23 @@ Below are the dashboards that are currently supported by this integration packag
 
 Below are the runtime metrics that are currently supported by this integration package.
 
-(Note: Below are the sample runtime metrics. Please replace these with your own actual metrics.)
-| Metrics Name               | Description                       | Unit    |
-|----------------------------|-----------------------------------|---------|
-| <metric.name.heap_inuse>   | Heap used            			 | Number  |
-| <metric.name.heap.alloc>   | Allocated memory     			 | Byte    |
+(Note: Replace the sample entries below with actual metrics for your package.)
+
+| Metric Name             | Description                      | Unit    |
+|-------------------------|----------------------------------|---------|
+| <metric.name.example1>  | Description of the metric        | <unit>  |
+| <metric.name.example2>  | Description of another metric    | <unit>  |
 
 ### Resource Attributes
 
 Below are the resource attributes that are currently supported by this integration package.
 
-(Note: Below are the sample resource attributes. Please replace these with your own actual resource attributes.)
-| Attribute Key                  | Type   |  Description           |
-|--------------------------------|--------|------------------------|
-| <resource.service.name>        | string | This attribute is used to describe the entity name. |
-| <resource.service.instance.id> | string | This attribute is used to describe the entity ID of the current object. |
+(Note: Replace with the actual resource attributes relevant to your package.)
+
+| Attribute Key                    | Type   | Description                                      |
+|----------------------------------|--------|--------------------------------------------------|
+| <resource.attribute.key1>        | string | Describes the entity name or other identifier    |
+| <resource.attribute.key2>        | string | Further identifies or qualifies the entity       |
 `;
 
     if (configTypes.includes('events')) {
@@ -1361,11 +1423,45 @@ Below are the resource attributes that are currently supported by this integrati
 
 Below are the events that are currently supported by this integration package.
 
-(Note: Below are the sample events. Please replace these with your own actual events.)
-| Event Name                 | Description                       |
-|----------------------------|-----------------------------------|
-| <event.name.heap_inuse>    | Heap used  |
-| <event.name.heap.alloc>    | Allocated memory  |
+(Note: Replace the sample entries below with actual events from your package.)
+
+| Event Name               | Description                       |
+|--------------------------|---------------------------------  |
+| <event.name.example1>    | Triggered when condition X occurs |
+| <event.name.example2>    | Triggered when condition Y occurs |
+`;
+    }
+
+    if (configTypes.includes('entities')) {
+        readmeContent += `
+## Entities
+
+Below are the entities that are currently supported by this integration package.
+
+(Note: Repeat the following structure for each custom entity in your package.)
+
+### Entity: <Entity Label>
+
+(Note: Write your entity description here.)
+
+#### Dashboards
+
+| Dashboard Title        | Description                                         |
+|------------------------|-----------------------------------------------------|
+| <dashboard_title>      | Describe the dashboard linked to this entity.       |
+
+#### Metrics
+
+| Metric Name             | Description                          | Unit   |
+|-------------------------|------------------------------------- |--------|
+| <metric.name.example1>  | What the metric tracks               | <unit> |
+| <metric.name.example2>  | Another metric for this entity       | <unit> |
+
+#### Dependencies
+
+| Related Entity          | Description of Relationship                                     |
+|-------------------------|-----------------------------------------------------------------|
+| <related_entity_label>  | Explain how this entity depends on or relates to another entity |
 `;
     }
 
