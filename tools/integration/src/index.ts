@@ -292,8 +292,8 @@ async function handleLint(argv: any) {
 
     // Check README
     if (readmeContent) {
-	try {
-	    validateReadmeContent(readmeContent, packageData.name, currentDirectory, errors, warnings, successMessages);
+		try {
+	    	validateReadmeContent(readmeContent, packageData.name, currentDirectory, errors, warnings, successMessages);
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : String(error);
             errors.push(errorMessage);
@@ -360,11 +360,11 @@ async function validatePackageJson(packageData: any, errors: string[], warnings:
     const namePattern = /^@instana-integration\/[a-zA-Z0-9-_]+$/;
     if (!namePattern.test(packageData.name)) {
         const warningMessage = `Warning: Package name "${packageData.name}" does not align with the IBM package naming convention.`;
-	if(strictMode) {
-	    errors.push(warningMessage);
-	} else {
-	    warnings.push(warningMessage);
-	}
+		if(strictMode) {
+	    	errors.push(warningMessage);
+		} else {
+	    	warnings.push(warningMessage);
+		}
     } else {
         successMessages.push('The package name is correctly defined.');
     }
