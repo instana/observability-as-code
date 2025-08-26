@@ -543,7 +543,7 @@ function validateEventFiles(eventsPath: string, errors: string[], warnings: stri
 function validateEntityFiles(entitiesPath: string, errors: string[], warnings: string[], successMessages: string[]): void {
 	const jsonFiles = getAllJsonFiles(entitiesPath);
 	if(jsonFiles.length === 0){
-		warnings.push('No JSON files found in the events folder.');
+		warnings.push('No JSON files found in the entities folder.');
 	}
 	jsonFiles.forEach((filePath) => {
 		const file = path.relative(entitiesPath, filePath);
