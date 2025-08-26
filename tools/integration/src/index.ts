@@ -64,11 +64,11 @@ const readReadmeFile = (directoryPath: string) : string | null => {
     const readmeFilePath = path.join(directoryPath, 'README.md');
     try {
         if(fs.existsSync(readmeFilePath)){
-	    return fs.readFileSync(readmeFilePath, 'utf8');
-	} else {
-	    logger.error(`README.md is missing in the directory: ${directoryPath}`);
+	    	return fs.readFileSync(readmeFilePath, 'utf8');
+		} else {
+	    	logger.error(`README.md is missing in the directory: ${directoryPath}`);
             return null;
-	}
+		}
     } catch (error){
         logger.error('Failed to read README.md.');
         return null;
@@ -249,19 +249,19 @@ yargs
     .command('lint', 'Provides linting for package', (yargs) => {
     	return yargs
             .option('path', {
-        	alias: 'p',
+        		alias: 'p',
                 describe: 'The path to the package',
                 type: 'string',
                 demandOption: false
             })
-	    .option('strict-mode', {
+	    	.option('strict-mode', {
                 alias: 's',
                 describe: 'Restricts the validations',
                 type: 'boolean',
                 demandOption: false
             })
-	    .option('debug', {
-		alias: 'd',
+	    	.option('debug', {
+				alias: 'd',
                 describe: 'Enable debug mode',
                 type: 'boolean',
                 default: false
@@ -302,7 +302,7 @@ async function handleLint(argv: any) {
         errors.push('README.md is missing or empty.');
     }
     try {
-	const strictMode = argv['strict-mode'];
+		const strictMode = argv['strict-mode'];
         await validatePackageJson(packageData, errors, warnings, successMessages, strictMode);
         if(fs.existsSync(dashboardsPath)){
             validateDashboardFiles(dashboardsPath, errors, warnings, successMessages);
@@ -328,7 +328,7 @@ async function handleLint(argv: any) {
     const isDebug = argv.debug;
 
     if (isDebug) {
-	successMessages.forEach((message) => {
+		successMessages.forEach((message) => {
             logger.info(message);
         });
         if (warnings.length > 0) {
@@ -452,21 +452,20 @@ function validateDashboardFiles(dashboardsPath: string, errors: string[], warnin
                 return;
             }
 
-	    const hasRequiredRule = accessRules.some(rule =>
-	    	rule.accessType === requiredAccessRule.accessType &&
-		rule.relationType === requiredAccessRule.relationType &&
-		rule.relatedId === requiredAccessRule.relatedId
-	    );
+	    	const hasRequiredRule = accessRules.some(rule =>
+	    		rule.accessType === requiredAccessRule.accessType &&
+				rule.relationType === requiredAccessRule.relationType &&
+				rule.relatedId === requiredAccessRule.relatedId
+	    	);
 
       	    if (!hasRequiredRule) {
             	errors.push(`Dashboard file ${file} must include the required accessRule: ${JSON.stringify(requiredAccessRule)}.`);
-	    } else {
-		successMessages.push(`Dashboard file ${file} contains the required GLOBAL accessRule.`);
-	    }
-
-    	} catch (error) {
-      	    errors.push(`Error validating file ${file}: ${error instanceof Error ? error.message : String(error)}.`);
-    	}
+			} else {
+				successMessages.push(`Dashboard file ${file} contains the required GLOBAL accessRule.`);
+			}
+		} catch (error) {
+			errors.push(`Error validating file ${file}: ${error instanceof Error ? error.message : String(error)}.`);
+		}
     });
 }
 
@@ -602,11 +601,11 @@ function validateReadmeContent(readmeContent: string, packageName: string, curre
     const eventsExist = fs.existsSync(path.join(currentDirectory, 'events'));
     const requiredSections = [packageName];
     if(dashboardsExist){
-	requiredSections.push('Dashboards');
+		requiredSections.push('Dashboards');
     }
     requiredSections.push('Metrics', 'Semantic Conventions', 'Resource Attributes');
     if(eventsExist){
-	requiredSections.push('Events');
+		requiredSections.push('Events');
     }
     const readmeLines = readmeContent.split('\n');
     const headingLines = readmeLines
@@ -830,9 +829,9 @@ async function handleImport(argv: any) {
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': `apiToken ${token}`
-			}
+						}
                     });
-		    logger.info(`Successfully applied ${file}: ${response.status}`);
+		    		logger.info(`Successfully applied ${file}: ${response.status}`);
                 } catch (error) {
                     if (axios.isAxiosError(error)) {
                         logger.error(`Failed to apply ${file}: ${error.message}`);
@@ -918,7 +917,7 @@ async function handleExport(argv: any) {
                 logFn(`No custom dashboard(s) found matching: ${inc.conditions.join(', ')}`);
                 continue;
             }
-	    const enriched = filtered.map(item => ({
+	    	const enriched = filtered.map(item => ({
                 ...item,
                 name: item.name ?? `custom-dashboard-${item.id}`
             }));
@@ -945,12 +944,11 @@ async function handleExport(argv: any) {
         let totalEventProcessed = 0;
 
         for (const inc of parsedIncludes.filter(inc => inc.type === "event" || inc.type === "all")) {
-            const matches = inc.conditions.filter(c => c.startsWith("id="));
-
+        	const matches = inc.conditions.filter(c => c.startsWith("id="));
             let filtered;
-	    if (matches.length) {
-                filtered = matches.map(idCond => {
-                    const id = idCond.split("=")[1]?.replace(/^"|"$/g, '');
+	   		if (matches.length) {
+            	filtered = matches.map(idCond => {
+                	const id = idCond.split("=")[1]?.replace(/^"|"$/g, '');
                     const found = allEvents.find(e => e.id === id);
                     return found;
                 }).filter(Boolean);
@@ -963,7 +961,7 @@ async function handleExport(argv: any) {
                 logFn(`No custom event(s) found matching: ${inc.conditions.join(', ')}`);
                 continue;
             }
-	    const enriched = filtered.map(item => ({
+	    	const enriched = filtered.map(item => ({
                 ...item,
                 name: item.name ?? `custom-event-${item.id}`
             }));
@@ -1026,12 +1024,10 @@ async function getDashboardList(server: string, token: string, axiosInstance: an
                 'Authorization': `apiToken ${token}`
             }
         });
-
         logger.info(`Successfully got custom dashboard list: ${response.status}`);
         if (logger.isDebugEnabled()) {
             logger.debug(`Response data: \n${JSON.stringify(response.data)}`);
         }
-
         return response.data;
     } catch (error) {
         handleAxiosError(error, `dashboard list`);
@@ -1147,37 +1143,36 @@ function filterEventsBy(idObjects: any[], include: string[]): any[] {
 
 // Helpers for export
 function parseIncludesFromArgv(argv: string[]): { type: string, conditions: string[], explicitlyTyped: boolean }[] {
-  const includes: { type: string, conditions: string[], explicitlyTyped: boolean }[] = [];
-  let current: { type: string, conditions: string[], explicitlyTyped: boolean } | null = null;
-  let clauseParts: string[] = [];
+	const includes: { type: string, conditions: string[], explicitlyTyped: boolean }[] = [];
+  	let current: { type: string, conditions: string[], explicitlyTyped: boolean } | null = null;
+  	let clauseParts: string[] = [];
 
-  for (let i = 0; i < argv.length; i++) {
-    const arg = argv[i];
-    if (arg === "--include") {
-      if (clauseParts.length && !current?.explicitlyTyped) {
-        logger.warn(`'type=' missing in include clause "${clauseParts.join(" ")}", interpreting as type=all`);
-      }
-      clauseParts = [];
-      const next = argv[i + 1];
-      const keyVal = next?.split("=");
-      if (keyVal?.[0] === "type") {
-        current = { type: keyVal[1], conditions: [], explicitlyTyped: true };
-        i++;
-        clauseParts.push(`type=${keyVal[1]}`);
-      } else {
-        current = { type: "all", conditions: [], explicitlyTyped: false };
-      }
-      includes.push(current);
-    } else if (current) {
-      current.conditions.push(arg);
-      clauseParts.push(arg);
-    }
-  }
-
-  if (clauseParts.length && !current?.explicitlyTyped) {
-    logger.warn(`'type=' missing in include clause "${clauseParts.join(" ")}", interpreting as type=all`);
-  }
-  return includes;
+  	for (let i = 0; i < argv.length; i++) {
+		const arg = argv[i];
+	  	if (arg === "--include") {
+      		if (clauseParts.length && !current?.explicitlyTyped) {
+				logger.warn(`'type=' missing in include clause "${clauseParts.join(" ")}", interpreting as type=all`);
+      		}
+			clauseParts = [];
+			const next = argv[i + 1];
+		  	const keyVal = next?.split("=");
+			if (keyVal?.[0] === "type") {
+				current = { type: keyVal[1], conditions: [], explicitlyTyped: true };
+			  	i++;
+			  	clauseParts.push(`type=${keyVal[1]}`);
+		  	} else {
+				current = { type: "all", conditions: [], explicitlyTyped: false };
+		  	}
+		  	includes.push(current);
+	  	} else if (current) {
+      		current.conditions.push(arg);
+      		clauseParts.push(arg);
+    	}
+  	}
+  	if (clauseParts.length && !current?.explicitlyTyped) {
+    	logger.warn(`'type=' missing in include clause "${clauseParts.join(" ")}", interpreting as type=all`);
+  	}
+  	return includes;
 }
 
 function parseIncludeItem(item: string): string[] {
@@ -1230,10 +1225,7 @@ function handleAxiosError(error: any, context: string) {
     }
 }
 
-function sanitizeTitles<T extends { id: string; title?: string; name?: string }>(
-    idObjects: T[],
-    fallbackPrefix: string
-): T[] {
+function sanitizeTitles<T extends { id: string; title?: string; name?: string }>(idObjects: T[], fallbackPrefix: string): T[] {
     const titleMap: { [key: string]: number } = {};
     return idObjects.map(obj => {
         const fallback = obj.name || `${fallbackPrefix}-${obj.id}`;
@@ -1350,24 +1342,23 @@ async function handleInit() {
 function printDirectoryTree(dirPath: string, rootLabel: string, indent: string = ''): void {
     const isRoot = indent === '';
     if (isRoot) {
-      logger.info(rootLabel);
+		logger.info(rootLabel);
     }
 
     const files = fs.readdirSync(dirPath);
     const lastIndex = files.length - 1;
 
     files.forEach((file, index) => {
-      const fullPath = path.join(dirPath, file);
-      const isDirectory = fs.statSync(fullPath).isDirectory();
-      const isLast = index === lastIndex;
-      const prefix = isLast ? '└── ' : '├── ';
+		const fullPath = path.join(dirPath, file);
+      	const isDirectory = fs.statSync(fullPath).isDirectory();
+      	const isLast = index === lastIndex;
+      	const prefix = isLast ? '└── ' : '├── ';
 
-      logger.info(indent + prefix + file);
-
-      if (isDirectory) {
-        const newIndent = indent + (isLast ? '    ' : '│   ');
-        printDirectoryTree(fullPath, rootLabel, newIndent);
-      }
+      	logger.info(indent + prefix + file);
+    	if (isDirectory) {
+			const newIndent = indent + (isLast ? '    ' : '│   ');
+        	printDirectoryTree(fullPath, rootLabel, newIndent);
+      	}
     });
 }
 
