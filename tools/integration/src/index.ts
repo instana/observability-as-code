@@ -64,11 +64,11 @@ const readReadmeFile = (directoryPath: string) : string | null => {
     const readmeFilePath = path.join(directoryPath, 'README.md');
     try {
         if(fs.existsSync(readmeFilePath)){
-	    return fs.readFileSync(readmeFilePath, 'utf8');
-	} else {
-	    logger.error(`README.md is missing in the directory: ${directoryPath}`);
+	    	return fs.readFileSync(readmeFilePath, 'utf8');
+		} else {
+	    	logger.error(`README.md is missing in the directory: ${directoryPath}`);
             return null;
-	}
+		}
     } catch (error){
         logger.error('Failed to read README.md.');
         return null;
@@ -249,19 +249,19 @@ yargs
     .command('lint', 'Provides linting for package', (yargs) => {
     	return yargs
             .option('path', {
-        	alias: 'p',
+        		alias: 'p',
                 describe: 'The path to the package',
                 type: 'string',
                 demandOption: false
             })
-	    .option('strict-mode', {
+	    	.option('strict-mode', {
                 alias: 's',
                 describe: 'Restricts the validations',
                 type: 'boolean',
                 demandOption: false
             })
-	    .option('debug', {
-		alias: 'd',
+	    	.option('debug', {
+				alias: 'd',
                 describe: 'Enable debug mode',
                 type: 'boolean',
                 default: false
@@ -288,11 +288,12 @@ async function handleLint(argv: any) {
     const readmeContent = readReadmeFile(currentDirectory);
     const dashboardsPath = path.join(currentDirectory, 'dashboards');
     const eventsPath = path.join(currentDirectory, 'events');
+    const entitiesPath = path.join(currentDirectory, 'entities');
 
     // Check README
     if (readmeContent) {
-	try {
-	    validateReadmeContent(readmeContent, packageData.name, currentDirectory, errors, warnings, successMessages);
+		try {
+	    	validateReadmeContent(readmeContent, packageData.name, currentDirectory, errors, warnings, successMessages);
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : String(error);
             errors.push(errorMessage);
@@ -301,7 +302,7 @@ async function handleLint(argv: any) {
         errors.push('README.md is missing or empty.');
     }
     try {
-	const strictMode = argv['strict-mode'];
+		const strictMode = argv['strict-mode'];
         await validatePackageJson(packageData, errors, warnings, successMessages, strictMode);
         if(fs.existsSync(dashboardsPath)){
             validateDashboardFiles(dashboardsPath, errors, warnings, successMessages);
@@ -313,6 +314,11 @@ async function handleLint(argv: any) {
         } else {
             logger.info('No events folder found for this package.');
         }
+		if(fs.existsSync(entitiesPath)){
+			validateEntityFiles(entitiesPath, errors, warnings, successMessages);
+		} else{
+			logger.info('No entities folder found for this package.');
+		}
 
     } catch (error) {
         errors.push(`Linting failed: ${error}`);
@@ -322,7 +328,7 @@ async function handleLint(argv: any) {
     const isDebug = argv.debug;
 
     if (isDebug) {
-	successMessages.forEach((message) => {
+		successMessages.forEach((message) => {
             logger.info(message);
         });
         if (warnings.length > 0) {
@@ -354,11 +360,11 @@ async function validatePackageJson(packageData: any, errors: string[], warnings:
     const namePattern = /^@instana-integration\/[a-zA-Z0-9-_]+$/;
     if (!namePattern.test(packageData.name)) {
         const warningMessage = `Warning: Package name "${packageData.name}" does not align with the IBM package naming convention.`;
-	if(strictMode) {
-	    errors.push(warningMessage);
-	} else {
-	    warnings.push(warningMessage);
-	}
+		if(strictMode) {
+	    	errors.push(warningMessage);
+		} else {
+	    	warnings.push(warningMessage);
+		}
     } else {
         successMessages.push('The package name is correctly defined.');
     }
@@ -373,24 +379,27 @@ async function validatePackageJson(packageData: any, errors: string[], warnings:
 
     // Fetch the currently published version from npm and compare
     try {
-        const response = await axios.get(`https://registry.npmjs.org/${packageData.name}`);
+		const response = await axios.get(`https://registry.npmjs.org/${packageData.name}`);
         const publishedVersion = response.data['dist-tags']?.latest;
-
-        if (semver.eq(packageData.version, publishedVersion)) {
-            errors.push(`The package version "${packageData.version}" is the same as the currently published version "${publishedVersion}". It must be greater than the currently published version.`);
-        } else if (semver.lt(packageData.version, publishedVersion)) {
-            errors.push(`The package version "${packageData.version}" is invalid. It must be greater than the currently published version "${publishedVersion}".`);
+        if (!publishedVersion) {
+    		successMessages.push(`The package "${packageData.name}" exists in the npm registry but has no published versions. Treating as a new package.`);
         } else {
-            successMessages.push('The package version is valid and greater than the currently published version.');
-        }
-    } catch (error) {
-        if ((error as AxiosError).response?.status === 404) {
-            successMessages.push(`The package "${packageData.name}" not found on npm. This is a new package.`);
+        	if (semver.eq(packageData.version, publishedVersion)) {
+    			errors.push(`The package version "${packageData.version}" is the same as the currently published version "${publishedVersion}". It must be greater than the currently published version.`);
+            } else if (semver.lt(packageData.version, publishedVersion)) {
+    			errors.push(`The package version "${packageData.version}" is invalid. It must be greater than the currently published version "${publishedVersion}".`);
+            } else {
+    			successMessages.push('The package version is valid and greater than the currently published version.');
+            }
+		}
+	} catch (error) {
+    	if ((error as AxiosError).response?.status === 404) {
+        	successMessages.push(`The package "${packageData.name}" not found on npm. This is a new package.`);
         } else {
-            const axiosError = error as AxiosError;
+        	const axiosError = error as AxiosError;
             errors.push(axiosError.message || String(error));
         }
-    }
+	}
 
     // Check for required fields and description
     const requiredFields = ['name', 'version', 'author', 'license', 'description'];
@@ -443,21 +452,20 @@ function validateDashboardFiles(dashboardsPath: string, errors: string[], warnin
                 return;
             }
 
-	    const hasRequiredRule = accessRules.some(rule =>
-	    	rule.accessType === requiredAccessRule.accessType &&
-		rule.relationType === requiredAccessRule.relationType &&
-		rule.relatedId === requiredAccessRule.relatedId
-	    );
+	    	const hasRequiredRule = accessRules.some(rule =>
+	    		rule.accessType === requiredAccessRule.accessType &&
+				rule.relationType === requiredAccessRule.relationType &&
+				rule.relatedId === requiredAccessRule.relatedId
+	    	);
 
       	    if (!hasRequiredRule) {
             	errors.push(`Dashboard file ${file} must include the required accessRule: ${JSON.stringify(requiredAccessRule)}.`);
-	    } else {
-		successMessages.push(`Dashboard file ${file} contains the required GLOBAL accessRule.`);
-	    }
-
-    	} catch (error) {
-      	    errors.push(`Error validating file ${file}: ${error instanceof Error ? error.message : String(error)}.`);
-    	}
+			} else {
+				successMessages.push(`Dashboard file ${file} contains the required GLOBAL accessRule.`);
+			}
+		} catch (error) {
+			errors.push(`Error validating file ${file}: ${error instanceof Error ? error.message : String(error)}.`);
+		}
     });
 }
 
@@ -500,7 +508,10 @@ function validateEventFiles(eventsPath: string, errors: string[], warnings: stri
             const missingFields: string[] = [];
 
             for (const field of requiredEventFields) {
-                if (event[field] === undefined || event[field] === null || event[field] === '') {
+				const value = event[field];
+				const isEmptyArray = Array.isArray(value) && value.length === 0;
+                const isEmptyValue = value === undefined || value === null || value === '' || isEmptyArray;
+				if (isEmptyValue) {
                     missingFields.push(field);
                     allEventFieldsValid = false;
                 } else {
@@ -513,15 +524,7 @@ function validateEventFiles(eventsPath: string, errors: string[], warnings: stri
             }
 
             if (missingFields.length > 0) {
-                errors.push(`The package is missing required field(s): ${missingFields.join(', ')} in file: ${file}.`);
-            }
-
-            if (!Array.isArray(event.rules) || event.rules.length === 0) {
-                errors.push(`The event rules array is empty in file: ${file}.`);
-                allEventFieldsValid = false;
-            } else if (event.rules.some((rule: object) => Object.keys(rule).length === 0)) {
-                errors.push(`No event rules are defined in: ${file}.`);
-                allEventFieldsValid = false;
+                errors.push(`The event is missing required field(s): ${missingFields.join(', ')} in file: ${file}.`);
             }
 
             if (allEventFieldsValid) {
@@ -535,6 +538,61 @@ function validateEventFiles(eventsPath: string, errors: string[], warnings: stri
     });
 }
 
+// Helper function to validate entity files
+function validateEntityFiles(entitiesPath: string, errors: string[], warnings: string[], successMessages: string[]): void {
+	const jsonFiles = getAllJsonFiles(entitiesPath);
+	if(jsonFiles.length === 0){
+		warnings.push('No JSON files found in the entities folder.');
+	}
+	jsonFiles.forEach((filePath) => {
+		const file = path.relative(entitiesPath, filePath);
+		try {
+			const fileContent = fs.readFileSync(filePath, 'utf-8');
+			const entity = JSON.parse(fileContent);
+            let allEntityFieldsValid = true;
+            const requiredEntityFields = ['label', 'identifiers', 'tagFilterExpression'];
+
+            const presentFields: string[] = [];
+            const missingFields: string[] = [];
+
+            if (!entity.data || typeof entity.data !== 'object'  || Object.keys(entity.data).length === 0) {
+            	errors.push(`Missing or invalid 'data' object in file: ${file}.`);
+                allEntityFieldsValid = false;
+                return;
+            }
+
+            for (const field of requiredEntityFields) {
+				const value = entity.data[field];
+              	const isEmptyArray = Array.isArray(value) && value.length === 0;
+              	const isEmptyObject = typeof value === 'object' && value !== null && !Array.isArray(value) && Object.keys(value).length === 0;
+              	const isEmptyValue = value === undefined || value === null || value === '' || isEmptyArray || isEmptyObject;
+              	if (isEmptyValue) {
+                	missingFields.push(field);
+                	allEntityFieldsValid = false;
+              	} else {
+                	presentFields.push(field);
+              	}
+            }
+
+			if (presentFields.length > 0) {
+				successMessages.push(`The entity field(s) ${presentFields.join(', ')} are present in the file: ${file}.`);
+			}
+            if (missingFields.length > 0) {
+            	errors.push(`The entity is missing required field(s): ${missingFields.join(', ')} in file: ${file}.`);
+            }
+
+			if(allEntityFieldsValid === true){
+				successMessages.push(`Entity is correctly defined in the file: ${file}.`);
+			} else {
+				errors.push(`Entity is not correctly defined in the file: ${file}.`);
+			}
+
+        } catch (error) {
+			errors.push(`Error validating file ${filePath}: ${error instanceof Error ? error.message : String(error)}.`);
+        }
+    });
+}
+
 
 // Helper function to validate README content
 function validateReadmeContent(readmeContent: string, packageName: string, currentDirectory: string, errors: string[], warnings: string[], successMessages: string[]): void {
@@ -543,11 +601,11 @@ function validateReadmeContent(readmeContent: string, packageName: string, curre
     const eventsExist = fs.existsSync(path.join(currentDirectory, 'events'));
     const requiredSections = [packageName];
     if(dashboardsExist){
-	requiredSections.push('Dashboards');
+		requiredSections.push('Dashboards');
     }
     requiredSections.push('Metrics', 'Semantic Conventions', 'Resource Attributes');
     if(eventsExist){
-	requiredSections.push('Events');
+		requiredSections.push('Events');
     }
     const readmeLines = readmeContent.split('\n');
     const headingLines = readmeLines
@@ -771,9 +829,9 @@ async function handleImport(argv: any) {
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': `apiToken ${token}`
-			}
+						}
                     });
-		    logger.info(`Successfully applied ${file}: ${response.status}`);
+		    		logger.info(`Successfully applied ${file}: ${response.status}`);
                 } catch (error) {
                     if (axios.isAxiosError(error)) {
                         logger.error(`Failed to apply ${file}: ${error.message}`);
@@ -859,7 +917,7 @@ async function handleExport(argv: any) {
                 logFn(`No custom dashboard(s) found matching: ${inc.conditions.join(', ')}`);
                 continue;
             }
-	    const enriched = filtered.map(item => ({
+	    	const enriched = filtered.map(item => ({
                 ...item,
                 name: item.name ?? `custom-dashboard-${item.id}`
             }));
@@ -886,12 +944,11 @@ async function handleExport(argv: any) {
         let totalEventProcessed = 0;
 
         for (const inc of parsedIncludes.filter(inc => inc.type === "event" || inc.type === "all")) {
-            const matches = inc.conditions.filter(c => c.startsWith("id="));
-
+        	const matches = inc.conditions.filter(c => c.startsWith("id="));
             let filtered;
-	    if (matches.length) {
-                filtered = matches.map(idCond => {
-                    const id = idCond.split("=")[1]?.replace(/^"|"$/g, '');
+	   		if (matches.length) {
+            	filtered = matches.map(idCond => {
+                	const id = idCond.split("=")[1]?.replace(/^"|"$/g, '');
                     const found = allEvents.find(e => e.id === id);
                     return found;
                 }).filter(Boolean);
@@ -904,7 +961,7 @@ async function handleExport(argv: any) {
                 logFn(`No custom event(s) found matching: ${inc.conditions.join(', ')}`);
                 continue;
             }
-	    const enriched = filtered.map(item => ({
+	    	const enriched = filtered.map(item => ({
                 ...item,
                 name: item.name ?? `custom-event-${item.id}`
             }));
@@ -967,12 +1024,10 @@ async function getDashboardList(server: string, token: string, axiosInstance: an
                 'Authorization': `apiToken ${token}`
             }
         });
-
         logger.info(`Successfully got custom dashboard list: ${response.status}`);
         if (logger.isDebugEnabled()) {
             logger.debug(`Response data: \n${JSON.stringify(response.data)}`);
         }
-
         return response.data;
     } catch (error) {
         handleAxiosError(error, `dashboard list`);
@@ -1088,37 +1143,36 @@ function filterEventsBy(idObjects: any[], include: string[]): any[] {
 
 // Helpers for export
 function parseIncludesFromArgv(argv: string[]): { type: string, conditions: string[], explicitlyTyped: boolean }[] {
-  const includes: { type: string, conditions: string[], explicitlyTyped: boolean }[] = [];
-  let current: { type: string, conditions: string[], explicitlyTyped: boolean } | null = null;
-  let clauseParts: string[] = [];
+	const includes: { type: string, conditions: string[], explicitlyTyped: boolean }[] = [];
+  	let current: { type: string, conditions: string[], explicitlyTyped: boolean } | null = null;
+  	let clauseParts: string[] = [];
 
-  for (let i = 0; i < argv.length; i++) {
-    const arg = argv[i];
-    if (arg === "--include") {
-      if (clauseParts.length && !current?.explicitlyTyped) {
-        logger.warn(`'type=' missing in include clause "${clauseParts.join(" ")}", interpreting as type=all`);
-      }
-      clauseParts = [];
-      const next = argv[i + 1];
-      const keyVal = next?.split("=");
-      if (keyVal?.[0] === "type") {
-        current = { type: keyVal[1], conditions: [], explicitlyTyped: true };
-        i++;
-        clauseParts.push(`type=${keyVal[1]}`);
-      } else {
-        current = { type: "all", conditions: [], explicitlyTyped: false };
-      }
-      includes.push(current);
-    } else if (current) {
-      current.conditions.push(arg);
-      clauseParts.push(arg);
-    }
-  }
-
-  if (clauseParts.length && !current?.explicitlyTyped) {
-    logger.warn(`'type=' missing in include clause "${clauseParts.join(" ")}", interpreting as type=all`);
-  }
-  return includes;
+  	for (let i = 0; i < argv.length; i++) {
+		const arg = argv[i];
+	  	if (arg === "--include") {
+      		if (clauseParts.length && !current?.explicitlyTyped) {
+				logger.warn(`'type=' missing in include clause "${clauseParts.join(" ")}", interpreting as type=all`);
+      		}
+			clauseParts = [];
+			const next = argv[i + 1];
+		  	const keyVal = next?.split("=");
+			if (keyVal?.[0] === "type") {
+				current = { type: keyVal[1], conditions: [], explicitlyTyped: true };
+			  	i++;
+			  	clauseParts.push(`type=${keyVal[1]}`);
+		  	} else {
+				current = { type: "all", conditions: [], explicitlyTyped: false };
+		  	}
+		  	includes.push(current);
+	  	} else if (current) {
+      		current.conditions.push(arg);
+      		clauseParts.push(arg);
+    	}
+  	}
+  	if (clauseParts.length && !current?.explicitlyTyped) {
+    	logger.warn(`'type=' missing in include clause "${clauseParts.join(" ")}", interpreting as type=all`);
+  	}
+  	return includes;
 }
 
 function parseIncludeItem(item: string): string[] {
@@ -1171,10 +1225,7 @@ function handleAxiosError(error: any, context: string) {
     }
 }
 
-function sanitizeTitles<T extends { id: string; title?: string; name?: string }>(
-    idObjects: T[],
-    fallbackPrefix: string
-): T[] {
+function sanitizeTitles<T extends { id: string; title?: string; name?: string }>(idObjects: T[], fallbackPrefix: string): T[] {
     const titleMap: { [key: string]: number } = {};
     return idObjects.map(obj => {
         const fallback = obj.name || `${fallbackPrefix}-${obj.id}`;
@@ -1230,8 +1281,8 @@ async function handleInit() {
         choices: [
             { name: 'dashboards', value: 'dashboards', checked: true },
             { name: 'events', value: 'events'},
+            { name: 'entities', value: 'entities'},
             new Separator('-- Below items are not supported yet --'),
-            { name: 'entities', value: 'entities', disabled: true, },
             { name: 'collector configs', value: 'collector-configs', disabled: true, },
         ],
         required: true
@@ -1291,24 +1342,23 @@ async function handleInit() {
 function printDirectoryTree(dirPath: string, rootLabel: string, indent: string = ''): void {
     const isRoot = indent === '';
     if (isRoot) {
-      logger.info(rootLabel);
+		logger.info(rootLabel);
     }
 
     const files = fs.readdirSync(dirPath);
     const lastIndex = files.length - 1;
 
     files.forEach((file, index) => {
-      const fullPath = path.join(dirPath, file);
-      const isDirectory = fs.statSync(fullPath).isDirectory();
-      const isLast = index === lastIndex;
-      const prefix = isLast ? '└── ' : '├── ';
+		const fullPath = path.join(dirPath, file);
+      	const isDirectory = fs.statSync(fullPath).isDirectory();
+      	const isLast = index === lastIndex;
+      	const prefix = isLast ? '└── ' : '├── ';
 
-      logger.info(indent + prefix + file);
-
-      if (isDirectory) {
-        const newIndent = indent + (isLast ? '    ' : '│   ');
-        printDirectoryTree(fullPath, rootLabel, newIndent);
-      }
+      	logger.info(indent + prefix + file);
+    	if (isDirectory) {
+			const newIndent = indent + (isLast ? '    ' : '│   ');
+        	printDirectoryTree(fullPath, rootLabel, newIndent);
+      	}
     });
 }
 
@@ -1324,10 +1374,11 @@ function generateReadme(packagePath: string, packageName: string, configTypes: s
 
 Below are the dashboards that are currently supported by this integration package.
 
-(Note: Below are the sample dashboards. Please replace these with your own actual dashboards.)
-| Dashboard Title    | Description           |
-|--------------------|-----------------------|
-| Runtime Metrics    | Instana custom dashboard that displays runtime metrics for application |
+(Note: Replace the sample entries below with actual dashboards defined in your package.)
+
+| Dashboard Title        | Description                                                |
+|------------------------|------------------------------------------------------------|
+| <dashboard_title>      | Brief description of what this dashboard displays.         |
 `;
     }
 
@@ -1338,21 +1389,23 @@ Below are the dashboards that are currently supported by this integration packag
 
 Below are the runtime metrics that are currently supported by this integration package.
 
-(Note: Below are the sample runtime metrics. Please replace these with your own actual metrics.)
-| Metrics Name               | Description                       | Unit    |
-|----------------------------|-----------------------------------|---------|
-| <metric.name.heap_inuse>   | Heap used            			 | Number  |
-| <metric.name.heap.alloc>   | Allocated memory     			 | Byte    |
+(Note: Replace the sample entries below with actual metrics for your package.)
+
+| Metric Name             | Description                      | Unit    |
+|-------------------------|----------------------------------|---------|
+| <metric.name.example1>  | Description of the metric        | <unit>  |
+| <metric.name.example2>  | Description of another metric    | <unit>  |
 
 ### Resource Attributes
 
 Below are the resource attributes that are currently supported by this integration package.
 
-(Note: Below are the sample resource attributes. Please replace these with your own actual resource attributes.)
-| Attribute Key                  | Type   |  Description           |
-|--------------------------------|--------|------------------------|
-| <resource.service.name>        | string | This attribute is used to describe the entity name. |
-| <resource.service.instance.id> | string | This attribute is used to describe the entity ID of the current object. |
+(Note: Replace with the actual resource attributes relevant to your package.)
+
+| Attribute Key                    | Type   | Description                                      |
+|----------------------------------|--------|--------------------------------------------------|
+| <resource.attribute.key1>        | string | Describes the entity name or other identifier    |
+| <resource.attribute.key2>        | string | Further identifies or qualifies the entity       |
 `;
 
     if (configTypes.includes('events')) {
@@ -1361,11 +1414,45 @@ Below are the resource attributes that are currently supported by this integrati
 
 Below are the events that are currently supported by this integration package.
 
-(Note: Below are the sample events. Please replace these with your own actual events.)
-| Event Name                 | Description                       |
-|----------------------------|-----------------------------------|
-| <event.name.heap_inuse>    | Heap used  |
-| <event.name.heap.alloc>    | Allocated memory  |
+(Note: Replace the sample entries below with actual events from your package.)
+
+| Event Name               | Description                       |
+|--------------------------|---------------------------------  |
+| <event.name.example1>    | Triggered when condition X occurs |
+| <event.name.example2>    | Triggered when condition Y occurs |
+`;
+    }
+
+    if (configTypes.includes('entities')) {
+        readmeContent += `
+## Entities
+
+Below are the entities that are currently supported by this integration package.
+
+(Note: Repeat the following structure for each custom entity in your package.)
+
+### Entity: <Entity Label>
+
+(Note: Write your entity description here.)
+
+#### Dashboards
+
+| Dashboard Title        | Description                                         |
+|------------------------|-----------------------------------------------------|
+| <dashboard_title>      | Describe the dashboard linked to this entity.       |
+
+#### Metrics
+
+| Metric Name             | Description                          | Unit   |
+|-------------------------|------------------------------------- |--------|
+| <metric.name.example1>  | What the metric tracks               | <unit> |
+| <metric.name.example2>  | Another metric for this entity       | <unit> |
+
+#### Dependencies
+
+| Related Entity          | Description of Relationship                                     |
+|-------------------------|-----------------------------------------------------------------|
+| <related_entity_label>  | Explain how this entity depends on or relates to another entity |
 `;
     }
 
