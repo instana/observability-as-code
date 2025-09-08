@@ -713,47 +713,6 @@ async function handlePublish(argv: any) {
     }
 }
 
-function parseParams(params: string[]): any {
-    const result: any = {};
-
-    params.forEach(param => {
-        const [key, value] = param.split('=');
-        const keys = key.split('.');
-        keys.reduce((acc, key, index) => {
-            if (index === keys.length - 1) {
-                acc[key] = value || acc[key];
-            } else {
-                acc[key] = acc[key] || {};
-            }
-            return acc[key];
-        }, result);
-    });
-
-    return result;
-}
-
-interface AccessRule {
-    accessType: string;
-    relationType: string;
-}
-
-function ensureAccessRules(dashboard: any): void {
-    const globalAccessRule = {
-        accessType: "READ_WRITE",
-        relationType: "GLOBAL",
-        relatedId: ""
-    }
-
-    const globalAccessRuleExists = dashboard.accessRules.some(
-        (rule: AccessRule) => rule.accessType === "READ_WRITE" && rule.relationType === "GLOBAL"
-    );
-
-    if (!globalAccessRuleExists) {
-        dashboard.accessRules.push(globalAccessRule);
-        logger.info("Added the missing global access rule.");
-    }
-}
-
 // Function to handle import logic
 async function handleImport(argv: any) {
     const { package: packageNameOrPath, server, token, location, include: includePattern, set: parameters, debug } = argv;
@@ -770,6 +729,7 @@ async function handleImport(argv: any) {
 
     const defaultFolders = ['dashboards'];
     const defaultEventsFolders = ['events'];
+    const defaultEntitiesFolders = ['entities'];
 
     // Create an axios instance with a custom httpsAgent to ignore self-signed certificate errors
     const axiosInstance = axios.create({
@@ -822,6 +782,29 @@ async function handleImport(argv: any) {
                   ensureAccessRules(jsonContent)
                 }
 
+				if (apiPath === 'api/custom-entitytypes' && jsonContent.data){
+					logger.info(`Flattening the structure for ${file} ...`);
+					jsonContent = {
+                    	...jsonContent.data,
+                        id: jsonContent.id,
+                        version: jsonContent.version,
+                        created: jsonContent.created
+                    };
+				}
+
+				if (apiPath === 'api/custom-entitytypes' && Array.isArray(jsonContent.dashboards) && jsonContent.dashboards.length > 0){
+					const dashboardsFolderPath = path.join(packagePath, 'dashboards');
+					logger.info(`Resolving dashboard references in custom entity from: ${dashboardsFolderPath} ...`);
+					try{
+						jsonContent.dashboards = resolveDashboardReferences(jsonContent.dashboards, dashboardsFolderPath);
+					} catch (err) {
+						logger.error(`Failed to resolve dashboard references for ${file}: ${err instanceof Error ? err.message : String(err)}`);
+						continue;
+					}
+				} else if (apiPath === 'api/custom-entitytypes') {
+					logger.info (`No dashboards defined in entity.`);
+				}
+
                 try {
                     const url = `https://${server}/${apiPath}`;
                     logger.info(`Applying the ${typeLabel} to ${url} ...`);
@@ -846,7 +829,6 @@ async function handleImport(argv: any) {
                 }
             }
         }
-
         logger.info(`Total file(s) processed: ${files.length}`)
     }
 
@@ -854,6 +836,8 @@ async function handleImport(argv: any) {
         const searchPattern = path.join(packagePath, includePattern);
         if (includePattern.includes('events')) {
             await importIntegration(searchPattern, "api/events/settings/event-specifications/custom", "custom event");
+        } else if (includePattern.includes('entities')) {
+            await importIntegration(searchPattern, "api/custom-entitytypes", "custom entity");
         } else {
             await importIntegration(searchPattern, "api/custom-dashboard", "custom dashboard");
         }
@@ -866,7 +850,71 @@ async function handleImport(argv: any) {
             const searchPattern = path.join(packagePath, defaultFolder, '**/*.json');
             await importIntegration(searchPattern, "api/events/settings/event-specifications/custom", "custom event");
         }
+        for (const defaultFolder of defaultEntitiesFolders) {
+            const searchPattern = path.join(packagePath, defaultFolder, '**/*.json');
+            await importIntegration(searchPattern, "api/custom-entitytypes", "custom entity");
+        }
     }
+}
+
+//Helper functions for import
+function parseParams(params: string[]): any {
+    const result: any = {};
+
+    params.forEach(param => {
+        const [key, value] = param.split('=');
+        const keys = key.split('.');
+        keys.reduce((acc, key, index) => {
+            if (index === keys.length - 1) {
+                acc[key] = value || acc[key];
+            } else {
+                acc[key] = acc[key] || {};
+            }
+            return acc[key];
+        }, result);
+    });
+
+    return result;
+}
+
+interface AccessRule {
+    accessType: string;
+    relationType: string;
+}
+
+function ensureAccessRules(dashboard: any): void {
+    const globalAccessRule = {
+        accessType: "READ_WRITE",
+        relationType: "GLOBAL",
+        relatedId: ""
+    }
+
+    const globalAccessRuleExists = dashboard.accessRules.some(
+        (rule: AccessRule) => rule.accessType === "READ_WRITE" && rule.relationType === "GLOBAL"
+    );
+
+    if (!globalAccessRuleExists) {
+        dashboard.accessRules.push(globalAccessRule);
+        logger.info("Added the missing global access rule.");
+    }
+}
+
+function resolveDashboardReferences(dashboards: any[], dashboardsFolderPath: string): any[] {
+	return dashboards.map((dashboard) => {
+		if (dashboard.reference) {
+			const dashboardPath = path.resolve(dashboardsFolderPath, dashboard.reference);
+			if (!fs.existsSync(dashboardPath)) {
+				throw new Error(`Dashboard reference not found: ${dashboardPath}`);
+			}
+			try {
+				const dashboardContent = fs.readFileSync(dashboardPath, 'utf8');
+				return JSON.parse(dashboardContent);
+			} catch (err) {
+				throw new Error(`Failed to read or parse dashboard at ${dashboardPath}: ${err}`);
+			}
+		}
+		return dashboard;
+	});
 }
 
 // Function to handle export logic
