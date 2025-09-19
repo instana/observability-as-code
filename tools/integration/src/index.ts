@@ -324,7 +324,6 @@ async function handleLint(argv: any) {
         } else {
             logger.info('No events folder found for this package.');
         }
-
     } catch (error) {
         errors.push(`Linting failed: ${error}`);
     }
@@ -891,7 +890,6 @@ async function handleImport(argv: any) {
         } else {
             logger.info(`Total files: ${totalFiles} | Successfully imported: ${successFileCount} | Failed: ${failFileCount}`);
         }
-
     }
 
     if (includePattern) {
