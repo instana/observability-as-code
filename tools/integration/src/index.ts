@@ -111,14 +111,16 @@ Examples:
 Import integration package with parameters replaced:
   ${execName} import --package my-package --server example.com --include "dashboards/**/test-*.json" --set key1=value1 --set key2=value2
   ${execName} import --package my-package --server example.com --include "events/**/*.json"
+  ${execName} import --package my-package --server example.com --include "entities/**/*.json"
 `;
 
 const examplesForExport = `
 Examples:
 
 Export integration elements:
-  ${execName} export --server example.com --include type=dashboard title="Runtime.*" --location ./my-package
+  ${execName} export --server example.com --include type=dashboard title="exampleTitle" --location ./my-package
   ${execName} export --server example.com --include type=event id=exampleid --location ./my-package
+  ${execName} export --server example.com --include type=entity title="exampleTitle" --location ./my-package
 `;
 
 // Configure yargs to parse command-line arguments with subcommands
@@ -290,6 +292,8 @@ async function handleLint(argv: any) {
     const eventsPath = path.join(currentDirectory, 'events');
     const entitiesPath = path.join(currentDirectory, 'entities');
 
+    let embeddedDashboardRefs = new Set<string>();
+
     // Check README
     if (readmeContent) {
 		try {
@@ -304,8 +308,14 @@ async function handleLint(argv: any) {
     try {
 		const strictMode = argv['strict-mode'];
         await validatePackageJson(packageData, errors, warnings, successMessages, strictMode);
+        if(fs.existsSync(entitiesPath)){
+        	embeddedDashboardRefs = getEmbeddedDashboardRefs(entitiesPath);
+        	validateEntityFiles(entitiesPath, errors, warnings, successMessages);
+        } else{
+        	logger.info('No entities folder found for this package.');
+        }
         if(fs.existsSync(dashboardsPath)){
-            validateDashboardFiles(dashboardsPath, errors, warnings, successMessages);
+            validateDashboardFiles(dashboardsPath, errors, warnings, successMessages, embeddedDashboardRefs);
         } else {
             logger.info('No dashboards folder found for this package.');
         }
@@ -314,11 +324,6 @@ async function handleLint(argv: any) {
         } else {
             logger.info('No events folder found for this package.');
         }
-		if(fs.existsSync(entitiesPath)){
-			validateEntityFiles(entitiesPath, errors, warnings, successMessages);
-		} else{
-			logger.info('No entities folder found for this package.');
-		}
 
     } catch (error) {
         errors.push(`Linting failed: ${error}`);
@@ -403,17 +408,29 @@ async function validatePackageJson(packageData: any, errors: string[], warnings:
 
     // Check for required fields and description
     const requiredFields = ['name', 'version', 'author', 'license', 'description'];
+    const presentFields: string[] = [];
+    const missingFields: string[] = [];
+
     for (const field of requiredFields) {
-        if (packageData[field] === undefined || packageData[field] === null || packageData[field] === '') {
+		const value = packageData[field];
+        if (value === undefined || value === null || value === '') {
             if (field === 'description') {
                 warnings.push('Warning: The package description is missing. Adding a description is recommended.');
             } else {
-                errors.push(`The package is missing required field ${field}.`);
+                missingFields.push(field);
             }
         } else {
-            successMessages.push(`The package field ${field} is present.`);
+            presentFields.push(field);
         }
     }
+
+	if (presentFields.length > 0) {
+		successMessages.push (`The package field(s) ${presentFields.join(', ')} are present.`);
+	}
+
+	if (missingFields.length > 0) {
+		errors.push(`The package is missing required field(s): ${missingFields.join(', ')}.`);
+	}
 
     // Check for publishConfig.access = "public"
     if (!packageData.publishConfig || packageData.publishConfig.access !== "public") {
@@ -425,7 +442,7 @@ async function validatePackageJson(packageData: any, errors: string[], warnings:
 }
 
 // Helper function to validate dashboard files
-function validateDashboardFiles(dashboardsPath: string, errors: string[], warnings: string[], successMessages: string[]): void {
+function validateDashboardFiles( dashboardsPath: string, errors: string[], warnings: string[], successMessages: string[], embeddedRefs: Set<string> = new Set()): void {
     const files = fs.readdirSync(dashboardsPath);
     const jsonFiles = files.filter(file => file.endsWith('.json'));
 
@@ -436,6 +453,8 @@ function validateDashboardFiles(dashboardsPath: string, errors: string[], warnin
 
     jsonFiles.forEach(file => {
         const filePath = path.join(dashboardsPath, file);
+        const isEmbedded = embeddedRefs.has(file);
+
         try {
             const fileContent = fs.readFileSync(filePath, 'utf-8');
             const dashboard = JSON.parse(fileContent);
@@ -447,25 +466,29 @@ function validateDashboardFiles(dashboardsPath: string, errors: string[], warnin
                 relatedId: ''
             };
 
-            if (!Array.isArray(accessRules) || accessRules.length === 0) {
-                errors.push(`accessRules are missing in the dashboard file: ${file}.`);
-                return;
+            if (!isEmbedded) {
+				if (!Array.isArray(accessRules) || accessRules.length === 0) {
+                    errors.push(`accessRules are missing in the custom dashboard file: ${file}.`);
+                    return;
+                }
+
+                const hasRequiredRule = accessRules.some(rule =>
+                    rule.accessType === requiredAccessRule.accessType &&
+                    rule.relationType === requiredAccessRule.relationType &&
+                    rule.relatedId === requiredAccessRule.relatedId
+                );
+
+                if (!hasRequiredRule) {
+                    errors.push(`Custom dashboard ${file} must include the required accessRule: ${JSON.stringify(requiredAccessRule)}.`);
+                } else {
+					successMessages.push(`Custom dashboard ${file} contains the required GLOBAL accessRule.`);
+                }
+            } else {
+				successMessages.push(`Skipping accessRule validation for embedded entity dashboard: ${file}`);
             }
-
-	    	const hasRequiredRule = accessRules.some(rule =>
-	    		rule.accessType === requiredAccessRule.accessType &&
-				rule.relationType === requiredAccessRule.relationType &&
-				rule.relatedId === requiredAccessRule.relatedId
-	    	);
-
-      	    if (!hasRequiredRule) {
-            	errors.push(`Dashboard file ${file} must include the required accessRule: ${JSON.stringify(requiredAccessRule)}.`);
-			} else {
-				successMessages.push(`Dashboard file ${file} contains the required GLOBAL accessRule.`);
-			}
-		} catch (error) {
-			errors.push(`Error validating file ${file}: ${error instanceof Error ? error.message : String(error)}.`);
-		}
+        } catch (error) {
+            errors.push(`Error validating file ${file}: ${error instanceof Error ? error.message : String(error)}.`);
+        }
     });
 }
 
@@ -520,17 +543,17 @@ function validateEventFiles(eventsPath: string, errors: string[], warnings: stri
             }
 
             if (presentFields.length > 0) {
-                successMessages.push(`The event field(s) ${presentFields.join(', ')} are present in the file: ${file}.`);
+                successMessages.push(`The Custom event field(s) ${presentFields.join(', ')} are present in the file: ${file}.`);
             }
 
             if (missingFields.length > 0) {
-                errors.push(`The event is missing required field(s): ${missingFields.join(', ')} in file: ${file}.`);
+                errors.push(`The custom event is missing required field(s): ${missingFields.join(', ')} in file: ${file}.`);
             }
 
             if (allEventFieldsValid) {
-                successMessages.push(`Event is correctly defined in the file: ${file}.`);
+                successMessages.push(`Custom event is correctly defined in the file: ${file}.`);
             } else {
-                errors.push(`Event is not correctly defined in the file: ${file}.`);
+                errors.push(`Custom event is not correctly defined in the file: ${file}.`);
             }
         } catch (error) {
             errors.push(`Error validating file ${filePath}: ${error instanceof Error ? error.message : String(error)}.`);
@@ -556,7 +579,7 @@ function validateEntityFiles(entitiesPath: string, errors: string[], warnings: s
             const missingFields: string[] = [];
 
             if (!entity.data || typeof entity.data !== 'object'  || Object.keys(entity.data).length === 0) {
-            	errors.push(`Missing or invalid 'data' object in file: ${file}.`);
+            	errors.push(`Missing or invalid 'data' object in custom entity: ${file}.`);
                 allEntityFieldsValid = false;
                 return;
             }
@@ -575,22 +598,46 @@ function validateEntityFiles(entitiesPath: string, errors: string[], warnings: s
             }
 
 			if (presentFields.length > 0) {
-				successMessages.push(`The entity field(s) ${presentFields.join(', ')} are present in the file: ${file}.`);
+				successMessages.push(`The custom entity field(s) ${presentFields.join(', ')} are present in the file: ${file}.`);
 			}
             if (missingFields.length > 0) {
-            	errors.push(`The entity is missing required field(s): ${missingFields.join(', ')} in file: ${file}.`);
+            	errors.push(`The custom entity is missing required field(s): ${missingFields.join(', ')} in file: ${file}.`);
             }
 
 			if(allEntityFieldsValid === true){
-				successMessages.push(`Entity is correctly defined in the file: ${file}.`);
+				successMessages.push(`Custom entity is correctly defined in the file: ${file}.`);
 			} else {
-				errors.push(`Entity is not correctly defined in the file: ${file}.`);
+				errors.push(`Custom entity is not correctly defined in the file: ${file}.`);
 			}
 
         } catch (error) {
 			errors.push(`Error validating file ${filePath}: ${error instanceof Error ? error.message : String(error)}.`);
         }
     });
+}
+
+function getEmbeddedDashboardRefs(entitiesPath: string): Set<string> {
+	const embeddedDashboardRefs = new Set<string>();
+	const jsonFiles = getAllJsonFiles(entitiesPath);
+
+	jsonFiles.forEach(filePath => {
+		try {
+			const content = fs.readFileSync(filePath, 'utf-8');
+			const entity = JSON.parse(content);
+			const dashboards = entity?.data?.dashboards;
+
+			if(Array.isArray(dashboards)){
+				dashboards.forEach((dashboard: any) => {
+					if (dashboard?.reference){
+						embeddedDashboardRefs.add(dashboard.reference);
+					}
+				});
+			}
+		} catch (error) {
+
+		}
+	});
+	return embeddedDashboardRefs;
 }
 
 
@@ -750,7 +797,11 @@ async function handleImport(argv: any) {
 
         const paramsObject = parameters ? parseParams(parameters) : {};
 
+		let successFileCount = 0;
+        let failFileCount = 0;
+
         for (const file of files) {
+
             if (path.extname(file) === '.json') {
 
                 logger.info(`Importing ${file} ...`);
@@ -802,7 +853,7 @@ async function handleImport(argv: any) {
 						continue;
 					}
 				} else if (apiPath === 'api/custom-entitytypes') {
-					logger.info (`No dashboards defined in entity.`);
+					logger.info (`No dashboards defined in custom entity.`);
 				}
 
                 try {
@@ -815,6 +866,7 @@ async function handleImport(argv: any) {
 						}
                     });
 		    		logger.info(`Successfully applied ${file}: ${response.status}`);
+		    		successFileCount++;
                 } catch (error) {
                     if (axios.isAxiosError(error)) {
                         logger.error(`Failed to apply ${file}: ${error.message}`);
@@ -826,10 +878,20 @@ async function handleImport(argv: any) {
                     } else {
                         logger.error(`Failed to apply ${file}: ${String(error)}`);
                     }
+					failFileCount++;
                 }
             }
         }
-        logger.info(`Total file(s) processed: ${files.length}`)
+		const totalFiles = successFileCount + failFileCount;
+
+        if (successFileCount > 0 && failFileCount === 0) {
+            logger.info(`Successfully imported: ${successFileCount}`);
+        } else if (failFileCount > 0 && successFileCount === 0) {
+            logger.info(`Failed to import: ${failFileCount}`);
+        } else {
+            logger.info(`Total files: ${totalFiles} | Successfully imported: ${successFileCount} | Failed: ${failFileCount}`);
+        }
+
     }
 
     if (includePattern) {
@@ -925,21 +987,47 @@ async function handleExport(argv: any) {
         logger.level = 'debug';
     }
 
+	const parsedIncludes = parseIncludesFromArgv(process.argv);
+
+    const exportPath = path.resolve(location);
+    if (fs.existsSync(exportPath)) {
+        const foldersToCheck = [
+            path.join(location, 'dashboards'),
+            path.join(location, 'events'),
+            path.join(location, 'entities')
+        ];
+
+        for (const folderPath of foldersToCheck) {
+            if (fs.existsSync(folderPath)) {
+                const files = fs.readdirSync(folderPath);
+                if (files.length > 0) {
+                    logger.error(`Cannot export: folder is not empty.`);
+                    logger.info(`The export directory must be completely empty (including dashboards/, events/, entities/).`);
+                    logger.info(`Please clean the folder or choose a new one.`);
+					process.exit(1);
+                }
+            }
+        }
+    } else {
+        fs.mkdirSync(exportPath, { recursive: true });
+    }
+
     const axiosInstance = axios.create({
         httpsAgent: new https.Agent({
             rejectUnauthorized: false
         })
     });
 
-    const parsedIncludes = parseIncludesFromArgv(process.argv);
-
     const dashboardsPath = path.join(location, "dashboards");
     const eventsPath = path.join(location, "events");
+    const entitiesPath = path.join(location, "entities");
     fs.mkdirSync(dashboardsPath, { recursive: true });
     fs.mkdirSync(eventsPath, { recursive: true });
+    fs.mkdirSync(entitiesPath, {recursive: true});
 
     let wasDashboardFound = false;
     let wasEventFound = false;
+    let wasEntityFound = false;
 
     // Dashboard export
     if (parsedIncludes.some(inc => inc.type === "dashboard" || inc.type === "all")) {
@@ -978,7 +1066,7 @@ async function handleExport(argv: any) {
                     wasDashboardFound = true;
                 } else {
                     const logFn = inc.explicitlyTyped ? logger.error : logger.debug;
-                    logFn(`Dashboard with id=${dash.id} not found or failed to export.`);
+                    logFn(`Custom dashboard with id=${dash.id} not found or failed to export.`);
                 }
             }
         }
@@ -1022,7 +1110,7 @@ async function handleExport(argv: any) {
                     wasEventFound = true;
                 } else {
                     const logFn = inc.explicitlyTyped ? logger.error : logger.debug;
-                    logFn(`Event with id=${evt.id} not found or failed to export.`);
+                    logFn(`Custom event with id=${evt.id} not found or failed to export.`);
                 }
             }
         }
@@ -1030,11 +1118,157 @@ async function handleExport(argv: any) {
         logger.info(`Total custom event(s) processed: ${totalEventProcessed}`);
     }
 
+	if (parsedIncludes.some(inc => inc.type === "entity" || inc.type === "all")){
+		const allEntities = await getEntityList(server, token, axiosInstance);
+		let totalEntitiesProcessed = 0;
+
+		for (const inc of parsedIncludes.filter(inc => inc.type === "entity" || inc.type === "all")){
+			const matches = inc.conditions.filter(c => c.startsWith("id="));
+			let filtered;
+			if (matches.length) {
+				filtered = matches.map(idCond => {
+                	const id = idCond.split("=")[1]?.replace(/^"|"$/g, '');
+                    const found = allEntities.find(e => e.id === id);
+                    return found;
+                }).filter(Boolean);
+			} else {
+				filtered = filterEntitiesBy(allEntities, inc.conditions);
+			}
+
+			if (filtered.length === 0){
+				const logFn = inc.explicitlyTyped ? logger.error : logger.debug;
+				logFn(`No custom entities found matching: ${inc.conditions.join(', ')}`)
+				continue;
+			}
+
+			const enriched = filtered.map(item => ({
+				...item,
+            	data: {
+            		...item.data,
+            		label: item.data?.label ?? `custom-entity-${item.id}`
+            	}
+			}));
+
+            const sanitized = sanitizeTitles(enriched, "custom-entity");
+
+            for (const ent of sanitized) {
+				const entity = await exportEntity(server, token, ent.id, axiosInstance);
+            	if (entity) {
+            		saveEntity(entitiesPath, dashboardsPath, entity);
+            		totalEntitiesProcessed++;
+            		wasEntityFound = true;
+            	} else {
+            		const logFn = inc.explicitlyTyped ? logger.error : logger.debug;
+            		logFn(`Custom entity with id=${ent.id} not found or failed to export.`);
+            	}
+			}
+		}
+		logger.info(`Total custom entities processed: ${totalEntitiesProcessed}`);
+	}
+
     // Final info
-    if (!wasDashboardFound && !wasEventFound) {
+    if (!wasDashboardFound && !wasEventFound && !wasEntityFound) {
         logger.error("No custom elements were found or exported.");
     }
 }
+
+// Helper functions for entity export
+async function getEntityList(server: string, token: string, axiosInstance: any): Promise<any[]> {
+	try {
+		const url = `https://${server}/api/custom-entitytypes`;
+		logger.info(`Getting custom entity list from ${url} ...`);
+
+		const response = await axiosInstance.get(url, {
+        	headers: {
+            	'Content-Type': 'application/json',
+                'Authorization': `apiToken ${token}`
+            }
+		});
+        logger.info(`Successfully got custom entity list: ${response.status}`);
+        if (logger.isDebugEnabled()) {
+        	logger.debug(`Response data: \n${JSON.stringify(response.data)}`);
+        }
+        return response.data;
+	} catch (error) {
+		handleAxiosError(error, `entity list`);
+        return [];
+	}
+}
+
+function filterEntitiesBy(idObjects: any[], include: string[]): any[] {
+    return idObjects.filter(obj => {
+        return include.every(condition => {
+            const [key, rawValue] = condition.split('=');
+            const value = rawValue?.replace(/^"|"$/g, '');
+            if (key === 'name' || key === 'title') {
+                return new RegExp(value, 'i').test(obj.name ?? obj.data?.label ?? '');
+            } else if (key === 'label') {
+                return new RegExp(value, 'i').test(obj.data?.label ?? '');
+            }
+            return false;
+        });
+    });
+}
+
+async function exportEntity(server: string, token: string, entityId: string, axiosInstance: any): Promise<any> {
+	try {
+		const url = `https://${server}/api/custom-entitytypes/${entityId}`;
+		logger.info(`Getting custom entity (id=${entityId}) from ${url} ...`);
+
+		const response = await axiosInstance.get(url, {
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `apiToken ${token}`
+			}
+		});
+
+		logger.info(`Successfully got custom entity (id=${entityId}): ${response.status}`);
+		if (logger.isDebugEnabled()) {
+			logger.debug(`Response data: \n${JSON.stringify(response.data)}`);
+		}
+
+		return response.data;
+	} catch (error) {
+		handleAxiosError(error, `entity (id=${entityId})`);
+		return null;
+	}
+}
+
+function saveEntity(entityDir: string, dashboardDir: string, entity: any) {
+	try {
+		const entityId = entity.id;
+		const entityName = sanitizeFileName(entity.data?.label ?? `custom-entity-${entityId}`);
+		const entityFilePath = path.join(entityDir, `${entityName}.json`);
+
+		logger.info(`Saving custom entity (id=${entityId}) to ${entityFilePath} ...`);
+
+		const dashboards = entity.data?.dashboards || [];
+		const updatedDashboards: any[] = [];
+
+		dashboards.forEach((dashboard: any, index: number) => {
+			const dashboardContent = dashboard;
+			const dashboardFileName = `${entityName}_dashboard_${index + 1}.json`;
+			const dashboardFilePath = path.join(dashboardDir, dashboardFileName);
+
+			logger.info(`Saving embedded dashboard for entity (id=${entityId}) to ${dashboardFilePath} ...`);
+			try {
+				fs.writeFileSync(dashboardFilePath, JSON.stringify(dashboardContent, null, 2));
+				logger.info(`Embedded dashboard for entity (id=${entityId}) saved successfully to ${dashboardFilePath}`);
+				updatedDashboards.push({ reference: dashboardFileName });
+			} catch (err) {
+				logger.error(`Error saving embedded dashboard for entity (id=${entityId}) to ${dashboardFilePath}:`, err);
+			}
+		});
+
+		entity.data.dashboards = updatedDashboards;
+
+		fs.writeFileSync(entityFilePath, JSON.stringify(entity, null, 2));
+		logger.info(`Custom entity (id=${entityId}) saved successfully to ${entityFilePath}`);
+	} catch (error) {
+		logger.error(`Error saving custom entity (id=${entity?.id ?? 'unknown'}):`, error);
+	}
+}
+
 
 // Helper functions for dashboard export
 async function exportDashboard(server: string, token: string, dashboardId: string, axiosInstance: any): Promise<any> {
@@ -1264,9 +1498,13 @@ function handleAxiosError(error: any, context: string) {
     if (axios.isAxiosError(error)) {
         logger.error(`Failed to get ${context}: ${error.message}`);
         if (error.response) {
-            logger.error(`Response data: ${JSON.stringify(error.response.data)}`);
-            logger.error(`Response status: ${error.response.status}`);
-            logger.error(`Response headers: ${JSON.stringify(error.response.headers)}`);
+			if (logger.isDebugEnabled()) {
+            	logger.error(`Response data: ${JSON.stringify(error.response.data)}`);
+            	logger.error(`Response status: ${error.response.status}`);
+            	logger.error(`Response headers: ${JSON.stringify(error.response.headers)}`);
+            } else {
+				logger.error(`Response status: ${error.response.status}`);
+			}
         }
     } else {
         logger.error(`Failed to get ${context}: ${String(error)}`);
