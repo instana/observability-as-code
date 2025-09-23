@@ -784,7 +784,7 @@ async function handleImport(argv: any) {
         })
     });
 
-    async function importIntegration(searchPattern: string, apiPath: string, typeLabel: string) {
+    async function importIntegration(searchPattern: string, apiPath: string, typeLabel: string, skipFiles: Set<string> = new Set()) {
         const files = globSync(searchPattern);
 
         logger.info(`Start to import the integration package from ${searchPattern}`);
@@ -800,6 +800,11 @@ async function handleImport(argv: any) {
         let failFileCount = 0;
 
         for (const file of files) {
+
+			if (skipFiles.has(file)){
+				logger.info(`Skipping embedded custom dashboard ${file} for entity.`);
+				continue;
+			}
 
             if (path.extname(file) === '.json') {
 
@@ -898,14 +903,38 @@ async function handleImport(argv: any) {
             await importIntegration(searchPattern, "api/events/settings/event-specifications/custom", "custom event");
         } else if (includePattern.includes('entities')) {
             await importIntegration(searchPattern, "api/custom-entitytypes", "custom entity");
-        } else {
-            await importIntegration(searchPattern, "api/custom-dashboard", "custom dashboard");
+        } else if (includePattern.includes('dashboards')) {
+			const entitiesPath = path.join(packagePath, 'entities');
+            let referencedDashboardPaths = new Set<string>();
+
+            if (fs.existsSync(entitiesPath)) {
+            	const referencedDashboards = getEmbeddedDashboardRefs(entitiesPath);
+                const allDashboardFiles = globSync(searchPattern);
+                referencedDashboardPaths = new Set(
+                	allDashboardFiles.filter(file => referencedDashboards.has(path.basename(file)))
+                );
+                referencedDashboardPaths.forEach(d => {
+                	logger.info(`Skipping embedded custom dashboard ${path.basename(d)} (used in entity)`);
+                });
+			} else {
+            	logger.warn(`No 'entities' folder found — cannot check for embedded dashboards`);
+            }
+            await importIntegration(searchPattern, "api/custom-dashboard", "custom dashboard", referencedDashboardPaths);
         }
     } else {
-        for (const defaultFolder of defaultFolders) {
-            const searchPattern = path.join(packagePath, defaultFolder, '**/*.json');
-            await importIntegration(searchPattern, "api/custom-dashboard", "custom dashboard");
-        }
+        const entitiesPath = path.join(packagePath, 'entities');
+            const referencedDashboards = getEmbeddedDashboardRefs(entitiesPath);
+            const referencedDashboardPaths = new Set<string>();
+
+            const allDashboardFiles = globSync(path.join(packagePath, 'dashboards', '**/*.json'));
+            allDashboardFiles.forEach(file => {
+                const filename = path.basename(file);
+                if (referencedDashboards.has(filename)) {
+                    referencedDashboardPaths.add(file);
+                }
+            });
+
+            await importIntegration(path.join(packagePath, 'dashboards', '**/*.json'), "api/custom-dashboard", "custom dashboard", referencedDashboardPaths);
         for (const defaultFolder of defaultEventsFolders) {
             const searchPattern = path.join(packagePath, defaultFolder, '**/*.json');
             await importIntegration(searchPattern, "api/events/settings/event-specifications/custom", "custom event");
@@ -1423,36 +1452,44 @@ function filterEventsBy(idObjects: any[], include: string[]): any[] {
 
 // Helpers for export
 function parseIncludesFromArgv(argv: string[]): { type: string, conditions: string[], explicitlyTyped: boolean }[] {
-	const includes: { type: string, conditions: string[], explicitlyTyped: boolean }[] = [];
-  	let current: { type: string, conditions: string[], explicitlyTyped: boolean } | null = null;
-  	let clauseParts: string[] = [];
+    const includes: { type: string, conditions: string[], explicitlyTyped: boolean }[] = [];
+    let current: { type: string, conditions: string[], explicitlyTyped: boolean } | null = null;
+    let clauseParts: string[] = [];
 
-  	for (let i = 0; i < argv.length; i++) {
-		const arg = argv[i];
-	  	if (arg === "--include") {
-      		if (clauseParts.length && !current?.explicitlyTyped) {
-				logger.warn(`'type=' missing in include clause "${clauseParts.join(" ")}", interpreting as type=all`);
-      		}
-			clauseParts = [];
-			const next = argv[i + 1];
-		  	const keyVal = next?.split("=");
-			if (keyVal?.[0] === "type") {
-				current = { type: keyVal[1], conditions: [], explicitlyTyped: true };
-			  	i++;
-			  	clauseParts.push(`type=${keyVal[1]}`);
-		  	} else {
-				current = { type: "all", conditions: [], explicitlyTyped: false };
-		  	}
-		  	includes.push(current);
-	  	} else if (current) {
-      		current.conditions.push(arg);
-      		clauseParts.push(arg);
-    	}
-  	}
-  	if (clauseParts.length && !current?.explicitlyTyped) {
-    	logger.warn(`'type=' missing in include clause "${clauseParts.join(" ")}", interpreting as type=all`);
-  	}
-  	return includes;
+    for (let i = 0; i < argv.length; i++) {
+        const arg = argv[i];
+        if (arg === "--include") {
+            if (clauseParts.length && !current?.explicitlyTyped) {
+                logger.warn(`'type=' missing in include clause "${clauseParts.join(" ")}", interpreting as type=all`);
+            }
+            clauseParts = [];
+            const next = argv[i + 1];
+            const keyVal = next?.split("=");
+            if (keyVal?.[0] === "type") {
+                current = { type: keyVal[1], conditions: [], explicitlyTyped: true };
+                i++;
+                clauseParts.push(`type=${keyVal[1]}`);
+            } else {
+                current = { type: "all", conditions: [], explicitlyTyped: false };
+            }
+            includes.push(current);
+        } else if (current) {
+            if (arg.includes('=')) {
+                const [key, value] = arg.split('=');
+                if (value === undefined || value.trim() === '') {
+                    logger.error(`Invalid --include condition: "${arg}". The value for "${key}" cannot be empty.`);
+                    process.exit(1);
+                }
+            }
+            current.conditions.push(arg);
+            clauseParts.push(arg);
+        }
+    }
+
+    if (clauseParts.length && !current?.explicitlyTyped) {
+        logger.warn(`'type=' missing in include clause "${clauseParts.join(" ")}", interpreting as type=all`);
+    }
+    return includes;
 }
 
 function parseIncludeItem(item: string): string[] {
@@ -1771,4 +1808,3 @@ $ stanctl-integration import --package ${packageName} \\
     fs.writeFileSync(readmeFilePath, readmeContent);
     logger.info(`Created the package README file at ${readmeFilePath}`);
 }
-
