@@ -1,0 +1,18 @@
+{
+  "name": "Unusual Jenkins Job Count",
+  "description": "Detects when there is an unusually high number of Jenkins jobs, which may indicate unauthorized job creation or configuration issues.",
+  "query": "entity.type:\"jenkins-service\"",
+  "entityType": "openTelemetry",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "window": 300000,
+      "severity": 5,
+      "metricName": "metrics.gauges.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/jenkinsreceiver/jenkins.jobs.count",
+      "aggregation": "avg",
+      "conditionOperator": ">",
+      "conditionValue": 100
+    }
+  ]
+}

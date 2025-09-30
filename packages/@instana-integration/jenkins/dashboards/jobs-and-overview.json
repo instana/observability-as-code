@@ -1,0 +1,380 @@
+{
+  "writable": true,
+  "id": "vUsXSUuaSp2DyCRAS-JkRA",
+  "title": "Jenkins Jobs & Overview",
+  "accessRules": [
+    {
+      "accessType": "READ_WRITE",
+      "relationType": "GLOBAL",
+      "relatedId": ""
+    }
+  ],
+  "widgets": [
+    {
+      "id": "aCL_nsYodSdHmSiX",
+      "width": 6,
+      "height": 8,
+      "x": 0,
+      "y": 8,
+      "title": "Executors Count",
+      "type": "chart",
+      "config": {
+        "type": "TIME_SERIES",
+        "y1": {
+          "formatterSelected": false,
+          "metrics": [
+            {
+              "source": "INFRASTRUCTURE_METRICS",
+              "metric": "metrics.gauges.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/jenkinsreceiver/jenkins.executors",
+              "aggregation": "MEAN",
+              "timeShift": 0,
+              "compareToTimeShifted": false,
+              "label": "Executors",
+              "metricLabel": "Jenkins Executors",
+              "color": "",
+              "threshold": {
+                "thresholdEnabled": false,
+                "critical": "",
+                "warning": "",
+                "operator": ">="
+              },
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "type": "openTelemetry",
+              "crossSeriesAggregation": "MEAN",
+              "allowedCrossSeriesAggregations": [],
+              "lastValue": false,
+              "metricPath": [
+                "Jenkins"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number"
+            }
+          ],
+          "formatter": "number.detailed",
+          "renderer": "line"
+        },
+        "y2": {
+          "metrics": [],
+          "formatter": "number.detailed",
+          "renderer": "line"
+        },
+        "shareMaxAxisDomain": false
+      }
+    },
+    {
+      "id": "GWHUyarn8obA3p7g",
+      "width": 6,
+      "height": 8,
+      "x": 6,
+      "y": 8,
+      "title": "Jobs Count",
+      "type": "chart",
+      "config": {
+        "type": "TIME_SERIES",
+        "y1": {
+          "formatterSelected": false,
+          "metrics": [
+            {
+              "source": "INFRASTRUCTURE_METRICS",
+              "metric": "metrics.gauges.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/jenkinsreceiver/jenkins.jobs.count",
+              "aggregation": "MEAN",
+              "timeShift": 0,
+              "compareToTimeShifted": false,
+              "label": "Jobs",
+              "metricLabel": "Jenkins Jobs Count",
+              "color": "",
+              "threshold": {
+                "thresholdEnabled": false,
+                "critical": "",
+                "warning": "",
+                "operator": ">="
+              },
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "type": "openTelemetry",
+              "crossSeriesAggregation": "MEAN",
+              "allowedCrossSeriesAggregations": [],
+              "lastValue": false,
+              "metricPath": [
+                "Jenkins"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number"
+            }
+          ],
+          "formatter": "number.detailed",
+          "renderer": "line"
+        },
+        "y2": {
+          "metrics": [],
+          "formatter": "number.detailed",
+          "renderer": "line"
+        },
+        "shareMaxAxisDomain": false
+      }
+    },
+    {
+      "id": "jenkinsJobHealthScores",
+      "title": "Job Health Scores",
+      "width": 6,
+      "height": 12,
+      "x": 0,
+      "y": 8,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "30",
+                "warning": "60",
+                "thresholdEnabled": true,
+                "operator": "<="
+              },
+              "aggregation": "MEAN",
+              "label": "Health Score",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "openTelemetry",
+              "metricPath": [
+                "Jenkins",
+                "Job"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.gauges.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/jenkinsreceiver/jenkins.job.health_score",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Jenkins Job Health Score",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "jenkinsJobStatuses",
+      "title": "Job Statuses",
+      "width": 6,
+      "height": 12,
+      "x": 6,
+      "y": 8,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": true,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Job Status",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "openTelemetry",
+              "metricPath": [
+                "Jenkins",
+                "Job"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.gauges.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/jenkinsreceiver/jenkins.job.status",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Jenkins Job Status",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "jenkinsJobBuildDurations",
+      "title": "Job Build Durations",
+      "width": 6,
+      "height": 12,
+      "x": 0,
+      "y": 20,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "millis.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Build Duration",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "openTelemetry",
+              "metricPath": [
+                "Jenkins",
+                "Job"
+              ],
+              "formatter": "millis.detailed",
+              "unit": "milisecond",
+              "metric": "metrics.gauges.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/jenkinsreceiver/jenkins.job.last_build.duration",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Jenkins Job Last Build Duration",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Estimated Duration",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "openTelemetry",
+              "metricPath": [
+                "Jenkins",
+                "Job"
+              ],
+              "formatter": "millis.detailed",
+              "unit": "milisecond",
+              "metric": "metrics.gauges.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/jenkinsreceiver/jenkins.job.last_build.estimated_duration",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Jenkins Job Last Build Estimated Duration",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "jenkinsJobBuildAges",
+      "title": "Job Build Ages",
+      "width": 6,
+      "height": 12,
+      "x": 6,
+      "y": 20,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "source": "INFRASTRUCTURE_METRICS",
+        "y1": {
+          "formatter": "millis.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "86400",
+                "warning": "43200",
+                "thresholdEnabled": true,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Build Age",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "openTelemetry",
+              "metricPath": [
+                "Jenkins",
+                "Job"
+              ],
+              "formatter": "millis.detailed",
+              "unit": "milisecond",
+              "metric": "metrics.gauges.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/jenkinsreceiver/jenkins.job.last_build.age",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Jenkins Job Last Build Age",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    }
+  ]
+}
