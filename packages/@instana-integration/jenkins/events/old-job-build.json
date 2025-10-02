@@ -1,7 +1,6 @@
 {
   "name": "Old Jenkins Job Build",
   "description": "Detects when a Jenkins job hasn't been built in a long time, which may indicate abandoned jobs or configuration issues.",
-  "query": "entity.type:\"jenkins-service\"",
   "entityType": "openTelemetry",
   "expirationTime": 300000,
   "rules": [

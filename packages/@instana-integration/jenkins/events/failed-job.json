@@ -1,7 +1,6 @@
 {
   "name": "Failed Jenkins Job",
   "description": "Detects when a Jenkins job has failed, which requires immediate attention to fix the build issues.",
-  "query": "entity.type:\"jenkins-service\"",
   "entityType": "openTelemetry",
   "expirationTime": 300000,
   "rules": [

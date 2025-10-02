@@ -1,7 +1,6 @@
 {
   "name": "Jenkins Executor Exhaustion",
   "description": "Detects when Jenkins executors are fully utilized, which may cause build queuing and delays in CI/CD pipelines.",
-  "query": "entity.type:\"jenkins-service\"",
   "entityType": "openTelemetry",
   "expirationTime": 300000,
   "rules": [

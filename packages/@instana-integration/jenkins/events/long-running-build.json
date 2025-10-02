@@ -1,7 +1,6 @@
 {
   "name": "Long Running Jenkins Build",
   "description": "Detects when a Jenkins build is taking significantly longer than expected, which may indicate performance issues or build process problems.",
-  "query": "entity.type:\"jenkins-service\"",
   "entityType": "openTelemetry",
   "expirationTime": 300000,
   "rules": [

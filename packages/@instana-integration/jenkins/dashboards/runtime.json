@@ -1,7 +1,7 @@
 {
   "writable": true,
   "id": "vUsXSUuaSp2DyCRAS-JkRA",
-  "title": "Jenkins Jobs & Overview",
+  "title": "Jenkins Runtime Monitoring",
   "accessRules": [
     {
       "accessType": "READ_WRITE",

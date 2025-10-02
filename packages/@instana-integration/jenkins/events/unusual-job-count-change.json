@@ -1,7 +1,6 @@
 {
   "name": "Unusual Jenkins Job Count",
   "description": "Detects when there is an unusually high number of Jenkins jobs, which may indicate unauthorized job creation or configuration issues.",
-  "query": "entity.type:\"jenkins-service\"",
   "entityType": "openTelemetry",
   "expirationTime": 300000,
   "rules": [

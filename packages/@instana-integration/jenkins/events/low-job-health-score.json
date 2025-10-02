@@ -1,7 +1,6 @@
 {
   "name": "Low Jenkins Job Health Score",
   "description": "Detects when a Jenkins job has a low health score, which may indicate recurring build failures or other issues with the job.",
-  "query": "entity.type:\"jenkins-service\"",
   "entityType": "openTelemetry",
   "expirationTime": 300000,
   "rules": [

@@ -6,37 +6,49 @@ The integration package is used to support Jenkins monitoring. Once imported int
 
 Below are the dashboards that are currently supported by this integration package.
 
-| Dashboard Title         | Description                                      |
-|-------------------------|--------------------------------------------------|
-| Jenkins Jobs & Overview | Dashboard for monitoring Jenkins Jobs & Overview |
+| Dashboard Title            | Description                                      |
+|----------------------------|--------------------------------------------------|
+| Jenkins Runtime Monitoring | Dashboard for monitoring Jenkins Jobs & Overview |
 
 ## Metrics
 
 ### Semantic Conventions
 
-Below are the runtime metrics that are currently supported by this integration package.
+Below are the Jenkins metrics that are currently supported by this integration package. These metrics are collected using the OpenTelemetry Jenkins receiver:
 
-[None]
+| Metric Name                               | Description                              | Unit         | Type  |
+|-------------------------------------------|------------------------------------------|--------------|-------|
+| jenkins.executors                         | Total number of executors                | Count        | Gauge |
+| jenkins.jobs.count                        | Total number of jobs                     | Count        | Gauge |
+| jenkins.job.health_score                  | Health score of a job (0-100)            | Score        | Gauge |
+| jenkins.job.status                        | Status of a job (0=failed, 1=successful) | Status       | Gauge |
+| jenkins.job.last_build.duration           | Duration of the last build               | Milliseconds | Gauge |
+| jenkins.job.last_build.estimated_duration | Estimated duration of the last build     | Milliseconds | Gauge |
+| jenkins.job.last_build.age                | Time since the last build                | Milliseconds | Gauge |
+| jenkins.queue.size                        | Number of jobs in queue                  | Count        | Gauge |
 
 ### Resource Attributes
 
 Below are the resource attributes that are currently supported by this integration package.
 
-[None]
+| Attribute Key       | Type   | Description                                                     |
+|---------------------|--------|-----------------------------------------------------------------|
+| service.name        | string | This attribute is used to identify the Jenkins service.         |
+| service.instance.id | string | This attribute is used to identify a specific Jenkins instance. |
 
 
 ## Events
 
 Below are the events that are currently supported by this integration package.
 
-| Event Name                       | Description                                                                                                                                  |
-|----------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|
-| Jenkins Executor Exhaustion      | Detects when Jenkins executors are fully utilized, which may cause build queuing and delays in CI/CD pipelines.                              |
-| Failed Jenkins Job               | Detects when a Jenkins job has failed, which requires immediate attention to fix the build issues.                                           |
-| Long Running Jenkins Build       | Detects when a Jenkins build is taking significantly longer than expected, which may indicate performance issues or build process problems.  |
-| Low Jenkins Job Health Score     | Detects when a Jenkins job has a low health score, which may indicate recurring build failures or other issues with the job.                 |
-| Old Jenkins Job Build            | Detects when a Jenkins job hasn't been built in a long time, which may indicate abandoned jobs or configuration issues.                      |
-| Unusual Jenkins Job Count Change | Detects when there is an unusually high number of Jenkins jobs, which may indicate unauthorized job creation or configuration issues.        |
+| Event Name                   | Description                                                                                                                                 |
+|------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
+| Jenkins Executor Exhaustion  | Detects when Jenkins executors are fully utilized, which may cause build queuing and delays in CI/CD pipelines.                             |
+| Failed Jenkins Job           | Detects when a Jenkins job has failed, which requires immediate attention to fix the build issues.                                          |
+| Long Running Jenkins Build   | Detects when a Jenkins build is taking significantly longer than expected, which may indicate performance issues or build process problems. |
+| Low Jenkins Job Health Score | Detects when a Jenkins job has a low health score, which may indicate recurring build failures or other issues with the job.                |
+| Old Jenkins Job Build        | Detects when a Jenkins job hasn't been built in a long time, which may indicate abandoned jobs or configuration issues.                     |
+| Unusual Jenkins Job Count    | Detects when there is an unusually high number of Jenkins jobs, which may indicate unauthorized job creation or configuration issues.       |
 
 
 ## Installation and Usage
