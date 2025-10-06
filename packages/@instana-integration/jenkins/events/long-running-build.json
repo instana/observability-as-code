@@ -1,0 +1,17 @@
+{
+  "name": "Long Running Jenkins Build",
+  "description": "Detects when a Jenkins build is taking significantly longer than expected, which may indicate performance issues or build process problems.",
+  "entityType": "openTelemetry",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "window": 300000,
+      "severity": 10,
+      "metricName": "metrics.gauges.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/jenkinsreceiver/jenkins.job.last_build.duration",
+      "aggregation": "avg",
+      "conditionOperator": ">",
+      "conditionValue": 300000
+    }
+  ]
+}
