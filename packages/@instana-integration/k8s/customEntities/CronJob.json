@@ -1,0 +1,155 @@
+{
+  "label": "Otel Kubernetes CronJob",
+  "identifiers": [
+    "otel.attribute.k8s.cronjob.name",
+    "otel.attribute.k8s.cronjob.uid"
+  ],
+  "tagFilterExpression": {
+    "type": "EXPRESSION",
+    "logicalOperator": "AND",
+    "elements": [
+      {
+        "type": "TAG_FILTER",
+        "name": "dfq.selftype",
+        "operator": "EQUALS",
+        "value": "otelk8s"
+      },
+      {
+        "type": "TAG_FILTER",
+        "name": "otel.attribute.k8s.cronjob.uid",
+        "operator": "NOT_EMPTY",
+        "value": ""
+      }
+    ]
+  },
+  "dashboards": [
+    {
+      "rbacTags": [],
+      "accessRules": [
+        {
+          "accessType": "READ_WRITE",
+          "relationType": "USER",
+          "relatedId": "5ee8a3e8cd70020001ecb007"
+        }
+      ],
+      "id": "CronJobDashboardID",
+      "title": "OtelK8sCronJobs",
+      "widgets": [
+        {
+          "width": 3,
+          "x": 0,
+          "y": 0,
+          "id": "CronJobWidget1",
+          "title": "Active Jobs",
+          "type": "bigNumber",
+          "config": {
+            "formatter": "number.compact",
+            "comparisonDecreaseColor": "greenish",
+            "metricConfiguration": {
+              "lastValue": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "oTelK8sCluster",
+              "metricPath": ["Others", "OpenTelemetry Kubernetes CronJob"],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.gauges.k8s.cronjob.active",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "crossSeriesAggregation": "MEAN"
+            },
+            "comparisonIncreaseColor": "redish",
+            "formatterSelected": true
+          },
+          "height": 4
+        },
+        {
+          "width": 6,
+          "x": 0,
+          "y": 4,
+          "id": "CronJobWidget2",
+          "title": "Active Jobs Over Time",
+          "type": "chart",
+          "config": {
+            "shareMaxAxisDomain": false,
+            "y1": {
+              "formatter": "number.compact",
+              "renderer": "line",
+              "metrics": [
+                {
+                  "lastValue": false,
+                  "color": "",
+                  "compareToTimeShifted": false,
+                  "threshold": {
+                    "critical": "",
+                    "warning": "",
+                    "thresholdEnabled": false,
+                    "operator": ">="
+                  },
+                  "aggregation": "MEAN",
+                  "label": "",
+                  "source": "INFRASTRUCTURE_METRICS",
+                  "type": "oTelK8sCluster",
+                  "metricPath": ["Others", "OpenTelemetry Kubernetes CronJob"],
+                  "formatter": "number.detailed",
+                  "unit": "number",
+                  "metric": "metrics.gauges.k8s.cronjob.active",
+                  "timeShift": 0,
+                  "tagFilterExpression": {
+                    "logicalOperator": "AND",
+                    "elements": [],
+                    "type": "EXPRESSION"
+                  },
+                  "allowedCrossSeriesAggregations": [],
+                  "metricLabel": "OpenTelemetry gauge k8s.cronjob.active",
+                  "crossSeriesAggregation": "MEAN"
+                }
+              ],
+              "formatterSelected": true
+            },
+            "y2": {
+              "formatter": "number.detailed",
+              "renderer": "line",
+              "metrics": []
+            },
+            "type": "TIME_SERIES"
+          },
+          "height": 13
+        }
+      ],
+      "ownerId": "5ee8a3e8cd70020001ecb007",
+      "writable": true
+    }
+  ],
+  "metrics": [
+    {
+      "type": "oTelK8sCluster",
+      "source": "metrics.gauges.k8s.cronjob.active{scope=\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver\"}",
+      "name": "k8s.cronjob.active",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Kubernetes CronJob",
+      "label": "Number of actively running jobs",
+      "description": "Number of actively running jobs",
+      "formatter": "NUMBER"
+    }
+  ],
+  "dependencies": [
+    {
+      "direction": "outgoing",
+      "name": "com.instana.forge.infrastructure.custom.sensorsdk.k8s.graph.OTelK8sClusterDependency",
+      "type": "IS",
+      "identifiers": ["resource.k8s.cluster.uid"]
+    }
+  ]
+}

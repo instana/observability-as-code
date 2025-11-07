@@ -1,0 +1,306 @@
+{
+  "label": "Otel Kubernetes StatefulSet",
+  "identifiers": [
+    "otel.attribute.k8s.statefulset.name",
+    "otel.attribute.k8s.cluster.uid"
+  ],
+  "tagFilterExpression": {
+    "type": "EXPRESSION",
+    "logicalOperator": "AND",
+    "elements": [
+      {
+        "type": "TAG_FILTER",
+        "name": "dfq.selftype",
+        "operator": "EQUALS",
+        "value": "otelk8s"
+      },
+      {
+        "type": "TAG_FILTER",
+        "name": "otel.attribute.k8s.statefulset.uid",
+        "operator": "NOT_EMPTY",
+        "value": ""
+      }
+    ]
+  },
+  "dashboards": [
+    {
+      "rbacTags": [],
+      "accessRules": [
+        {
+          "accessType": "READ_WRITE",
+          "relationType": "USER",
+          "relatedId": "5ee8a3e8cd70020001ecb007"
+        }
+      ],
+      "id": "StatefulSetDashboardID",
+      "title": "OtelK8sStatefulSets",
+      "widgets": [
+        {
+          "width": 3,
+          "x": 0,
+          "y": 0,
+          "id": "StatefulSetWidget1",
+          "title": "Ready StatefulSet Pods",
+          "type": "bigNumber",
+          "config": {
+            "formatter": "number.compact",
+            "comparisonDecreaseColor": "greenish",
+            "metricConfiguration": {
+              "lastValue": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "oTelK8sCluster",
+              "metricPath": ["Others", "OpenTelemetry Kubernetes StatefulSet"],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.gauges.k8s.statefulset.ready",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "crossSeriesAggregation": "MEAN"
+            },
+            "comparisonIncreaseColor": "redish",
+            "formatterSelected": true
+          },
+          "height": 4
+        },
+        {
+          "width": 3,
+          "x": 0,
+          "y": 4,
+          "id": "StatefulSetWidget2",
+          "title": "Desired vs Ready Pods",
+          "type": "chart",
+          "config": {
+            "shareMaxAxisDomain": false,
+            "y1": {
+              "formatter": "number.compact",
+              "renderer": "line",
+              "metrics": [
+                {
+                  "lastValue": false,
+                  "color": "",
+                  "compareToTimeShifted": false,
+                  "threshold": {
+                    "critical": "",
+                    "warning": "",
+                    "thresholdEnabled": false,
+                    "operator": ">="
+                  },
+                  "aggregation": "MEAN",
+                  "label": "",
+                  "source": "INFRASTRUCTURE_METRICS",
+                  "type": "oTelK8sCluster",
+                  "metricPath": [
+                    "Others",
+                    "OpenTelemetry Kubernetes StatefulSet"
+                  ],
+                  "formatter": "number.detailed",
+                  "unit": "number",
+                  "metric": "metrics.gauges.k8s.statefulset.ready",
+                  "timeShift": 0,
+                  "tagFilterExpression": {
+                    "logicalOperator": "AND",
+                    "elements": [],
+                    "type": "EXPRESSION"
+                  },
+                  "allowedCrossSeriesAggregations": [],
+                  "metricLabel": "OpenTelemetry gauge k8s.statefulset.ready",
+                  "crossSeriesAggregation": "MEAN"
+                },
+                {
+                  "lastValue": false,
+                  "color": "",
+                  "compareToTimeShifted": false,
+                  "threshold": {
+                    "critical": "",
+                    "warning": "",
+                    "thresholdEnabled": false,
+                    "operator": ">="
+                  },
+                  "aggregation": "MEAN",
+                  "label": "",
+                  "source": "INFRASTRUCTURE_METRICS",
+                  "type": "oTelK8sCluster",
+                  "metricPath": [
+                    "Others",
+                    "OpenTelemetry Kubernetes StatefulSet"
+                  ],
+                  "formatter": "number.detailed",
+                  "unit": "number",
+                  "metric": "metrics.gauges.k8s.statefulset.desired",
+                  "timeShift": 0,
+                  "tagFilterExpression": {
+                    "logicalOperator": "AND",
+                    "elements": [],
+                    "type": "EXPRESSION"
+                  },
+                  "allowedCrossSeriesAggregations": [],
+                  "metricLabel": "OpenTelemetry gauge k8s.statefulset.desired",
+                  "crossSeriesAggregation": "MEAN"
+                }
+              ],
+              "formatterSelected": true
+            },
+            "y2": {
+              "formatter": "number.detailed",
+              "renderer": "line",
+              "metrics": []
+            },
+            "type": "TIME_SERIES"
+          },
+          "height": 13
+        },
+        {
+          "width": 3,
+          "x": 3,
+          "y": 4,
+          "id": "StatefulSetWidget3",
+          "title": "Current vs Updated Pods",
+          "type": "chart",
+          "config": {
+            "shareMaxAxisDomain": false,
+            "y1": {
+              "formatter": "number.compact",
+              "renderer": "line",
+              "metrics": [
+                {
+                  "lastValue": false,
+                  "color": "",
+                  "compareToTimeShifted": false,
+                  "threshold": {
+                    "critical": "",
+                    "warning": "",
+                    "thresholdEnabled": false,
+                    "operator": ">="
+                  },
+                  "aggregation": "MEAN",
+                  "label": "",
+                  "source": "INFRASTRUCTURE_METRICS",
+                  "type": "oTelK8sCluster",
+                  "metricPath": [
+                    "Others",
+                    "OpenTelemetry Kubernetes StatefulSet"
+                  ],
+                  "formatter": "number.detailed",
+                  "unit": "number",
+                  "metric": "metrics.gauges.k8s.statefulset.current",
+                  "timeShift": 0,
+                  "tagFilterExpression": {
+                    "logicalOperator": "AND",
+                    "elements": [],
+                    "type": "EXPRESSION"
+                  },
+                  "allowedCrossSeriesAggregations": [],
+                  "metricLabel": "OpenTelemetry gauge k8s.statefulset.current",
+                  "crossSeriesAggregation": "MEAN"
+                },
+                {
+                  "lastValue": false,
+                  "color": "",
+                  "compareToTimeShifted": false,
+                  "threshold": {
+                    "critical": "",
+                    "warning": "",
+                    "thresholdEnabled": false,
+                    "operator": ">="
+                  },
+                  "aggregation": "MEAN",
+                  "label": "",
+                  "source": "INFRASTRUCTURE_METRICS",
+                  "type": "oTelK8sCluster",
+                  "metricPath": [
+                    "Others",
+                    "OpenTelemetry Kubernetes StatefulSet"
+                  ],
+                  "formatter": "number.detailed",
+                  "unit": "number",
+                  "metric": "metrics.gauges.k8s.statefulset.updated",
+                  "timeShift": 0,
+                  "tagFilterExpression": {
+                    "logicalOperator": "AND",
+                    "elements": [],
+                    "type": "EXPRESSION"
+                  },
+                  "allowedCrossSeriesAggregations": [],
+                  "metricLabel": "OpenTelemetry gauge k8s.statefulset.updated",
+                  "crossSeriesAggregation": "MEAN"
+                }
+              ],
+              "formatterSelected": true
+            },
+            "y2": {
+              "formatter": "number.detailed",
+              "renderer": "line",
+              "metrics": []
+            },
+            "type": "TIME_SERIES"
+          },
+          "height": 13
+        }
+      ],
+      "ownerId": "5ee8a3e8cd70020001ecb007",
+      "writable": true
+    }
+  ],
+  "metrics": [
+    {
+      "type": "oTelK8sCluster",
+      "source": "metrics.gauges.k8s.statefulset.desired{scope=\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver\"}",
+      "name": "k8s.statefulset.desired",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Kubernetes StatefulSet",
+      "label": "Number of desired replica pods",
+      "description": "Number of desired replica pods",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelK8sCluster",
+      "source": "metrics.gauges.k8s.statefulset.ready{scope=\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver\"}",
+      "name": "k8s.statefulset.ready",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Kubernetes StatefulSet",
+      "label": "Number of ready replica pods",
+      "description": "Number of ready replica pods",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelK8sCluster",
+      "source": "metrics.gauges.k8s.statefulset.current{scope=\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver\"}",
+      "name": "k8s.statefulset.current",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Kubernetes StatefulSet",
+      "label": "Number of current pods",
+      "description": "Number of current pods",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelK8sCluster",
+      "source": "metrics.gauges.k8s.statefulset.updated{scope=\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver\"}",
+      "name": "k8s.statefulset.updated",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Kubernetes StatefulSet",
+      "label": "Number of updated pods",
+      "description": "Number of updated pods",
+      "formatter": "NUMBER"
+    }
+  ],
+  "dependencies": [
+    {
+      "direction": "outgoing",
+      "name": "com.instana.forge.infrastructure.custom.sensorsdk.k8s.graph.OTelK8sClusterDependency",
+      "type": "IS",
+      "identifiers": ["otel.attribute.k8s.cluster.uid"]
+    }
+  ]
+}

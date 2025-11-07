@@ -1,0 +1,382 @@
+{
+  "label": "Otel Kubernetes Job",
+  "identifiers": [
+    "otel.attribute.k8s.job.name",
+    "otel.attribute.k8s.cluster.uid"
+  ],
+  "tagFilterExpression": {
+    "type": "EXPRESSION",
+    "logicalOperator": "AND",
+    "elements": [
+      {
+        "type": "TAG_FILTER",
+        "name": "dfq.selftype",
+        "operator": "EQUALS",
+        "value": "otelk8s"
+      },
+      {
+        "type": "TAG_FILTER",
+        "name": "otel.attribute.k8s.job.uid",
+        "operator": "NOT_EMPTY",
+        "value": ""
+      }
+    ]
+  },
+  "metrics": [
+    {
+      "type": "oTelK8sCluster",
+      "source": "metrics.gauges.k8s.job.active{scope=\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver\"}",
+      "name": "k8s.job.active",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Kubernetes Job",
+      "label": "Number of currently running pods",
+      "description": "Number of currently running pods",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelK8sCluster",
+      "source": "metrics.gauges.k8s.job.failed{scope=\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver\"}",
+      "name": "k8s.job.failed",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Kubernetes Job",
+      "label": "Number of failed pods",
+      "description": "Number of failed pods",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelK8sCluster",
+      "source": "metrics.gauges.k8s.job.successful{scope=\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver\"}",
+      "name": "k8s.job.successful",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Kubernetes Job",
+      "label": "Number of successful pods",
+      "description": "Number of successful pods",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelK8sCluster",
+      "source": "metrics.gauges.k8s.job.desired_successful{scope=\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver\"}",
+      "name": "k8s.job.desired_successful",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Kubernetes Job",
+      "label": "Desired number of successful pods",
+      "description": "Desired number of successful pods",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelK8sCluster",
+      "source": "metrics.gauges.k8s.job.max_parallel{scope=\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver\"}",
+      "name": "k8s.job.max_parallel",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Kubernetes Job",
+      "label": "Maximum number of parallel pods",
+      "description": "Maximum number of parallel pods",
+      "formatter": "NUMBER"
+    }
+  ],
+  "dashboards": [
+    {
+      "rbacTags": [],
+      "accessRules": [
+        {
+          "accessType": "READ_WRITE",
+          "relationType": "USER",
+          "relatedId": "5ee8a3e8cd70020001ecb007"
+        }
+      ],
+      "id": "JobDashboardID",
+      "title": "OtelK8sJobs",
+      "widgets": [
+        {
+          "width": 3,
+          "x": 0,
+          "y": 0,
+          "id": "JobWidget1",
+          "title": "Active Pods",
+          "type": "bigNumber",
+          "config": {
+            "formatter": "number.compact",
+            "comparisonDecreaseColor": "greenish",
+            "metricConfiguration": {
+              "lastValue": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "oTelK8sCluster",
+              "metricPath": ["Others", "OpenTelemetry Kubernetes Job"],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.gauges.k8s.job.active",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "crossSeriesAggregation": "MEAN"
+            },
+            "comparisonIncreaseColor": "redish",
+            "formatterSelected": true
+          },
+          "height": 4
+        },
+        {
+          "width": 3,
+          "x": 3,
+          "y": 0,
+          "id": "JobWidget2",
+          "title": "Successful Pods",
+          "type": "bigNumber",
+          "config": {
+            "formatter": "number.compact",
+            "comparisonDecreaseColor": "greenish",
+            "metricConfiguration": {
+              "lastValue": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "oTelK8sCluster",
+              "metricPath": ["Others", "OpenTelemetry Kubernetes Job"],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.gauges.k8s.job.successful",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "crossSeriesAggregation": "MEAN"
+            },
+            "comparisonIncreaseColor": "redish",
+            "formatterSelected": true
+          },
+          "height": 4
+        },
+        {
+          "width": 3,
+          "x": 6,
+          "y": 0,
+          "id": "JobWidget3",
+          "title": "Failed Pods",
+          "type": "bigNumber",
+          "config": {
+            "formatter": "number.compact",
+            "comparisonDecreaseColor": "greenish",
+            "metricConfiguration": {
+              "lastValue": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "oTelK8sCluster",
+              "metricPath": ["Others", "OpenTelemetry Kubernetes Job"],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.gauges.k8s.job.failed",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "crossSeriesAggregation": "MEAN"
+            },
+            "comparisonIncreaseColor": "redish",
+            "formatterSelected": true
+          },
+          "height": 4
+        },
+        {
+          "width": 6,
+          "x": 0,
+          "y": 4,
+          "id": "JobWidget4",
+          "title": "Successful vs Desired Successful Pods",
+          "type": "chart",
+          "config": {
+            "shareMaxAxisDomain": false,
+            "y1": {
+              "formatter": "number.compact",
+              "renderer": "line",
+              "metrics": [
+                {
+                  "lastValue": false,
+                  "color": "",
+                  "compareToTimeShifted": false,
+                  "threshold": {
+                    "critical": "",
+                    "warning": "",
+                    "thresholdEnabled": false,
+                    "operator": ">="
+                  },
+                  "aggregation": "MEAN",
+                  "label": "",
+                  "source": "INFRASTRUCTURE_METRICS",
+                  "type": "oTelK8sCluster",
+                  "metricPath": ["Others", "OpenTelemetry Kubernetes Job"],
+                  "formatter": "number.detailed",
+                  "unit": "number",
+                  "metric": "metrics.gauges.k8s.job.successful",
+                  "timeShift": 0,
+                  "tagFilterExpression": {
+                    "logicalOperator": "AND",
+                    "elements": [],
+                    "type": "EXPRESSION"
+                  },
+                  "allowedCrossSeriesAggregations": [],
+                  "metricLabel": "OpenTelemetry gauge k8s.job.successful",
+                  "crossSeriesAggregation": "MEAN"
+                },
+                {
+                  "lastValue": false,
+                  "color": "",
+                  "compareToTimeShifted": false,
+                  "threshold": {
+                    "critical": "",
+                    "warning": "",
+                    "thresholdEnabled": false,
+                    "operator": ">="
+                  },
+                  "aggregation": "MEAN",
+                  "label": "",
+                  "source": "INFRASTRUCTURE_METRICS",
+                  "type": "oTelK8sCluster",
+                  "metricPath": ["Others", "OpenTelemetry Kubernetes Job"],
+                  "formatter": "number.detailed",
+                  "unit": "number",
+                  "metric": "metrics.gauges.k8s.job.desired_successful",
+                  "timeShift": 0,
+                  "tagFilterExpression": {
+                    "logicalOperator": "AND",
+                    "elements": [],
+                    "type": "EXPRESSION"
+                  },
+                  "allowedCrossSeriesAggregations": [],
+                  "metricLabel": "OpenTelemetry gauge k8s.job.desired_successful",
+                  "crossSeriesAggregation": "MEAN"
+                }
+              ],
+              "formatterSelected": true
+            },
+            "y2": {
+              "formatter": "number.detailed",
+              "renderer": "line",
+              "metrics": []
+            },
+            "type": "TIME_SERIES"
+          },
+          "height": 13
+        },
+        {
+          "width": 6,
+          "x": 6,
+          "y": 4,
+          "id": "JobWidget5",
+          "title": "Active vs Max Parallel Pods",
+          "type": "chart",
+          "config": {
+            "shareMaxAxisDomain": false,
+            "y1": {
+              "formatter": "number.compact",
+              "renderer": "line",
+              "metrics": [
+                {
+                  "lastValue": false,
+                  "color": "",
+                  "compareToTimeShifted": false,
+                  "threshold": {
+                    "critical": "",
+                    "warning": "",
+                    "thresholdEnabled": false,
+                    "operator": ">="
+                  },
+                  "aggregation": "MEAN",
+                  "label": "",
+                  "source": "INFRASTRUCTURE_METRICS",
+                  "type": "oTelK8sCluster",
+                  "metricPath": ["Others", "OpenTelemetry Kubernetes Job"],
+                  "formatter": "number.detailed",
+                  "unit": "number",
+                  "metric": "metrics.gauges.k8s.job.active",
+                  "timeShift": 0,
+                  "tagFilterExpression": {
+                    "logicalOperator": "AND",
+                    "elements": [],
+                    "type": "EXPRESSION"
+                  },
+                  "allowedCrossSeriesAggregations": [],
+                  "metricLabel": "OpenTelemetry gauge k8s.job.active",
+                  "crossSeriesAggregation": "MEAN"
+                },
+                {
+                  "lastValue": false,
+                  "color": "",
+                  "compareToTimeShifted": false,
+                  "threshold": {
+                    "critical": "",
+                    "warning": "",
+                    "thresholdEnabled": false,
+                    "operator": ">="
+                  },
+                  "aggregation": "MEAN",
+                  "label": "",
+                  "source": "INFRASTRUCTURE_METRICS",
+                  "type": "oTelK8sCluster",
+                  "metricPath": ["Others", "OpenTelemetry Kubernetes Job"],
+                  "formatter": "number.detailed",
+                  "unit": "number",
+                  "metric": "metrics.gauges.k8s.job.max_parallel",
+                  "timeShift": 0,
+                  "tagFilterExpression": {
+                    "logicalOperator": "AND",
+                    "elements": [],
+                    "type": "EXPRESSION"
+                  },
+                  "allowedCrossSeriesAggregations": [],
+                  "metricLabel": "OpenTelemetry gauge k8s.job.max_parallel",
+                  "crossSeriesAggregation": "MEAN"
+                }
+              ],
+              "formatterSelected": true
+            },
+            "y2": {
+              "formatter": "number.detailed",
+              "renderer": "line",
+              "metrics": []
+            },
+            "type": "TIME_SERIES"
+          },
+          "height": 13
+        }
+      ],
+      "ownerId": "5ee8a3e8cd70020001ecb007",
+      "writable": true
+    }
+  ],
+  "dependencies": [
+    {
+      "direction": "outgoing",
+      "name": "com.instana.forge.infrastructure.custom.sensorsdk.k8s.graph.OTelK8sClusterDependency",
+      "type": "IS",
+      "identifiers": ["otel.attribute.k8s.cluster.uid"]
+    }
+  ]
+}

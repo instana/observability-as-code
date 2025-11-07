@@ -1,0 +1,193 @@
+{
+  "label": "Otel Kubernetes Deployment",
+  "identifiers": [
+    "otel.attribute.k8s.deployment.name",
+    "otel.attribute.k8s.cluster.uid"
+  ],
+  "tagFilterExpression": {
+    "type": "EXPRESSION",
+    "logicalOperator": "AND",
+    "elements": [
+      {
+        "type": "TAG_FILTER",
+        "name": "dfq.selftype",
+        "operator": "EQUALS",
+        "value": "otelk8s"
+      },
+      {
+        "type": "TAG_FILTER",
+        "name": "otel.attribute.k8s.deployment.uid",
+        "operator": "NOT_EMPTY",
+        "value": ""
+      }
+    ]
+  },
+  "dashboards": [
+    {
+      "rbacTags": [],
+      "accessRules": [
+        {
+          "accessType": "READ_WRITE",
+          "relationType": "USER",
+          "relatedId": "5ee8a3e8cd70020001ecb007"
+        }
+      ],
+      "id": "YfC4W9iNTjSPTH1aeRXKvA",
+      "title": "OtelK8sDeployments-balsrini",
+      "widgets": [
+        {
+          "width": 3,
+          "x": 0,
+          "y": 0,
+          "id": "Bd6Hc3yMrLY3_mAl",
+          "title": "Available Deployment",
+          "type": "bigNumber",
+          "config": {
+            "formatter": "number.compact",
+            "comparisonDecreaseColor": "greenish",
+            "metricConfiguration": {
+              "lastValue": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "oTelK8sCluster",
+              "metricPath": ["Others", "OpenTelemetry Kubernetes Cluster"],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.gauges.k8s.deployment.available",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "crossSeriesAggregation": "MEAN"
+            },
+            "comparisonIncreaseColor": "redish",
+            "formatterSelected": true
+          },
+          "height": 4
+        },
+        {
+          "width": 3,
+          "x": 0,
+          "y": 4,
+          "id": "prUoZuep_2nAkz7m",
+          "title": "Desired vs Available",
+          "type": "chart",
+          "config": {
+            "shareMaxAxisDomain": false,
+            "y1": {
+              "formatter": "number.compact",
+              "renderer": "line",
+              "metrics": [
+                {
+                  "lastValue": false,
+                  "color": "",
+                  "compareToTimeShifted": false,
+                  "threshold": {
+                    "critical": "",
+                    "warning": "",
+                    "thresholdEnabled": false,
+                    "operator": ">="
+                  },
+                  "aggregation": "MEAN",
+                  "label": "",
+                  "source": "INFRASTRUCTURE_METRICS",
+                  "type": "oTelK8sCluster",
+                  "metricPath": ["Others", "OpenTelemetry Kubernetes Cluster"],
+                  "formatter": "number.detailed",
+                  "unit": "number",
+                  "metric": "metrics.gauges.k8s.deployment.available",
+                  "timeShift": 0,
+                  "tagFilterExpression": {
+                    "logicalOperator": "AND",
+                    "elements": [],
+                    "type": "EXPRESSION"
+                  },
+                  "allowedCrossSeriesAggregations": [],
+                  "metricLabel": "OpenTelemetry gauge k8s.deployment.available",
+                  "crossSeriesAggregation": "MEAN"
+                },
+                {
+                  "lastValue": false,
+                  "color": "",
+                  "compareToTimeShifted": false,
+                  "threshold": {
+                    "critical": "",
+                    "warning": "",
+                    "thresholdEnabled": false,
+                    "operator": ">="
+                  },
+                  "aggregation": "MEAN",
+                  "label": "",
+                  "source": "INFRASTRUCTURE_METRICS",
+                  "type": "oTelK8sCluster",
+                  "metricPath": ["Others", "OpenTelemetry Kubernetes Cluster"],
+                  "formatter": "number.detailed",
+                  "unit": "number",
+                  "metric": "metrics.gauges.k8s.deployment.desired",
+                  "timeShift": 0,
+                  "tagFilterExpression": {
+                    "logicalOperator": "AND",
+                    "elements": [],
+                    "type": "EXPRESSION"
+                  },
+                  "allowedCrossSeriesAggregations": [],
+                  "metricLabel": "OpenTelemetry gauge k8s.deployment.desired",
+                  "crossSeriesAggregation": "MEAN"
+                }
+              ],
+              "formatterSelected": true
+            },
+            "y2": {
+              "formatter": "number.detailed",
+              "renderer": "line",
+              "metrics": []
+            },
+            "type": "TIME_SERIES"
+          },
+          "height": 13
+        }
+      ],
+      "ownerId": "5ee8a3e8cd70020001ecb007",
+      "writable": true
+    }
+  ],
+  "metrics": [
+    {
+      "type": "oTelK8sCluster",
+      "source": "metrics.gauges.k8s.deployment.desired{scope=\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver\"}",
+      "name": "k8s.deployment.desired",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Kubernetes Deployment",
+      "label": "Number of desired Replica pods",
+      "description": "Number of desired Replica pods",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelK8sCluster",
+      "source": "metrics.gauges.k8s.deployment.available{scope=\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver\"}",
+      "name": "k8s.deployment.available",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Kubernetes Deployment",
+      "label": "Number of available Replica pods",
+      "description": "Number of available Replica pods",
+      "formatter": "NUMBER"
+    }
+  ],
+  "dependencies": [
+    {
+      "direction": "outgoing",
+      "name": "com.instana.forge.infrastructure.custom.sensorsdk.k8s.graph.OTelK8sClusterDependency",
+      "type": "IS",
+      "identifiers": ["otel.attribute.k8s.cluster.uid"]
+    }
+  ]
+}
