@@ -1,0 +1,517 @@
+{
+  "label": "Otel Go Runtime",
+  "identifiers": [
+    "otel.attribute.service.name",
+    "otel.attribute.service.instance.id"
+  ],
+  "tagFilterExpression": {
+    "type": "EXPRESSION",
+    "logicalOperator": "AND",
+    "elements": [
+      {
+        "type": "TAG_FILTER",
+        "name": "otel.attribute.telemetry.sdk.language",
+        "operator": "EQUALS",
+        "value": "go"
+      },
+      {
+        "type": "TAG_FILTER",
+        "name": "otel.attribute.process.runtime.name",
+        "operator": "EQUALS",
+        "value": "go"
+      }
+    ]
+  },
+  "dashboards": [
+    {
+      "rbacTags": [],
+      "accessRules": [
+        {
+          "accessType": "READ_WRITE",
+          "relationType": "USER",
+          "relatedId": "5ee8a3e8cd70020001ecb007"
+        }
+      ],
+      "id": "GoRuntimeDashboardID",
+      "title": "OtelGoRuntime",
+      "widgets": [
+        {
+          "width": 3,
+          "x": 0,
+          "y": 0,
+          "id": "GoWidget1",
+          "title": "Heap Allocated Memory",
+          "type": "bigNumber",
+          "config": {
+            "formatter": "number.compact",
+            "comparisonDecreaseColor": "greenish",
+            "metricConfiguration": {
+              "lastValue": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "oTelGo",
+              "metricPath": ["Others", "OpenTelemetry Go Runtime"],
+              "formatter": "number.detailed",
+              "unit": "bytes",
+              "metric": "metrics.gauges.go.memory.heap.alloc",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "crossSeriesAggregation": "MEAN"
+            },
+            "comparisonIncreaseColor": "redish",
+            "formatterSelected": true
+          },
+          "height": 4
+        },
+        {
+          "width": 3,
+          "x": 3,
+          "y": 0,
+          "id": "GoWidget2",
+          "title": "Active Goroutines",
+          "type": "bigNumber",
+          "config": {
+            "formatter": "number.compact",
+            "comparisonDecreaseColor": "greenish",
+            "metricConfiguration": {
+              "lastValue": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "oTelGo",
+              "metricPath": ["Others", "OpenTelemetry Go Runtime"],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.gauges.go.goroutines",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "crossSeriesAggregation": "MEAN"
+            },
+            "comparisonIncreaseColor": "redish",
+            "formatterSelected": true
+          },
+          "height": 4
+        },
+        {
+          "width": 3,
+          "x": 6,
+          "y": 0,
+          "id": "GoWidget3",
+          "title": "GC Pause Time",
+          "type": "bigNumber",
+          "config": {
+            "formatter": "number.compact",
+            "comparisonDecreaseColor": "greenish",
+            "metricConfiguration": {
+              "lastValue": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "oTelGo",
+              "metricPath": ["Others", "OpenTelemetry Go Runtime"],
+              "formatter": "number.detailed",
+              "unit": "nanoseconds",
+              "metric": "metrics.gauges.go.gc.pause.ns",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "crossSeriesAggregation": "MEAN"
+            },
+            "comparisonIncreaseColor": "redish",
+            "formatterSelected": true
+          },
+          "height": 4
+        },
+        {
+          "width": 6,
+          "x": 0,
+          "y": 4,
+          "id": "GoWidget4",
+          "title": "Memory Usage Over Time",
+          "type": "chart",
+          "config": {
+            "shareMaxAxisDomain": false,
+            "y1": {
+              "formatter": "number.compact",
+              "renderer": "line",
+              "metrics": [
+                {
+                  "lastValue": false,
+                  "color": "",
+                  "compareToTimeShifted": false,
+                  "threshold": {
+                    "critical": "",
+                    "warning": "",
+                    "thresholdEnabled": false,
+                    "operator": ">="
+                  },
+                  "aggregation": "MEAN",
+                  "label": "",
+                  "source": "INFRASTRUCTURE_METRICS",
+                  "type": "oTelGo",
+                  "metricPath": ["Others", "OpenTelemetry Go Runtime"],
+                  "formatter": "number.detailed",
+                  "unit": "bytes",
+                  "metric": "metrics.gauges.go.memory.heap.alloc",
+                  "timeShift": 0,
+                  "tagFilterExpression": {
+                    "logicalOperator": "AND",
+                    "elements": [],
+                    "type": "EXPRESSION"
+                  },
+                  "allowedCrossSeriesAggregations": [],
+                  "metricLabel": "OpenTelemetry gauge go.memory.heap.alloc",
+                  "crossSeriesAggregation": "MEAN"
+                },
+                {
+                  "lastValue": false,
+                  "color": "",
+                  "compareToTimeShifted": false,
+                  "threshold": {
+                    "critical": "",
+                    "warning": "",
+                    "thresholdEnabled": false,
+                    "operator": ">="
+                  },
+                  "aggregation": "MEAN",
+                  "label": "",
+                  "source": "INFRASTRUCTURE_METRICS",
+                  "type": "oTelGo",
+                  "metricPath": ["Others", "OpenTelemetry Go Runtime"],
+                  "formatter": "number.detailed",
+                  "unit": "bytes",
+                  "metric": "metrics.gauges.go.memory.heap.sys",
+                  "timeShift": 0,
+                  "tagFilterExpression": {
+                    "logicalOperator": "AND",
+                    "elements": [],
+                    "type": "EXPRESSION"
+                  },
+                  "allowedCrossSeriesAggregations": [],
+                  "metricLabel": "OpenTelemetry gauge go.memory.heap.sys",
+                  "crossSeriesAggregation": "MEAN"
+                }
+              ],
+              "formatterSelected": true
+            },
+            "y2": {
+              "formatter": "number.detailed",
+              "renderer": "line",
+              "metrics": []
+            },
+            "type": "TIME_SERIES"
+          },
+          "height": 13
+        },
+        {
+          "width": 6,
+          "x": 6,
+          "y": 4,
+          "id": "GoWidget5",
+          "title": "Goroutines Over Time",
+          "type": "chart",
+          "config": {
+            "shareMaxAxisDomain": false,
+            "y1": {
+              "formatter": "number.compact",
+              "renderer": "line",
+              "metrics": [
+                {
+                  "lastValue": false,
+                  "color": "",
+                  "compareToTimeShifted": false,
+                  "threshold": {
+                    "critical": "",
+                    "warning": "",
+                    "thresholdEnabled": false,
+                    "operator": ">="
+                  },
+                  "aggregation": "MEAN",
+                  "label": "",
+                  "source": "INFRASTRUCTURE_METRICS",
+                  "type": "oTelGo",
+                  "metricPath": ["Others", "OpenTelemetry Go Runtime"],
+                  "formatter": "number.detailed",
+                  "unit": "number",
+                  "metric": "metrics.gauges.go.goroutines",
+                  "timeShift": 0,
+                  "tagFilterExpression": {
+                    "logicalOperator": "AND",
+                    "elements": [],
+                    "type": "EXPRESSION"
+                  },
+                  "allowedCrossSeriesAggregations": [],
+                  "metricLabel": "OpenTelemetry gauge go.goroutines",
+                  "crossSeriesAggregation": "MEAN"
+                }
+              ],
+              "formatterSelected": true
+            },
+            "y2": {
+              "formatter": "number.detailed",
+              "renderer": "line",
+              "metrics": []
+            },
+            "type": "TIME_SERIES"
+          },
+          "height": 13
+        },
+        {
+          "width": 6,
+          "x": 0,
+          "y": 17,
+          "id": "GoWidget6",
+          "title": "GC Metrics Over Time",
+          "type": "chart",
+          "config": {
+            "shareMaxAxisDomain": false,
+            "y1": {
+              "formatter": "number.compact",
+              "renderer": "line",
+              "metrics": [
+                {
+                  "lastValue": false,
+                  "color": "",
+                  "compareToTimeShifted": false,
+                  "threshold": {
+                    "critical": "",
+                    "warning": "",
+                    "thresholdEnabled": false,
+                    "operator": ">="
+                  },
+                  "aggregation": "SUM",
+                  "label": "",
+                  "source": "INFRASTRUCTURE_METRICS",
+                  "type": "oTelGo",
+                  "metricPath": ["Others", "OpenTelemetry Go Runtime"],
+                  "formatter": "number.detailed",
+                  "unit": "number",
+                  "metric": "metrics.counters.go.gc.count",
+                  "timeShift": 0,
+                  "tagFilterExpression": {
+                    "logicalOperator": "AND",
+                    "elements": [],
+                    "type": "EXPRESSION"
+                  },
+                  "allowedCrossSeriesAggregations": [],
+                  "metricLabel": "OpenTelemetry counter go.gc.count",
+                  "crossSeriesAggregation": "SUM"
+                }
+              ],
+              "formatterSelected": true
+            },
+            "y2": {
+              "formatter": "number.detailed",
+              "renderer": "line",
+              "metrics": []
+            },
+            "type": "TIME_SERIES"
+          },
+          "height": 13
+        }
+      ],
+      "ownerId": "5ee8a3e8cd70020001ecb007",
+      "writable": true
+    }
+  ],
+  "metrics": [
+    {
+      "type": "oTelGo",
+      "source": "metrics.gauges.go.memory.heap.alloc{scope=\"go.opentelemetry.io/contrib/instrumentation/runtime\"}",
+      "name": "go.memory.heap.alloc",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Go Runtime",
+      "label": "Bytes of allocated heap objects",
+      "description": "Bytes of allocated heap objects",
+      "formatter": "BYTES"
+    },
+    {
+      "type": "oTelGo",
+      "source": "metrics.gauges.go.memory.heap.sys{scope=\"go.opentelemetry.io/contrib/instrumentation/runtime\"}",
+      "name": "go.memory.heap.sys",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Go Runtime",
+      "label": "Bytes of heap memory obtained from OS",
+      "description": "Bytes of heap memory obtained from OS",
+      "formatter": "BYTES"
+    },
+    {
+      "type": "oTelGo",
+      "source": "metrics.gauges.go.memory.heap.idle{scope=\"go.opentelemetry.io/contrib/instrumentation/runtime\"}",
+      "name": "go.memory.heap.idle",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Go Runtime",
+      "label": "Bytes in idle heap spans",
+      "description": "Bytes in idle heap spans",
+      "formatter": "BYTES"
+    },
+    {
+      "type": "oTelGo",
+      "source": "metrics.gauges.go.memory.heap.inuse{scope=\"go.opentelemetry.io/contrib/instrumentation/runtime\"}",
+      "name": "go.memory.heap.inuse",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Go Runtime",
+      "label": "Bytes in in-use heap spans",
+      "description": "Bytes in in-use heap spans",
+      "formatter": "BYTES"
+    },
+    {
+      "type": "oTelGo",
+      "source": "metrics.gauges.go.memory.heap.released{scope=\"go.opentelemetry.io/contrib/instrumentation/runtime\"}",
+      "name": "go.memory.heap.released",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Go Runtime",
+      "label": "Bytes of heap memory released to OS",
+      "description": "Bytes of heap memory released to OS",
+      "formatter": "BYTES"
+    },
+    {
+      "type": "oTelGo",
+      "source": "metrics.gauges.go.memory.heap.objects{scope=\"go.opentelemetry.io/contrib/instrumentation/runtime\"}",
+      "name": "go.memory.heap.objects",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Go Runtime",
+      "label": "Number of allocated heap objects",
+      "description": "Number of allocated heap objects",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelGo",
+      "source": "metrics.gauges.go.memory.stack.inuse{scope=\"go.opentelemetry.io/contrib/instrumentation/runtime\"}",
+      "name": "go.memory.stack.inuse",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Go Runtime",
+      "label": "Bytes in stack spans",
+      "description": "Bytes in stack spans",
+      "formatter": "BYTES"
+    },
+    {
+      "type": "oTelGo",
+      "source": "metrics.gauges.go.memory.stack.sys{scope=\"go.opentelemetry.io/contrib/instrumentation/runtime\"}",
+      "name": "go.memory.stack.sys",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Go Runtime",
+      "label": "Bytes of stack memory obtained from OS",
+      "description": "Bytes of stack memory obtained from OS",
+      "formatter": "BYTES"
+    },
+    {
+      "type": "oTelGo",
+      "source": "metrics.gauges.go.goroutines{scope=\"go.opentelemetry.io/contrib/instrumentation/runtime\"}",
+      "name": "go.goroutines",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Go Runtime",
+      "label": "Number of goroutines that currently exist",
+      "description": "Number of goroutines that currently exist",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelGo",
+      "source": "metrics.counters.go.gc.count{scope=\"go.opentelemetry.io/contrib/instrumentation/runtime\"}",
+      "name": "go.gc.count",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Go Runtime",
+      "label": "Number of completed GC cycles",
+      "description": "Number of completed GC cycles",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelGo",
+      "source": "metrics.gauges.go.gc.pause.ns{scope=\"go.opentelemetry.io/contrib/instrumentation/runtime\"}",
+      "name": "go.gc.pause.ns",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Go Runtime",
+      "label": "GC pause time in nanoseconds",
+      "description": "GC pause time in nanoseconds",
+      "formatter": "DURATION_NS"
+    },
+    {
+      "type": "oTelGo",
+      "source": "metrics.gauges.go.memory.limit{scope=\"go.opentelemetry.io/contrib/instrumentation/runtime\"}",
+      "name": "go.memory.limit",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Go Runtime",
+      "label": "Go runtime memory limit",
+      "description": "Go runtime memory limit",
+      "formatter": "BYTES"
+    },
+    {
+      "type": "oTelGo",
+      "source": "metrics.gauges.go.memory.used{scope=\"go.opentelemetry.io/contrib/instrumentation/runtime\"}",
+      "name": "go.memory.used",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Go Runtime",
+      "label": "Total memory used by Go runtime",
+      "description": "Total memory used by Go runtime",
+      "formatter": "BYTES"
+    },
+    {
+      "type": "oTelGo",
+      "source": "metrics.gauges.go.memory.allocated{scope=\"go.opentelemetry.io/contrib/instrumentation/runtime\"}",
+      "name": "go.memory.allocated",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Go Runtime",
+      "label": "Cumulative bytes allocated for heap objects",
+      "description": "Cumulative bytes allocated for heap objects",
+      "formatter": "BYTES"
+    },
+    {
+      "type": "oTelGo",
+      "source": "metrics.gauges.go.memory.gc.goal{scope=\"go.opentelemetry.io/contrib/instrumentation/runtime\"}",
+      "name": "go.memory.gc.goal",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Go Runtime",
+      "label": "Target heap size for next GC cycle",
+      "description": "Target heap size for next GC cycle",
+      "formatter": "BYTES"
+    },
+    {
+      "type": "oTelGo",
+      "source": "metrics.gauges.go.schedule.duration{scope=\"go.opentelemetry.io/contrib/instrumentation/runtime\"}",
+      "name": "go.schedule.duration",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Go Runtime",
+      "label": "Time goroutines spent in runnable state",
+      "description": "Time goroutines spent in runnable state",
+      "formatter": "DURATION_NS"
+    }
+  ],
+  "dependencies": [
+    {
+      "direction": "outgoing",
+      "name": "com.instana.forge.infrastructure.os.host.graph.HostIdDependency",
+      "type": "OF",
+      "identifiers": ["otel.attribute.host.id"]
+    }
+  ]
+}
