@@ -1,26 +1,14 @@
 {
-  "label": "Otel Kubernetes StatefulSet",
+  "label": "Otel Kubernetes HorizontalPodAutoscaler",
   "identifiers": [
-    "otel.attribute.k8s.statefulset.name",
+    "otel.attribute.k8s.hpa.name",
     "otel.attribute.k8s.cluster.name"
   ],
   "tagFilterExpression": {
-    "type": "EXPRESSION",
-    "logicalOperator": "AND",
-    "elements": [
-      {
-        "type": "TAG_FILTER",
-        "name": "dfq.selftype",
-        "operator": "EQUALS",
-        "value": "otelk8s"
-      },
-      {
-        "type": "TAG_FILTER",
-        "name": "otel.attribute.k8s.statefulset.uid",
-        "operator": "NOT_EMPTY",
-        "value": ""
-      }
-    ]
+    "type": "TAG_FILTER",
+    "name": "otel.attribute.k8s.hpa.uid",
+    "operator": "NOT_EMPTY",
+    "value": ""
   },
   "dashboards": [
     {
@@ -32,15 +20,15 @@
           "relatedId": "5ee8a3e8cd70020001ecb007"
         }
       ],
-      "id": "StatefulSetDashboardID",
-      "title": "OtelK8sStatefulSets",
+      "id": "HPADashboardID",
+      "title": "OtelK8sHorizontalPodAutoscalers",
       "widgets": [
         {
           "width": 3,
           "x": 0,
           "y": 0,
-          "id": "StatefulSetWidget1",
-          "title": "Ready StatefulSet Pods",
+          "id": "HPAWidget1",
+          "title": "Current Pods",
           "type": "bigNumber",
           "config": {
             "formatter": "number.compact",
@@ -56,10 +44,13 @@
               "aggregation": "MEAN",
               "source": "INFRASTRUCTURE_METRICS",
               "type": "oTelK8sCluster",
-              "metricPath": ["Others", "OpenTelemetry Kubernetes StatefulSet"],
+              "metricPath": [
+                "Others",
+                "OpenTelemetry Kubernetes HorizontalPodAutoscaler"
+              ],
               "formatter": "number.detailed",
               "unit": "number",
-              "metric": "metrics.gauges.k8s.statefulset.ready",
+              "metric": "metrics.gauges.k8s.hpa.current",
               "timeShift": 0,
               "tagFilterExpression": {
                 "logicalOperator": "AND",
@@ -76,10 +67,52 @@
         },
         {
           "width": 3,
+          "x": 3,
+          "y": 0,
+          "id": "HPAWidget2",
+          "title": "Desired Pods",
+          "type": "bigNumber",
+          "config": {
+            "formatter": "number.compact",
+            "comparisonDecreaseColor": "greenish",
+            "metricConfiguration": {
+              "lastValue": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "oTelK8sCluster",
+              "metricPath": [
+                "Others",
+                "OpenTelemetry Kubernetes HorizontalPodAutoscaler"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.gauges.k8s.hpa.desired",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "crossSeriesAggregation": "MEAN"
+            },
+            "comparisonIncreaseColor": "redish",
+            "formatterSelected": true
+          },
+          "height": 4
+        },
+        {
+          "width": 6,
           "x": 0,
           "y": 4,
-          "id": "StatefulSetWidget2",
-          "title": "Desired vs Ready Pods",
+          "id": "HPAWidget3",
+          "title": "Current vs Desired Pods",
           "type": "chart",
           "config": {
             "shareMaxAxisDomain": false,
@@ -103,11 +136,11 @@
                   "type": "oTelK8sCluster",
                   "metricPath": [
                     "Others",
-                    "OpenTelemetry Kubernetes StatefulSet"
+                    "OpenTelemetry Kubernetes HorizontalPodAutoscaler"
                   ],
                   "formatter": "number.detailed",
                   "unit": "number",
-                  "metric": "metrics.gauges.k8s.statefulset.ready",
+                  "metric": "metrics.gauges.k8s.hpa.current",
                   "timeShift": 0,
                   "tagFilterExpression": {
                     "logicalOperator": "AND",
@@ -115,7 +148,7 @@
                     "type": "EXPRESSION"
                   },
                   "allowedCrossSeriesAggregations": [],
-                  "metricLabel": "OpenTelemetry gauge k8s.statefulset.ready",
+                  "metricLabel": "OpenTelemetry gauge k8s.hpa.current",
                   "crossSeriesAggregation": "MEAN"
                 },
                 {
@@ -134,11 +167,11 @@
                   "type": "oTelK8sCluster",
                   "metricPath": [
                     "Others",
-                    "OpenTelemetry Kubernetes StatefulSet"
+                    "OpenTelemetry Kubernetes HorizontalPodAutoscaler"
                   ],
                   "formatter": "number.detailed",
                   "unit": "number",
-                  "metric": "metrics.gauges.k8s.statefulset.desired",
+                  "metric": "metrics.gauges.k8s.hpa.desired",
                   "timeShift": 0,
                   "tagFilterExpression": {
                     "logicalOperator": "AND",
@@ -146,7 +179,7 @@
                     "type": "EXPRESSION"
                   },
                   "allowedCrossSeriesAggregations": [],
-                  "metricLabel": "OpenTelemetry gauge k8s.statefulset.desired",
+                  "metricLabel": "OpenTelemetry gauge k8s.hpa.desired",
                   "crossSeriesAggregation": "MEAN"
                 }
               ],
@@ -162,11 +195,11 @@
           "height": 13
         },
         {
-          "width": 3,
-          "x": 3,
+          "width": 6,
+          "x": 6,
           "y": 4,
-          "id": "StatefulSetWidget3",
-          "title": "Current vs Updated Pods",
+          "id": "HPAWidget4",
+          "title": "Min vs Max Pods",
           "type": "chart",
           "config": {
             "shareMaxAxisDomain": false,
@@ -190,11 +223,11 @@
                   "type": "oTelK8sCluster",
                   "metricPath": [
                     "Others",
-                    "OpenTelemetry Kubernetes StatefulSet"
+                    "OpenTelemetry Kubernetes HorizontalPodAutoscaler"
                   ],
                   "formatter": "number.detailed",
                   "unit": "number",
-                  "metric": "metrics.gauges.k8s.statefulset.current",
+                  "metric": "metrics.gauges.k8s.hpa.min",
                   "timeShift": 0,
                   "tagFilterExpression": {
                     "logicalOperator": "AND",
@@ -202,7 +235,7 @@
                     "type": "EXPRESSION"
                   },
                   "allowedCrossSeriesAggregations": [],
-                  "metricLabel": "OpenTelemetry gauge k8s.statefulset.current",
+                  "metricLabel": "OpenTelemetry gauge k8s.hpa.min",
                   "crossSeriesAggregation": "MEAN"
                 },
                 {
@@ -221,11 +254,11 @@
                   "type": "oTelK8sCluster",
                   "metricPath": [
                     "Others",
-                    "OpenTelemetry Kubernetes StatefulSet"
+                    "OpenTelemetry Kubernetes HorizontalPodAutoscaler"
                   ],
                   "formatter": "number.detailed",
                   "unit": "number",
-                  "metric": "metrics.gauges.k8s.statefulset.updated",
+                  "metric": "metrics.gauges.k8s.hpa.max",
                   "timeShift": 0,
                   "tagFilterExpression": {
                     "logicalOperator": "AND",
@@ -233,7 +266,7 @@
                     "type": "EXPRESSION"
                   },
                   "allowedCrossSeriesAggregations": [],
-                  "metricLabel": "OpenTelemetry gauge k8s.statefulset.updated",
+                  "metricLabel": "OpenTelemetry gauge k8s.hpa.max",
                   "crossSeriesAggregation": "MEAN"
                 }
               ],
@@ -256,42 +289,42 @@
   "metrics": [
     {
       "type": "oTelK8sCluster",
-      "source": "metrics.gauges.k8s.statefulset.desired{scope=\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver\"}",
-      "name": "k8s.statefulset.desired",
+      "source": "metrics.gauges.k8s.hpa.desired{scope=\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver\"}",
+      "name": "k8s.hpa.desired",
       "section": "OTHERS",
-      "category": "OpenTelemetry Kubernetes StatefulSet",
-      "label": "Number of desired replica pods",
-      "description": "Number of desired replica pods",
+      "category": "OpenTelemetry Kubernetes HorizontalPodAutoscaler",
+      "label": "Desired number of replica pods",
+      "description": "Desired number of replica pods",
       "formatter": "NUMBER"
     },
     {
       "type": "oTelK8sCluster",
-      "source": "metrics.gauges.k8s.statefulset.ready{scope=\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver\"}",
-      "name": "k8s.statefulset.ready",
+      "source": "metrics.gauges.k8s.hpa.current{scope=\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver\"}",
+      "name": "k8s.hpa.current",
       "section": "OTHERS",
-      "category": "OpenTelemetry Kubernetes StatefulSet",
-      "label": "Number of ready replica pods",
-      "description": "Number of ready replica pods",
+      "category": "OpenTelemetry Kubernetes HorizontalPodAutoscaler",
+      "label": "Current number of replica pods",
+      "description": "Current number of replica pods",
       "formatter": "NUMBER"
     },
     {
       "type": "oTelK8sCluster",
-      "source": "metrics.gauges.k8s.statefulset.current{scope=\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver\"}",
-      "name": "k8s.statefulset.current",
+      "source": "metrics.gauges.k8s.hpa.max{scope=\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver\"}",
+      "name": "k8s.hpa.max",
       "section": "OTHERS",
-      "category": "OpenTelemetry Kubernetes StatefulSet",
-      "label": "Number of current pods",
-      "description": "Number of current pods",
+      "category": "OpenTelemetry Kubernetes HorizontalPodAutoscaler",
+      "label": "Maximum number of replica pods",
+      "description": "Maximum number of replica pods",
       "formatter": "NUMBER"
     },
     {
       "type": "oTelK8sCluster",
-      "source": "metrics.gauges.k8s.statefulset.updated{scope=\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver\"}",
-      "name": "k8s.statefulset.updated",
+      "source": "metrics.gauges.k8s.hpa.min{scope=\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver\"}",
+      "name": "k8s.hpa.min",
       "section": "OTHERS",
-      "category": "OpenTelemetry Kubernetes StatefulSet",
-      "label": "Number of updated pods",
-      "description": "Number of updated pods",
+      "category": "OpenTelemetry Kubernetes HorizontalPodAutoscaler",
+      "label": "Minimum number of replica pods",
+      "description": "Minimum number of replica pods",
       "formatter": "NUMBER"
     }
   ],

@@ -2,7 +2,7 @@
   "label": "Otel Kubernetes Job",
   "identifiers": [
     "otel.attribute.k8s.job.name",
-    "otel.attribute.k8s.cluster.uid"
+    "otel.attribute.k8s.cluster.name"
   ],
   "tagFilterExpression": {
     "type": "EXPRESSION",
