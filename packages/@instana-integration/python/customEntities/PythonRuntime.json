@@ -353,7 +353,7 @@
       "category": "OpenTelemetry Python Runtime",
       "label": "Resident Set Size memory",
       "description": "Resident Set Size memory",
-      "formatter": "BYTES"
+      "formatter": "NUMBER"
     },
     {
       "type": "oTelPython",
@@ -363,7 +363,7 @@
       "category": "OpenTelemetry Python Runtime",
       "label": "Virtual Memory Size",
       "description": "Virtual Memory Size",
-      "formatter": "BYTES"
+      "formatter": "NUMBER"
     },
     {
       "type": "oTelPython",
@@ -373,7 +373,7 @@
       "category": "OpenTelemetry Python Runtime",
       "label": "CPU time used by process",
       "description": "CPU time used by process",
-      "formatter": "DURATION_S"
+      "formatter": "NUMBER"
     },
     {
       "type": "oTelPython",
@@ -443,7 +443,7 @@
       "category": "OpenTelemetry Python Runtime",
       "label": "Python runtime memory usage",
       "description": "Python runtime memory usage",
-      "formatter": "BYTES"
+      "formatter": "NUMBER"
     },
     {
       "type": "oTelPython",
@@ -453,7 +453,7 @@
       "category": "OpenTelemetry Python Runtime",
       "label": "Python runtime CPU time",
       "description": "Python runtime CPU time",
-      "formatter": "DURATION_S"
+      "formatter": "NUMBER"
     },
     {
       "type": "oTelPython",
@@ -463,7 +463,7 @@
       "category": "OpenTelemetry Python Runtime",
       "label": "Python heap memory usage",
       "description": "Python heap memory usage",
-      "formatter": "BYTES"
+      "formatter": "NUMBER"
     }
   ],
   "dependencies": [
@@ -471,7 +471,7 @@
       "direction": "outgoing",
       "name": "com.instana.forge.infrastructure.os.host.graph.HostIdDependency",
       "type": "OF",
-      "identifiers": ["otel.attribute.host.name"]
+      "identifiers": ["otel.attribute.hostname"]
     }
   ]
 }

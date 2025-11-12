@@ -353,7 +353,7 @@
       "category": "OpenTelemetry Go Runtime",
       "label": "Bytes of allocated heap objects",
       "description": "Bytes of allocated heap objects",
-      "formatter": "BYTES"
+      "formatter": "NUMBER"
     },
     {
       "type": "oTelGo",
@@ -363,7 +363,7 @@
       "category": "OpenTelemetry Go Runtime",
       "label": "Bytes of heap memory obtained from OS",
       "description": "Bytes of heap memory obtained from OS",
-      "formatter": "BYTES"
+      "formatter": "NUMBER"
     },
     {
       "type": "oTelGo",
@@ -373,7 +373,7 @@
       "category": "OpenTelemetry Go Runtime",
       "label": "Bytes in idle heap spans",
       "description": "Bytes in idle heap spans",
-      "formatter": "BYTES"
+      "formatter": "NUMBER"
     },
     {
       "type": "oTelGo",
@@ -383,7 +383,7 @@
       "category": "OpenTelemetry Go Runtime",
       "label": "Bytes in in-use heap spans",
       "description": "Bytes in in-use heap spans",
-      "formatter": "BYTES"
+      "formatter": "NUMBER"
     },
     {
       "type": "oTelGo",
@@ -393,7 +393,7 @@
       "category": "OpenTelemetry Go Runtime",
       "label": "Bytes of heap memory released to OS",
       "description": "Bytes of heap memory released to OS",
-      "formatter": "BYTES"
+      "formatter": "NUMBER"
     },
     {
       "type": "oTelGo",
@@ -413,7 +413,7 @@
       "category": "OpenTelemetry Go Runtime",
       "label": "Bytes in stack spans",
       "description": "Bytes in stack spans",
-      "formatter": "BYTES"
+      "formatter": "NUMBER"
     },
     {
       "type": "oTelGo",
@@ -423,7 +423,7 @@
       "category": "OpenTelemetry Go Runtime",
       "label": "Bytes of stack memory obtained from OS",
       "description": "Bytes of stack memory obtained from OS",
-      "formatter": "BYTES"
+      "formatter": "NUMBER"
     },
     {
       "type": "oTelGo",
@@ -453,7 +453,7 @@
       "category": "OpenTelemetry Go Runtime",
       "label": "GC pause time in nanoseconds",
       "description": "GC pause time in nanoseconds",
-      "formatter": "DURATION_NS"
+      "formatter": "NUMBER"
     },
     {
       "type": "oTelGo",
@@ -463,7 +463,7 @@
       "category": "OpenTelemetry Go Runtime",
       "label": "Go runtime memory limit",
       "description": "Go runtime memory limit",
-      "formatter": "BYTES"
+      "formatter": "NUMBER"
     },
     {
       "type": "oTelGo",
@@ -473,7 +473,7 @@
       "category": "OpenTelemetry Go Runtime",
       "label": "Total memory used by Go runtime",
       "description": "Total memory used by Go runtime",
-      "formatter": "BYTES"
+      "formatter": "NUMBER"
     },
     {
       "type": "oTelGo",
@@ -483,7 +483,7 @@
       "category": "OpenTelemetry Go Runtime",
       "label": "Cumulative bytes allocated for heap objects",
       "description": "Cumulative bytes allocated for heap objects",
-      "formatter": "BYTES"
+      "formatter": "NUMBER"
     },
     {
       "type": "oTelGo",
@@ -493,7 +493,7 @@
       "category": "OpenTelemetry Go Runtime",
       "label": "Target heap size for next GC cycle",
       "description": "Target heap size for next GC cycle",
-      "formatter": "BYTES"
+      "formatter": "NUMBER"
     },
     {
       "type": "oTelGo",
@@ -503,7 +503,7 @@
       "category": "OpenTelemetry Go Runtime",
       "label": "Time goroutines spent in runnable state",
       "description": "Time goroutines spent in runnable state",
-      "formatter": "DURATION_NS"
+      "formatter": "NUMBER"
     }
   ],
   "dependencies": [
@@ -511,7 +511,7 @@
       "direction": "outgoing",
       "name": "com.instana.forge.infrastructure.os.host.graph.HostIdDependency",
       "type": "OF",
-      "identifiers": ["otel.attribute.host.id"]
+      "identifiers": ["otel.attribute.hostname"]
     }
   ]
 }

@@ -328,7 +328,7 @@
       "category": "OpenTelemetry Node.js Runtime",
       "label": "Heap memory used in bytes",
       "description": "Heap memory used in bytes",
-      "formatter": "BYTES"
+      "formatter": "NUMBER"
     },
     {
       "type": "oTelNodeJs",
@@ -338,7 +338,7 @@
       "category": "OpenTelemetry Node.js Runtime",
       "label": "Total heap memory allocated in bytes",
       "description": "Total heap memory allocated in bytes",
-      "formatter": "BYTES"
+      "formatter": "NUMBER"
     },
     {
       "type": "oTelNodeJs",
@@ -348,7 +348,7 @@
       "category": "OpenTelemetry Node.js Runtime",
       "label": "Resident set size in bytes",
       "description": "Resident set size in bytes",
-      "formatter": "BYTES"
+      "formatter": "NUMBER"
     },
     {
       "type": "oTelNodeJs",
@@ -358,7 +358,7 @@
       "category": "OpenTelemetry Node.js Runtime",
       "label": "External memory usage in bytes",
       "description": "External memory usage in bytes",
-      "formatter": "BYTES"
+      "formatter": "NUMBER"
     },
     {
       "type": "oTelNodeJs",
@@ -368,7 +368,7 @@
       "category": "OpenTelemetry Node.js Runtime",
       "label": "Array buffers memory in bytes",
       "description": "Array buffers memory in bytes",
-      "formatter": "BYTES"
+      "formatter": "NUMBER"
     },
     {
       "type": "oTelNodeJs",
@@ -378,7 +378,7 @@
       "category": "OpenTelemetry Node.js Runtime",
       "label": "Mean event loop lag in milliseconds",
       "description": "Mean event loop lag in milliseconds",
-      "formatter": "DURATION_MS"
+      "formatter": "NUMBER"
     },
     {
       "type": "oTelNodeJs",
@@ -388,7 +388,7 @@
       "category": "OpenTelemetry Node.js Runtime",
       "label": "Minimum event loop lag in milliseconds",
       "description": "Minimum event loop lag in milliseconds",
-      "formatter": "DURATION_MS"
+      "formatter": "NUMBER"
     },
     {
       "type": "oTelNodeJs",
@@ -398,7 +398,7 @@
       "category": "OpenTelemetry Node.js Runtime",
       "label": "Maximum event loop lag in milliseconds",
       "description": "Maximum event loop lag in milliseconds",
-      "formatter": "DURATION_MS"
+      "formatter": "NUMBER"
     },
     {
       "type": "oTelNodeJs",
@@ -408,7 +408,7 @@
       "category": "OpenTelemetry Node.js Runtime",
       "label": "Standard deviation of event loop lag",
       "description": "Standard deviation of event loop lag",
-      "formatter": "DURATION_MS"
+      "formatter": "NUMBER"
     },
     {
       "type": "oTelNodeJs",
@@ -448,7 +448,7 @@
       "category": "OpenTelemetry Node.js Runtime",
       "label": "Garbage collection pause duration",
       "description": "Garbage collection pause duration",
-      "formatter": "DURATION_MS"
+      "formatter": "NUMBER"
     }
   ],
   "dependencies": [
@@ -456,7 +456,7 @@
       "direction": "outgoing",
       "name": "com.instana.forge.infrastructure.os.host.graph.HostIdDependency",
       "type": "OF",
-      "identifiers": ["otel.attribute.host.name"]
+      "identifiers": ["otel.attribute.hostname"]
     }
   ]
 }
