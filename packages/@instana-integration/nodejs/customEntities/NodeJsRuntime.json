@@ -22,432 +22,106 @@
       }
     ]
   },
-  "dashboards": [
-    {
-      "rbacTags": [],
-      "accessRules": [
-        {
-          "accessType": "READ_WRITE",
-          "relationType": "USER",
-          "relatedId": "5ee8a3e8cd70020001ecb007"
-        }
-      ],
-      "id": "NodeJsRuntimeDashboardID",
-      "title": "OtelNodeJsRuntime",
-      "widgets": [
-        {
-          "width": 3,
-          "x": 0,
-          "y": 0,
-          "id": "NodeJsWidget1",
-          "title": "Heap Used Memory",
-          "type": "bigNumber",
-          "config": {
-            "formatter": "number.compact",
-            "comparisonDecreaseColor": "greenish",
-            "metricConfiguration": {
-              "lastValue": false,
-              "threshold": {
-                "critical": "",
-                "warning": "",
-                "thresholdEnabled": false,
-                "operator": ">="
-              },
-              "aggregation": "MEAN",
-              "source": "INFRASTRUCTURE_METRICS",
-              "type": "oTelNodeJs",
-              "metricPath": ["Others", "OpenTelemetry Node.js Runtime"],
-              "formatter": "number.detailed",
-              "unit": "bytes",
-              "metric": "metrics.gauges.nodejs.memory.heap.used",
-              "timeShift": 0,
-              "tagFilterExpression": {
-                "logicalOperator": "AND",
-                "elements": [],
-                "type": "EXPRESSION"
-              },
-              "allowedCrossSeriesAggregations": [],
-              "crossSeriesAggregation": "MEAN"
-            },
-            "comparisonIncreaseColor": "redish",
-            "formatterSelected": true
-          },
-          "height": 4
-        },
-        {
-          "width": 3,
-          "x": 3,
-          "y": 0,
-          "id": "NodeJsWidget2",
-          "title": "Event Loop Lag",
-          "type": "bigNumber",
-          "config": {
-            "formatter": "number.compact",
-            "comparisonDecreaseColor": "greenish",
-            "metricConfiguration": {
-              "lastValue": false,
-              "threshold": {
-                "critical": "",
-                "warning": "",
-                "thresholdEnabled": false,
-                "operator": ">="
-              },
-              "aggregation": "MEAN",
-              "source": "INFRASTRUCTURE_METRICS",
-              "type": "oTelNodeJs",
-              "metricPath": ["Others", "OpenTelemetry Node.js Runtime"],
-              "formatter": "number.detailed",
-              "unit": "milliseconds",
-              "metric": "metrics.gauges.nodejs.eventloop.lag.mean",
-              "timeShift": 0,
-              "tagFilterExpression": {
-                "logicalOperator": "AND",
-                "elements": [],
-                "type": "EXPRESSION"
-              },
-              "allowedCrossSeriesAggregations": [],
-              "crossSeriesAggregation": "MEAN"
-            },
-            "comparisonIncreaseColor": "redish",
-            "formatterSelected": true
-          },
-          "height": 4
-        },
-        {
-          "width": 3,
-          "x": 6,
-          "y": 0,
-          "id": "NodeJsWidget3",
-          "title": "Active Handles",
-          "type": "bigNumber",
-          "config": {
-            "formatter": "number.compact",
-            "comparisonDecreaseColor": "greenish",
-            "metricConfiguration": {
-              "lastValue": false,
-              "threshold": {
-                "critical": "",
-                "warning": "",
-                "thresholdEnabled": false,
-                "operator": ">="
-              },
-              "aggregation": "MEAN",
-              "source": "INFRASTRUCTURE_METRICS",
-              "type": "oTelNodeJs",
-              "metricPath": ["Others", "OpenTelemetry Node.js Runtime"],
-              "formatter": "number.detailed",
-              "unit": "number",
-              "metric": "metrics.gauges.nodejs.active_handles.total",
-              "timeShift": 0,
-              "tagFilterExpression": {
-                "logicalOperator": "AND",
-                "elements": [],
-                "type": "EXPRESSION"
-              },
-              "allowedCrossSeriesAggregations": [],
-              "crossSeriesAggregation": "MEAN"
-            },
-            "comparisonIncreaseColor": "redish",
-            "formatterSelected": true
-          },
-          "height": 4
-        },
-        {
-          "width": 6,
-          "x": 0,
-          "y": 4,
-          "id": "NodeJsWidget4",
-          "title": "Memory Usage Over Time",
-          "type": "chart",
-          "config": {
-            "shareMaxAxisDomain": false,
-            "y1": {
-              "formatter": "number.compact",
-              "renderer": "line",
-              "metrics": [
-                {
-                  "lastValue": false,
-                  "color": "",
-                  "compareToTimeShifted": false,
-                  "threshold": {
-                    "critical": "",
-                    "warning": "",
-                    "thresholdEnabled": false,
-                    "operator": ">="
-                  },
-                  "aggregation": "MEAN",
-                  "label": "",
-                  "source": "INFRASTRUCTURE_METRICS",
-                  "type": "oTelNodeJs",
-                  "metricPath": ["Others", "OpenTelemetry Node.js Runtime"],
-                  "formatter": "number.detailed",
-                  "unit": "bytes",
-                  "metric": "metrics.gauges.nodejs.memory.heap.used",
-                  "timeShift": 0,
-                  "tagFilterExpression": {
-                    "logicalOperator": "AND",
-                    "elements": [],
-                    "type": "EXPRESSION"
-                  },
-                  "allowedCrossSeriesAggregations": [],
-                  "metricLabel": "OpenTelemetry gauge nodejs.memory.heap.used",
-                  "crossSeriesAggregation": "MEAN"
-                },
-                {
-                  "lastValue": false,
-                  "color": "",
-                  "compareToTimeShifted": false,
-                  "threshold": {
-                    "critical": "",
-                    "warning": "",
-                    "thresholdEnabled": false,
-                    "operator": ">="
-                  },
-                  "aggregation": "MEAN",
-                  "label": "",
-                  "source": "INFRASTRUCTURE_METRICS",
-                  "type": "oTelNodeJs",
-                  "metricPath": ["Others", "OpenTelemetry Node.js Runtime"],
-                  "formatter": "number.detailed",
-                  "unit": "bytes",
-                  "metric": "metrics.gauges.nodejs.memory.heap.total",
-                  "timeShift": 0,
-                  "tagFilterExpression": {
-                    "logicalOperator": "AND",
-                    "elements": [],
-                    "type": "EXPRESSION"
-                  },
-                  "allowedCrossSeriesAggregations": [],
-                  "metricLabel": "OpenTelemetry gauge nodejs.memory.heap.total",
-                  "crossSeriesAggregation": "MEAN"
-                }
-              ],
-              "formatterSelected": true
-            },
-            "y2": {
-              "formatter": "number.detailed",
-              "renderer": "line",
-              "metrics": []
-            },
-            "type": "TIME_SERIES"
-          },
-          "height": 13
-        },
-        {
-          "width": 6,
-          "x": 6,
-          "y": 4,
-          "id": "NodeJsWidget5",
-          "title": "Event Loop Lag Over Time",
-          "type": "chart",
-          "config": {
-            "shareMaxAxisDomain": false,
-            "y1": {
-              "formatter": "number.compact",
-              "renderer": "line",
-              "metrics": [
-                {
-                  "lastValue": false,
-                  "color": "",
-                  "compareToTimeShifted": false,
-                  "threshold": {
-                    "critical": "",
-                    "warning": "",
-                    "thresholdEnabled": false,
-                    "operator": ">="
-                  },
-                  "aggregation": "MEAN",
-                  "label": "",
-                  "source": "INFRASTRUCTURE_METRICS",
-                  "type": "oTelNodeJs",
-                  "metricPath": ["Others", "OpenTelemetry Node.js Runtime"],
-                  "formatter": "number.detailed",
-                  "unit": "milliseconds",
-                  "metric": "metrics.gauges.nodejs.eventloop.lag.mean",
-                  "timeShift": 0,
-                  "tagFilterExpression": {
-                    "logicalOperator": "AND",
-                    "elements": [],
-                    "type": "EXPRESSION"
-                  },
-                  "allowedCrossSeriesAggregations": [],
-                  "metricLabel": "OpenTelemetry gauge nodejs.eventloop.lag.mean",
-                  "crossSeriesAggregation": "MEAN"
-                },
-                {
-                  "lastValue": false,
-                  "color": "",
-                  "compareToTimeShifted": false,
-                  "threshold": {
-                    "critical": "",
-                    "warning": "",
-                    "thresholdEnabled": false,
-                    "operator": ">="
-                  },
-                  "aggregation": "MAX",
-                  "label": "",
-                  "source": "INFRASTRUCTURE_METRICS",
-                  "type": "oTelNodeJs",
-                  "metricPath": ["Others", "OpenTelemetry Node.js Runtime"],
-                  "formatter": "number.detailed",
-                  "unit": "milliseconds",
-                  "metric": "metrics.gauges.nodejs.eventloop.lag.max",
-                  "timeShift": 0,
-                  "tagFilterExpression": {
-                    "logicalOperator": "AND",
-                    "elements": [],
-                    "type": "EXPRESSION"
-                  },
-                  "allowedCrossSeriesAggregations": [],
-                  "metricLabel": "OpenTelemetry gauge nodejs.eventloop.lag.max",
-                  "crossSeriesAggregation": "MAX"
-                }
-              ],
-              "formatterSelected": true
-            },
-            "y2": {
-              "formatter": "number.detailed",
-              "renderer": "line",
-              "metrics": []
-            },
-            "type": "TIME_SERIES"
-          },
-          "height": 13
-        }
-      ],
-      "ownerId": "5ee8a3e8cd70020001ecb007",
-      "writable": true
-    }
-  ],
+  "dashboards": [],
   "metrics": [
     {
       "type": "oTelNodeJs",
-      "source": "metrics.gauges.nodejs.memory.heap.used{scope=\"@opentelemetry/instrumentation-runtime-node\"}",
-      "name": "nodejs.memory.heap.used",
+      "source": "metrics.gauges.@opentelemetry/instrumentation-runtime-node/nodejs.eventloop.delay.max{}",
+      "name": "nodejs.eventloop.delay.max",
       "section": "OTHERS",
       "category": "OpenTelemetry Node.js Runtime",
-      "label": "Heap memory used in bytes",
-      "description": "Heap memory used in bytes",
+      "label": "Event loop maximum delay.",
+      "description": "Event loop maximum delay.",
       "formatter": "NUMBER"
     },
     {
       "type": "oTelNodeJs",
-      "source": "metrics.gauges.nodejs.memory.heap.total{scope=\"@opentelemetry/instrumentation-runtime-node\"}",
-      "name": "nodejs.memory.heap.total",
+      "source": "metrics.gauges.@opentelemetry/instrumentation-runtime-node/nodejs.eventloop.delay.mean{}",
+      "name": "nodejs.eventloop.delay.mean",
       "section": "OTHERS",
       "category": "OpenTelemetry Node.js Runtime",
-      "label": "Total heap memory allocated in bytes",
-      "description": "Total heap memory allocated in bytes",
+      "label": "Event loop standard deviation delay",
+      "description": "Event loop standard deviation delay",
       "formatter": "NUMBER"
     },
     {
       "type": "oTelNodeJs",
-      "source": "metrics.gauges.nodejs.memory.rss{scope=\"@opentelemetry/instrumentation-runtime-node\"}",
-      "name": "nodejs.memory.rss",
+      "source": "metrics.gauges.@opentelemetry/instrumentation-runtime-node/nodejs.eventloop.delay.min{}",
+      "name": "nodejs.eventloop.delay.min",
       "section": "OTHERS",
       "category": "OpenTelemetry Node.js Runtime",
-      "label": "Resident set size in bytes",
-      "description": "Resident set size in bytes",
+      "label": "Event loop minimum delay",
+      "description": "Event loop minimum delay",
       "formatter": "NUMBER"
     },
     {
       "type": "oTelNodeJs",
-      "source": "metrics.gauges.nodejs.memory.external{scope=\"@opentelemetry/instrumentation-runtime-node\"}",
-      "name": "nodejs.memory.external",
+      "source": "metrics.gauges.@opentelemetry/instrumentation-runtime-node/nodejs.eventloop.delay.p50{}",
+      "name": "nodejs.eventloop.delay.p50",
       "section": "OTHERS",
       "category": "OpenTelemetry Node.js Runtime",
-      "label": "External memory usage in bytes",
-      "description": "External memory usage in bytes",
+      "label": "Event loop 50 percentile delay",
+      "description": "Event loop 50 percentile delay",
       "formatter": "NUMBER"
     },
     {
       "type": "oTelNodeJs",
-      "source": "metrics.gauges.nodejs.memory.arrayBuffers{scope=\"@opentelemetry/instrumentation-runtime-node\"}",
-      "name": "nodejs.memory.arrayBuffers",
+      "source": "metrics.gauges.@opentelemetry/instrumentation-runtime-node/nodejs.eventloop.delay.p90{}",
+      "name": "nodejs.eventloop.delay.p90",
       "section": "OTHERS",
       "category": "OpenTelemetry Node.js Runtime",
-      "label": "Array buffers memory in bytes",
-      "description": "Array buffers memory in bytes",
+      "label": "Event loop 90 percentile delay",
+      "description": "Event loop 90 percentile delay",
       "formatter": "NUMBER"
     },
     {
       "type": "oTelNodeJs",
-      "source": "metrics.gauges.nodejs.eventloop.lag.mean{scope=\"@opentelemetry/instrumentation-runtime-node\"}",
-      "name": "nodejs.eventloop.lag.mean",
+      "source": "metrics.gauges.@opentelemetry/instrumentation-runtime-node/nodejs.eventloop.delay.p99{}",
+      "name": "nodejs.eventloop.delay.p99",
       "section": "OTHERS",
       "category": "OpenTelemetry Node.js Runtime",
-      "label": "Mean event loop lag in milliseconds",
-      "description": "Mean event loop lag in milliseconds",
+      "label": "Event loop 99 percentile delay",
+      "description": "Event loop 99 percentile delay",
       "formatter": "NUMBER"
     },
     {
       "type": "oTelNodeJs",
-      "source": "metrics.gauges.nodejs.eventloop.lag.min{scope=\"@opentelemetry/instrumentation-runtime-node\"}",
-      "name": "nodejs.eventloop.lag.min",
+      "source": "metrics.gauges.@opentelemetry/instrumentation-runtime-node/nodejs.eventloop.delay.stddev{}",
+      "name": "nodejs.eventloop.delay.stddev",
       "section": "OTHERS",
       "category": "OpenTelemetry Node.js Runtime",
-      "label": "Minimum event loop lag in milliseconds",
-      "description": "Minimum event loop lag in milliseconds",
+      "label": "Event loop standard deviation delay",
+      "description": "Event loop standard deviation delay",
       "formatter": "NUMBER"
     },
     {
       "type": "oTelNodeJs",
-      "source": "metrics.gauges.nodejs.eventloop.lag.max{scope=\"@opentelemetry/instrumentation-runtime-node\"}",
-      "name": "nodejs.eventloop.lag.max",
+      "source": "metrics.gauges.@opentelemetry/instrumentation-runtime-node/nodejs.eventloop.utilization{}",
+      "name": "nodejs.eventloop.utilization",
       "section": "OTHERS",
       "category": "OpenTelemetry Node.js Runtime",
-      "label": "Maximum event loop lag in milliseconds",
-      "description": "Maximum event loop lag in milliseconds",
+      "label": "Event loop utilization.",
+      "description": "Event loop utilization.",
       "formatter": "NUMBER"
     },
     {
       "type": "oTelNodeJs",
-      "source": "metrics.gauges.nodejs.eventloop.lag.stddev{scope=\"@opentelemetry/instrumentation-runtime-node\"}",
-      "name": "nodejs.eventloop.lag.stddev",
+      "source": "metrics.sums.@opentelemetry/instrumentation-runtime-node/nodejs.eventloop.time{nodejs.eventloop.state=\"active\"}",
+      "name": "nodejs.eventloop.state{\"active\"}",
       "section": "OTHERS",
       "category": "OpenTelemetry Node.js Runtime",
-      "label": "Standard deviation of event loop lag",
-      "description": "Standard deviation of event loop lag",
+      "label": "The state of event loop time - active",
+      "description": "The state of event loop time - active",
       "formatter": "NUMBER"
     },
     {
       "type": "oTelNodeJs",
-      "source": "metrics.gauges.nodejs.active_handles.total{scope=\"@opentelemetry/instrumentation-runtime-node\"}",
-      "name": "nodejs.active_handles.total",
+      "source": "metrics.sums.@opentelemetry/instrumentation-runtime-node/nodejs.eventloop.time{nodejs.eventloop.state=\"idle\"}",
+      "name": "nodejs.eventloop.state{\"idle\"}",
       "section": "OTHERS",
       "category": "OpenTelemetry Node.js Runtime",
-      "label": "Number of active handles",
-      "description": "Number of active handles",
-      "formatter": "NUMBER"
-    },
-    {
-      "type": "oTelNodeJs",
-      "source": "metrics.gauges.nodejs.active_requests.total{scope=\"@opentelemetry/instrumentation-runtime-node\"}",
-      "name": "nodejs.active_requests.total",
-      "section": "OTHERS",
-      "category": "OpenTelemetry Node.js Runtime",
-      "label": "Number of active requests",
-      "description": "Number of active requests",
-      "formatter": "NUMBER"
-    },
-    {
-      "type": "oTelNodeJs",
-      "source": "metrics.counters.nodejs.gc.count{scope=\"@opentelemetry/instrumentation-runtime-node\"}",
-      "name": "nodejs.gc.count",
-      "section": "OTHERS",
-      "category": "OpenTelemetry Node.js Runtime",
-      "label": "Garbage collection count",
-      "description": "Garbage collection count",
-      "formatter": "NUMBER"
-    },
-    {
-      "type": "oTelNodeJs",
-      "source": "metrics.gauges.nodejs.gc.pause.duration{scope=\"@opentelemetry/instrumentation-runtime-node\"}",
-      "name": "nodejs.gc.pause.duration",
-      "section": "OTHERS",
-      "category": "OpenTelemetry Node.js Runtime",
-      "label": "Garbage collection pause duration",
-      "description": "Garbage collection pause duration",
+      "label": "The state of event loop time - idle",
+      "description": "The state of event loop time - idle",
       "formatter": "NUMBER"
     }
   ],
