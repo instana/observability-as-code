@@ -12,6 +12,10 @@ Below are the dashboards that are currently supported by this integration packag
 | presto-query-performance-health
 | presto-data-metadata-health
 | presto-workload-health
+| presto-query-lifecycle-health
+| presto-error-health
+| presto-query-latency-health
+| presto-anomaly-and-trend-insights
 
 ## Metrics
 
