@@ -1,6 +1,6 @@
 {
   "name": "@instana/stanctl-integration",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "The Instana CLI for integration package management",
   "main": "./dist/index.js",
   "scripts": {
