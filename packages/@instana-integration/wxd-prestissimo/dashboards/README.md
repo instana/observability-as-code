@@ -1,4 +1,4 @@
-# @instana-integration/wxd-presto
+# @instana-integration/wxd-prestissimo
 
 The Instana integration package is designed to showcase observability capabilities within Instana by monitoring the Watsonx.data Prestissimo Engine. Prestissimo exposes metrics through OpenTelemetry, which can be effectively leveraged to track real-time metrics using the provided dashboards.
 
