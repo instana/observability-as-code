@@ -1,0 +1,18 @@
+{
+  "name": "[SRETUSLO] filler raw message lag > 5 seconds [TF]",
+  "description": "Filler raw message processing is lagging. The lag has been greater than five seconds for the last fifteen minutes.  ## Consequences We are ingesting both tags and metrics more slowly than we should. Data will not become available in Instana in a timely fashion or might be dropped.  ## Remediation Steps to take _until remediation_ - Upsize the metrics profile for the TU. - Move this filler to the highperf nodepool. - Move off other high-load components running on the same worker. - Scale out the filler.",
+  "query": "entity.jvm.app.name:filler AND NOT entity.kubernetes.deployment.name:techzone-observability-filler",
+  "entityType": "dropwizardApplicationContainer",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "metrics.timers.com.instana.filler.topology.RawMessagesStreamInitializer.time-difference.99th",
+      "aggregation": "avg",
+      "window": 900000,
+      "conditionOperator": ">",
+      "conditionValue": 5000,
+      "severity": 5
+    }
+  ]
+}

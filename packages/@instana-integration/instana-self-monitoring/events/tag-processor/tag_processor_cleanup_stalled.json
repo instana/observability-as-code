@@ -1,0 +1,18 @@
+{
+  "name": "[SRESLO] tag-processor is not cleaning up tag sets [TF]",
+  "description": "Tag processor is is not running the cleanup of tag sets. ## Consequences Changes which have been dropped will not be fixed and updates to tag sets will not be reflected. This could cause some entities to not show up in searches and smart alerts based on these tags become unreliable and have false alerts. ## Remediation Steps to take _until remediation_ - Verify that there are no issues with Cassandra and Kafka. - Consider a rolling restart of pods - Inform engineering",
+  "query": "entity.jvm.app.name:tag-processor",
+  "entityType": "dropwizardApplicationContainer",
+  "expirationTime": 600000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "metrics.timers.com.instana.tags.synchronization.DefaultTagPropagationStateCleaner.state-age.rate",
+      "aggregation": "avg",
+      "window": 600000,
+      "conditionOperator": "=",
+      "conditionValue": 0.0,
+      "severity": 5
+    }
+  ]
+}

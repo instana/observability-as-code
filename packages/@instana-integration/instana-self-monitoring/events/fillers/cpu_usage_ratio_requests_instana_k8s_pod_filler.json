@@ -1,0 +1,18 @@
+{
+  "name": "[DEVTUSLO] Instana filler pod CPU usage to CPU requests > 200%  [TF]",
+  "description": "This Instana filler pod's CPU usage is over twice the CPU requests for more than 1h. This either indicates that the pod has too little requests and should be resized or that there is a problem with an upstream component (e.g. spike in usage on a specific pod).",
+  "query": "entity.type:kubernetesPod AND entity.kubernetes.pod.name:\"*filler*\"",
+  "entityType": "kubernetesPod",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "cpuUsageToRequestedRatio",
+      "aggregation": "avg",
+      "window": 3600000,
+      "conditionOperator": ">",
+      "conditionValue": 2,
+      "severity": 10
+    }
+  ]
+}
