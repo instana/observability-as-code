@@ -1,0 +1,17 @@
+{
+  "name": "Old Jenkins Job Build",
+  "description": "Detects when a Jenkins job hasn't been built in a long time, which may indicate abandoned jobs or configuration issues.",
+  "entityType": "openTelemetry",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "window": 300000,
+      "severity": 5,
+      "metricName": "metrics.gauges.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/jenkinsreceiver/jenkins.job.last_build.age",
+      "aggregation": "avg",
+      "conditionOperator": ">",
+      "conditionValue": 86400000
+    }
+  ]
+}

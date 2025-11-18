@@ -1,0 +1,17 @@
+{
+  "name": "Jenkins Executor Exhaustion",
+  "description": "Detects when Jenkins executors are fully utilized, which may cause build queuing and delays in CI/CD pipelines.",
+  "entityType": "openTelemetry",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "window": 300000,
+      "severity": 10,
+      "metricName": "metrics.gauges.github.com/open-telemetry/opentelemetry-collector-contrib/receiver/jenkinsreceiver/jenkins.executors",
+      "aggregation": "avg",
+      "conditionOperator": "==",
+      "conditionValue": 0
+    }
+  ]
+}
