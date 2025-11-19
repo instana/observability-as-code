@@ -1,6 +1,6 @@
-# @instana-integration/wxd-milvus
+# @instana-integration/wxd-prestissimo
 
-The Instana integration package is designed to showcase observability capabilities within Instana by monitoring the Watsonx.data Milvus Engine. Milvus exposes metrics through OpenTelemetry, which can be effectively leveraged to track real-time metrics using the provided dashboards.
+The Instana integration package is designed to showcase observability capabilities within Instana by monitoring the Watsonx.data Prestissimo Engine. Prestissimo exposes metrics through OpenTelemetry, which can be effectively leveraged to track real-time metrics using the provided dashboards.
 
 ## Dashboards
 
@@ -8,14 +8,15 @@ Below are the dashboards that are currently supported by this integration packag
 
 | Dashboard Title    | 
 |-------------------|
-| milvus-system-health 
-| milvus-query-performance-health
-| milvus-data-metadata-health
-| milvus-workload-health
-| milvus-anomaly-and-trend-insights
-| milvus-log-and-error-health
-| milvus-query-latency-health
-| milvus-query-lifecycle-health 
+| presto-cpp-query-stats
+| presto-cpp-cache
+| presto-cpp-cluster-memory
+| presto-cpp-cluster-status
+| presto-cpp-execution
+| presto-cpp-memory-usage
+| presto-cpp-S3-IO
+| presto-cpp-threadpoools
+
 
 ## Metrics
 
@@ -37,13 +38,13 @@ With [Instana CLI for integration package management](https://github.com/instana
 Downloading the package:
 
 ```shell
-$ stanctl-integration download --package @instana-integration/wxd-milvus
+$ stanctl-integration download --package @instana-integration/wxd-presto
 ```
 
 Importing the package into Instana:
 
 ```shell
-$ stanctl-integration import --package @instana-integration/wxd-milvus \
+$ stanctl-integration import --package @instana-integration/wxd-presto\
   --server $INSTANA_SERVER \
   --token $API_TOKEN \
   --set serviceinstanceid=$SERVICE_INSTANCE_ID
