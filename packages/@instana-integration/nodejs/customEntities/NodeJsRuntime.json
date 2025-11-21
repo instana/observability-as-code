@@ -1,0 +1,136 @@
+{
+  "label": "Otel Node.js Runtime",
+  "identifiers": [
+    "otel.attribute.service.name",
+    "otel.attribute.service.instance.id"
+  ],
+  "tagFilterExpression": {
+    "type": "EXPRESSION",
+    "logicalOperator": "AND",
+    "elements": [
+      {
+        "type": "TAG_FILTER",
+        "name": "otel.attribute.telemetry.sdk.language",
+        "operator": "EQUALS",
+        "value": "nodejs"
+      },
+      {
+        "type": "TAG_FILTER",
+        "name": "otel.attribute.process.runtime.name",
+        "operator": "EQUALS",
+        "value": "nodejs"
+      }
+    ]
+  },
+  "dashboards": [],
+  "metrics": [
+    {
+      "type": "oTelNodeJs",
+      "source": "metrics.gauges.@opentelemetry/instrumentation-runtime-node/nodejs.eventloop.delay.max{}",
+      "name": "nodejs.eventloop.delay.max",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Node.js Runtime",
+      "label": "Event loop maximum delay.",
+      "description": "Event loop maximum delay.",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelNodeJs",
+      "source": "metrics.gauges.@opentelemetry/instrumentation-runtime-node/nodejs.eventloop.delay.mean{}",
+      "name": "nodejs.eventloop.delay.mean",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Node.js Runtime",
+      "label": "Event loop standard deviation delay",
+      "description": "Event loop standard deviation delay",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelNodeJs",
+      "source": "metrics.gauges.@opentelemetry/instrumentation-runtime-node/nodejs.eventloop.delay.min{}",
+      "name": "nodejs.eventloop.delay.min",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Node.js Runtime",
+      "label": "Event loop minimum delay",
+      "description": "Event loop minimum delay",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelNodeJs",
+      "source": "metrics.gauges.@opentelemetry/instrumentation-runtime-node/nodejs.eventloop.delay.p50{}",
+      "name": "nodejs.eventloop.delay.p50",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Node.js Runtime",
+      "label": "Event loop 50 percentile delay",
+      "description": "Event loop 50 percentile delay",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelNodeJs",
+      "source": "metrics.gauges.@opentelemetry/instrumentation-runtime-node/nodejs.eventloop.delay.p90{}",
+      "name": "nodejs.eventloop.delay.p90",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Node.js Runtime",
+      "label": "Event loop 90 percentile delay",
+      "description": "Event loop 90 percentile delay",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelNodeJs",
+      "source": "metrics.gauges.@opentelemetry/instrumentation-runtime-node/nodejs.eventloop.delay.p99{}",
+      "name": "nodejs.eventloop.delay.p99",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Node.js Runtime",
+      "label": "Event loop 99 percentile delay",
+      "description": "Event loop 99 percentile delay",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelNodeJs",
+      "source": "metrics.gauges.@opentelemetry/instrumentation-runtime-node/nodejs.eventloop.delay.stddev{}",
+      "name": "nodejs.eventloop.delay.stddev",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Node.js Runtime",
+      "label": "Event loop standard deviation delay",
+      "description": "Event loop standard deviation delay",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelNodeJs",
+      "source": "metrics.gauges.@opentelemetry/instrumentation-runtime-node/nodejs.eventloop.utilization{}",
+      "name": "nodejs.eventloop.utilization",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Node.js Runtime",
+      "label": "Event loop utilization.",
+      "description": "Event loop utilization.",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelNodeJs",
+      "source": "metrics.sums.@opentelemetry/instrumentation-runtime-node/nodejs.eventloop.time{nodejs.eventloop.state=\"active\"}",
+      "name": "nodejs.eventloop.state{\"active\"}",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Node.js Runtime",
+      "label": "The state of event loop time - active",
+      "description": "The state of event loop time - active",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelNodeJs",
+      "source": "metrics.sums.@opentelemetry/instrumentation-runtime-node/nodejs.eventloop.time{nodejs.eventloop.state=\"idle\"}",
+      "name": "nodejs.eventloop.state{\"idle\"}",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Node.js Runtime",
+      "label": "The state of event loop time - idle",
+      "description": "The state of event loop time - idle",
+      "formatter": "NUMBER"
+    }
+  ],
+  "dependencies": [
+    {
+      "direction": "outgoing",
+      "name": "com.instana.forge.infrastructure.os.host.graph.HostIdDependency",
+      "type": "OF",
+      "identifiers": ["otel.attribute.hostname"]
+    }
+  ]
+}

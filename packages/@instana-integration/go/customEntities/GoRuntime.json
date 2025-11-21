@@ -1,0 +1,133 @@
+{
+  "label": "Otel Go Runtime",
+  "identifiers": ["otel.attribute.service.name"],
+  "tagFilterExpression": {
+    "type": "EXPRESSION",
+    "logicalOperator": "AND",
+    "elements": [
+      {
+        "type": "TAG_FILTER",
+        "name": "otel.attribute.telemetry.sdk.language",
+        "operator": "EQUALS",
+        "value": "go"
+      },
+      {
+        "type": "TAG_FILTER",
+        "name": "otel.attribute.process.runtime.name",
+        "operator": "EQUALS",
+        "value": "go"
+      }
+    ]
+  },
+  "dashboards": [],
+  "metrics": [
+    {
+      "type": "oTelGo",
+      "source": "metrics.sums.go.opentelemetry.io/contrib/instrumentation/runtime/go.memory.used{go.memory.type=\"other\"}",
+      "name": "go.memory.used",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Go Runtime",
+      "label": "Memory used by the Go runtime - Other",
+      "description": "Memory used by the Go runtime - Other",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelGo",
+      "source": "metrics.sums.go.opentelemetry.io/contrib/instrumentation/runtime/go.memory.used{go.memory.type=\"stack\"}",
+      "name": "",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Go Runtime",
+      "label": "Memory used by the Go runtime - Stack",
+      "description": "Memory used by the Go runtime - Stack",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelGo",
+      "source": "",
+      "name": "",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Go Runtime",
+      "label": "",
+      "description": "",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelGo",
+      "source": "metrics.sums.go.opentelemetry.io/contrib/instrumentation/runtime/go.memory.limit{}",
+      "name": "go.memory.limit",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Go Runtime",
+      "label": "Go runtime memory limit configured by the user, if a limit exists",
+      "description": "Go runtime memory limit configured by the user, if a limit exists",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelGo",
+      "source": "metrics.sums.go.opentelemetry.io/contrib/instrumentation/runtime/go.memory.allocated{}",
+      "name": "go.memory.allocated",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Go Runtime",
+      "label": "Memory allocated to the heap by the application",
+      "description": "Memory allocated to the heap by the application",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelGo",
+      "source": "metrics.sums.go.opentelemetry.io/contrib/instrumentation/runtime/go.memory.allocations{}",
+      "name": "go.memory.allocations",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Go Runtime",
+      "label": "Count of allocations to the heap by the application",
+      "description": "Count of allocations to the heap by the application",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelGo",
+      "source": "metrics.sums.go.opentelemetry.io/contrib/instrumentation/runtime/go.memory.gc.goal{}",
+      "name": "go.memory.gc.goal",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Go Runtime",
+      "label": "Heap size target for the end of the GC cycle",
+      "description": "Heap size target for the end of the GC cycle",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelGo",
+      "source": "metrics.sums.go.opentelemetry.io/contrib/instrumentation/runtime/go.goroutine.count{}",
+      "name": "go.goroutine.count",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Go Runtime",
+      "label": "Count of live goroutines",
+      "description": "Count of live goroutines",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelGo",
+      "source": "metrics.sums.go.opentelemetry.io/contrib/instrumentation/runtime/go.processor.limit{}",
+      "name": "go.processor.limit",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Go Runtime",
+      "label": "The number of OS threads that can execute user-level Go code simultaneously.",
+      "description": "The number of OS threads that can execute user-level Go code simultaneously.",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelGo",
+      "source": "metrics.sums.go.opentelemetry.io/contrib/instrumentation/runtime/go.config.gogc{}",
+      "name": "go.config.gogc",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Go Runtime",
+      "label": "Heap size target percentage configured by the user, otherwise 100",
+      "description": "Heap size target percentage configured by the user, otherwise 100",
+      "formatter": "NUMBER"
+    }
+  ],
+  "dependencies": [
+    {
+      "direction": "outgoing",
+      "name": "com.instana.forge.infrastructure.os.host.graph.HostIdDependency",
+      "type": "OF",
+      "identifiers": ["otel.attribute.hostname"]
+    }
+  ]
+}

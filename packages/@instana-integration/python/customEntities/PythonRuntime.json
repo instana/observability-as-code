@@ -1,0 +1,477 @@
+{
+  "label": "Otel Python Runtime",
+  "identifiers": [
+    "otel.attribute.service.name",
+    "otel.attribute.service.instance.id"
+  ],
+  "tagFilterExpression": {
+    "type": "EXPRESSION",
+    "logicalOperator": "AND",
+    "elements": [
+      {
+        "type": "TAG_FILTER",
+        "name": "otel.attribute.telemetry.sdk.language",
+        "operator": "EQUALS",
+        "value": "python"
+      },
+      {
+        "type": "TAG_FILTER",
+        "name": "otel.attribute.process.runtime.name",
+        "operator": "EQUALS",
+        "value": "cpython"
+      }
+    ]
+  },
+  "dashboards": [
+    {
+      "rbacTags": [],
+      "accessRules": [
+        {
+          "accessType": "READ_WRITE",
+          "relationType": "USER",
+          "relatedId": "5ee8a3e8cd70020001ecb007"
+        }
+      ],
+      "id": "PythonRuntimeDashboardID",
+      "title": "OtelPythonRuntime",
+      "widgets": [
+        {
+          "width": 3,
+          "x": 0,
+          "y": 0,
+          "id": "PythonWidget1",
+          "title": "Memory Used",
+          "type": "bigNumber",
+          "config": {
+            "formatter": "number.compact",
+            "comparisonDecreaseColor": "greenish",
+            "metricConfiguration": {
+              "lastValue": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "oTelPython",
+              "metricPath": ["Others", "OpenTelemetry Python Runtime"],
+              "formatter": "number.detailed",
+              "unit": "bytes",
+              "metric": "metrics.gauges.process.runtime.python.memory.rss",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "crossSeriesAggregation": "MEAN"
+            },
+            "comparisonIncreaseColor": "redish",
+            "formatterSelected": true
+          },
+          "height": 4
+        },
+        {
+          "width": 3,
+          "x": 3,
+          "y": 0,
+          "id": "PythonWidget2",
+          "title": "Active Threads",
+          "type": "bigNumber",
+          "config": {
+            "formatter": "number.compact",
+            "comparisonDecreaseColor": "greenish",
+            "metricConfiguration": {
+              "lastValue": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "oTelPython",
+              "metricPath": ["Others", "OpenTelemetry Python Runtime"],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.gauges.process.runtime.python.thread.count",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "crossSeriesAggregation": "MEAN"
+            },
+            "comparisonIncreaseColor": "redish",
+            "formatterSelected": true
+          },
+          "height": 4
+        },
+        {
+          "width": 3,
+          "x": 6,
+          "y": 0,
+          "id": "PythonWidget3",
+          "title": "CPU Time",
+          "type": "bigNumber",
+          "config": {
+            "formatter": "number.compact",
+            "comparisonDecreaseColor": "greenish",
+            "metricConfiguration": {
+              "lastValue": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "oTelPython",
+              "metricPath": ["Others", "OpenTelemetry Python Runtime"],
+              "formatter": "number.detailed",
+              "unit": "seconds",
+              "metric": "metrics.gauges.process.runtime.python.cpu.time",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "crossSeriesAggregation": "MEAN"
+            },
+            "comparisonIncreaseColor": "redish",
+            "formatterSelected": true
+          },
+          "height": 4
+        },
+        {
+          "width": 6,
+          "x": 0,
+          "y": 4,
+          "id": "PythonWidget4",
+          "title": "Memory Usage Over Time",
+          "type": "chart",
+          "config": {
+            "shareMaxAxisDomain": false,
+            "y1": {
+              "formatter": "number.compact",
+              "renderer": "line",
+              "metrics": [
+                {
+                  "lastValue": false,
+                  "color": "",
+                  "compareToTimeShifted": false,
+                  "threshold": {
+                    "critical": "",
+                    "warning": "",
+                    "thresholdEnabled": false,
+                    "operator": ">="
+                  },
+                  "aggregation": "MEAN",
+                  "label": "",
+                  "source": "INFRASTRUCTURE_METRICS",
+                  "type": "oTelPython",
+                  "metricPath": ["Others", "OpenTelemetry Python Runtime"],
+                  "formatter": "number.detailed",
+                  "unit": "bytes",
+                  "metric": "metrics.gauges.process.runtime.python.memory.rss",
+                  "timeShift": 0,
+                  "tagFilterExpression": {
+                    "logicalOperator": "AND",
+                    "elements": [],
+                    "type": "EXPRESSION"
+                  },
+                  "allowedCrossSeriesAggregations": [],
+                  "metricLabel": "OpenTelemetry gauge process.runtime.python.memory.rss",
+                  "crossSeriesAggregation": "MEAN"
+                },
+                {
+                  "lastValue": false,
+                  "color": "",
+                  "compareToTimeShifted": false,
+                  "threshold": {
+                    "critical": "",
+                    "warning": "",
+                    "thresholdEnabled": false,
+                    "operator": ">="
+                  },
+                  "aggregation": "MEAN",
+                  "label": "",
+                  "source": "INFRASTRUCTURE_METRICS",
+                  "type": "oTelPython",
+                  "metricPath": ["Others", "OpenTelemetry Python Runtime"],
+                  "formatter": "number.detailed",
+                  "unit": "bytes",
+                  "metric": "metrics.gauges.process.runtime.python.memory.vms",
+                  "timeShift": 0,
+                  "tagFilterExpression": {
+                    "logicalOperator": "AND",
+                    "elements": [],
+                    "type": "EXPRESSION"
+                  },
+                  "allowedCrossSeriesAggregations": [],
+                  "metricLabel": "OpenTelemetry gauge process.runtime.python.memory.vms",
+                  "crossSeriesAggregation": "MEAN"
+                }
+              ],
+              "formatterSelected": true
+            },
+            "y2": {
+              "formatter": "number.detailed",
+              "renderer": "line",
+              "metrics": []
+            },
+            "type": "TIME_SERIES"
+          },
+          "height": 13
+        },
+        {
+          "width": 6,
+          "x": 6,
+          "y": 4,
+          "id": "PythonWidget5",
+          "title": "CPU Time Over Time",
+          "type": "chart",
+          "config": {
+            "shareMaxAxisDomain": false,
+            "y1": {
+              "formatter": "number.compact",
+              "renderer": "line",
+              "metrics": [
+                {
+                  "lastValue": false,
+                  "color": "",
+                  "compareToTimeShifted": false,
+                  "threshold": {
+                    "critical": "",
+                    "warning": "",
+                    "thresholdEnabled": false,
+                    "operator": ">="
+                  },
+                  "aggregation": "MEAN",
+                  "label": "",
+                  "source": "INFRASTRUCTURE_METRICS",
+                  "type": "oTelPython",
+                  "metricPath": ["Others", "OpenTelemetry Python Runtime"],
+                  "formatter": "number.detailed",
+                  "unit": "seconds",
+                  "metric": "metrics.gauges.process.runtime.python.cpu.time",
+                  "timeShift": 0,
+                  "tagFilterExpression": {
+                    "logicalOperator": "AND",
+                    "elements": [],
+                    "type": "EXPRESSION"
+                  },
+                  "allowedCrossSeriesAggregations": [],
+                  "metricLabel": "OpenTelemetry gauge process.runtime.python.cpu.time",
+                  "crossSeriesAggregation": "MEAN"
+                }
+              ],
+              "formatterSelected": true
+            },
+            "y2": {
+              "formatter": "number.detailed",
+              "renderer": "line",
+              "metrics": []
+            },
+            "type": "TIME_SERIES"
+          },
+          "height": 13
+        },
+        {
+          "width": 6,
+          "x": 0,
+          "y": 17,
+          "id": "PythonWidget6",
+          "title": "GC Collections Over Time",
+          "type": "chart",
+          "config": {
+            "shareMaxAxisDomain": false,
+            "y1": {
+              "formatter": "number.compact",
+              "renderer": "line",
+              "metrics": [
+                {
+                  "lastValue": false,
+                  "color": "",
+                  "compareToTimeShifted": false,
+                  "threshold": {
+                    "critical": "",
+                    "warning": "",
+                    "thresholdEnabled": false,
+                    "operator": ">="
+                  },
+                  "aggregation": "SUM",
+                  "label": "",
+                  "source": "INFRASTRUCTURE_METRICS",
+                  "type": "oTelPython",
+                  "metricPath": ["Others", "OpenTelemetry Python Runtime"],
+                  "formatter": "number.detailed",
+                  "unit": "number",
+                  "metric": "metrics.counters.process.runtime.python.gc.count",
+                  "timeShift": 0,
+                  "tagFilterExpression": {
+                    "logicalOperator": "AND",
+                    "elements": [],
+                    "type": "EXPRESSION"
+                  },
+                  "allowedCrossSeriesAggregations": [],
+                  "metricLabel": "OpenTelemetry counter process.runtime.python.gc.count",
+                  "crossSeriesAggregation": "SUM"
+                }
+              ],
+              "formatterSelected": true
+            },
+            "y2": {
+              "formatter": "number.detailed",
+              "renderer": "line",
+              "metrics": []
+            },
+            "type": "TIME_SERIES"
+          },
+          "height": 13
+        }
+      ],
+      "ownerId": "5ee8a3e8cd70020001ecb007",
+      "writable": true
+    }
+  ],
+  "metrics": [
+    {
+      "type": "oTelPython",
+      "source": "metrics.gauges.process.runtime.python.memory.rss{scope=\"opentelemetry.instrumentation.system_metrics\"}",
+      "name": "process.runtime.python.memory.rss",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Python Runtime",
+      "label": "Resident Set Size memory",
+      "description": "Resident Set Size memory",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelPython",
+      "source": "metrics.gauges.process.runtime.python.memory.vms{scope=\"opentelemetry.instrumentation.system_metrics\"}",
+      "name": "process.runtime.python.memory.vms",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Python Runtime",
+      "label": "Virtual Memory Size",
+      "description": "Virtual Memory Size",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelPython",
+      "source": "metrics.gauges.process.runtime.python.cpu.time{scope=\"opentelemetry.instrumentation.system_metrics\"}",
+      "name": "process.runtime.python.cpu.time",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Python Runtime",
+      "label": "CPU time used by process",
+      "description": "CPU time used by process",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelPython",
+      "source": "metrics.gauges.process.runtime.python.cpu.utilization{scope=\"opentelemetry.instrumentation.system_metrics\"}",
+      "name": "process.runtime.python.cpu.utilization",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Python Runtime",
+      "label": "CPU utilization percentage",
+      "description": "CPU utilization percentage",
+      "formatter": "PERCENTAGE"
+    },
+    {
+      "type": "oTelPython",
+      "source": "metrics.gauges.process.runtime.python.thread.count{scope=\"opentelemetry.instrumentation.system_metrics\"}",
+      "name": "process.runtime.python.thread.count",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Python Runtime",
+      "label": "Number of threads",
+      "description": "Number of threads",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelPython",
+      "source": "metrics.gauges.process.runtime.python.context_switches{scope=\"opentelemetry.instrumentation.system_metrics\"}",
+      "name": "process.runtime.python.context_switches",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Python Runtime",
+      "label": "Number of context switches",
+      "description": "Number of context switches",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelPython",
+      "source": "metrics.counters.process.runtime.python.gc.count{scope=\"opentelemetry.instrumentation.system_metrics\"}",
+      "name": "process.runtime.python.gc.count",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Python Runtime",
+      "label": "Garbage collection count by generation",
+      "description": "Garbage collection count by generation",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelPython",
+      "source": "metrics.gauges.process.runtime.python.gc.objects.collected{scope=\"opentelemetry.instrumentation.system_metrics\"}",
+      "name": "process.runtime.python.gc.objects.collected",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Python Runtime",
+      "label": "Objects collected during GC",
+      "description": "Objects collected during GC",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelPython",
+      "source": "metrics.gauges.process.runtime.python.gc.objects.uncollectable{scope=\"opentelemetry.instrumentation.system_metrics\"}",
+      "name": "process.runtime.python.gc.objects.uncollectable",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Python Runtime",
+      "label": "Uncollectable objects found during GC",
+      "description": "Uncollectable objects found during GC",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelPython",
+      "source": "metrics.gauges.runtime.python.memory{scope=\"opentelemetry.instrumentation.system_metrics\"}",
+      "name": "runtime.python.memory",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Python Runtime",
+      "label": "Python runtime memory usage",
+      "description": "Python runtime memory usage",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelPython",
+      "source": "metrics.gauges.runtime.python.cpu_time{scope=\"opentelemetry.instrumentation.system_metrics\"}",
+      "name": "runtime.python.cpu_time",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Python Runtime",
+      "label": "Python runtime CPU time",
+      "description": "Python runtime CPU time",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelPython",
+      "source": "metrics.gauges.process.runtime.python.memory.heap{scope=\"opentelemetry.instrumentation.system_metrics\"}",
+      "name": "process.runtime.python.memory.heap",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Python Runtime",
+      "label": "Python heap memory usage",
+      "description": "Python heap memory usage",
+      "formatter": "NUMBER"
+    }
+  ],
+  "dependencies": [
+    {
+      "direction": "outgoing",
+      "name": "com.instana.forge.infrastructure.os.host.graph.HostIdDependency",
+      "type": "OF",
+      "identifiers": ["otel.attribute.hostname"]
+    }
+  ]
+}

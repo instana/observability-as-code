@@ -1,0 +1,339 @@
+{
+  "label": "Otel Kubernetes HorizontalPodAutoscaler",
+  "identifiers": [
+    "otel.attribute.k8s.hpa.name",
+    "otel.attribute.k8s.cluster.name"
+  ],
+  "tagFilterExpression": {
+    "type": "TAG_FILTER",
+    "name": "otel.attribute.k8s.hpa.uid",
+    "operator": "NOT_EMPTY",
+    "value": ""
+  },
+  "dashboards": [
+    {
+      "rbacTags": [],
+      "accessRules": [
+        {
+          "accessType": "READ_WRITE",
+          "relationType": "USER",
+          "relatedId": "5ee8a3e8cd70020001ecb007"
+        }
+      ],
+      "id": "HPADashboardID",
+      "title": "OtelK8sHorizontalPodAutoscalers",
+      "widgets": [
+        {
+          "width": 3,
+          "x": 0,
+          "y": 0,
+          "id": "HPAWidget1",
+          "title": "Current Pods",
+          "type": "bigNumber",
+          "config": {
+            "formatter": "number.compact",
+            "comparisonDecreaseColor": "greenish",
+            "metricConfiguration": {
+              "lastValue": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "oTelK8sCluster",
+              "metricPath": [
+                "Others",
+                "OpenTelemetry Kubernetes HorizontalPodAutoscaler"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.gauges.k8s.hpa.current",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "crossSeriesAggregation": "MEAN"
+            },
+            "comparisonIncreaseColor": "redish",
+            "formatterSelected": true
+          },
+          "height": 4
+        },
+        {
+          "width": 3,
+          "x": 3,
+          "y": 0,
+          "id": "HPAWidget2",
+          "title": "Desired Pods",
+          "type": "bigNumber",
+          "config": {
+            "formatter": "number.compact",
+            "comparisonDecreaseColor": "greenish",
+            "metricConfiguration": {
+              "lastValue": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "oTelK8sCluster",
+              "metricPath": [
+                "Others",
+                "OpenTelemetry Kubernetes HorizontalPodAutoscaler"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.gauges.k8s.hpa.desired",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "crossSeriesAggregation": "MEAN"
+            },
+            "comparisonIncreaseColor": "redish",
+            "formatterSelected": true
+          },
+          "height": 4
+        },
+        {
+          "width": 6,
+          "x": 0,
+          "y": 4,
+          "id": "HPAWidget3",
+          "title": "Current vs Desired Pods",
+          "type": "chart",
+          "config": {
+            "shareMaxAxisDomain": false,
+            "y1": {
+              "formatter": "number.compact",
+              "renderer": "line",
+              "metrics": [
+                {
+                  "lastValue": false,
+                  "color": "",
+                  "compareToTimeShifted": false,
+                  "threshold": {
+                    "critical": "",
+                    "warning": "",
+                    "thresholdEnabled": false,
+                    "operator": ">="
+                  },
+                  "aggregation": "MEAN",
+                  "label": "",
+                  "source": "INFRASTRUCTURE_METRICS",
+                  "type": "oTelK8sCluster",
+                  "metricPath": [
+                    "Others",
+                    "OpenTelemetry Kubernetes HorizontalPodAutoscaler"
+                  ],
+                  "formatter": "number.detailed",
+                  "unit": "number",
+                  "metric": "metrics.gauges.k8s.hpa.current",
+                  "timeShift": 0,
+                  "tagFilterExpression": {
+                    "logicalOperator": "AND",
+                    "elements": [],
+                    "type": "EXPRESSION"
+                  },
+                  "allowedCrossSeriesAggregations": [],
+                  "metricLabel": "OpenTelemetry gauge k8s.hpa.current",
+                  "crossSeriesAggregation": "MEAN"
+                },
+                {
+                  "lastValue": false,
+                  "color": "",
+                  "compareToTimeShifted": false,
+                  "threshold": {
+                    "critical": "",
+                    "warning": "",
+                    "thresholdEnabled": false,
+                    "operator": ">="
+                  },
+                  "aggregation": "MEAN",
+                  "label": "",
+                  "source": "INFRASTRUCTURE_METRICS",
+                  "type": "oTelK8sCluster",
+                  "metricPath": [
+                    "Others",
+                    "OpenTelemetry Kubernetes HorizontalPodAutoscaler"
+                  ],
+                  "formatter": "number.detailed",
+                  "unit": "number",
+                  "metric": "metrics.gauges.k8s.hpa.desired",
+                  "timeShift": 0,
+                  "tagFilterExpression": {
+                    "logicalOperator": "AND",
+                    "elements": [],
+                    "type": "EXPRESSION"
+                  },
+                  "allowedCrossSeriesAggregations": [],
+                  "metricLabel": "OpenTelemetry gauge k8s.hpa.desired",
+                  "crossSeriesAggregation": "MEAN"
+                }
+              ],
+              "formatterSelected": true
+            },
+            "y2": {
+              "formatter": "number.detailed",
+              "renderer": "line",
+              "metrics": []
+            },
+            "type": "TIME_SERIES"
+          },
+          "height": 13
+        },
+        {
+          "width": 6,
+          "x": 6,
+          "y": 4,
+          "id": "HPAWidget4",
+          "title": "Min vs Max Pods",
+          "type": "chart",
+          "config": {
+            "shareMaxAxisDomain": false,
+            "y1": {
+              "formatter": "number.compact",
+              "renderer": "line",
+              "metrics": [
+                {
+                  "lastValue": false,
+                  "color": "",
+                  "compareToTimeShifted": false,
+                  "threshold": {
+                    "critical": "",
+                    "warning": "",
+                    "thresholdEnabled": false,
+                    "operator": ">="
+                  },
+                  "aggregation": "MEAN",
+                  "label": "",
+                  "source": "INFRASTRUCTURE_METRICS",
+                  "type": "oTelK8sCluster",
+                  "metricPath": [
+                    "Others",
+                    "OpenTelemetry Kubernetes HorizontalPodAutoscaler"
+                  ],
+                  "formatter": "number.detailed",
+                  "unit": "number",
+                  "metric": "metrics.gauges.k8s.hpa.min",
+                  "timeShift": 0,
+                  "tagFilterExpression": {
+                    "logicalOperator": "AND",
+                    "elements": [],
+                    "type": "EXPRESSION"
+                  },
+                  "allowedCrossSeriesAggregations": [],
+                  "metricLabel": "OpenTelemetry gauge k8s.hpa.min",
+                  "crossSeriesAggregation": "MEAN"
+                },
+                {
+                  "lastValue": false,
+                  "color": "",
+                  "compareToTimeShifted": false,
+                  "threshold": {
+                    "critical": "",
+                    "warning": "",
+                    "thresholdEnabled": false,
+                    "operator": ">="
+                  },
+                  "aggregation": "MEAN",
+                  "label": "",
+                  "source": "INFRASTRUCTURE_METRICS",
+                  "type": "oTelK8sCluster",
+                  "metricPath": [
+                    "Others",
+                    "OpenTelemetry Kubernetes HorizontalPodAutoscaler"
+                  ],
+                  "formatter": "number.detailed",
+                  "unit": "number",
+                  "metric": "metrics.gauges.k8s.hpa.max",
+                  "timeShift": 0,
+                  "tagFilterExpression": {
+                    "logicalOperator": "AND",
+                    "elements": [],
+                    "type": "EXPRESSION"
+                  },
+                  "allowedCrossSeriesAggregations": [],
+                  "metricLabel": "OpenTelemetry gauge k8s.hpa.max",
+                  "crossSeriesAggregation": "MEAN"
+                }
+              ],
+              "formatterSelected": true
+            },
+            "y2": {
+              "formatter": "number.detailed",
+              "renderer": "line",
+              "metrics": []
+            },
+            "type": "TIME_SERIES"
+          },
+          "height": 13
+        }
+      ],
+      "ownerId": "5ee8a3e8cd70020001ecb007",
+      "writable": true
+    }
+  ],
+  "metrics": [
+    {
+      "type": "oTelK8sCluster",
+      "source": "metrics.gauges.k8s.hpa.desired{scope=\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver\"}",
+      "name": "k8s.hpa.desired",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Kubernetes HorizontalPodAutoscaler",
+      "label": "Desired number of replica pods",
+      "description": "Desired number of replica pods",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelK8sCluster",
+      "source": "metrics.gauges.k8s.hpa.current{scope=\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver\"}",
+      "name": "k8s.hpa.current",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Kubernetes HorizontalPodAutoscaler",
+      "label": "Current number of replica pods",
+      "description": "Current number of replica pods",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelK8sCluster",
+      "source": "metrics.gauges.k8s.hpa.max{scope=\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver\"}",
+      "name": "k8s.hpa.max",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Kubernetes HorizontalPodAutoscaler",
+      "label": "Maximum number of replica pods",
+      "description": "Maximum number of replica pods",
+      "formatter": "NUMBER"
+    },
+    {
+      "type": "oTelK8sCluster",
+      "source": "metrics.gauges.k8s.hpa.min{scope=\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver\"}",
+      "name": "k8s.hpa.min",
+      "section": "OTHERS",
+      "category": "OpenTelemetry Kubernetes HorizontalPodAutoscaler",
+      "label": "Minimum number of replica pods",
+      "description": "Minimum number of replica pods",
+      "formatter": "NUMBER"
+    }
+  ],
+  "dependencies": [
+    {
+      "direction": "outgoing",
+      "name": "com.instana.forge.infrastructure.custom.sensorsdk.k8s.graph.OTelK8sClusterDependency",
+      "type": "OF",
+      "identifiers": ["otel.attribute.k8s.cluster.uid"]
+    }
+  ]
+}
