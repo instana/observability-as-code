@@ -2,6 +2,11 @@
 
 The Instana CLI for Integration Package Management is used to manage the lifecycle of Instana integration package. For example, you can use this CLI to download the integration package from public website to your local machine, then install the package into an existing Instana environment.
 
+## Requirements
+
+- **For binary users**: No Node.js installation required. The binary includes an embedded Node.js 18 runtime.
+- **For developers**: Node.js 18 or higher is required when running from source code.
+
 ## For end users
 
 ### Download the CLI

@@ -592,11 +592,15 @@ describe('handleExport', () => {
             mockedUtils.sanitizeFileName = jest.fn().mockReturnValue('smart-alert-1');
             mockFilterElementsBy.mockImplementation((items) => items);
             
-            // Mock the 3 smart-alert endpoints returning data from first endpoint
+            // Mock the 7 smart-alert endpoints returning data from first endpoint
             mockAxiosInstance.get
                 .mockResolvedValueOnce({ status: 200, data: mockSmartAlerts }) // mobile-app endpoint
                 .mockResolvedValueOnce({ status: 200, data: [] }) // application endpoint
                 .mockResolvedValueOnce({ status: 200, data: [] }) // infra endpoint
+                .mockResolvedValueOnce({ status: 200, data: [] }) // website endpoint
+                .mockResolvedValueOnce({ status: 200, data: [] }) // synthetics endpoint
+                .mockResolvedValueOnce({ status: 200, data: [] }) // service-levels endpoint
+                .mockResolvedValueOnce({ status: 200, data: [] }) // logs endpoint
                 .mockResolvedValueOnce({ status: 200, data: { id: 'alert-1', name: 'Smart Alert 1' } }); // fetch single alert
 
             await handleExport(argv);
@@ -630,10 +634,14 @@ describe('handleExport', () => {
             mockedUtils.sanitizeFileName = jest.fn().mockReturnValue('smart-alert-1');
             
             mockAxiosInstance.get
-                .mockResolvedValueOnce({ status: 200, data: mockSmartAlerts })
-                .mockResolvedValueOnce({ status: 200, data: [] })
-                .mockResolvedValueOnce({ status: 200, data: [] })
-                .mockResolvedValueOnce({ status: 200, data: { id: 'alert-1', name: 'Smart Alert 1' } });
+                .mockResolvedValueOnce({ status: 200, data: mockSmartAlerts }) // mobile-app endpoint
+                .mockResolvedValueOnce({ status: 200, data: [] }) // application endpoint
+                .mockResolvedValueOnce({ status: 200, data: [] }) // infra endpoint
+                .mockResolvedValueOnce({ status: 200, data: [] }) // website endpoint
+                .mockResolvedValueOnce({ status: 200, data: [] }) // synthetics endpoint
+                .mockResolvedValueOnce({ status: 200, data: [] }) // service-levels endpoint
+                .mockResolvedValueOnce({ status: 200, data: [] }) // logs endpoint
+                .mockResolvedValueOnce({ status: 200, data: { id: 'alert-1', name: 'Smart Alert 1' } }); // fetch single alert
 
             await handleExport(argv);
 
@@ -705,6 +713,10 @@ describe('handleExport', () => {
                 .mockResolvedValueOnce({ status: 200, data: mobileAlerts }) // mobile-app endpoint
                 .mockResolvedValueOnce({ status: 200, data: appAlerts }) // application endpoint
                 .mockResolvedValueOnce({ status: 200, data: infraAlerts }) // infra endpoint
+                .mockResolvedValueOnce({ status: 200, data: [] }) // website endpoint
+                .mockResolvedValueOnce({ status: 200, data: [] }) // synthetics endpoint
+                .mockResolvedValueOnce({ status: 200, data: [] }) // service-levels endpoint
+                .mockResolvedValueOnce({ status: 200, data: [] }) // logs endpoint
                 .mockResolvedValueOnce({ status: 200, data: { id: 'alert-1', name: 'Mobile Alert' } })
                 .mockResolvedValueOnce({ status: 200, data: { id: 'alert-2', name: 'App Alert' } })
                 .mockResolvedValueOnce({ status: 200, data: { id: 'alert-3', name: 'Infra Alert' } });
@@ -741,10 +753,14 @@ describe('handleExport', () => {
             );
             
             mockAxiosInstance.get
-                .mockResolvedValueOnce({ status: 200, data: mockSmartAlerts })
-                .mockResolvedValueOnce({ status: 200, data: [] })
-                .mockResolvedValueOnce({ status: 200, data: [] })
-                .mockResolvedValueOnce({ status: 200, data: { id: 'alert-1', name: 'Critical Alert' } });
+                .mockResolvedValueOnce({ status: 200, data: mockSmartAlerts }) // mobile-app endpoint
+                .mockResolvedValueOnce({ status: 200, data: [] }) // application endpoint
+                .mockResolvedValueOnce({ status: 200, data: [] }) // infra endpoint
+                .mockResolvedValueOnce({ status: 200, data: [] }) // website endpoint
+                .mockResolvedValueOnce({ status: 200, data: [] }) // synthetics endpoint
+                .mockResolvedValueOnce({ status: 200, data: [] }) // service-levels endpoint
+                .mockResolvedValueOnce({ status: 200, data: [] }) // logs endpoint
+                .mockResolvedValueOnce({ status: 200, data: { id: 'alert-1', name: 'Critical Alert' } }); // fetch single alert
 
             await handleExport(argv);
 
@@ -815,6 +831,10 @@ describe('handleExport', () => {
                 .mockResolvedValueOnce({ status: 200, data: mobileAlerts }) // mobile-app endpoint succeeds
                 .mockRejectedValueOnce(new Error('API Error')) // application endpoint fails
                 .mockRejectedValueOnce(new Error('API Error')) // infra endpoint fails
+                .mockRejectedValueOnce(new Error('API Error')) // website endpoint fails
+                .mockRejectedValueOnce(new Error('API Error')) // synthetics endpoint fails
+                .mockRejectedValueOnce(new Error('API Error')) // service-levels endpoint fails
+                .mockRejectedValueOnce(new Error('API Error')) // logs endpoint fails
                 .mockResolvedValueOnce({ status: 200, data: { id: 'alert-1', name: 'Mobile Alert' } }); // fetch single alert
 
             await handleExport(argv);
@@ -852,7 +872,15 @@ describe('handleExport', () => {
                 .mockResolvedValueOnce({ status: 200, data: mockSmartAlerts }) // mobile-app list
                 .mockResolvedValueOnce({ status: 200, data: [] }) // application list
                 .mockResolvedValueOnce({ status: 200, data: [] }) // infra list
-                // First two endpoints fail, third succeeds
+                .mockResolvedValueOnce({ status: 200, data: [] }) // website list
+                .mockResolvedValueOnce({ status: 200, data: [] }) // synthetics list
+                .mockResolvedValueOnce({ status: 200, data: [] }) // service-levels list
+                .mockResolvedValueOnce({ status: 200, data: [] }) // logs list
+                // First six endpoints fail, seventh succeeds
+                .mockRejectedValueOnce(new Error('Not found'))
+                .mockRejectedValueOnce(new Error('Not found'))
+                .mockRejectedValueOnce(new Error('Not found'))
+                .mockRejectedValueOnce(new Error('Not found'))
                 .mockRejectedValueOnce(new Error('Not found'))
                 .mockRejectedValueOnce(new Error('Not found'))
                 .mockResolvedValueOnce({ status: 200, data: { id: 'alert-1', name: 'Smart Alert 1' } });
@@ -886,8 +914,8 @@ describe('handleExport', () => {
 
             await handleExport(argv);
 
-            // Should call get for dashboards, events, entities, and smart-alerts (3 endpoints for smart-alerts)
-            expect(mockAxiosInstance.get).toHaveBeenCalledTimes(6);
+            // Should call get for dashboards, events, entities, and smart-alerts (7 endpoints for smart-alerts)
+            expect(mockAxiosInstance.get).toHaveBeenCalledTimes(10);
             expect(mockedLogger.info).toHaveBeenCalledWith('Total dashboard(s) processed: 0');
             expect(mockedLogger.info).toHaveBeenCalledWith('Total event(s) processed: 0');
             expect(mockedLogger.info).toHaveBeenCalledWith('Total entities processed: 0');

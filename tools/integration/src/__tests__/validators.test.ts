@@ -597,6 +597,7 @@ describe('validators', () => {
 
     describe('getEntityDashboardRefs', () => {
         beforeEach(() => {
+            mockedFs.existsSync.mockReturnValue(true); // Default: directory exists
             mockedFs.readdirSync.mockReturnValue(['entity1.json'] as any);
             mockedFs.statSync.mockReturnValue({ isDirectory: () => false } as any);
         });
@@ -640,6 +641,15 @@ describe('validators', () => {
             const result = validators.getEntityDashboardRefs('/test/entities');
 
             expect(result.size).toBe(0);
+        });
+
+        it('should return empty set when entities directory does not exist', () => {
+            mockedFs.existsSync.mockReturnValue(false);
+
+            const result = validators.getEntityDashboardRefs('/test/entities');
+
+            expect(result.size).toBe(0);
+            expect(mockedFs.readdirSync).not.toHaveBeenCalled();
         });
 
         it('should silently ignore parse errors', () => {

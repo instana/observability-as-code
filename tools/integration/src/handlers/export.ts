@@ -62,10 +62,6 @@ export async function handleExport(argv: any) {
     const eventsPath = path.join(location, "events");
     const entitiesPath = path.join(location, "entities");
     const smartAlertsPath = path.join(location, "smart-alerts");
-    fs.mkdirSync(dashboardsPath, { recursive: true });
-    fs.mkdirSync(eventsPath, { recursive: true });
-    fs.mkdirSync(entitiesPath, {recursive: true});
-    fs.mkdirSync(smartAlertsPath, {recursive: true});
 
     let wasDashboardFound = false;
     let wasEventFound = false;
@@ -74,6 +70,8 @@ export async function handleExport(argv: any) {
 
     // Dashboard export
     if (parsedIncludes.some(inc => inc.type === "dashboard" || inc.type === "all")) {
+        // Create dashboards folder only when exporting dashboards
+        fs.mkdirSync(dashboardsPath, { recursive: true });
         const allDashboards = await fetchDashboards(server, token, axiosInstance);
         let totalDashboardProcessed = 0;
 
@@ -118,6 +116,8 @@ export async function handleExport(argv: any) {
 
     // Event export
     if (parsedIncludes.some(inc => inc.type === "event" || inc.type === "all")) {
+        // Create events folder only when exporting events
+        fs.mkdirSync(eventsPath, { recursive: true });
         const allEvents = await fetchEvents(server, token, axiosInstance);
         let totalEventProcessed = 0;
 
@@ -162,6 +162,8 @@ export async function handleExport(argv: any) {
 
 	// Entity export
 	if (parsedIncludes.some(inc => inc.type === "entity" || inc.type === "all")){
+		// Create entities folder only when exporting entities
+		fs.mkdirSync(entitiesPath, { recursive: true });
 		const allEntities = await fetchEntities(server, token, axiosInstance);
 		let totalEntitiesProcessed = 0;
 
@@ -211,6 +213,8 @@ export async function handleExport(argv: any) {
 
     // smart-alert export
     if (parsedIncludes.some(inc => inc.type === "smart-alert" || inc.type === "all")) {
+        // Create smart-alerts folder only when exporting smart-alerts
+        fs.mkdirSync(smartAlertsPath, { recursive: true });
         const allSmartAlerts = await fetchSmartAlerts(server, token, axiosInstance);
         let totalSmartAlertsProcessed = 0;
 
@@ -265,7 +269,11 @@ async function fetchSmartAlerts(server: string, token: string, axiosInstance: an
         const urls = [
             `https://${server}/api/events/settings/mobile-app-alert-configs`,
             `https://${server}/api/events/settings/application-alert-configs`,
-            `https://${server}/api/events/settings/infra-alert-configs`
+            `https://${server}/api/events/settings/infra-alert-configs`,
+            `https://${server}/api/events/settings/website-alert-configs`,
+            `https://${server}/api/events/settings/global-alert-configs/synthetics`,
+            `https://${server}/api/events/settings/global-alert-configs/service-levels`,
+            `https://${server}/api/events/settings/global-alert-configs/logs`
         ];
         
         if (alertId) {
@@ -377,6 +385,12 @@ function saveEntity(entityDir: string, dashboardDir: string, entity: any) {
 
 		const dashboards = entity.data?.dashboards || [];
 		const updatedDashboards: any[] = [];
+
+		// Create dashboards folder if entity has embedded dashboards
+		if (dashboards.length > 0 && !fs.existsSync(dashboardDir)) {
+			fs.mkdirSync(dashboardDir, { recursive: true });
+			logger.debug('Created dashboards folder for entity embedded dashboards');
+		}
 
 		dashboards.forEach((dashboard: any, index: number) => {
 			const dashboardContent = dashboard;

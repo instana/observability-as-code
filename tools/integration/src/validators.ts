@@ -305,6 +305,12 @@ export function validateEntityFiles(
  */
 export function getEntityDashboardRefs(entitiesPath: string): Set<string> {
     const embeddedDashboardRefs = new Set<string>();
+    
+    // Return empty set if entities path doesn't exist
+    if (!fs.existsSync(entitiesPath)) {
+        return embeddedDashboardRefs;
+    }
+    
     const jsonFiles = getAllJsonFiles(entitiesPath);
 
     jsonFiles.forEach(filePath => {
