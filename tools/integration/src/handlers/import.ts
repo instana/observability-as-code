@@ -101,11 +101,19 @@ export async function handleImport(argv: any) {
                     try {
                         actualApiPath = determineSmartAlertAPI(jsonContent);
                         
-                        const typeName = actualApiPath.includes('infra')
-                            ? 'infrastructure'
+                        const typeName = actualApiPath.includes('mobile-app')
+                            ? 'mobile app'
                             : actualApiPath.includes('application')
                             ? 'application'
-                            : 'mobile app';
+                            : actualApiPath.includes('website')
+                            ? 'website'
+                            : actualApiPath.includes('synthetics')
+                            ? 'synthetics'
+                            : actualApiPath.includes('service-levels')
+                            ? 'service levels'
+                            : actualApiPath.includes('infra')
+                            ? 'infrastructure'
+                            : 'logs';
                         
                         logger.info(`Detected ${typeName} smart alert`);
                     } catch (err) {
@@ -258,18 +266,26 @@ export async function handleImport(argv: any) {
         }
     } else {
         const entitiesPath = path.join(packagePath, 'entities');
-            const referencedDashboards = validators.getEntityDashboardRefs(entitiesPath);
-            const referencedDashboardPaths = new Set<string>();
+        let referencedDashboards = new Set<string>();
+        
+        // Only check for entity dashboard references if entities folder exists
+        if (fs.existsSync(entitiesPath)) {
+            referencedDashboards = validators.getEntityDashboardRefs(entitiesPath);
+        } else {
+            logger.warn(`No 'entities' folder found — cannot check for entity dashboards.`);
+        }
+        
+        const referencedDashboardPaths = new Set<string>();
 
-            const allDashboardFiles = globSync(path.join(packagePath, 'dashboards', '**/*.json'));
-            allDashboardFiles.forEach(file => {
-                const filename = path.basename(file);
-                if (referencedDashboards.has(filename)) {
-                    referencedDashboardPaths.add(file);
-                }
-            });
+        const allDashboardFiles = globSync(path.join(packagePath, 'dashboards', '**/*.json'));
+        allDashboardFiles.forEach(file => {
+            const filename = path.basename(file);
+            if (referencedDashboards.has(filename)) {
+                referencedDashboardPaths.add(file);
+            }
+        });
 
-            await importIntegration(path.join(packagePath, 'dashboards', '**/*.json'), "api/custom-dashboard", "dashboard", referencedDashboardPaths);
+        await importIntegration(path.join(packagePath, 'dashboards', '**/*.json'), "api/custom-dashboard", "dashboard", referencedDashboardPaths);
         for (const defaultFolder of defaultEventsFolders) {
             const searchPattern = path.join(packagePath, defaultFolder, '**/*.json');
             await importIntegration(searchPattern, "api/events/settings/event-specifications/custom", "event");
@@ -519,14 +535,30 @@ function determineSmartAlertAPI(alertJson: any): string {
 	else if (alertJson.applicationId || alertJson.applications) {
 		return 'api/events/settings/application-alert-configs';
 	}
-	// Check for infrastructure alert
-	else if (alertJson.rule?.entityType || (Array.isArray(alertJson.rules) && alertJson.rules.length > 0)) {
+	// Check for website alert
+	else if (alertJson.websiteId) {
+		return 'api/events/settings/website-alert-configs';
+	}
+	// Check for synthetics alert 
+	else if (alertJson.syntheticTestIds) {
+		return 'api/events/settings/global-alert-configs/synthetics';
+	}
+	// Check for service level alert 
+	else if (alertJson.sloIds) {
+		return 'api/events/settings/global-alert-configs/service-levels';
+	}
+	// Check for infrastructure alert (has rule.entityType OR rules array with rule.entityType in items)
+	else if (alertJson.rule?.entityType || (Array.isArray(alertJson.rules) && alertJson.rules.some((r: any) => r.rule?.entityType))) {
 		return 'api/events/settings/infra-alert-configs';
+	}
+	// Check for logs alert (has rules array - fallback for remaining alerts with rules)
+	else if (alertJson.rules) {
+		return 'api/events/settings/global-alert-configs/logs';
 	}
 	// Unknown smart alert type
 	else {
-       throw new Error(
-            `Alert must have one of: mobileAppId, applicationId/applications, or rule.entityType`
-        );
+		throw new Error(
+			`Unable to determine smart alert type. Alert must have one of: mobileAppId, applicationId/applications, websiteId, syntheticTestIds, sloIds, rule.entityType, or rules array`
+		);
 	}
 }
