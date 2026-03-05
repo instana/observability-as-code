@@ -1,6 +1,6 @@
 {
   "name": "@instana/stanctl-integration",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "The Instana CLI for integration package management",
   "main": "./dist/index.js",
   "scripts": {
@@ -21,9 +21,9 @@
       "node_modules/**/*"
     ],
     "targets": [
-      "node16-macos",
-      "node16-linux",
-      "node16-win"
+      "node18-macos",
+      "node18-linux",
+      "node18-win"
     ]
   },
   "repository": {
