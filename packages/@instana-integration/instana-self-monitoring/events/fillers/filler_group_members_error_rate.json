@@ -1,0 +1,18 @@
+{
+  "name": "[EXPTUSLO] filler is failing to publish group member data [TF]",
+  "description": "Sending group members to the group processing instance is failing at a high rate. This probably indicates a serious issue with the kafka producer.  ## Consequences Group entities will not be updated  ## Remediation - Restart `filler`  To get more context: [🔵](https://blue-instanaops.instana.io/#/customDashboards/view;dashboardId=5ilU_JJoTuWHKd9uz1PKXQ) [🟢](https://green-instanaops.instana.io/#/customDashboards/view;dashboardId=WnDP6tKCTTOKCBIeR9Dx1w) [🔴](https://red-instanaops.instana.io/#/customDashboards/view;dashboardId=1eqIS6ThSrud09h-fZzLRA) [🟠](https://orange-instanaops.instana.io/#/customDashboards/view;dashboardId=n1ruCLQvQhm--a1IbkXxyw)",
+  "query": "entity.jvm.app.name:filler AND NOT entity.kubernetes.deployment.name:techzone-observability-filler",
+  "entityType": "dropwizardApplicationContainer",
+  "expirationTime": 60000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "metrics.gauges.com.instana.filler.topology.downstream.GroupMemberKafkaDownstream.kafka-producer.record-error-rate",
+      "aggregation": "avg",
+      "window": 600000,
+      "conditionOperator": ">",
+      "conditionValue": 5,
+      "severity": 5
+    }
+  ]
+}

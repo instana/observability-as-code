@@ -1,0 +1,18 @@
+{
+  "name": "[SRETUSLO] filler writes to Cassandra are failing [TF]",
+  "description": "There is a high error rate when trying to write rollups to Cassandra. This can be caused by bugs (e.g. unsupported rollups used) or *a lot more likely* a broken connection between `filler` and Metrics Cassandra or general Metrics Cassandra problems.  ## Consequences Alerting and live metrics viewing in the UI will be affected.  ## Remediation - Check whether Cassandra is accessible from `filler`. - Otherwise report to team Infrastructure.  To get more context: [🔵](https://blue-instanaops.instana.io/#/customDashboards/view;dashboardId=R-BySNacQiGmIwSXpvAVqQ) [🟢](https://green-instanaops.instana.io/#/customDashboards/view;dashboardId=eppNF3E5SIGcUYw1-DCEUQ) [🔴](https://red-instanaops.instana.io/#/customDashboards/view;dashboardId=jDWDz6P_RU-5zwQ37IioFw) [🟠](https://orange-instanaops.instana.io/#/customDashboards/view;dashboardId=Ml9uzhNNRqu5_QJQ3AZoYQ)",
+  "query": "entity.jvm.app.name:filler AND NOT entity.kubernetes.deployment.name:techzone-observability-filler",
+  "entityType": "dropwizardApplicationContainer",
+  "expirationTime": 60000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "metrics.gauges.KPI.outgoing.rollups.cassandra.error_rate",
+      "aggregation": "avg",
+      "window": 60000,
+      "conditionOperator": ">",
+      "conditionValue": 0.10,
+      "severity": 10
+    }
+  ]
+}

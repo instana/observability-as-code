@@ -1,0 +1,18 @@
+{
+  "name": "[SRETUSLO] filler is dropping snapshot changes [TF]",
+  "description": "Snapshot changes are being dropped before being written to ElasticSearch. This is a sign that `filler` is running with too little resources or on a over-utilized host. ## Consequences All reporting entities in this TU will go offline and there will effectively be no infrastructure monitoring. ## Remediation - Restart `filler` To get more context: [🔵](https://blue-instanaops.instana.io/#/customDashboards/view;dashboardId=C3eN96Z8RyOJ7ycpgHkK5Q) [🟢](https://green-instanaops.instana.io/#/customDashboards/view;dashboardId=NXPy2nCSSeOsiKS2Rd6O-g) [🔴](https://red-instanaops.instana.io/#/customDashboards/view;dashboardId=XvhTJitbRAmM3hhMOOKPbQ) [🟠](https://orange-instanaops.instana.io/#/customDashboards/view;dashboardId=4YntvQ3eSsaJ-BUXgoB2Wg)",
+  "query": "entity.jvm.app.name:filler AND NOT entity.kubernetes.deployment.name:techzone-observability-filler",
+  "entityType": "dropwizardApplicationContainer",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "metrics.meters.KPI.processing.snapshot.requested",
+      "aggregation": "avg",
+      "window": 120000,
+      "conditionOperator": "=",
+      "conditionValue": 0,
+      "severity": 10
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "appdata-processor - Failed to heal online infra graph [TF]",
+  "description": "https://www.notion.so/instana/appdata-processor-Failure-to-heal-online-infra-graph-8daaf2073f0143f790607e78abb4a663",
+  "query": "entity.jvm.app.name:appdata-processor",
+  "entityType": "dropwizardApplicationContainer",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "metrics.meters.com.instana.graph.GraphStateMaintainer.num-rejected-full-updates",
+      "aggregation": "sum",
+      "window": 3600000,
+      "conditionOperator": ">=",
+      "conditionValue": 2,
+      "severity": 5
+    }
+  ]
+}

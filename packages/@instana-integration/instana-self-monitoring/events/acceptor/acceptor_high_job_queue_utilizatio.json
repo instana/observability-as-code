@@ -1,0 +1,18 @@
+{
+  "name": "[SRESLO] Acceptor HTTP job queue is filling up [TF]",
+  "description": "The HTTP threads of this instance do not seem to be able to handle the number of incoming requests causing job queue to fill up. This may eventually result in rejected HTTP requests and Acceptor responding with HTTP status code ENHANCE_YOUR_CALM. Potential causes for this are the respective Acceptor instance receiving too much traffic or problems with the Kafka cluster.",
+  "query": "entity.kubernetes.deployment.name:\"acceptor\"",
+  "entityType": "dropwizardApplicationContainer",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "window": 60000,
+      "severity": 10,
+      "metricName": "metrics.gauges.org.eclipse.jetty.util.thread.QueuedThreadPool.dw.jobs-queue-utilization",
+      "aggregation": "avg",
+      "conditionOperator": ">",
+      "conditionValue": 0.5
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "[SREInfraSLO] Elasticsearch is not running on the host. [TF]",
+  "description": "The Elasticsearch process is not running on the underlying host. Please check Elasticsearch logs for any recurring exceptions / errors and if none are present restart the process",
+  "query": "entity.zone:\"elasticsearch*\"",
+  "entityType": "host",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "entity_verification",
+      "severity": 10,
+      "matchingEntityType": "elasticsearchNode",
+      "matchingOperator": "startsWith",
+      "matchingEntityLabel": "global_metadata_ng",
+      "offlineDuration": 120000
+    }
+  ]
+}
