@@ -54,6 +54,72 @@ describe('handleImport', () => {
         mockProcessExit.mockRestore();
     });
 
+    describe('Server Validation', () => {
+        it('should reject server address with https:// protocol', async () => {
+            const argv = {
+                package: '/test/package',
+                server: 'https://test-server.com',
+                token: 'test-token',
+                location: '/test/location',
+                debug: false
+            };
+
+            mockedValidators.validateServerAddress = jest.fn().mockImplementation(() => {
+                throw new Error('Invalid server address: Do not include protocol (http:// or https://). Please use only the hostname, e.g., "example.com" instead of "https://test-server.com"');
+            });
+
+            await expect(handleImport(argv)).rejects.toThrow('process.exit(1)');
+            expect(mockedLogger.error).toHaveBeenCalledWith(
+                expect.stringContaining('Invalid server address: Do not include protocol')
+            );
+        });
+
+        it('should reject server address with http:// protocol', async () => {
+            const argv = {
+                package: '/test/package',
+                server: 'http://test-server.com',
+                token: 'test-token',
+                location: '/test/location',
+                debug: false
+            };
+
+            mockedValidators.validateServerAddress = jest.fn().mockImplementation(() => {
+                throw new Error('Invalid server address: Do not include protocol (http:// or https://). Please use only the hostname, e.g., "example.com" instead of "http://test-server.com"');
+            });
+
+            await expect(handleImport(argv)).rejects.toThrow('process.exit(1)');
+            expect(mockedLogger.error).toHaveBeenCalledWith(
+                expect.stringContaining('Invalid server address: Do not include protocol')
+            );
+        });
+
+        it('should accept valid server address without protocol', async () => {
+            const argv = {
+                package: '/test/package',
+                server: 'test-server.com',
+                token: 'test-token',
+                location: '/test/location',
+                include: 'dashboards/**/*.json',
+                debug: false
+            };
+
+            mockedValidators.validateServerAddress = jest.fn();
+            mockedFs.existsSync = jest.fn().mockReturnValue(true);
+            mockedGlobSync.mockReturnValue(['/test/package/dashboards/test.json']);
+            mockedFs.readFileSync = jest.fn().mockReturnValue(JSON.stringify({
+                title: 'Test Dashboard',
+                accessRules: [{ accessType: 'READ_WRITE', relationType: 'GLOBAL' }]
+            }));
+            mockAxiosInstance.post.mockResolvedValue({ status: 200 });
+            mockedValidators.getEntityDashboardRefs = jest.fn().mockReturnValue(new Set());
+
+            await handleImport(argv);
+
+            expect(mockedValidators.validateServerAddress).toHaveBeenCalledWith('test-server.com');
+            expect(mockAxiosInstance.post).toHaveBeenCalled();
+        });
+    });
+
     describe('Basic Import Functionality', () => {
         it('should import dashboards successfully', async () => {
             const argv = {

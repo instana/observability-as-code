@@ -24,6 +24,7 @@ Import integration package with parameters replaced:
   ${execName} import --package my-package --server example.com --include "dashboards/**/test-*.json" --set key1=value1 --set key2=value2
   ${execName} import --package my-package --server example.com --include "events/**/*.json"
   ${execName} import --package my-package --server example.com --include "entities/**/*.json"
+  ${execName} import --package my-package --server example.com --include "smart-alerts/**/*.json"
 `;
 
 const examplesForExport = `
@@ -33,6 +34,7 @@ Export integration elements:
   ${execName} export --server example.com --include type=dashboard title="exampleTitle" --location ./my-package
   ${execName} export --server example.com --include type=event id=exampleid --location ./my-package
   ${execName} export --server example.com --include type=entity title="exampleTitle" --location ./my-package
+  ${execName} export --server example.com --include type=smart-alert title="exampleTitle" --location ./my-package
 `;
 
 /**

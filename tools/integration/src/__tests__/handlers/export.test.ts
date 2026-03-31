@@ -1,4 +1,5 @@
 import * as utils from '../../utils';
+import * as validators from '../../validators';
 
 import axios from 'axios';
 import fs from 'fs';
@@ -11,11 +12,13 @@ jest.mock('axios');
 jest.mock('fs');
 jest.mock('../../logger');
 jest.mock('../../utils');
+jest.mock('../../validators');
 
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 const mockedFs = fs as jest.Mocked<typeof fs>;
 const mockedLogger = logger as jest.Mocked<typeof logger>;
 const mockedUtils = utils as jest.Mocked<typeof utils>;
+const mockedValidators = validators as jest.Mocked<typeof validators>;
 
 describe('handleExport', () => {
     let mockAxiosInstance: any;
@@ -58,6 +61,137 @@ describe('handleExport', () => {
     afterEach(() => {
         mockProcessExit.mockRestore();
         mockFilterElementsBy.mockRestore();
+    });
+
+    describe('Include Type Validation', () => {
+        it('should reject invalid include type "dashboards"', async () => {
+            process.argv = ['node', 'script.js', 'export', '--include', 'type=dashboards'];
+            
+            const argv = {
+                server: 'test-server.com',
+                token: 'test-token',
+                location: '/test/export',
+                debug: false
+            };
+
+            mockedValidators.validateServerAddress = jest.fn();
+            mockedValidators.validateIncludeTypes = jest.fn().mockImplementation(() => {
+                throw new Error('Invalid --include type value(s): "dashboards". Valid types are: "dashboard", "event", "entity", "smart-alert", "all"');
+            });
+
+            await expect(handleExport(argv)).rejects.toThrow('process.exit(1)');
+            expect(mockedLogger.error).toHaveBeenCalledWith(
+                expect.stringContaining('Invalid --include type value(s): "dashboards"')
+            );
+        });
+
+        it('should reject invalid include type "events"', async () => {
+            process.argv = ['node', 'script.js', 'export', '--include', 'type=events'];
+            
+            const argv = {
+                server: 'test-server.com',
+                token: 'test-token',
+                location: '/test/export',
+                debug: false
+            };
+
+            mockedValidators.validateServerAddress = jest.fn();
+            mockedValidators.validateIncludeTypes = jest.fn().mockImplementation(() => {
+                throw new Error('Invalid --include type value(s): "events". Valid types are: "dashboard", "event", "entity", "smart-alert", "all"');
+            });
+
+            await expect(handleExport(argv)).rejects.toThrow('process.exit(1)');
+            expect(mockedLogger.error).toHaveBeenCalledWith(
+                expect.stringContaining('Invalid --include type value(s): "events"')
+            );
+        });
+
+        it('should accept valid include type "dashboard"', async () => {
+            process.argv = ['node', 'script.js', 'export', '--include', 'type=dashboard'];
+            
+            const argv = {
+                server: 'test-server.com',
+                token: 'test-token',
+                location: '/test/export',
+                debug: false
+            };
+
+            mockedValidators.validateServerAddress = jest.fn();
+            mockedValidators.validateIncludeTypes = jest.fn();
+            mockedFs.existsSync = jest.fn().mockReturnValue(false);
+            mockedFs.mkdirSync = jest.fn();
+            mockedFs.readdirSync = jest.fn().mockReturnValue([]);
+            mockedUtils.parseIncludesFromArgv = jest.fn().mockReturnValue([
+                { type: 'dashboard', conditions: [], explicitlyTyped: true }
+            ]);
+            mockedUtils.sanitizeTitles = jest.fn().mockReturnValue([]);
+            mockAxiosInstance.get.mockResolvedValue({ status: 200, data: [] });
+
+            await handleExport(argv);
+
+            expect(mockedValidators.validateIncludeTypes).toHaveBeenCalled();
+        });
+    });
+
+    describe('Server Validation', () => {
+        it('should reject server address with https:// protocol', async () => {
+            const argv = {
+                server: 'https://test-server.com',
+                token: 'test-token',
+                location: '/test/export',
+                debug: false
+            };
+
+            mockedValidators.validateServerAddress = jest.fn().mockImplementation(() => {
+                throw new Error('Invalid server address: Do not include protocol (http:// or https://). Please use only the hostname, e.g., "example.com" instead of "https://test-server.com"');
+            });
+
+            await expect(handleExport(argv)).rejects.toThrow('process.exit(1)');
+            expect(mockedLogger.error).toHaveBeenCalledWith(
+                expect.stringContaining('Invalid server address: Do not include protocol')
+            );
+        });
+
+        it('should reject server address with http:// protocol', async () => {
+            const argv = {
+                server: 'http://test-server.com',
+                token: 'test-token',
+                location: '/test/export',
+                debug: false
+            };
+
+            mockedValidators.validateServerAddress = jest.fn().mockImplementation(() => {
+                throw new Error('Invalid server address: Do not include protocol (http:// or https://). Please use only the hostname, e.g., "example.com" instead of "http://test-server.com"');
+            });
+
+            await expect(handleExport(argv)).rejects.toThrow('process.exit(1)');
+            expect(mockedLogger.error).toHaveBeenCalledWith(
+                expect.stringContaining('Invalid server address: Do not include protocol')
+            );
+        });
+
+        it('should accept valid server address without protocol', async () => {
+            const argv = {
+                server: 'test-server.com',
+                token: 'test-token',
+                location: '/test/export',
+                debug: false
+            };
+
+            mockedValidators.validateServerAddress = jest.fn();
+            mockedFs.existsSync = jest.fn().mockReturnValue(false);
+            mockedFs.mkdirSync = jest.fn();
+            mockedFs.readdirSync = jest.fn().mockReturnValue([]);
+            mockedUtils.parseIncludesFromArgv = jest.fn().mockReturnValue([
+                { type: 'all', conditions: [], explicitlyTyped: false }
+            ]);
+            mockedUtils.sanitizeTitles = jest.fn().mockReturnValue([]);
+            mockAxiosInstance.get.mockResolvedValue({ status: 200, data: [] });
+
+            await handleExport(argv);
+
+            expect(mockedValidators.validateServerAddress).toHaveBeenCalledWith('test-server.com');
+        });
     });
 
     describe('Directory Validation', () => {
