@@ -11,6 +11,50 @@ export interface ValidationResult {
     successMessages: string[];
 }
 
+/* Validates that the server address does not include protocol (http:// or https://) */
+export function validateServerAddress(server: string): void {
+    if (!server || typeof server !== 'string') {
+        throw new Error('Server address is required and must be a string');
+    }
+
+    const trimmedServer = server.trim();
+    
+    if (trimmedServer.startsWith('http://') || trimmedServer.startsWith('https://')) {
+        throw new Error(
+            'Invalid server address: Do not include protocol (http:// or https://). Please use only the hostname.'
+        );
+    }
+
+    if (trimmedServer.includes('://')) {
+        throw new Error(
+            'Invalid server address: Protocol prefix detected. Please use only the hostname.'
+        );
+    }
+}
+
+/* Valid types for the --include type parameter */
+export const VALID_INCLUDE_TYPES = ['dashboard', 'event', 'entity', 'smart-alert'] as const;
+export type ValidIncludeType = typeof VALID_INCLUDE_TYPES[number];
+
+/* Validates that include types are valid */
+export function validateIncludeTypes(parsedIncludes: Array<{ type: string; conditions: string[]; explicitlyTyped: boolean }>): void {
+    const invalidTypes: string[] = [];
+    
+    for (const include of parsedIncludes) {
+        if (include.explicitlyTyped && !VALID_INCLUDE_TYPES.includes(include.type as any)) {
+            invalidTypes.push(include.type);
+        }
+    }
+    
+    if (invalidTypes.length > 0) {
+        const uniqueInvalidTypes = [...new Set(invalidTypes)];
+        throw new Error(
+            `Invalid --include type value(s): ${uniqueInvalidTypes.map(t => `"${t}"`).join(', ')}. ` +
+            `Valid types are: ${VALID_INCLUDE_TYPES.map(t => `"${t}"`).join(', ')}`
+        );
+    }
+}
+
 /**
  * Validates package.json file for required fields and version constraints
  */

@@ -29,6 +29,14 @@ export async function handleImport(argv: any) {
         logger.level = 'debug';
     }
 
+    // Validate server address
+    try {
+        validators.validateServerAddress(server);
+    } catch (error) {
+        logger.error(error instanceof Error ? error.message : String(error));
+        process.exit(1);
+    }
+
     let packagePath = packageNameOrPath;
     if (!fs.existsSync(packageNameOrPath)) {
         packagePath = path.join(location, 'node_modules', packageNameOrPath);

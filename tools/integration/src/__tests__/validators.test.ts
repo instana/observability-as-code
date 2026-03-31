@@ -1,5 +1,6 @@
 import * as validators from '../validators';
 
+import { VALID_INCLUDE_TYPES, validateIncludeTypes, validateServerAddress } from '../validators';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
 import axios from 'axios';
@@ -1046,4 +1047,160 @@ describe('validators', () => {
             expect(errors).toHaveLength(0);
         });
     });
-});
+   });
+   
+   describe('validateServerAddress', () => {
+    it('should accept valid server addresses without protocol', () => {
+    	expect(() => validateServerAddress('example.com')).not.toThrow();
+    	expect(() => validateServerAddress('api.example.com')).not.toThrow();
+    	expect(() => validateServerAddress('192.168.1.1')).not.toThrow();
+    	expect(() => validateServerAddress('localhost')).not.toThrow();
+    	expect(() => validateServerAddress('example.com:8080')).not.toThrow();
+    	expect(() => validateServerAddress('api.example.com:443')).not.toThrow();
+    });
+   
+    it('should reject server addresses with http:// protocol', () => {
+    	expect(() => validateServerAddress('http://example.com')).toThrow(
+    		'Invalid server address: Do not include protocol (http:// or https://). Please use only the hostname, e.g., "example.com" instead of "http://example.com"'
+    	);
+    });
+   
+    it('should reject server addresses with https:// protocol', () => {
+    	expect(() => validateServerAddress('https://example.com')).toThrow(
+    		'Invalid server address: Do not include protocol (http:// or https://). Please use only the hostname, e.g., "example.com" instead of "https://example.com"'
+    	);
+    });
+   
+    it('should reject server addresses with https:// protocol and port', () => {
+    	expect(() => validateServerAddress('https://example.com:8080')).toThrow(
+    		'Invalid server address: Do not include protocol (http:// or https://). Please use only the hostname, e.g., "example.com" instead of "https://example.com:8080"'
+    	);
+    });
+   
+    it('should reject server addresses with other protocols', () => {
+    	expect(() => validateServerAddress('ftp://example.com')).toThrow(
+    		'Invalid server address: Protocol prefix detected. Please use only the hostname, e.g., "example.com" instead of "ftp://example.com"'
+    	);
+    });
+   
+    it('should handle server addresses with whitespace', () => {
+    	expect(() => validateServerAddress('  https://example.com  ')).toThrow(
+    		'Invalid server address: Do not include protocol (http:// or https://). Please use only the hostname, e.g., "example.com" instead of "https://example.com"'
+    	);
+    });
+   
+    it('should reject empty server addresses', () => {
+    	expect(() => validateServerAddress('')).toThrow(
+    		'Server address is required and must be a string'
+    	);
+    });
+   
+    it('should reject null or undefined server addresses', () => {
+    	expect(() => validateServerAddress(null as any)).toThrow(
+    		'Server address is required and must be a string'
+    	);
+    	expect(() => validateServerAddress(undefined as any)).toThrow(
+    		'Server address is required and must be a string'
+    	);
+    });
+   
+    it('should reject non-string server addresses', () => {
+    	expect(() => validateServerAddress(123 as any)).toThrow(
+    		'Server address is required and must be a string'
+    	);
+    	expect(() => validateServerAddress({} as any)).toThrow(
+    		'Server address is required and must be a string'
+    	);
+    });
+   });
+   
+   describe('validateIncludeTypes', () => {
+    it('should accept valid include types', () => {
+    	const validIncludes = [
+    		{ type: 'dashboard', conditions: [], explicitlyTyped: true },
+    		{ type: 'event', conditions: [], explicitlyTyped: true },
+    		{ type: 'entity', conditions: [], explicitlyTyped: true },
+    		{ type: 'smart-alert', conditions: [], explicitlyTyped: true },
+    		{ type: 'all', conditions: [], explicitlyTyped: true }
+    	];
+    	expect(() => validateIncludeTypes(validIncludes)).not.toThrow();
+    });
+   
+    it('should accept multiple valid include types', () => {
+    	const validIncludes = [
+    		{ type: 'dashboard', conditions: ['title=test'], explicitlyTyped: true },
+    		{ type: 'event', conditions: ['name=test'], explicitlyTyped: true }
+    	];
+    	expect(() => validateIncludeTypes(validIncludes)).not.toThrow();
+    });
+   
+    it('should reject invalid include type "dashboards"', () => {
+    	const invalidIncludes = [
+    		{ type: 'dashboards', conditions: [], explicitlyTyped: true }
+    	];
+    	expect(() => validateIncludeTypes(invalidIncludes)).toThrow(
+    		'Invalid --include type value(s): "dashboards". Valid types are: "dashboard", "event", "entity", "smart-alert", "all"'
+    	);
+    });
+   
+    it('should reject invalid include type "events"', () => {
+    	const invalidIncludes = [
+    		{ type: 'events', conditions: [], explicitlyTyped: true }
+    	];
+    	expect(() => validateIncludeTypes(invalidIncludes)).toThrow(
+    		'Invalid --include type value(s): "events". Valid types are: "dashboard", "event", "entity", "smart-alert", "all"'
+    	);
+    });
+   
+    it('should reject invalid include type "entities"', () => {
+    	const invalidIncludes = [
+    		{ type: 'entities', conditions: [], explicitlyTyped: true }
+    	];
+    	expect(() => validateIncludeTypes(invalidIncludes)).toThrow(
+    		'Invalid --include type value(s): "entities". Valid types are: "dashboard", "event", "entity", "smart-alert", "all"'
+    	);
+    });
+   
+    it('should reject completely invalid type', () => {
+    	const invalidIncludes = [
+    		{ type: 'invalid-type', conditions: [], explicitlyTyped: true }
+    	];
+    	expect(() => validateIncludeTypes(invalidIncludes)).toThrow(
+    		'Invalid --include type value(s): "invalid-type". Valid types are: "dashboard", "event", "entity", "smart-alert", "all"'
+    	);
+    });
+   
+    it('should reject multiple invalid types and show all unique ones', () => {
+    	const invalidIncludes = [
+    		{ type: 'dashboards', conditions: [], explicitlyTyped: true },
+    		{ type: 'events', conditions: [], explicitlyTyped: true },
+    		{ type: 'dashboards', conditions: [], explicitlyTyped: true } // duplicate
+    	];
+    	expect(() => validateIncludeTypes(invalidIncludes)).toThrow(
+    		'Invalid --include type value(s): "dashboards", "events". Valid types are: "dashboard", "event", "entity", "smart-alert", "all"'
+    	);
+    });
+   
+    it('should accept mix of valid and implicitly typed (not explicitly typed)', () => {
+    	const mixedIncludes = [
+    		{ type: 'dashboard', conditions: [], explicitlyTyped: true },
+    		{ type: 'all', conditions: [], explicitlyTyped: false } // implicitly typed, should not be validated
+    	];
+    	expect(() => validateIncludeTypes(mixedIncludes)).not.toThrow();
+    });
+   
+    it('should only validate explicitly typed includes', () => {
+    	const includes = [
+    		{ type: 'invalid-type', conditions: [], explicitlyTyped: false } // not explicitly typed, should be ignored
+    	];
+    	expect(() => validateIncludeTypes(includes)).not.toThrow();
+    });
+   
+    it('should accept empty array', () => {
+    	expect(() => validateIncludeTypes([])).not.toThrow();
+    });
+   
+    it('should have correct valid types constant', () => {
+    	expect(VALID_INCLUDE_TYPES).toEqual(['dashboard', 'event', 'entity', 'smart-alert', 'all']);
+    });
+   });

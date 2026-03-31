@@ -1,4 +1,5 @@
 import * as utils from '../utils';
+import * as validators from '../validators';
 
 import axios from 'axios';
 import fs from 'fs';
@@ -23,9 +24,25 @@ export async function handleExport(argv: any) {
         logger.level = 'debug';
     }
 
+    // Validate server address
+    try {
+    	validators.validateServerAddress(server);
+    } catch (error) {
+        logger.error(error instanceof Error ? error.message : String(error));
+        process.exit(1);
+    }
+
 	const parsedIncludes = utils.parseIncludesFromArgv(process.argv);
 
-    const exportPath = path.resolve(location);
+	// Validate include types
+	try {
+		validators.validateIncludeTypes(parsedIncludes);
+	} catch (error) {
+		logger.error(error instanceof Error ? error.message : String(error));
+	    process.exit(1);
+	}
+
+	const exportPath = path.resolve(location);
     if (fs.existsSync(exportPath)) {
         const foldersToCheck = [
             path.join(location, 'dashboards'),
