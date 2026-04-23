@@ -1,0 +1,18 @@
+{
+  "name": "[SRESLO] tag-processor is dropping snapshot updates [TF]",
+  "description": "Tag processor is dropping records when reading the `snapshots` topic to reduce latency. This means tag-processor is having trouble keeping up with the number of snapshot updates for some TUs. ## Consequences As long as this occurs, there may be delays in custom dashboards and Analyze Infrastructure for some TUs. ## Remediation Steps to take _until remediation_ - Verify that there are no issues with Kafka. - Consider increasing the number of tag-processor instances to keep up with increased load. You can go to an individual tag-processor dropiwizard dashboard to see which TUs are affected (check the `com.instana.tags.processing.SnapshotUpdateDropper.<tenant-unit>.error_rate` metrics) To get more context: [🔵](https://blue-instanaops.instana.io/#/customDashboards/view;dashboardId=l6yRfqedQn-t_GqhGVHYmg) [🟢](https://green-instanaops.instana.io/#/customDashboards/view;dashboardId=9VDfDX1UQ7yAMuBj14CK7A) [🔴](https://red-instanaops.instana.io/#/customDashboards/view;dashboardId=jDwGyhY8SAq88FJXvtsqIg) [🟠](https://orange-instanaops.instana.io/#/customDashboards/view;dashboardId=YalysPDKRoGpzuagPYtWwg)",
+  "query": "entity.jvm.app.name:tag-processor",
+  "entityType": "dropwizardApplicationContainer",
+  "expirationTime": 600000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "com.instana.tags.processing.SnapshotUpdateDropper.error_rate{tenantUnit=\"all\"}",
+      "aggregation": "avg",
+      "window": 300000,
+      "conditionOperator": ">",
+      "conditionValue": 0.01,
+      "severity": 5
+    }
+  ]
+}

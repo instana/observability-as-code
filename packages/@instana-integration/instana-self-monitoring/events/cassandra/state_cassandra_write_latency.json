@@ -1,0 +1,18 @@
+{
+  "name": "[SREInfraSLO] state-cassandra write latency greater than 1 minute [TF]",
+  "description": "A node in the state-cassandra cluster is having very high write latency. This indicates a major issue which will affect\ndependent components like tag-processor. Try restarting the node.",
+  "query": "entity.cassandra.cluster.name:\"*state*\"",
+  "entityType": "cassandraNode",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "clientrequests.write.mean",
+      "aggregation": "avg",
+      "window": 300000,
+      "conditionOperator": ">",
+      "conditionValue": 60000,
+      "severity": 10
+    }
+  ]
+}
