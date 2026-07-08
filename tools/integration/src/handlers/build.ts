@@ -1,32 +1,9 @@
 import fs from 'fs';
 import logger from '../logger';
 import path from 'path';
-import { pathExists } from '../utils';
-import { execSync, spawn } from 'child_process';
+import { detectContainerRuntime, pathExists } from '../utils';
+import { spawn } from 'child_process';
 import { validateCollectorFiles } from '../validators';
-
-/* Detect available container runtime (docker or podman)  */
-function detectContainerRuntime(): string {
-    const runtimes = ['docker', 'podman'];
-    
-    for (const runtime of runtimes) {
-        try {
-            // Check if command exists and daemon is accessible
-            execSync(`${runtime} version`, { stdio: 'pipe', timeout: 5000 });
-            logger.info(`Detected container runtime: ${runtime}`);
-            return runtime;
-        } catch (error) {
-            // Runtime not available or daemon not running, try next
-            continue;
-        }
-    }
-    
-    throw new Error(
-        'No container runtime detected. Please install Docker or Podman and ensure the daemon is running.\n' +
-        'Docker: https://docs.docker.com/get-docker/\n' +
-        'Podman: https://podman.io/getting-started/installation'
-    );
-}
 
 /**
  * Handler for building collector container images

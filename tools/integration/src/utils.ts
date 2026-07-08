@@ -1,7 +1,7 @@
 import fs from 'fs';
 import logger from './logger';
 import path from 'path';
-import { spawn } from 'child_process';
+import { execSync, spawn } from 'child_process';
 
 /**
  * Generic filter function for filtering objects by conditions
@@ -35,18 +35,56 @@ export const filterElementsBy = (objects: any[], conditions: string[]): any[] =>
  * Promisify spawn for async/await usage
  */
 export const spawnAsync = (command: any, args: any, options: any) => {
-    return new Promise<void>((resolve, reject) => {
-        const child = spawn(command, args, options);
+    return new Promise<{ stdout: string; stderr: string }>((resolve, reject) => {
+        const { input, ...spawnOptions } = options;
+        const child = spawn(command, args, spawnOptions);
+        if (input !== undefined && child.stdin) {
+            child.stdin.write(input);
+            child.stdin.end();
+        }
+        let stdout = '';
+        let stderr = '';
+        if (child.stdout) {
+            child.stdout.on('data', (data: Buffer) => {
+                const chunk = data.toString();
+                stdout += chunk;
+                process.stdout.write(chunk);
+            });
+        }
+        if (child.stderr) {
+            child.stderr.on('data', (data: Buffer) => { stderr += data.toString(); });
+        }
         child.on('close', (code) => {
             if (code !== 0) {
                 reject(new Error(`Command failed with exit code ${code}`));
             } else {
-                resolve();
+                resolve({ stdout, stderr });
             }
         });
         child.on('error', reject);
     });
 };
+
+/**
+ * Detect available container runtime (docker or podman)
+ */
+export function detectContainerRuntime(): string {
+    const runtimes = ['docker', 'podman'];
+    for (const runtime of runtimes) {
+        try {
+            execSync(`${runtime} version`, { stdio: 'pipe', timeout: 5000 });
+            logger.info(`Detected container runtime: ${runtime}`);
+            return runtime;
+        } catch (error) {
+            continue;
+        }
+    }
+    throw new Error(
+        'No container runtime detected. Please install Docker or Podman and ensure the daemon is running.\n' +
+        'Docker: https://docs.docker.com/get-docker/\n' +
+        'Podman: https://podman.io/getting-started/installation'
+    );
+}
 
 /**
  * Check if a path exists

@@ -37,6 +37,16 @@ Export integration elements:
   ${execName} export --server example.com --include type=smart-alert title="exampleTitle" --location ./my-package
 `;
 
+const examplesForPublish = `
+Examples:
+
+Publish an integration package to npm:
+  ${execName} publish --package @instana-integration/my-package --registry-username myuser --registry-email me@example.com --type package
+
+Publish a collector container image to a registry:
+  ${execName} publish --package @instana-integration/my-package --registry-username myuser --registry-password mypassword --type image
+`;
+
 const examplesForBuild = `
 Examples:
 
@@ -176,16 +186,38 @@ export function configureCLI(handlers: {
                 })
                 .option('registry-username', {
                     alias: 'U',
-                    describe: 'Username to access the integration package registry',
+                    describe: 'Username to access the integration package or container image registry',
                     type: 'string',
                     demandOption: true
                 })
                 .option('registry-email', {
                     alias: 'E',
-                    describe: 'Email to access the integration package registry',
+                    describe: 'Email to access the integration package registry (required when --type package)',
                     type: 'string',
-                    demandOption: true
-                });
+                    demandOption: false
+                })
+                .option('type', {
+                    alias: 't',
+                    describe: 'Type of publish: integration package or container image (default: package)',
+                    type: 'string',
+                    demandOption: false
+                })
+                .option('registry-password', {
+                    alias: 'P',
+                    describe: 'Password to access the container image registry (required when --type image)',
+                    type: 'string',
+                    demandOption: false
+                })
+                .check((argv) => {
+                    if (argv.type === 'package' && !argv['registry-email']) {
+                        throw new Error('--registry-email is required when --type is package');
+                    }
+                    if (argv.type === 'image' && !argv['registry-password']) {
+                        throw new Error('--registry-password is required when --type is image');
+                    }
+                    return true;
+                })
+                .epilog(examplesForPublish);
         }, handlers.handlePublish)
         .command('lint', 'Provides linting for package', (yargs) => {
             return yargs

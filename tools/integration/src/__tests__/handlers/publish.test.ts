@@ -1,13 +1,17 @@
 import * as utils from '../../utils';
 
+import fs from 'fs';
 import { handlePublish } from '../../handlers/publish';
 import logger from '../../logger';
 import path from 'path';
 
 // Mock dependencies
+jest.mock('fs');
 jest.mock('../../utils');
 jest.mock('../../logger');
 jest.mock('path');
+
+const mockFs = fs as jest.Mocked<typeof fs>;
 
 describe('Publish Handler', () => {
     let mockExit: jest.SpyInstance;
@@ -36,7 +40,8 @@ describe('Publish Handler', () => {
             const argv = {
                 package: '/path/to/package',
                 registryUsername: 'testuser',
-                registryEmail: 'test@example.com'
+                'registry-email': 'test@example.com',
+                type: 'package'
             };
 
             const packageJson = { name: '@scope/test-package' };
@@ -61,7 +66,8 @@ describe('Publish Handler', () => {
             const argv = {
                 package: 'test-package',
                 registryUsername: 'testuser',
-                registryEmail: 'test@example.com'
+                'registry-email': 'test@example.com',
+                type: 'package'
             };
 
             const packageJson = { name: 'test-package' };
@@ -83,7 +89,8 @@ describe('Publish Handler', () => {
             const argv = {
                 package: '/path/to/package',
                 registryUsername: 'testuser',
-                registryEmail: 'test@example.com'
+                'registry-email': 'test@example.com',
+                type: 'package'
             };
 
             (utils.pathExists as jest.Mock).mockReturnValue(true);
@@ -99,7 +106,8 @@ describe('Publish Handler', () => {
             const argv = {
                 package: 'nonexistent-package',
                 registryUsername: 'testuser',
-                registryEmail: 'test@example.com'
+                'registry-email': 'test@example.com',
+                type: 'package'
             };
 
             (utils.pathExists as jest.Mock).mockReturnValue(false);
@@ -114,7 +122,8 @@ describe('Publish Handler', () => {
             const argv = {
                 package: '/path/to/package',
                 registryUsername: 'testuser',
-                registryEmail: 'test@example.com'
+                'registry-email': 'test@example.com',
+                type: 'package'
             };
 
             const packageJson = { name: 'test-package' };
@@ -138,7 +147,8 @@ describe('Publish Handler', () => {
             const argv = {
                 package: '/path/to/package',
                 registryUsername: 'testuser',
-                registryEmail: 'test@example.com'
+                'registry-email': 'test@example.com',
+                type: 'package'
             };
 
             const packageJson = { name: '@myorg/test-package' };
@@ -161,7 +171,8 @@ describe('Publish Handler', () => {
             const argv = {
                 package: '/path/to/package',
                 registryUsername: 'testuser',
-                registryEmail: 'test@example.com'
+                'registry-email': 'test@example.com',
+                type: 'package'
             };
 
             const packageJson = { name: 'test-package' };
@@ -182,7 +193,8 @@ describe('Publish Handler', () => {
             const argv = {
                 package: '/path/to/package',
                 registryUsername: 'testuser',
-                registryEmail: 'test@example.com'
+                'registry-email': 'test@example.com',
+                type: 'package'
             };
 
             const packageJson = { name: '@scope/test-package' };
@@ -205,7 +217,8 @@ describe('Publish Handler', () => {
             const argv = {
                 package: '/path/to/package',
                 registryUsername: 'testuser',
-                registryEmail: 'test@example.com'
+                'registry-email': 'test@example.com',
+                type: 'package'
             };
 
             const packageJson = { name: 'test-package' };
@@ -228,7 +241,8 @@ describe('Publish Handler', () => {
             const argv = {
                 package: '/path/to/package',
                 registryUsername: 'testuser',
-                registryEmail: 'test@example.com'
+                'registry-email': 'test@example.com',
+                type: 'package'
             };
 
             const packageJson = { name: 'test-package' };
@@ -252,7 +266,8 @@ describe('Publish Handler', () => {
             const argv = {
                 package: '/path/to/package',
                 registryUsername: 'testuser',
-                registryEmail: 'test@example.com'
+                'registry-email': 'test@example.com',
+                type: 'package'
             };
 
             const packageJson = { name: '@myorg/my-package' };
@@ -273,7 +288,8 @@ describe('Publish Handler', () => {
             const argv = {
                 package: '/path/to/package',
                 registryUsername: 'testuser',
-                registryEmail: 'test@example.com'
+                'registry-email': 'test@example.com',
+                type: 'package'
             };
 
             const packageJson = { name: 'unscoped-package' };
@@ -292,7 +308,8 @@ describe('Publish Handler', () => {
             const argv = {
                 package: '/path/to/package',
                 registryUsername: 'testuser',
-                registryEmail: 'test@example.com'
+                'registry-email': 'test@example.com',
+                type: 'package'
             };
 
             const packageJson = { name: '@instana/integration-package' };
@@ -311,7 +328,8 @@ describe('Publish Handler', () => {
             const argv = {
                 package: '/path/to/package',
                 registryUsername: 'testuser',
-                registryEmail: 'test@example.com'
+                'registry-email': 'test@example.com',
+                type: 'package'
             };
 
             const packageJson = { name: '@my-org/my-package-name' };
@@ -324,6 +342,155 @@ describe('Publish Handler', () => {
             await handlePublish(argv);
 
             expect(logger.info).toHaveBeenCalledWith('Scope: my-org');
+        });
+    });
+
+    describe('handlePublish --type image', () => {
+        const imageArgv = {
+            package: '/path/to/package',
+            registryUsername: 'testuser',
+            'registry-password': 'secret',
+            type: 'image'
+        };
+
+        const mockConfig = {
+            image: {
+                registry: 'quay.io',
+                repository: 'instana-collectors/my-collector',
+                tag: '1.0.0'
+            }
+        };
+
+        beforeEach(() => {
+            (utils.pathExists as jest.Mock).mockReturnValue(true);
+            (utils.detectContainerRuntime as jest.Mock).mockReturnValue('docker');
+            (utils.spawnAsync as jest.Mock).mockResolvedValue({ stdout: '', stderr: '' });
+        });
+
+        it('should publish image successfully', async () => {
+            mockFs.readFileSync.mockReturnValue(JSON.stringify(mockConfig) as any);
+
+            await handlePublish(imageArgv);
+
+            expect(utils.detectContainerRuntime).toHaveBeenCalled();
+            expect(utils.spawnAsync).toHaveBeenCalledWith(
+                'docker',
+                ['login', 'quay.io', '--username', 'testuser', '--password-stdin'],
+                expect.objectContaining({ input: 'secret' })
+            );
+            expect(utils.spawnAsync).toHaveBeenCalledWith(
+                'docker',
+                ['push', 'quay.io/instana-collectors/my-collector:1.0.0'],
+                { stdio: ['inherit', 'pipe', 'inherit'] }
+            );
+        });
+
+        it('should throw if collector directory does not exist', async () => {
+            (utils.pathExists as jest.Mock)
+                .mockReturnValueOnce(true)   // packagePath exists
+                .mockReturnValueOnce(false); // collectorPath does not
+
+            await expect(handlePublish(imageArgv)).rejects.toThrow('Collector directory not found');
+        });
+
+        it('should throw if config.json is missing or invalid', async () => {
+            mockFs.readFileSync.mockImplementation(() => {
+                throw new Error('ENOENT');
+            });
+
+            await expect(handlePublish(imageArgv)).rejects.toThrow('Failed to read config.json');
+        });
+
+        it('should throw if config.json is missing image fields', async () => {
+            mockFs.readFileSync.mockReturnValue(
+                JSON.stringify({ image: { registry: 'quay.io' } }) as any
+            );
+
+            await expect(handlePublish(imageArgv)).rejects.toThrow('config.json is missing required image fields');
+        });
+
+        it('should throw if container runtime login fails', async () => {
+            mockFs.readFileSync.mockReturnValue(JSON.stringify(mockConfig) as any);
+            (utils.spawnAsync as jest.Mock).mockRejectedValueOnce(new Error('unauthorized'));
+
+            await expect(handlePublish(imageArgv)).rejects.toThrow('Failed to login to container registry');
+        });
+
+        it('should throw if container image push fails', async () => {
+            mockFs.readFileSync.mockReturnValue(JSON.stringify(mockConfig) as any);
+            (utils.spawnAsync as jest.Mock)
+                .mockResolvedValueOnce({ stdout: '', stderr: '' })  // login succeeds
+                .mockRejectedValueOnce(new Error('push failed')); // push fails
+
+            await expect(handlePublish(imageArgv)).rejects.toThrow('Failed to push container image');
+        });
+
+        it('should use podman when docker is not available', async () => {
+            (utils.detectContainerRuntime as jest.Mock).mockReturnValue('podman');
+            mockFs.readFileSync.mockReturnValue(JSON.stringify(mockConfig) as any);
+
+            await handlePublish(imageArgv);
+
+            expect(utils.spawnAsync).toHaveBeenCalledWith(
+                'podman',
+                ['login', 'quay.io', '--username', 'testuser', '--password-stdin'],
+                expect.objectContaining({ input: 'secret' })
+            );
+            expect(utils.spawnAsync).toHaveBeenCalledWith(
+                'podman',
+                ['push', 'quay.io/instana-collectors/my-collector:1.0.0'],
+                { stdio: ['inherit', 'pipe', 'inherit'] }
+            );
+        });
+
+        it('should throw if no container runtime is available', async () => {
+            (utils.detectContainerRuntime as jest.Mock).mockImplementation(() => {
+                throw new Error('No container runtime detected');
+            });
+
+            await expect(handlePublish(imageArgv)).rejects.toThrow('No container runtime detected');
+        });
+
+        it('should log info when all layers already exist on registry', async () => {
+            mockFs.readFileSync.mockReturnValue(JSON.stringify(mockConfig) as any);
+            const pushOutput = [
+                'The push refers to repository [quay.io/instana-collectors/my-collector]',
+                'da396a519e4d: Preparing',
+                'ae1ec844c4de: Waiting',
+                'da396a519e4d: Layer already exists',
+                'ae1ec844c4de: Layer already exists',
+                '1.0.0: digest: sha256:abc123 size: 1234'
+            ].join('\n');
+            (utils.spawnAsync as jest.Mock)
+                .mockResolvedValueOnce({ stdout: '', stderr: '' })       // login
+                .mockResolvedValueOnce({ stdout: pushOutput, stderr: '' }); // push
+
+            await handlePublish(imageArgv);
+
+            expect(logger.info).toHaveBeenCalledWith(
+                expect.stringContaining('The image tag "quay.io/instana-collectors/my-collector:1.0.0" is identical to the currently published image')
+            );
+        });
+
+        it('should not log already-exists info when some layers are new', async () => {
+            mockFs.readFileSync.mockReturnValue(JSON.stringify(mockConfig) as any);
+            const pushOutput = [
+                'The push refers to repository [quay.io/instana-collectors/my-collector]',
+                'da396a519e4d: Preparing',
+                'ae1ec844c4de: Preparing',
+                'da396a519e4d: Layer already exists',
+                'ae1ec844c4de: Pushed',
+                '1.0.0: digest: sha256:abc123 size: 1234'
+            ].join('\n');
+            (utils.spawnAsync as jest.Mock)
+                .mockResolvedValueOnce({ stdout: '', stderr: '' })       // login
+                .mockResolvedValueOnce({ stdout: pushOutput, stderr: '' }); // push
+
+            await handlePublish(imageArgv);
+
+            expect(logger.info).not.toHaveBeenCalledWith(
+                expect.stringContaining('The image tag "quay.io/instana-collectors/my-collector:1.0.0" is identical to the currently published image')
+            );
         });
     });
 });
