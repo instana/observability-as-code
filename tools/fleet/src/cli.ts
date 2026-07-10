@@ -15,12 +15,32 @@ Examples:
 Restart the agent instances:
   ${execName} restart --server example.com --token validToken --type agentType --tag key1=value1 --tag key2=value2
   ${execName} restart --type agentType --tag key1=value1 --tag key2=value2 (specify the server and token as environment variables using INSTANA_SERVER and INSTANA_API_TOKEN)
-  ${execName} restart --type agentType --group groupValue
-  ${execName} restart --type agentType --group groupValue --debug
+  ${execName} restart --type agentType --tag key1=value1 --debug
 `;
+
+const examplesForDeploy = `
+Examples:
+
+Deploy the agent component:
+  ${execName} deploy --server example.com --token validToken --type agentType --tag key1=value1 --tag key2=value2
+  ${execName} deploy --type agentType --tag key1=value1 --tag key2=value2 (specify the server and token as environment variables using INSTANA_SERVER and INSTANA_API_TOKEN)
+  ${execName} deploy --type agentType --tag key1=value1 --configurationId=configID --debug
+`;
+
+const examplesForUpdate = `
+Examples:
+
+Update the agent configuration:
+  ${execName} config-update --server example.com --token validToken --type agentType --tag key1=value1 --tag key2=value2
+  ${execName} config-update --type agentType --tag key1=value1 --tag key2=value2 (specify the server and token as environment variables using INSTANA_SERVER and INSTANA_API_TOKEN)
+  ${execName} config-update --type agentType --tag key1=value1 --configurationId=configID --debug
+`;
+
 
 export function configureCLI(handlers: {
     handleRestart: (argv: any) => Promise<void>;
+    handleDeploy: (argv: any) => Promise<void>;
+    handleUpdate: (argv: any) => Promise<void>;
 }) {
     return yargs
         .wrap(160)
@@ -49,16 +69,10 @@ export function configureCLI(handlers: {
                         demandOption: true
                     })
                     .option('tag', {
-						alias: 'T',
-                        describe: 'Tags in the format key=value',
+                        alias: 'T',
+                        describe: 'Tags in the format key=value, can be specified multiple times',
                         type: 'array',
-                        demandOption: false
-                    })
-                    .option('group', {
-						alias: 'g',
-                        describe: 'Groups list',
-                        type: 'array',
-                        demandOption: false
+                        demandOption: true
                     })
                     .option('debug', {
 						alias: 'd',
@@ -67,8 +81,93 @@ export function configureCLI(handlers: {
                         default: false
                     })
 					.epilog(examplesForRestart);
-            },
-            handlers.handleRestart
+            }, handlers.handleRestart)
+			.command(
+				'deploy',
+				'Deploy the agent component',
+				(yargs) => {
+					return yargs
+						.option('server', {
+							alias: 'S',
+							describe: 'Address of an environment',
+							type: 'string',
+							demandOption: false
+						})
+						.option('token', {
+							alias: 't',
+							describe: 'API token for authenticating agent restart requests',
+							type: 'string',
+							demandOption: false
+						})
+						.option('type', {
+							alias: 'y',
+							describe: 'Agent type, allowed values (com.ibm.opentelemetrycollector, com.ibm.instana.agent, com.ibm.instana.customcollector)',
+							type: 'string',
+							demandOption: true
+						})
+						.option('tag', {
+							alias: 'T',
+							describe: 'Tags in the format key=value',
+							type: 'array',
+							demandOption: false
+						})
+						.option('debug', {
+							alias: 'd',
+							describe: 'Enable debug mode',
+							type: 'boolean',
+							default: false
+						})
+						.option('configurationId', {
+							alias: 'c',
+							describe: 'Configuration ID',
+							type: 'string',
+							demandOption: true
+						})
+						.epilog(examplesForDeploy);
+				}, handlers.handleDeploy)
+                .command(
+				'config-update',
+				'Update the agent configuration',
+				(yargs) => {
+					return yargs
+						.option('server', {
+							alias: 'S',
+							describe: 'Address of an environment',
+							type: 'string',
+							demandOption: false
+						})
+						.option('token', {
+							alias: 't',
+							describe: 'API token for authenticating agent restart requests',
+							type: 'string',
+							demandOption: false
+						})
+						.option('type', {
+							alias: 'y',
+							describe: 'Agent type, allowed values (com.ibm.opentelemetrycollector, com.ibm.instana.agent, com.ibm.instana.customcollector)',
+							type: 'string',
+							demandOption: true
+						})
+						.option('tag', {
+							alias: 'T',
+							describe: 'Tags in the format key=value',
+							type: 'array',
+							demandOption: false
+						})
+						.option('debug', {
+							alias: 'd',
+							describe: 'Enable debug mode',
+							type: 'boolean',
+							default: false
+						})
+						.option('configurationId', {
+							alias: 'c',
+							describe: 'Configuration ID',
+							type: 'string',
+							demandOption: true
+						})
+						.epilog(examplesForUpdate);
+				}, handlers.handleUpdate
         )
         .demandCommand(1, 'You need at least one command before moving on')
         .help()

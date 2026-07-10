@@ -3,13 +3,15 @@ import { validateServerAddress } from '../validators';
 import { createAxiosInstance, handleAxiosError, parseTags } from '../utils';
 
 interface AgentControlActionRequest {
-    action: 'agent.restart';
+    action: 'agent.component.deploy';
     type: 'com.ibm.opentelemetrycollector' | 'com.ibm.instana.agent' | 'com.ibm.instana.customcollector';
     tags?: Record<string, string>;
-    args?: Record<string, any>;
+    args: {
+        configurationId: string;
+    };
 }
 
-export async function handleRestart(argv: any) {
+export async function handleDeploy(argv: any) {
     const server = argv.server ?? process.env.INSTANA_SERVER;
     if (!server) {
         throw new Error('Missing server. Specify --server or set INSTANA_SERVER');
@@ -21,6 +23,10 @@ export async function handleRestart(argv: any) {
     }
 
     const { type, debug } = argv;
+    const configurationId = argv.configurationId;
+    if (!configurationId) {
+        throw new Error('Missing required parameter: --configurationId');
+    }
 
     if (debug) {
         logger.level = 'debug';
@@ -33,17 +39,13 @@ export async function handleRestart(argv: any) {
     }
 
     const tagsInput = [].concat(argv.tag ?? []).filter(Boolean);
-
-    if (tagsInput.length === 0) {
-        throw new Error('Missing required parameter: --tag (at least one tag is required)');
-    }
-
     const tags = parseTags(tagsInput);
 
     const request: AgentControlActionRequest = {
-        action: 'agent.restart',
+        action: 'agent.component.deploy',
         type,
-        tags
+        ...(tags && { tags }),
+        args: { configurationId }
     };
 
     const axiosInstance = createAxiosInstance();
@@ -76,7 +78,7 @@ export async function handleRestart(argv: any) {
         return data;
 
     } catch (error: any) {
-        handleAxiosError(error, 'agent.restart request');
+        handleAxiosError(error, 'agent.component.deploy request');
         throw error;
     }
 }
