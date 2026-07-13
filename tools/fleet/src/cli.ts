@@ -22,7 +22,7 @@ const examplesForDeploy = `
 Examples:
 
 Deploy the agent component:
-  ${execName} deploy --server example.com --token validToken --type agentType --tag key1=value1 --tag key2=value2
+  ${execName} deploy --server example.com --token validToken --type agentType --tag key1=value1 --tag key2=value2 --configurationId=configID
   ${execName} deploy --type agentType --tag key1=value1 --tag key2=value2 (specify the server and token as environment variables using INSTANA_SERVER and INSTANA_API_TOKEN)
   ${execName} deploy --type agentType --tag key1=value1 --configurationId=configID --debug
 `;
@@ -31,7 +31,7 @@ const examplesForUpdate = `
 Examples:
 
 Update the agent configuration:
-  ${execName} config-update --server example.com --token validToken --type agentType --tag key1=value1 --tag key2=value2
+  ${execName} config-update --server example.com --token validToken --type agentType --tag key1=value1 --tag key2=value2 --configurationId=configID
   ${execName} config-update --type agentType --tag key1=value1 --tag key2=value2 (specify the server and token as environment variables using INSTANA_SERVER and INSTANA_API_TOKEN)
   ${execName} config-update --type agentType --tag key1=value1 --configurationId=configID --debug
 `;
@@ -107,9 +107,9 @@ export function configureCLI(handlers: {
 						})
 						.option('tag', {
 							alias: 'T',
-							describe: 'Tags in the format key=value',
+							describe: 'Tags in the format key=value, can be specified multiple times',
 							type: 'array',
-							demandOption: false
+							demandOption: true
 						})
 						.option('debug', {
 							alias: 'd',
@@ -150,9 +150,9 @@ export function configureCLI(handlers: {
 						})
 						.option('tag', {
 							alias: 'T',
-							describe: 'Tags in the format key=value',
+							describe: 'Tags in the format key=value, can be specified multiple times',
 							type: 'array',
-							demandOption: false
+							demandOption: true
 						})
 						.option('debug', {
 							alias: 'd',

@@ -18,6 +18,7 @@ describe('handleDeploy', () => {
         token: 'test-token',
         type: 'com.ibm.opentelemetrycollector',
         configurationId: 'bfuW0eeKTCWgL73t3zyzgA',
+        tag: ['otel.attribute.entity.type=otel-collector'],
         debug: false
     };
 
@@ -31,13 +32,14 @@ describe('handleDeploy', () => {
         } as any);
     });
 
-    test('successfully sends deploy request without tags', async () => {
+    test('successfully sends deploy request with tags', async () => {
         const postMock = jest.fn().mockResolvedValue({
             data: { requestId: '123', status: 'accepted', message: 'queued' }
         });
         mockedAxios.create.mockReturnValue({ post: postMock } as any);
 
-        const result = await handleDeploy(baseArgv);
+        const argv = { ...baseArgv, tag: ['otel.attribute.entity.type=otel-collector'] };
+        const result = await handleDeploy(argv);
 
         expect(postMock).toHaveBeenCalledTimes(1);
         const [url, body, config] = postMock.mock.calls[0];
@@ -45,11 +47,19 @@ describe('handleDeploy', () => {
         expect(body).toEqual({
             action: 'agent.component.deploy',
             type: 'com.ibm.opentelemetrycollector',
+            tags: { 'otel.attribute.entity.type': 'otel-collector' },
             args: { configurationId: 'bfuW0eeKTCWgL73t3zyzgA' }
         });
         expect(config.headers['Authorization']).toBe('apiToken test-token');
         expect(config.headers['Content-Type']).toBe('application/json');
         expect(result).toEqual({ requestId: '123', status: 'accepted', message: 'queued' });
+    });
+
+    test('throws when no tags are provided', async () => {
+        const argv = { ...baseArgv, tag: [] };
+        await expect(handleDeploy(argv)).rejects.toThrow(
+            'Missing required parameter: --tag (at least one tag is required)'
+        );
     });
 
     test('successfully sends deploy request with a single tag', async () => {
@@ -117,7 +127,8 @@ describe('handleDeploy', () => {
 
         const argv = {
             type: baseArgv.type,
-            configurationId: baseArgv.configurationId
+            configurationId: baseArgv.configurationId,
+            tag: ['entity.type=otel-collector']
         };
 
         const result = await handleDeploy(argv);

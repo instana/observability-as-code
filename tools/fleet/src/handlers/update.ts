@@ -39,6 +39,9 @@ export async function handleUpdate(argv: any) {
     }
 
     const tagsInput = [].concat(argv.tag ?? []).filter(Boolean);
+    if (tagsInput.length === 0) {
+        throw new Error('Missing required parameter: --tag (at least one tag is required)');
+    }
     const tags = parseTags(tagsInput);
 
     const request: AgentControlActionRequest = {
