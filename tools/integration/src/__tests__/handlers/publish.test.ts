@@ -41,7 +41,7 @@ describe('Publish Handler', () => {
                 package: '/path/to/package',
                 registryUsername: 'testuser',
                 'registry-email': 'test@example.com',
-                type: 'package'
+                'artifact-type': 'package'
             };
 
             const packageJson = { name: '@scope/test-package' };
@@ -67,7 +67,7 @@ describe('Publish Handler', () => {
                 package: 'test-package',
                 registryUsername: 'testuser',
                 'registry-email': 'test@example.com',
-                type: 'package'
+                'artifact-type': 'package'
             };
 
             const packageJson = { name: 'test-package' };
@@ -85,36 +85,38 @@ describe('Publish Handler', () => {
             expect(logger.info).toHaveBeenCalledWith('Package test-package published successfully');
         });
 
-        it('should return early if package.json cannot be read', async () => {
+        it('should exit with code 1 if package.json cannot be read', async () => {
             const argv = {
                 package: '/path/to/package',
                 registryUsername: 'testuser',
                 'registry-email': 'test@example.com',
-                type: 'package'
+                'artifact-type': 'package'
             };
 
             (utils.pathExists as jest.Mock).mockReturnValue(true);
             (utils.readPackageJson as jest.Mock).mockReturnValue(null);
 
-            await handlePublish(argv);
+            await expect(handlePublish(argv)).rejects.toThrow('process.exit(1)');
 
-            expect(logger.error).toHaveBeenCalledWith('Failed to read the package.json');
+            expect(logger.error).toHaveBeenCalledWith('Publish failed:', expect.objectContaining({ message: 'Failed to read the package.json' }));
+            expect(mockExit).toHaveBeenCalledWith(1);
             expect(utils.isUserLoggedIn).not.toHaveBeenCalled();
         });
 
-        it('should return early if package path does not exist', async () => {
+        it('should exit with code 1 if package path does not exist', async () => {
             const argv = {
                 package: 'nonexistent-package',
                 registryUsername: 'testuser',
                 'registry-email': 'test@example.com',
-                type: 'package'
+                'artifact-type': 'package'
             };
 
             (utils.pathExists as jest.Mock).mockReturnValue(false);
 
-            await handlePublish(argv);
+            await expect(handlePublish(argv)).rejects.toThrow('process.exit(1)');
 
             expect(logger.error).toHaveBeenCalledWith('Path does not exist: /current/dir/nonexistent-package');
+            expect(mockExit).toHaveBeenCalledWith(1);
             expect(utils.isUserLoggedIn).not.toHaveBeenCalled();
         });
 
@@ -123,7 +125,7 @@ describe('Publish Handler', () => {
                 package: '/path/to/package',
                 registryUsername: 'testuser',
                 'registry-email': 'test@example.com',
-                type: 'package'
+                'artifact-type': 'package'
             };
 
             const packageJson = { name: 'test-package' };
@@ -148,7 +150,7 @@ describe('Publish Handler', () => {
                 package: '/path/to/package',
                 registryUsername: 'testuser',
                 'registry-email': 'test@example.com',
-                type: 'package'
+                'artifact-type': 'package'
             };
 
             const packageJson = { name: '@myorg/test-package' };
@@ -172,20 +174,19 @@ describe('Publish Handler', () => {
                 package: '/path/to/package',
                 registryUsername: 'testuser',
                 'registry-email': 'test@example.com',
-                type: 'package'
+                'artifact-type': 'package'
             };
 
             const packageJson = { name: 'test-package' };
-            const loginError = new Error('Login failed');
 
             (utils.pathExists as jest.Mock).mockReturnValue(true);
             (utils.readPackageJson as jest.Mock).mockReturnValue(packageJson);
             (utils.isUserLoggedIn as jest.Mock).mockResolvedValue(false);
-            (utils.spawnAsync as jest.Mock).mockRejectedValueOnce(loginError);
+            (utils.spawnAsync as jest.Mock).mockRejectedValueOnce(new Error('Login failed'));
 
             await expect(handlePublish(argv)).rejects.toThrow('process.exit(1)');
 
-            expect(logger.error).toHaveBeenCalledWith('Error occurred during login:', loginError);
+            expect(logger.error).toHaveBeenCalledWith('Publish failed:', expect.objectContaining({ message: expect.stringContaining('Failed to login to npm registry') }));
             expect(mockExit).toHaveBeenCalledWith(1);
         });
 
@@ -194,7 +195,7 @@ describe('Publish Handler', () => {
                 package: '/path/to/package',
                 registryUsername: 'testuser',
                 'registry-email': 'test@example.com',
-                type: 'package'
+                'artifact-type': 'package'
             };
 
             const packageJson = { name: '@scope/test-package' };
@@ -218,7 +219,7 @@ describe('Publish Handler', () => {
                 package: '/path/to/package',
                 registryUsername: 'testuser',
                 'registry-email': 'test@example.com',
-                type: 'package'
+                'artifact-type': 'package'
             };
 
             const packageJson = { name: 'test-package' };
@@ -242,22 +243,21 @@ describe('Publish Handler', () => {
                 package: '/path/to/package',
                 registryUsername: 'testuser',
                 'registry-email': 'test@example.com',
-                type: 'package'
+                'artifact-type': 'package'
             };
 
             const packageJson = { name: 'test-package' };
-            const publishError = new Error('Publish failed');
 
             (utils.pathExists as jest.Mock).mockReturnValue(true);
             (utils.readPackageJson as jest.Mock).mockReturnValue(packageJson);
             (utils.isUserLoggedIn as jest.Mock).mockResolvedValue(true);
-            (utils.spawnAsync as jest.Mock).mockRejectedValue(publishError);
+            (utils.spawnAsync as jest.Mock).mockRejectedValue(new Error('Publish failed'));
 
             await expect(handlePublish(argv)).rejects.toThrow('process.exit(1)');
 
             expect(logger.error).toHaveBeenCalledWith(
-                'Error publishing the integration package /path/to/package:',
-                publishError
+                'Publish failed:',
+                expect.objectContaining({ message: expect.stringContaining('Failed to publish package test-package') })
             );
             expect(mockExit).toHaveBeenCalledWith(1);
         });
@@ -267,7 +267,7 @@ describe('Publish Handler', () => {
                 package: '/path/to/package',
                 registryUsername: 'testuser',
                 'registry-email': 'test@example.com',
-                type: 'package'
+                'artifact-type': 'package'
             };
 
             const packageJson = { name: '@myorg/my-package' };
@@ -289,7 +289,7 @@ describe('Publish Handler', () => {
                 package: '/path/to/package',
                 registryUsername: 'testuser',
                 'registry-email': 'test@example.com',
-                type: 'package'
+                'artifact-type': 'package'
             };
 
             const packageJson = { name: 'unscoped-package' };
@@ -309,7 +309,7 @@ describe('Publish Handler', () => {
                 package: '/path/to/package',
                 registryUsername: 'testuser',
                 'registry-email': 'test@example.com',
-                type: 'package'
+                'artifact-type': 'package'
             };
 
             const packageJson = { name: '@instana/integration-package' };
@@ -329,7 +329,7 @@ describe('Publish Handler', () => {
                 package: '/path/to/package',
                 registryUsername: 'testuser',
                 'registry-email': 'test@example.com',
-                type: 'package'
+                'artifact-type': 'package'
             };
 
             const packageJson = { name: '@my-org/my-package-name' };
@@ -345,12 +345,12 @@ describe('Publish Handler', () => {
         });
     });
 
-    describe('handlePublish --type image', () => {
+    describe('handlePublish --artifact-type image', () => {
         const imageArgv = {
             package: '/path/to/package',
             registryUsername: 'testuser',
             'registry-password': 'secret',
-            type: 'image'
+            'artifact-type': 'image'
         };
 
         const mockConfig = {
@@ -381,48 +381,63 @@ describe('Publish Handler', () => {
             expect(utils.spawnAsync).toHaveBeenCalledWith(
                 'docker',
                 ['push', 'quay.io/instana-collectors/my-collector:1.0.0'],
-                { stdio: ['inherit', 'pipe', 'inherit'] }
+                { stdio: ['inherit', 'pipe', 'pipe'] }
             );
         });
 
-        it('should throw if collector directory does not exist', async () => {
+        it('should exit with code 1 if collector directory does not exist', async () => {
             (utils.pathExists as jest.Mock)
                 .mockReturnValueOnce(true)   // packagePath exists
                 .mockReturnValueOnce(false); // collectorPath does not
 
-            await expect(handlePublish(imageArgv)).rejects.toThrow('Collector directory not found');
+            await expect(handlePublish(imageArgv)).rejects.toThrow('process.exit(1)');
+
+            expect(logger.error).toHaveBeenCalledWith('Publish failed:', expect.objectContaining({ message: expect.stringContaining('Collector directory not found') }));
+            expect(mockExit).toHaveBeenCalledWith(1);
         });
 
-        it('should throw if config.json is missing or invalid', async () => {
+        it('should exit with code 1 if config.json is missing or invalid', async () => {
             mockFs.readFileSync.mockImplementation(() => {
                 throw new Error('ENOENT');
             });
 
-            await expect(handlePublish(imageArgv)).rejects.toThrow('Failed to read config.json');
+            await expect(handlePublish(imageArgv)).rejects.toThrow('process.exit(1)');
+
+            expect(logger.error).toHaveBeenCalledWith('Publish failed:', expect.objectContaining({ message: expect.stringContaining('Failed to read config.json') }));
+            expect(mockExit).toHaveBeenCalledWith(1);
         });
 
-        it('should throw if config.json is missing image fields', async () => {
+        it('should exit with code 1 if config.json is missing image fields', async () => {
             mockFs.readFileSync.mockReturnValue(
                 JSON.stringify({ image: { registry: 'quay.io' } }) as any
             );
 
-            await expect(handlePublish(imageArgv)).rejects.toThrow('config.json is missing required image fields');
+            await expect(handlePublish(imageArgv)).rejects.toThrow('process.exit(1)');
+
+            expect(logger.error).toHaveBeenCalledWith('Publish failed:', expect.objectContaining({ message: expect.stringContaining('config.json is missing required image fields') }));
+            expect(mockExit).toHaveBeenCalledWith(1);
         });
 
-        it('should throw if container runtime login fails', async () => {
+        it('should exit with code 1 if container runtime login fails', async () => {
             mockFs.readFileSync.mockReturnValue(JSON.stringify(mockConfig) as any);
             (utils.spawnAsync as jest.Mock).mockRejectedValueOnce(new Error('unauthorized'));
 
-            await expect(handlePublish(imageArgv)).rejects.toThrow('Failed to login to container registry');
+            await expect(handlePublish(imageArgv)).rejects.toThrow('process.exit(1)');
+
+            expect(logger.error).toHaveBeenCalledWith('Publish failed:', expect.objectContaining({ message: expect.stringContaining('Failed to login to container registry') }));
+            expect(mockExit).toHaveBeenCalledWith(1);
         });
 
-        it('should throw if container image push fails', async () => {
+        it('should exit with code 1 if container image push fails', async () => {
             mockFs.readFileSync.mockReturnValue(JSON.stringify(mockConfig) as any);
             (utils.spawnAsync as jest.Mock)
                 .mockResolvedValueOnce({ stdout: '', stderr: '' })  // login succeeds
                 .mockRejectedValueOnce(new Error('push failed')); // push fails
 
-            await expect(handlePublish(imageArgv)).rejects.toThrow('Failed to push container image');
+            await expect(handlePublish(imageArgv)).rejects.toThrow('process.exit(1)');
+
+            expect(logger.error).toHaveBeenCalledWith('Publish failed:', expect.objectContaining({ message: expect.stringContaining('Failed to push container image') }));
+            expect(mockExit).toHaveBeenCalledWith(1);
         });
 
         it('should use podman when docker is not available', async () => {
@@ -439,19 +454,22 @@ describe('Publish Handler', () => {
             expect(utils.spawnAsync).toHaveBeenCalledWith(
                 'podman',
                 ['push', 'quay.io/instana-collectors/my-collector:1.0.0'],
-                { stdio: ['inherit', 'pipe', 'inherit'] }
+                { stdio: ['inherit', 'pipe', 'pipe'] }
             );
         });
 
-        it('should throw if no container runtime is available', async () => {
+        it('should exit with code 1 if no container runtime is available', async () => {
             (utils.detectContainerRuntime as jest.Mock).mockImplementation(() => {
                 throw new Error('No container runtime detected');
             });
 
-            await expect(handlePublish(imageArgv)).rejects.toThrow('No container runtime detected');
+            await expect(handlePublish(imageArgv)).rejects.toThrow('process.exit(1)');
+
+            expect(logger.error).toHaveBeenCalledWith('Publish failed:', expect.objectContaining({ message: expect.stringContaining('No container runtime detected') }));
+            expect(mockExit).toHaveBeenCalledWith(1);
         });
 
-        it('should log info when all layers already exist on registry', async () => {
+        it('should log info when all layers already exist on registry (stdout)', async () => {
             mockFs.readFileSync.mockReturnValue(JSON.stringify(mockConfig) as any);
             const pushOutput = [
                 'The push refers to repository [quay.io/instana-collectors/my-collector]',
@@ -462,8 +480,29 @@ describe('Publish Handler', () => {
                 '1.0.0: digest: sha256:abc123 size: 1234'
             ].join('\n');
             (utils.spawnAsync as jest.Mock)
-                .mockResolvedValueOnce({ stdout: '', stderr: '' })       // login
-                .mockResolvedValueOnce({ stdout: pushOutput, stderr: '' }); // push
+                .mockResolvedValueOnce({ stdout: '', stderr: '' })            // login
+                .mockResolvedValueOnce({ stdout: pushOutput, stderr: '' });   // push via stdout (TTY)
+
+            await handlePublish(imageArgv);
+
+            expect(logger.info).toHaveBeenCalledWith(
+                expect.stringContaining('The image tag "quay.io/instana-collectors/my-collector:1.0.0" is identical to the currently published image')
+            );
+        });
+
+        it('should log info when all layers already exist on registry (stderr, non-TTY/CI)', async () => {
+            mockFs.readFileSync.mockReturnValue(JSON.stringify(mockConfig) as any);
+            const pushOutput = [
+                'The push refers to repository [quay.io/instana-collectors/my-collector]',
+                'da396a519e4d: Preparing',
+                'ae1ec844c4de: Waiting',
+                'da396a519e4d: Layer already exists',
+                'ae1ec844c4de: Layer already exists',
+                '1.0.0: digest: sha256:abc123 size: 1234'
+            ].join('\n');
+            (utils.spawnAsync as jest.Mock)
+                .mockResolvedValueOnce({ stdout: '', stderr: '' })            // login
+                .mockResolvedValueOnce({ stdout: '', stderr: pushOutput });   // push via stderr (non-TTY/CI)
 
             await handlePublish(imageArgv);
 

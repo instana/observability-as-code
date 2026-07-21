@@ -10,7 +10,7 @@ import path from 'path';
  */
 export async function handlePublish(argv: any): Promise<void> {
     const { package: packageNameOrPath, registryUsername } = argv;
-    const type = argv.type || 'package';
+    const type = argv['artifact-type'] || 'package';
 
     logger.info(`Start to publish the integration package: ${packageNameOrPath}`);
 
@@ -23,14 +23,22 @@ export async function handlePublish(argv: any): Promise<void> {
         packagePath = path.join(process.cwd(), packageNameOrPath);
         if (!utils.pathExists(packagePath)) {
             logger.error(`Path does not exist: ${packagePath}`);
-            return;
+            process.exit(1);
         }
     }
 
-    if (type === 'image') {
-        await publishImage(packagePath, registryUsername, argv['registry-password'], argv.debug);
-    } else {
-        await publishPackage(packagePath, packageNameOrPath, registryUsername, argv['registry-email']);
+    try {
+        if (type === 'image') {
+            await publishImage(packagePath, registryUsername, argv['registry-password'], argv.debug);
+        } else if (type === 'both') {
+            await publishPackage(packagePath, packageNameOrPath, registryUsername, argv['registry-email']);
+            await publishImage(packagePath, registryUsername, argv['registry-password'], argv.debug);
+        } else {
+            await publishPackage(packagePath, packageNameOrPath, registryUsername, argv['registry-email']);
+        }
+    } catch (error) {
+        logger.error('Publish failed:', error);
+        process.exit(1);
     }
 }
 
@@ -40,8 +48,7 @@ export async function handlePublish(argv: any): Promise<void> {
 async function publishPackage( packagePath: string, packageNameOrPath: string, registryUsername: string, registryEmail: string): Promise<void> {
     const packageJson = utils.readPackageJson(packagePath);
     if (!packageJson) {
-        logger.error('Failed to read the package.json');
-        return;
+        throw new Error('Failed to read the package.json');
     }
 
     const packageName = packageJson.name;
@@ -61,8 +68,7 @@ async function publishPackage( packagePath: string, packageNameOrPath: string, r
 
             logger.info('Logged into the integration package registry successfully');
         } catch (error) {
-            logger.error('Error occurred during login:', error);
-            process.exit(1);
+            throw new Error(`Failed to login to npm registry: ${error instanceof Error ? error.message : String(error)}`);
         }
     } else {
         logger.info('Already logged into the integration package registry');
@@ -82,8 +88,7 @@ async function publishPackage( packagePath: string, packageNameOrPath: string, r
 
         logger.info(`Package ${packageName} published successfully`);
     } catch (error) {
-        logger.error(`Error publishing the integration package ${packageNameOrPath}:`, error);
-        process.exit(1);
+        throw new Error(`Failed to publish package ${packageName}: ${error instanceof Error ? error.message : String(error)}`);
     }
 }
 
@@ -142,11 +147,11 @@ async function publishImage( packagePath: string, registryUsername: string, regi
     // Push image
     logger.info(`Pushing image ${imageTag} ...`);
     try {
-        // Pipe stdout to capture docker push output (docker writes progress to stdout when not a TTY)
-        // spawnAsync streams it live to process.stdout chunk-by-chunk
-        const { stdout } = await utils.spawnAsync(containerRuntime, ['push', imageTag], { stdio: ['inherit', 'pipe', 'inherit'] });
-        // Strip ANSI escape codes before parsing
-        const plain = stdout.replace(/\x1b\[[0-9;]*[A-Za-z]/g, '');
+        // Pipe both stdout and stderr to capture docker push layer progress.
+        // In non-TTY environments (e.g. CI), Docker routes layer lines to stderr instead of stdout.
+        const { stdout, stderr } = await utils.spawnAsync(containerRuntime, ['push', imageTag], { stdio: ['inherit', 'pipe', 'pipe'] });
+        // Combine both streams, then strip ANSI escape codes before parsing
+        const plain = (stdout + stderr).replace(/\x1b\[[0-9;]*[A-Za-z]/g, '');
         // Only consider final-state layer lines (exclude intermediate Preparing/Waiting lines)
         const layerLines = plain.split('\n').filter(l => /^[a-f0-9]+: /.test(l.trim()) && !l.includes('Preparing') && !l.includes('Waiting'));
         const allAlreadyExist = layerLines.length > 0 && layerLines.every(l => l.includes('Layer already exists'));

@@ -210,7 +210,7 @@ describe('CLI Module', () => {
             expect(cliContent).toContain("'registry-username'");
             expect(cliContent).toContain("'registry-email'");
             expect(cliContent).toContain("'registry-password'");
-            expect(cliContent).toContain("'type'");
+            expect(cliContent).toContain("'artifact-type'");
             expect(cliContent).toContain("alias: 'U'");
             expect(cliContent).toContain("alias: 'E'");
             expect(cliContent).toContain("alias: 'P'");
@@ -223,14 +223,14 @@ describe('CLI Module', () => {
             const cliPath = path.join(__dirname, '../cli.ts');
             const cliContent = fs.readFileSync(cliPath, 'utf-8');
 
-            // Verify .check() enforces type-conditional required options
+            // Verify .check() enforces artifact-type-conditional required options
             expect(cliContent).toContain('.check(');
-            expect(cliContent).toContain("argv.type === 'package'");
-            expect(cliContent).toContain("argv.type === 'image'");
+            expect(cliContent).toContain("argv['artifact-type'] === 'package'");
+            expect(cliContent).toContain("argv['artifact-type'] === 'image'");
             expect(cliContent).toContain("'registry-email'");
             expect(cliContent).toContain("'registry-password'");
-            expect(cliContent).toContain('--registry-email is required when --type is package');
-            expect(cliContent).toContain('--registry-password is required when --type is image');
+            expect(cliContent).toContain('--registry-email is required when --artifact-type is package or both');
+            expect(cliContent).toContain('--registry-password is required when --artifact-type is image or both');
         });
 
         it('should define lint command options', async () => {

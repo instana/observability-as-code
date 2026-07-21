@@ -41,10 +41,13 @@ const examplesForPublish = `
 Examples:
 
 Publish an integration package to npm:
-  ${execName} publish --package @instana-integration/my-package --registry-username myuser --registry-email me@example.com --type package
+  ${execName} publish --package @instana-integration/my-package --registry-username myuser --registry-email me@example.com --artifact-type package
 
 Publish a collector container image to a registry:
-  ${execName} publish --package @instana-integration/my-package --registry-username myuser --registry-password mypassword --type image
+  ${execName} publish --package @instana-integration/my-package --registry-username myuser --registry-password mypassword --artifact-type image
+
+Publish both the integration package and container image:
+  ${execName} publish --package @instana-integration/my-package --registry-username myuser --registry-email me@example.com --registry-password mypassword --artifact-type both
 `;
 
 const examplesForBuild = `
@@ -192,28 +195,30 @@ export function configureCLI(handlers: {
                 })
                 .option('registry-email', {
                     alias: 'E',
-                    describe: 'Email to access the integration package registry (required when --type package)',
+                    describe: 'Email to access the integration package registry (required when --artifact-type is package or both)',
                     type: 'string',
                     demandOption: false
                 })
-                .option('type', {
+                .option('artifact-type', {
                     alias: 't',
                     describe: 'Type of publish: integration package or container image (default: package)',
                     type: 'string',
+                    default: 'package',
+                    choices: ['package', 'image', 'both'],
                     demandOption: false
                 })
                 .option('registry-password', {
                     alias: 'P',
-                    describe: 'Password to access the container image registry (required when --type image)',
+                    describe: 'Password to access the container image registry (required when --artifact-type is image or both)',
                     type: 'string',
                     demandOption: false
                 })
                 .check((argv) => {
-                    if (argv.type === 'package' && !argv['registry-email']) {
-                        throw new Error('--registry-email is required when --type is package');
+                    if ((argv['artifact-type'] === 'package' || argv['artifact-type'] === 'both') && !argv['registry-email']) {
+                        throw new Error('--registry-email is required when --artifact-type is package or both');
                     }
-                    if (argv.type === 'image' && !argv['registry-password']) {
-                        throw new Error('--registry-password is required when --type is image');
+                    if ((argv['artifact-type'] === 'image' || argv['artifact-type'] === 'both') && !argv['registry-password']) {
+                        throw new Error('--registry-password is required when --artifact-type is image or both');
                     }
                     return true;
                 })

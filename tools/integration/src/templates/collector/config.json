@@ -12,10 +12,6 @@
     "tag": "1.0.0"
   },
 
-  "build_options": {
-    "platform": "linux/amd64"
-  },
-
   "configuration": {
     "interval": 60,
     "timeout": 30,
