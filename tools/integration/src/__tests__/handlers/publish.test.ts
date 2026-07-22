@@ -469,7 +469,7 @@ describe('Publish Handler', () => {
             expect(mockExit).toHaveBeenCalledWith(1);
         });
 
-        it('should log info when all layers already exist on registry (stdout)', async () => {
+        it('should warn and not log success when all layers already exist on registry (stdout)', async () => {
             mockFs.readFileSync.mockReturnValue(JSON.stringify(mockConfig) as any);
             const pushOutput = [
                 'The push refers to repository [quay.io/instana-collectors/my-collector]',
@@ -485,12 +485,15 @@ describe('Publish Handler', () => {
 
             await handlePublish(imageArgv);
 
-            expect(logger.info).toHaveBeenCalledWith(
+            expect(logger.warn).toHaveBeenCalledWith(
                 expect.stringContaining('The image tag "quay.io/instana-collectors/my-collector:1.0.0" is identical to the currently published image')
+            );
+            expect(logger.info).not.toHaveBeenCalledWith(
+                expect.stringContaining('Container image quay.io/instana-collectors/my-collector:1.0.0 published successfully')
             );
         });
 
-        it('should log info when all layers already exist on registry (stderr, non-TTY/CI)', async () => {
+        it('should warn and not log success when all layers already exist on registry (stderr, non-TTY/CI)', async () => {
             mockFs.readFileSync.mockReturnValue(JSON.stringify(mockConfig) as any);
             const pushOutput = [
                 'The push refers to repository [quay.io/instana-collectors/my-collector]',
@@ -506,12 +509,15 @@ describe('Publish Handler', () => {
 
             await handlePublish(imageArgv);
 
-            expect(logger.info).toHaveBeenCalledWith(
+            expect(logger.warn).toHaveBeenCalledWith(
                 expect.stringContaining('The image tag "quay.io/instana-collectors/my-collector:1.0.0" is identical to the currently published image')
+            );
+            expect(logger.info).not.toHaveBeenCalledWith(
+                expect.stringContaining('Container image quay.io/instana-collectors/my-collector:1.0.0 published successfully')
             );
         });
 
-        it('should not log already-exists info when some layers are new', async () => {
+        it('should log success and not warn when some layers are new', async () => {
             mockFs.readFileSync.mockReturnValue(JSON.stringify(mockConfig) as any);
             const pushOutput = [
                 'The push refers to repository [quay.io/instana-collectors/my-collector]',
@@ -527,9 +533,90 @@ describe('Publish Handler', () => {
 
             await handlePublish(imageArgv);
 
-            expect(logger.info).not.toHaveBeenCalledWith(
+            expect(logger.warn).not.toHaveBeenCalledWith(
                 expect.stringContaining('The image tag "quay.io/instana-collectors/my-collector:1.0.0" is identical to the currently published image')
             );
+            expect(logger.info).toHaveBeenCalledWith(
+                'Container image quay.io/instana-collectors/my-collector:1.0.0 published successfully'
+            );
+        });
+    });
+
+    describe('handlePublish --artifact-type both', () => {
+        const bothArgv = {
+            package: '/path/to/package',
+            registryUsername: 'testuser',
+            'registry-email': 'test@example.com',
+            'registry-password': 'secret',
+            'artifact-type': 'both'
+        };
+
+        const mockConfig = {
+            image: {
+                registry: 'quay.io',
+                repository: 'instana-collectors/my-collector',
+                tag: '1.0.0'
+            }
+        };
+
+        beforeEach(() => {
+            (utils.pathExists as jest.Mock).mockReturnValue(true);
+            (utils.detectContainerRuntime as jest.Mock).mockReturnValue('docker');
+        });
+
+        it('should publish package then image successfully', async () => {
+            const packageJson = { name: '@scope/test-package' };
+            (utils.readPackageJson as jest.Mock).mockReturnValue(packageJson);
+            (utils.isUserLoggedIn as jest.Mock).mockResolvedValue(true);
+            (utils.spawnAsync as jest.Mock).mockResolvedValue({ stdout: '', stderr: '' });
+            mockFs.readFileSync.mockReturnValue(JSON.stringify(mockConfig) as any);
+
+            await handlePublish(bothArgv);
+
+            expect(utils.spawnAsync).toHaveBeenCalledWith('npm', ['publish', '--access', 'public'], expect.any(Object));
+            expect(utils.spawnAsync).toHaveBeenCalledWith('docker', ['push', 'quay.io/instana-collectors/my-collector:1.0.0'], expect.any(Object));
+        });
+
+        it('should exit with code 1 and clear message if publishImage fails after publishPackage succeeds', async () => {
+            const packageJson = { name: '@scope/test-package' };
+            (utils.readPackageJson as jest.Mock).mockReturnValue(packageJson);
+            (utils.isUserLoggedIn as jest.Mock).mockResolvedValue(true);
+            (utils.spawnAsync as jest.Mock)
+                .mockResolvedValueOnce({ stdout: '', stderr: '' })  // npm publish succeeds
+                .mockResolvedValueOnce({ stdout: '', stderr: '' })  // docker login succeeds
+                .mockRejectedValueOnce(new Error('push failed'));   // docker push fails
+            mockFs.readFileSync.mockReturnValue(JSON.stringify(mockConfig) as any);
+
+            await expect(handlePublish(bothArgv)).rejects.toThrow('process.exit(1)');
+
+            expect(logger.error).toHaveBeenCalledWith(
+                'Publish failed:',
+                expect.objectContaining({
+                    message: expect.stringContaining('The npm package was published successfully, but publishing the container image failed')
+                })
+            );
+            expect(logger.error).toHaveBeenCalledWith(
+                'Publish failed:',
+                expect.objectContaining({
+                    message: expect.stringContaining('Re-run with --artifact-type image to retry only the image step')
+                })
+            );
+            expect(mockExit).toHaveBeenCalledWith(1);
+        });
+
+        it('should exit with code 1 normally if publishPackage itself fails', async () => {
+            const packageJson = { name: '@scope/test-package' };
+            (utils.readPackageJson as jest.Mock).mockReturnValue(packageJson);
+            (utils.isUserLoggedIn as jest.Mock).mockResolvedValue(false);
+            (utils.spawnAsync as jest.Mock).mockRejectedValueOnce(new Error('npm login failed'));
+
+            await expect(handlePublish(bothArgv)).rejects.toThrow('process.exit(1)');
+
+            expect(logger.error).toHaveBeenCalledWith(
+                'Publish failed:',
+                expect.objectContaining({ message: expect.stringContaining('Failed to login to npm registry') })
+            );
+            expect(mockExit).toHaveBeenCalledWith(1);
         });
     });
 });

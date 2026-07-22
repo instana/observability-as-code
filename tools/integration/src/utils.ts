@@ -45,18 +45,16 @@ export const spawnAsync = (command: any, args: any, options: any) => {
         let stdout = '';
         let stderr = '';
         if (child.stdout) {
-            child.stdout.on('data', (data: Buffer) => {
-                const chunk = data.toString();
-                stdout += chunk;
-                process.stdout.write(chunk);
-            });
+            child.stdout.on('data', (data: Buffer) => { stdout += data.toString(); });
         }
         if (child.stderr) {
             child.stderr.on('data', (data: Buffer) => { stderr += data.toString(); });
         }
         child.on('close', (code) => {
             if (code !== 0) {
-                reject(new Error(`Command failed with exit code ${code}`));
+                const output = [stderr, stdout].filter(s => s.trim()).join('\n');
+                const detail = output ? `\n${output}` : '';
+                reject(new Error(`Command failed with exit code ${code}${detail}`));
             } else {
                 resolve({ stdout, stderr });
             }

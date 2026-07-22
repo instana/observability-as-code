@@ -32,7 +32,15 @@ export async function handlePublish(argv: any): Promise<void> {
             await publishImage(packagePath, registryUsername, argv['registry-password'], argv.debug);
         } else if (type === 'both') {
             await publishPackage(packagePath, packageNameOrPath, registryUsername, argv['registry-email']);
-            await publishImage(packagePath, registryUsername, argv['registry-password'], argv.debug);
+            try {
+                await publishImage(packagePath, registryUsername, argv['registry-password'], argv.debug);
+            } catch (error) {
+                const msg = error instanceof Error ? error.message : String(error);
+                throw new Error(
+                    `The npm package was published successfully, but publishing the container image failed: ${msg}\n` +
+                    `The npm package has already been published - do not retry the full command. Re-run with --artifact-type image to retry only the image step.`
+                );
+            }
         } else {
             await publishPackage(packagePath, packageNameOrPath, registryUsername, argv['registry-email']);
         }
@@ -156,9 +164,10 @@ async function publishImage( packagePath: string, registryUsername: string, regi
         const layerLines = plain.split('\n').filter(l => /^[a-f0-9]+: /.test(l.trim()) && !l.includes('Preparing') && !l.includes('Waiting'));
         const allAlreadyExist = layerLines.length > 0 && layerLines.every(l => l.includes('Layer already exists'));
         if (allAlreadyExist) {
-            logger.info(`The image tag "${imageTag}" is identical to the currently published image. Bump the tag in config.json before publishing.`);
+            logger.warn(`The image tag "${imageTag}" is identical to the currently published image. Bump the tag in config.json before publishing.`);
+        } else {
+            logger.info(`Container image ${imageTag} published successfully`);
         }
-        logger.info(`Container image ${imageTag} published successfully`);
     } catch (error) {
         throw new Error(`Failed to push container image: ${error instanceof Error ? error.message : String(error)}`);
     }
