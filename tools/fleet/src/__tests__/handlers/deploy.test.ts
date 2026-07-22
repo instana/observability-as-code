@@ -17,7 +17,7 @@ describe('handleDeploy', () => {
         server: 'localhost:8080',
         token: 'test-token',
         type: 'com.ibm.opentelemetrycollector',
-        configurationId: 'bfuW0eeKTCWgL73t3zyzgA',
+        'configuration-id': 'bfuW0eeKTCWgL73t3zyzgA',
         tag: ['otel.attribute.entity.type=otel-collector'],
         debug: false
     };
@@ -127,7 +127,7 @@ describe('handleDeploy', () => {
 
         const argv = {
             type: baseArgv.type,
-            configurationId: baseArgv.configurationId,
+            'configuration-id': baseArgv['configuration-id'],
             tag: ['entity.type=otel-collector']
         };
 
@@ -139,7 +139,7 @@ describe('handleDeploy', () => {
     test('throws when server is missing from argv and env', async () => {
         delete process.env.INSTANA_SERVER;
 
-        const argv = { token: 'test', type: baseArgv.type, configurationId: baseArgv.configurationId };
+        const argv = { token: 'test', type: baseArgv.type, 'configuration-id': baseArgv['configuration-id'] };
         await expect(handleDeploy(argv)).rejects.toThrow(
             'Missing server. Specify --server or set INSTANA_SERVER'
         );
@@ -148,16 +148,16 @@ describe('handleDeploy', () => {
     test('throws when token is missing from argv and env', async () => {
         delete process.env.INSTANA_API_TOKEN;
 
-        const argv = { server: 'localhost:8080', type: baseArgv.type, configurationId: baseArgv.configurationId };
+        const argv = { server: 'localhost:8080', type: baseArgv.type, 'configuration-id': baseArgv['configuration-id'] };
         await expect(handleDeploy(argv)).rejects.toThrow(
             'Missing API token. Specify --token or set INSTANA_API_TOKEN'
         );
     });
 
     test('throws when configurationId is missing', async () => {
-        const argv = { ...baseArgv, configurationId: undefined };
+        const argv = { ...baseArgv, 'configuration-id': undefined };
         await expect(handleDeploy(argv)).rejects.toThrow(
-            'Missing required parameter: --configurationId'
+            'Missing required parameter: --configuration-id'
         );
     });
 
