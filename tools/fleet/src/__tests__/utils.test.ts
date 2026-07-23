@@ -37,6 +37,10 @@ describe('parseTags', () => {
         expect(parseTags([' env = prod '])).toEqual({ env: 'prod' });
     });
 
+    it('returns empty object for empty array input', () => {
+        expect(parseTags([])).toEqual({});
+    });
+
     it('throws on missing value', () => {
         expect(() => parseTags(['invalidTag'])).toThrow(
             'Invalid tag format: invalidTag. Expected key=value'
