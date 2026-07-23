@@ -103,6 +103,7 @@ describe('CLI Module', () => {
             expect(cliContent).toContain('examplesForDownload');
             expect(cliContent).toContain('examplesForImport');
             expect(cliContent).toContain('examplesForExport');
+            expect(cliContent).toContain('examplesForPublish');
             expect(cliContent).toContain('examplesForBuild');
             expect(cliContent).toContain('Examples:');
         });
@@ -208,8 +209,28 @@ describe('CLI Module', () => {
             // Verify publish options
             expect(cliContent).toContain("'registry-username'");
             expect(cliContent).toContain("'registry-email'");
+            expect(cliContent).toContain("'registry-password'");
+            expect(cliContent).toContain("'artifact-type'");
             expect(cliContent).toContain("alias: 'U'");
             expect(cliContent).toContain("alias: 'E'");
+            expect(cliContent).toContain("alias: 'P'");
+            expect(cliContent).toContain("alias: 't'");
+        });
+
+        it('should define publish command conditional validation', async () => {
+            const fs = require('fs');
+            const path = require('path');
+            const cliPath = path.join(__dirname, '../cli.ts');
+            const cliContent = fs.readFileSync(cliPath, 'utf-8');
+
+            // Verify .check() enforces artifact-type-conditional required options
+            expect(cliContent).toContain('.check(');
+            expect(cliContent).toContain("argv['artifact-type'] === 'package'");
+            expect(cliContent).toContain("argv['artifact-type'] === 'image'");
+            expect(cliContent).toContain("'registry-email'");
+            expect(cliContent).toContain("'registry-password'");
+            expect(cliContent).toContain('--registry-email is required when --artifact-type is package or both');
+            expect(cliContent).toContain('--registry-password is required when --artifact-type is image or both');
         });
 
         it('should define lint command options', async () => {
@@ -337,6 +358,7 @@ describe('CLI Module', () => {
             expect(cliContent).toContain('.epilog(examplesForDownload)');
             expect(cliContent).toContain('.epilog(examplesForImport)');
             expect(cliContent).toContain('.epilog(examplesForExport)');
+            expect(cliContent).toContain('.epilog(examplesForPublish)');
         });
 
         it('should set help and version aliases', async () => {
@@ -381,7 +403,7 @@ describe('CLI Module', () => {
             const cliContent = fs.readFileSync(cliPath, 'utf-8');
             
             expect(cliContent).toContain("import path from 'path'");
-            expect(cliContent).toContain("import yargs from 'yargs'");
+            expect(cliContent).toContain("from 'yargs'");
         });
     });
 });

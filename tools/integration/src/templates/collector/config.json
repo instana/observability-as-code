@@ -11,7 +11,7 @@
     "repository": "instana-collectors/{{PACKAGE_NAME_LOWER}}",
     "tag": "1.0.0"
   },
-  
+
   "configuration": {
     "interval": 60,
     "timeout": 30,

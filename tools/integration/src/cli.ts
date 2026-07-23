@@ -37,6 +37,19 @@ Export integration elements:
   ${execName} export --server example.com --include type=smart-alert title="exampleTitle" --location ./my-package
 `;
 
+const examplesForPublish = `
+Examples:
+
+Publish an integration package to npm:
+  ${execName} publish --package @instana-integration/my-package --registry-username myuser --registry-email me@example.com --artifact-type package
+
+Publish a collector container image to a registry:
+  ${execName} publish --package @instana-integration/my-package --registry-username myuser --registry-password mypassword --artifact-type image
+
+Publish both the integration package and container image:
+  ${execName} publish --package @instana-integration/my-package --registry-username myuser --registry-email me@example.com --registry-password mypassword --artifact-type both
+`;
+
 const examplesForBuild = `
 Examples:
 
@@ -176,16 +189,40 @@ export function configureCLI(handlers: {
                 })
                 .option('registry-username', {
                     alias: 'U',
-                    describe: 'Username to access the integration package registry',
+                    describe: 'Username to access the integration package or container image registry',
                     type: 'string',
                     demandOption: true
                 })
                 .option('registry-email', {
                     alias: 'E',
-                    describe: 'Email to access the integration package registry',
+                    describe: 'Email to access the integration package registry (required when --artifact-type is package or both)',
                     type: 'string',
-                    demandOption: true
-                });
+                    demandOption: false
+                })
+                .option('artifact-type', {
+                    alias: 't',
+                    describe: 'Type of publish: integration package or container image (default: package)',
+                    type: 'string',
+                    default: 'package',
+                    choices: ['package', 'image', 'both'],
+                    demandOption: false
+                })
+                .option('registry-password', {
+                    alias: 'P',
+                    describe: 'Password to access the container image registry (required when --artifact-type is image or both)',
+                    type: 'string',
+                    demandOption: false
+                })
+                .check((argv) => {
+                    if ((argv['artifact-type'] === 'package' || argv['artifact-type'] === 'both') && !argv['registry-email']) {
+                        throw new Error('--registry-email is required when --artifact-type is package or both');
+                    }
+                    if ((argv['artifact-type'] === 'image' || argv['artifact-type'] === 'both') && !argv['registry-password']) {
+                        throw new Error('--registry-password is required when --artifact-type is image or both');
+                    }
+                    return true;
+                })
+                .epilog(examplesForPublish);
         }, handlers.handlePublish)
         .command('lint', 'Provides linting for package', (yargs) => {
             return yargs

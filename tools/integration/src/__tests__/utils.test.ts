@@ -1,4 +1,5 @@
 import * as utils from '../utils';
+import * as child_process from 'child_process';
 
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 
@@ -12,6 +13,7 @@ jest.mock('../logger');
 jest.mock('child_process');
 
 const mockedFs = fs as jest.Mocked<typeof fs>;
+const mockedExecSync = child_process.execSync as jest.MockedFunction<typeof child_process.execSync>;
 
 describe('Utils Module', () => {
     beforeEach(() => {
@@ -684,5 +686,54 @@ describe('Utils Module', () => {
             }
         });
     });
+    });
+
+    describe('detectContainerRuntime', () => {
+        beforeEach(() => {
+            jest.clearAllMocks();
+        });
+
+        it('should return docker when docker is available', () => {
+            mockedExecSync.mockReturnValue(Buffer.from('Docker version 20.10.0'));
+
+            const result = utils.detectContainerRuntime();
+
+            expect(result).toBe('docker');
+            expect(mockedExecSync).toHaveBeenCalledWith('docker version', expect.objectContaining({ stdio: 'pipe' }));
+        });
+
+        it('should return podman when docker is not available but podman is', () => {
+            mockedExecSync
+                .mockImplementationOnce(() => { throw new Error('docker not found'); })
+                .mockReturnValueOnce(Buffer.from('podman version 4.0.0'));
+
+            const result = utils.detectContainerRuntime();
+
+            expect(result).toBe('podman');
+            expect(mockedExecSync).toHaveBeenCalledWith('docker version', expect.any(Object));
+            expect(mockedExecSync).toHaveBeenCalledWith('podman version', expect.any(Object));
+        });
+
+        it('should throw when neither docker nor podman is available', () => {
+            mockedExecSync.mockImplementation(() => { throw new Error('command not found'); });
+
+            expect(() => utils.detectContainerRuntime()).toThrow('No container runtime detected');
+        });
+
+        it('should prefer docker over podman when both are available', () => {
+            mockedExecSync.mockReturnValue(Buffer.from('Docker version 20.10.0'));
+
+            const result = utils.detectContainerRuntime();
+
+            expect(result).toBe('docker');
+            // Should not have tried podman
+            expect(mockedExecSync).toHaveBeenCalledTimes(1);
+        });
+
+        it('should include install instructions in the error message', () => {
+            mockedExecSync.mockImplementation(() => { throw new Error('command not found'); });
+
+            expect(() => utils.detectContainerRuntime()).toThrow('Docker: https://docs.docker.com/get-docker/');
+        });
     });
 });

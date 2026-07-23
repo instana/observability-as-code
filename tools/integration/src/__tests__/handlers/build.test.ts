@@ -19,9 +19,6 @@ const mockUtils = utils as jest.Mocked<typeof utils>;
 const mockValidators = validators as jest.Mocked<typeof validators>;
 const mockChildProcess = child_process as jest.Mocked<typeof child_process>;
 
-// Mock execSync to simulate docker/podman detection
-const mockExecSync = child_process.execSync as jest.MockedFunction<typeof child_process.execSync>;
-
 describe('handleBuild', () => {
     const mockPackagePath = '/test/package';
     const mockCollectorPath = path.join(mockPackagePath, 'collector');
@@ -30,8 +27,8 @@ describe('handleBuild', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
-        // Mock execSync to simulate successful docker detection
-        mockExecSync.mockReturnValue(Buffer.from('Docker version 20.10.0'));
+        // Mock detectContainerRuntime to return docker by default
+        mockUtils.detectContainerRuntime.mockReturnValue('docker');
     });
 
     const setupMockSpawn = (exitCode: number = 0) => {
@@ -78,7 +75,7 @@ describe('handleBuild', () => {
             expect.any(Array)
         );
         expect(mockFs.readFileSync).toHaveBeenCalledWith(mockConfigPath, 'utf-8');
-        expect(mockExecSync).toHaveBeenCalledWith('docker version', expect.any(Object));
+        expect(mockUtils.detectContainerRuntime).toHaveBeenCalled();
         expect(mockChildProcess.spawn).toHaveBeenCalledWith(
             'docker',
             ['build', '-t', 'quay.io/instana-collectors/test:1.0.0', mockCollectorPath],
@@ -335,20 +332,15 @@ describe('handleBuild', () => {
             }
         };
         mockFs.readFileSync.mockReturnValue(JSON.stringify(mockConfig));
-        
-        // Mock docker failing, podman succeeding
-        mockExecSync
-            .mockImplementationOnce(() => {
-                throw new Error('docker not found');
-            })
-            .mockReturnValueOnce(Buffer.from('Podman version 4.0.0'));
-        
+
+        // Mock detectContainerRuntime to return podman
+        mockUtils.detectContainerRuntime.mockReturnValue('podman');
+
         setupMockSpawn(0);
 
         await handleBuild({ package: mockPackagePath });
 
-        expect(mockExecSync).toHaveBeenCalledWith('docker version', expect.any(Object));
-        expect(mockExecSync).toHaveBeenCalledWith('podman version', expect.any(Object));
+        expect(mockUtils.detectContainerRuntime).toHaveBeenCalled();
         expect(mockChildProcess.spawn).toHaveBeenCalledWith(
             'podman',
             ['build', '-t', 'quay.io/instana-collectors/test:1.0.0', mockCollectorPath],
@@ -361,10 +353,10 @@ describe('handleBuild', () => {
         mockValidators.validateCollectorFiles.mockImplementation(() => {
             // No errors
         });
-        
-        // Mock both docker and podman failing
-        mockExecSync.mockImplementation(() => {
-            throw new Error('command not found');
+
+        // Mock detectContainerRuntime throwing
+        mockUtils.detectContainerRuntime.mockImplementation(() => {
+            throw new Error('No container runtime detected');
         });
 
         await expect(handleBuild({ package: mockPackagePath }))
