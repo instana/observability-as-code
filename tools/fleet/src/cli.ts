@@ -36,10 +36,19 @@ Update the agent configuration:
   ${execName} config-update --type agentType --tag key1=value1 --configuration-id=configID --debug
 `;
 
+const examplesForList = `
+Examples:
+
+List available resources:
+  ${execName} list --server example.com --token validToken --type agentType --resource configuration
+  ${execName} list --type agentType --resource configuration (specify the server and token as environment variables using INSTANA_SERVER and INSTANA_API_TOKEN)
+`;
+
 export function configureCLI(handlers: {
     handleRestart: (argv: any) => Promise<void>;
     handleDeploy: (argv: any) => Promise<void>;
     handleUpdate: (argv: any) => Promise<void>;
+    handleList: (argv: any) => Promise<void>;
 }) {
     return yargs
         .wrap(160)
@@ -81,6 +90,44 @@ export function configureCLI(handlers: {
                     })
                     .epilog(examplesForRestart);
             }, handlers.handleRestart)
+        .command(
+            'list',
+            'list available resources',
+            (yargs) => {
+                return yargs
+                    .option('server', {
+                        alias: 'S',
+                        describe: 'Address of an environment',
+                        type: 'string',
+                        demandOption: false
+                    })
+                    .option('token', {
+                        alias: 't',
+                        describe: 'API token for authenticating agent requests',
+                        type: 'string',
+                        demandOption: false
+                    })
+                    .option('type', {
+                        alias: 'y',
+                        describe: 'Agent type, allowed values (com.ibm.opentelemetrycollector, com.ibm.instana.agent, com.ibm.instana.customcollector)',
+                        type: 'string',
+                        demandOption: true
+                    })
+                    .option('resource', {
+                        alias: 'r',
+                        describe: 'Resource to list, allowed values (configuration)',
+                        type: 'string',
+                        choices: ['configuration'],
+                        demandOption: true
+                    })
+                    .option('debug', {
+                        alias: 'd',
+                        describe: 'Enable debug mode',
+                        type: 'boolean',
+                        default: false
+                    })
+                    .epilog(examplesForList);
+            }, handlers.handleList)
         .command(
             'deploy',
             'Deploy the agent component',
