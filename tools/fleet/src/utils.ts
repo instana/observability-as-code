@@ -51,14 +51,11 @@ export function handleAxiosError(error: any, context: string): void {
 }
 
 /**
- * Shared handler logic for all agent control actions (restart, deploy, config-update).
- * Resolves server/token, validates inputs, builds and sends the POST request.
+ * Resolves and validates the common connection parameters (server, token, type, debug)
+ * shared across all fleet commands. Extracted to avoid duplication between sendAgentRequest
+ * and other handlers (e.g. handleList) that cannot reuse sendAgentRequest directly.
  */
-export async function sendAgentRequest(
-    action: string,
-    argv: any,
-    configurationId?: string
-): Promise<any> {
+export function resolveConnection(argv: any): { server: string; token: string; type: string } {
     const server = argv.server ?? process.env.INSTANA_SERVER;
     if (!server) {
         throw new Error('Missing server. Specify --server or set INSTANA_SERVER');
@@ -80,7 +77,21 @@ export async function sendAgentRequest(
         throw new Error('Missing required parameter: --type');
     }
 
-    const tagsInput = [].concat(argv.tag ?? []).filter(Boolean);
+    return { server, token, type };
+}
+
+/**
+ * Shared handler logic for all agent control actions (restart, deploy, config-update).
+ * Resolves server/token, validates inputs, builds and sends the POST request.
+ */
+export async function sendAgentRequest(
+    action: string,
+    argv: any,
+    configurationId?: string
+): Promise<any> {
+    const { server, token, type } = resolveConnection(argv);
+
+    const tagsInput: string[] = [].concat(argv.tag ?? []).filter(Boolean);
     if (tagsInput.length === 0) {
         throw new Error('Missing required parameter: --tag (at least one tag is required)');
     }

@@ -77,7 +77,7 @@ describe('CLI Module', () => {
             expect(cliContent).toContain('Restart the agent instances');
             expect(cliContent).toContain('Deploy the agent component');
             expect(cliContent).toContain('Update the agent configuration');
-            expect(cliContent).toContain('list available resources');
+            expect(cliContent).toContain('List available resources');
         });
 
         it('should configure yargs with proper settings', async () => {

@@ -1,31 +1,10 @@
-import { createAxiosInstance, handleAxiosError } from '../utils';
-import { validateServerAddress } from '../validators';
+import { createAxiosInstance, handleAxiosError, resolveConnection } from '../utils';
 import logger from '../logger';
 
 export async function handleList(argv: any) {
-    const server = argv.server ?? process.env.INSTANA_SERVER;
-    if (!server) {
-        throw new Error('Missing server. Specify --server or set INSTANA_SERVER');
-    }
+    const { server, token, type } = resolveConnection(argv);
 
-    const token = argv.token ?? process.env.INSTANA_API_TOKEN;
-    if (!token) {
-        throw new Error('Missing API token. Specify --token or set INSTANA_API_TOKEN');
-    }
-
-    if (argv.debug) {
-        logger.level = 'debug';
-    }
-
-    validateServerAddress(server);
-
-    const { type, resource } = argv;
-
-    if (!type) {
-        throw new Error('Missing required parameter: --type');
-    }
-
-    if (resource === 'configuration') {
+    if (argv.resource === 'configuration') {
         const axiosInstance = createAxiosInstance();
         const url = `http://${server}/api/fleet/configurations`;
 
@@ -35,6 +14,7 @@ export async function handleList(argv: any) {
             const response = await axiosInstance.get(url, {
                 params: { type },
                 headers: {
+                    // Content-Type is intentionally omitted: GET requests have no body
                     'Authorization': `apiToken ${token}`
                 }
             });
@@ -43,9 +23,9 @@ export async function handleList(argv: any) {
 
             if (logger.isDebugEnabled()) {
                 logger.debug(JSON.stringify(data, null, 2));
+            } else {
+                logger.info(JSON.stringify(data, null, 2));
             }
-
-            logger.info(JSON.stringify(data, null, 2));
 
             return data;
 

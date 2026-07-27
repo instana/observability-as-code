@@ -92,7 +92,7 @@ export function configureCLI(handlers: {
             }, handlers.handleRestart)
         .command(
             'list',
-            'list available resources',
+            'List available resources',
             (yargs) => {
                 return yargs
                     .option('server', {

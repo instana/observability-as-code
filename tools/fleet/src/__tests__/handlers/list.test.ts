@@ -106,6 +106,23 @@ describe('handleList', () => {
         expect(logger.debug).toHaveBeenCalledWith(
             JSON.stringify([{ id: 'cfg-1' }], null, 2)
         );
+        expect(logger.info).not.toHaveBeenCalledWith(
+            JSON.stringify([{ id: 'cfg-1' }], null, 2)
+        );
+    });
+
+    test('logs info response when isDebugEnabled returns false', async () => {
+        const getMock = jest.fn().mockResolvedValue({ data: [{ id: 'cfg-1' }] });
+        mockedAxios.create.mockReturnValue({ get: getMock } as any);
+        const logger = require('../../logger');
+        logger.isDebugEnabled.mockReturnValue(false);
+
+        await handleList(baseArgv);
+
+        expect(logger.info).toHaveBeenCalledWith(
+            JSON.stringify([{ id: 'cfg-1' }], null, 2)
+        );
+        expect(logger.debug).not.toHaveBeenCalled();
     });
 
     test('logs error and rethrows on HTTP error response', async () => {
