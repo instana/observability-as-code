@@ -81,7 +81,7 @@ export function resolveConnection(argv: any): { server: string; token: string; t
 }
 
 /**
- * Shared handler logic for all agent control actions (restart, deploy, config-update).
+ * Shared handler logic for all agent control actions (restart, deploy, update-config).
  * Resolves server/token, validates inputs, builds and sends the POST request.
  */
 export async function sendAgentRequest(

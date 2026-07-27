@@ -31,9 +31,9 @@ const examplesForUpdate = `
 Examples:
 
 Update the agent configuration:
-  ${execName} config-update --server example.com --token validToken --type agentType --tag key1=value1 --tag key2=value2 --configuration-id=configID
-  ${execName} config-update --type agentType --tag key1=value1 --configuration-id=configID (specify the server and token as environment variables using INSTANA_SERVER and INSTANA_API_TOKEN)
-  ${execName} config-update --type agentType --tag key1=value1 --configuration-id=configID --debug
+  ${execName} update-config --server example.com --token validToken --type agentType --tag key1=value1 --tag key2=value2 --configuration-id=configID
+  ${execName} update-config --type agentType --tag key1=value1 --configuration-id=configID (specify the server and token as environment variables using INSTANA_SERVER and INSTANA_API_TOKEN)
+  ${execName} update-config --type agentType --tag key1=value1 --configuration-id=configID --debug
 `;
 
 const examplesForList = `
@@ -172,7 +172,7 @@ export function configureCLI(handlers: {
                     .epilog(examplesForDeploy);
             }, handlers.handleDeploy)
         .command(
-            'config-update',
+            'update-config',
             'Update the agent configuration',
             (yargs) => {
                 return yargs

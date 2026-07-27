@@ -65,7 +65,7 @@ describe('CLI Module', () => {
 
             expect(cliContent).toContain("'restart'");
             expect(cliContent).toContain("'deploy'");
-            expect(cliContent).toContain("'config-update'");
+            expect(cliContent).toContain("'update-config'");
             expect(cliContent).toContain("'list'");
         });
 
