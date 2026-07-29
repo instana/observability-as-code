@@ -14,7 +14,7 @@ The Instana CLI provides fleet management for agent instances including Instana 
 
 ### Download the CLI
 
-You can find the available binaries for the CLI on different platforms on the [release page of this project](https://github.com/instana/observability-as-code/releases). Select the binary from the latest release that matches your platform to download, then rename it to `stanctl-integration`. You should now be able to run it on your local machine.
+You can find the available binaries for the CLI on different platforms on the [release page of this project](https://github.com/instana/observability-as-code/releases). Select the binary from the latest release that matches your platform to download, then rename it to `stanctl-fleet`. You should now be able to run it on your local machine.
 
 ### Run the CLI
 

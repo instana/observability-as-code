@@ -23,6 +23,29 @@ export function parseTags(tagsInput: string[]): Record<string, string> {
 }
 
 /**
+ * Parse an array of key=value tag strings into a Record, allowing empty values.
+ * An empty value (key=) signals tag deletion for the tag-set command.
+ */
+export function parseTagsAllowEmpty(tagsInput: string[]): Record<string, string> {
+    const tags: Record<string, string> = {};
+
+    for (const tag of tagsInput) {
+        const eqIndex = String(tag).indexOf('=');
+        if (eqIndex === -1) {
+            throw new Error(`Invalid tag format: ${tag}. Expected key=value or key= (to delete)`);
+        }
+        const key = tag.slice(0, eqIndex).trim();
+        const value = tag.slice(eqIndex + 1).trim();
+        if (!key) {
+            throw new Error(`Invalid tag format: ${tag}. Expected key=value or key= (to delete)`);
+        }
+        tags[key] = value;
+    }
+
+    return tags;
+}
+
+/**
  * Create an axios instance that skips TLS certificate verification.
  * TLS certificate verification is disabled intentionally to support environments
  * where the Instana server uses self-signed certificates (e.g. on-prem deployments).
@@ -87,7 +110,8 @@ export function resolveConnection(argv: any): { server: string; token: string; t
 export async function sendAgentRequest(
     action: string,
     argv: any,
-    configurationId?: string
+    configurationId?: string,
+    tagsToApply?: Record<string, string>
 ): Promise<any> {
     const { server, token, type } = resolveConnection(argv);
 
@@ -97,11 +121,16 @@ export async function sendAgentRequest(
     }
     const tags = parseTags(tagsInput);
 
+    const args: Record<string, any> = {
+        ...(configurationId && { configurationId }),
+        ...(tagsToApply && { tags: tagsToApply })
+    };
+
     const request: Record<string, any> = {
         action,
         type,
         tags,
-        ...(configurationId && { args: { configurationId } })
+        ...(Object.keys(args).length > 0 && { args })
     };
 
     const axiosInstance = createAxiosInstance();

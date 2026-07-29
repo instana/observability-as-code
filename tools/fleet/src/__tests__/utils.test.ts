@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { parseTags, handleAxiosError, resolveConnection, sendAgentRequest } from '../utils';
+import { parseTags, parseTagsAllowEmpty, handleAxiosError, resolveConnection, sendAgentRequest } from '../utils';
 
 jest.mock('axios');
 jest.mock('../logger', () => ({
@@ -51,6 +51,55 @@ describe('parseTags', () => {
         expect(() => parseTags(['=value'])).toThrow(
             'Invalid tag format: =value. Expected key=value'
         );
+    });
+});
+
+describe('parseTagsAllowEmpty', () => {
+    it('parses a single key=value tag', () => {
+        expect(parseTagsAllowEmpty(['team=sre'])).toEqual({ team: 'sre' });
+    });
+
+    it('parses multiple key=value tags', () => {
+        expect(parseTagsAllowEmpty(['team=sre', 'region=us-east'])).toEqual({
+            team: 'sre',
+            region: 'us-east'
+        });
+    });
+
+    it('allows empty value (key=) for tag deletion', () => {
+        expect(parseTagsAllowEmpty(['team='])).toEqual({ team: '' });
+    });
+
+    it('allows = in the value', () => {
+        expect(parseTagsAllowEmpty(['key=val=ue'])).toEqual({ key: 'val=ue' });
+    });
+
+    it('trims whitespace from keys', () => {
+        expect(parseTagsAllowEmpty([' env = prod '])).toEqual({ env: 'prod' });
+    });
+
+    it('returns empty object for empty array input', () => {
+        expect(parseTagsAllowEmpty([])).toEqual({});
+    });
+
+    it('throws when = separator is missing', () => {
+        expect(() => parseTagsAllowEmpty(['invalidtag'])).toThrow(
+            'Invalid tag format: invalidtag. Expected key=value or key= (to delete)'
+        );
+    });
+
+    it('throws when key is empty', () => {
+        expect(() => parseTagsAllowEmpty(['=value'])).toThrow(
+            'Invalid tag format: =value. Expected key=value or key= (to delete)'
+        );
+    });
+
+    it('mixes add/update and delete in one call', () => {
+        expect(parseTagsAllowEmpty(['env=dev', 'abc=123', 'team='])).toEqual({
+            env: 'dev',
+            abc: '123',
+            team: ''
+        });
     });
 });
 
@@ -188,6 +237,44 @@ describe('sendAgentRequest', () => {
         const [, body] = postMock.mock.calls[0];
         expect(body.action).toBe('agent.component.deploy');
         expect(body.args).toEqual({ configurationId: 'cfg-123' });
+    });
+
+    it('sends tagsToApply in args.tags for tag-set', async () => {
+        const postMock = jest.fn().mockResolvedValue({
+            data: { requestId: '3', status: 'accepted' }
+        });
+        mockedAxios.create.mockReturnValue({ post: postMock } as any);
+
+        await sendAgentRequest('agent.tag.set', baseArgv, undefined, { team: 'sre', env: '' });
+
+        const [, body] = postMock.mock.calls[0];
+        expect(body.action).toBe('agent.tag.set');
+        expect(body.args).toEqual({ tags: { team: 'sre', env: '' } });
+        expect(body.args.configurationId).toBeUndefined();
+    });
+
+    it('sends both configurationId and tagsToApply in args when both provided', async () => {
+        const postMock = jest.fn().mockResolvedValue({
+            data: { requestId: '4', status: 'accepted' }
+        });
+        mockedAxios.create.mockReturnValue({ post: postMock } as any);
+
+        await sendAgentRequest('agent.test', baseArgv, 'cfg-abc', { team: 'sre' });
+
+        const [, body] = postMock.mock.calls[0];
+        expect(body.args).toEqual({ configurationId: 'cfg-abc', tags: { team: 'sre' } });
+    });
+
+    it('omits args entirely when neither configurationId nor tagsToApply are provided', async () => {
+        const postMock = jest.fn().mockResolvedValue({
+            data: { requestId: '5', status: 'accepted' }
+        });
+        mockedAxios.create.mockReturnValue({ post: postMock } as any);
+
+        await sendAgentRequest('agent.restart', baseArgv);
+
+        const [, body] = postMock.mock.calls[0];
+        expect(body.args).toBeUndefined();
     });
 
     it('sets Authorization header correctly', async () => {

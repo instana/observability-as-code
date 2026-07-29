@@ -55,6 +55,7 @@ describe('CLI Module', () => {
             expect(cliContent).toContain('examplesForDeploy');
             expect(cliContent).toContain('examplesForUpdate');
             expect(cliContent).toContain('examplesForList');
+            expect(cliContent).toContain('examplesForTagSet');
             expect(cliContent).toContain('Examples:');
         });
 
@@ -67,6 +68,7 @@ describe('CLI Module', () => {
             expect(cliContent).toContain("'deploy'");
             expect(cliContent).toContain("'update-config'");
             expect(cliContent).toContain("'list-configs'");
+            expect(cliContent).toContain("'tag-set <tags..>'");
         });
 
         it('should define command descriptions', async () => {
@@ -78,6 +80,7 @@ describe('CLI Module', () => {
             expect(cliContent).toContain('Deploy the agent component');
             expect(cliContent).toContain('Update the agent configuration');
             expect(cliContent).toContain('List configurations');
+            expect(cliContent).toContain('Add, update, or delete tags on agent instances selected by --tag');
         });
 
         it('should configure yargs with proper settings', async () => {
@@ -136,6 +139,7 @@ describe('CLI Module', () => {
             expect(cliContent).toContain('handlers.handleDeploy');
             expect(cliContent).toContain('handlers.handleUpdate');
             expect(cliContent).toContain('handlers.handleList');
+            expect(cliContent).toContain('handlers.handleTag');
         });
 
         it('should define all handler parameter types', async () => {
@@ -147,6 +151,7 @@ describe('CLI Module', () => {
             expect(cliContent).toContain('handleDeploy: (argv: any) => Promise<void>');
             expect(cliContent).toContain('handleUpdate: (argv: any) => Promise<void>');
             expect(cliContent).toContain('handleList: (argv: any) => Promise<any>');
+            expect(cliContent).toContain('handleTag:');
         });
     });
 
@@ -181,6 +186,7 @@ describe('CLI Module', () => {
             expect(cliContent).toContain('.epilog(examplesForDeploy)');
             expect(cliContent).toContain('.epilog(examplesForUpdate)');
             expect(cliContent).toContain('.epilog(examplesForList)');
+            expect(cliContent).toContain('.epilog(examplesForTagSet)');
         });
 
         it('should set help and version aliases', async () => {
@@ -209,7 +215,8 @@ describe('CLI Module', () => {
             const cliContent = fs.readFileSync(path.join(__dirname, '../cli.ts'), 'utf-8');
 
             expect(cliContent).toContain("import path from 'path'");
-            expect(cliContent).toContain("import yargs from 'yargs'");
+            expect(cliContent).toContain("import yargs");
+            expect(cliContent).toContain("from 'yargs'");
         });
     });
 });
