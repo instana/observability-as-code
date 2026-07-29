@@ -190,6 +190,34 @@ describe('CLI Module', () => {
             expect(cliContent).toContain("alias: 'd'");
         });
 
+        it('should define import collector options', async () => {
+            const fs = require('fs');
+            const path = require('path');
+            const cliPath = path.join(__dirname, '../cli.ts');
+            const cliContent = fs.readFileSync(cliPath, 'utf-8');
+
+            // Verify collector-specific options exist
+            expect(cliContent).toContain("'name'");
+            expect(cliContent).toContain("'config-version'");
+            expect(cliContent).toContain("'type'");
+            expect(cliContent).toContain("'config-input'");
+            expect(cliContent).toContain("alias: 'n'");
+            expect(cliContent).toContain("alias: 'r'");
+            expect(cliContent).toContain("alias: 'y'");
+            expect(cliContent).toContain("alias: 'c'");
+        });
+
+        it('should define import collector conditional validation', async () => {
+            const fs = require('fs');
+            const path = require('path');
+            const cliPath = path.join(__dirname, '../cli.ts');
+            const cliContent = fs.readFileSync(cliPath, 'utf-8');
+
+            // Verify .check() enforces --include collector conditional required options
+            expect(cliContent).toContain("argv['include'] === 'collector'");
+            expect(cliContent).toContain("--include collector requires:");
+        });
+
         it('should define export command options', async () => {
             const fs = require('fs');
             const path = require('path');

@@ -13,6 +13,15 @@ Handlebars.registerHelper('default', function (value: string, defaultValue: stri
     return typeof value !== 'undefined' ? value : defaultValue;
 });
 
+// TODO: remove getCollectorBaseUrl once collector API is available on production HTTPS,
+// then uncomment the line below and delete the getCollectorBaseUrl call
+function getCollectorBaseUrl(server: string): string {
+    const portMatch = server.match(/:(\d+)$/);
+    const port = portMatch ? parseInt(portMatch[1], 10) : 443;
+    const protocol = port === 443 ? 'https' : 'http';
+    return `${protocol}://${server}`;
+}
+
 interface AccessRule {
     accessType: string;
     relationType: string;
@@ -22,7 +31,8 @@ interface AccessRule {
  * Handle import command - imports dashboards, events, and entities to Instana
  */
 export async function handleImport(argv: any) {
-    const { package: packageNameOrPath, server, token, location, include: includePattern, set: parameters, debug } = argv;
+    const { package: packageNameOrPath, server, token, location, include: includePattern, set: parameters, debug,
+            name, 'config-version': version, type: agentType, 'config-input': configInput } = argv;
 
     // Set log level to debug if the debug flag is set
     if (debug) {
@@ -37,6 +47,23 @@ export async function handleImport(argv: any) {
         process.exit(1);
     }
 
+    // Create an axios instance with a custom httpsAgent to ignore self-signed certificate errors
+    const axiosInstance = axios.create({
+        httpsAgent: new https.Agent({
+            rejectUnauthorized: false
+        })
+    });
+
+    // Collector mode — package provides config.json, config-input provides the files to upload
+    if (includePattern === 'collector') {
+        let resolvedPackagePath = packageNameOrPath;
+        if (!fs.existsSync(packageNameOrPath)) {
+            resolvedPackagePath = path.join(location, 'node_modules', packageNameOrPath);
+        }
+        await importCollectorConfiguration(server, token, name, version, agentType, configInput, resolvedPackagePath, axiosInstance);
+        return;
+    }
+
     let packagePath = packageNameOrPath;
     if (!fs.existsSync(packageNameOrPath)) {
         packagePath = path.join(location, 'node_modules', packageNameOrPath);
@@ -46,13 +73,6 @@ export async function handleImport(argv: any) {
     const defaultEventsFolders = ['events'];
     const defaultEntitiesFolders = ['entities'];
     const defaultSmartAlertsFolders = ['smart-alerts'];
-
-    // Create an axios instance with a custom httpsAgent to ignore self-signed certificate errors
-    const axiosInstance = axios.create({
-        httpsAgent: new https.Agent({
-            rejectUnauthorized: false
-        })
-    });
 
     async function importIntegration(searchPattern: string, apiPath: string, typeLabel: string, skipFiles: Set<string> = new Set()) {
         const files = globSync(searchPattern);
@@ -306,6 +326,81 @@ export async function handleImport(argv: any) {
             const searchPattern = path.join(packagePath, defaultFolder, '**/*.json');
             await importIntegration(searchPattern, "smart-alert", "smart alert");
         }
+    }
+}
+
+/**
+ * Import a collector configuration to Instana
+ */
+async function importCollectorConfiguration(server: string, token: string, name: string, version: string, agentType: string, configInput: string, packagePath: string, axiosInstance: any): Promise<void> {
+    logger.info(`Importing collector configuration "${name}" (type=${agentType}, version=${version}) from ${configInput} ...`);
+
+    if (!fs.existsSync(configInput)) {
+        logger.error(`Config input path does not exist: ${configInput}`);
+        process.exit(1);
+    }
+
+    const stat = fs.statSync(configInput);
+    if (!stat.isDirectory()) {
+        logger.error(`Config input path is not a directory: ${configInput}`);
+        process.exit(1);
+    }
+
+    const allFiles = fs.readdirSync(configInput).filter(f => fs.statSync(path.join(configInput, f)).isFile());
+    if (allFiles.length === 0) {
+        logger.error(`No files found in config input directory: ${configInput}`);
+        process.exit(1);
+    }
+
+    // All files from config-input are uploaded
+    const files = allFiles.map(f => ({
+        name: f,
+        data: fs.readFileSync(path.join(configInput, f)).toString('base64')
+    }));
+
+    logger.info(`Found ${files.length} config file(s): ${allFiles.join(', ')}`);
+
+    // Build configuration object - image block only for customcollector, read from package/collector/config.json
+    const configuration: any = { files };
+    if (agentType === 'com.ibm.instana.customcollector') {
+        const configJsonPath = path.join(packagePath, 'collector', 'config.json');
+        if (!fs.existsSync(configJsonPath)) {
+            logger.error(`config.json not found in ${configJsonPath} - required for type com.ibm.instana.customcollector`);
+            process.exit(1);
+        }
+        const configJson = JSON.parse(fs.readFileSync(configJsonPath, 'utf8'));
+        const { registry, repository, tag } = configJson.image ?? {};
+        if (!registry || !repository || !tag) {
+            logger.error(`config.json is missing required image fields: registry, repository, tag`);
+            process.exit(1);
+        }
+        configuration.image = { repo: `${registry}/${repository}:${tag}` };
+        logger.info(`Using image: ${configuration.image.repo}`);
+    }
+
+    const url = `${getCollectorBaseUrl(server)}/api/fleet/configurations?type=${agentType}`;
+    // const url = `${server}/api/fleet/configurations?type=${agentType}`;
+    logger.info(`Applying collector configuration to ${url} ...`);
+
+    try {
+        const response = await axiosInstance.post(url, { name, version, type: agentType, configuration }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `apiToken ${token}`
+            }
+        });
+        logger.info(`Successfully imported collector configuration "${name}": ${response.status}`);
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            logger.error(`Failed to import collector configuration: ${error.message}`);
+            if (error.response) {
+                logger.error(`Response data: ${JSON.stringify(error.response.data)}`);
+                logger.error(`Response status: ${error.response.status}`);
+            }
+        } else {
+            logger.error(`Failed to import collector configuration: ${String(error)}`);
+        }
+        process.exit(1);
     }
 }
 
