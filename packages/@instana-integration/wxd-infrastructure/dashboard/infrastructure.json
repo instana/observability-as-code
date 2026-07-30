@@ -3,7 +3,7 @@
   "accessRules": [
     {
       "accessType": "READ_WRITE",
-      "relationType": "USER",
+      "relationType": "GLOBAL",
       "relatedId": "688744cde129430001af50ed"
     }
   ],
