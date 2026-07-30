@@ -1,4 +1,4 @@
-# @instana-integration/wxd-infra-metrics
+# @instana-integration/wxd-infrastructure
 
 The Instana integration package is designed to showcase infrastructure observability capabilities within Instana by monitoring Kubernetes container resource metrics collected through the OpenTelemetry Prometheus Receiver. These metrics provide real-time visibility into CPU, memory, filesystem, and network utilization for Watsonx.data components running in Kubernetes/OpenShift clusters.
 
@@ -61,13 +61,13 @@ With the **Instana CLI for integration package management**, you can download an
 ### Download the package
 
 ```shell
-stanctl-integration download --package @instana-integration/wxd-infra-metrics
+stanctl-integration download --package @instana-integration/wxd-infrastructure
 ```
 
 ### Import the package
 
 ```shell
-stanctl-integration import --package @instana-integration/wxd-infra-metrics \
+stanctl-integration import --package @instana-integration/wxd-infrastructure \
   --server $INSTANA_SERVER \
   --token $API_TOKEN \
   --set serviceinstanceid=$SERVICE_INSTANCE_ID
