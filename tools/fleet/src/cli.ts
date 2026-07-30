@@ -39,9 +39,9 @@ Update the agent configuration:
 const examplesForList = `
 Examples:
 
-List available resources:
-  ${execName} list --server example.com --token validToken --type agentType --resource configuration
-  ${execName} list --type agentType --resource configuration (specify the server and token as environment variables using INSTANA_SERVER and INSTANA_API_TOKEN)
+List configurations:
+  ${execName} list-configs --server example.com --token validToken --type agentType
+  ${execName} list-configs --type agentType (specify the server and token as environment variables using INSTANA_SERVER and INSTANA_API_TOKEN)
 `;
 
 export function configureCLI(handlers: {
@@ -91,8 +91,8 @@ export function configureCLI(handlers: {
                     .epilog(examplesForRestart);
             }, handlers.handleRestart)
         .command(
-            'list',
-            'List available resources',
+            'list-configs',
+            'List configurations',
             (yargs) => {
                 return yargs
                     .option('server', {
@@ -111,13 +111,6 @@ export function configureCLI(handlers: {
                         alias: 'y',
                         describe: 'Agent type, allowed values (com.ibm.opentelemetrycollector, com.ibm.instana.agent, com.ibm.instana.customcollector)',
                         type: 'string',
-                        demandOption: true
-                    })
-                    .option('resource', {
-                        alias: 'r',
-                        describe: 'Resource to list, allowed values (configuration)',
-                        type: 'string',
-                        choices: ['configuration'],
                         demandOption: true
                     })
                     .option('debug', {

@@ -17,7 +17,6 @@ describe('handleList', () => {
         server: 'localhost:8080',
         token: 'test-token',
         type: 'com.ibm.instana.customcollector',
-        resource: 'configuration',
         debug: false
     };
 
@@ -53,7 +52,7 @@ describe('handleList', () => {
         });
         mockedAxios.create.mockReturnValue({ get: getMock } as any);
 
-        const argv = { type: baseArgv.type, resource: 'configuration', debug: false };
+        const argv = { type: baseArgv.type, debug: false };
         const result = await handleList(argv);
 
         expect(result).toEqual([{ id: 'cfg-2' }]);
@@ -63,7 +62,7 @@ describe('handleList', () => {
     test('throws when server is missing from argv and env', async () => {
         delete process.env.INSTANA_SERVER;
 
-        const argv = { token: 'test-token', type: baseArgv.type, resource: 'configuration' };
+        const argv = { token: 'test-token', type: baseArgv.type };
         await expect(handleList(argv)).rejects.toThrow(
             'Missing server. Specify --server or set INSTANA_SERVER'
         );
@@ -72,7 +71,7 @@ describe('handleList', () => {
     test('throws when token is missing from argv and env', async () => {
         delete process.env.INSTANA_API_TOKEN;
 
-        const argv = { server: 'localhost:8080', type: baseArgv.type, resource: 'configuration' };
+        const argv = { server: 'localhost:8080', type: baseArgv.type };
         await expect(handleList(argv)).rejects.toThrow(
             'Missing API token. Specify --token or set INSTANA_API_TOKEN'
         );

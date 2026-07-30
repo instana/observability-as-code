@@ -66,7 +66,7 @@ describe('CLI Module', () => {
             expect(cliContent).toContain("'restart'");
             expect(cliContent).toContain("'deploy'");
             expect(cliContent).toContain("'update-config'");
-            expect(cliContent).toContain("'list'");
+            expect(cliContent).toContain("'list-configs'");
         });
 
         it('should define command descriptions', async () => {
@@ -77,7 +77,7 @@ describe('CLI Module', () => {
             expect(cliContent).toContain('Restart the agent instances');
             expect(cliContent).toContain('Deploy the agent component');
             expect(cliContent).toContain('Update the agent configuration');
-            expect(cliContent).toContain('List available resources');
+            expect(cliContent).toContain('List configurations');
         });
 
         it('should configure yargs with proper settings', async () => {
@@ -115,15 +115,6 @@ describe('CLI Module', () => {
             const cliContent = fs.readFileSync(path.join(__dirname, '../cli.ts'), 'utf-8');
 
             expect(cliContent).toContain("'configuration-id'");
-        });
-
-        it('should define resource option for list command', async () => {
-            const fs = require('fs');
-            const path = require('path');
-            const cliContent = fs.readFileSync(path.join(__dirname, '../cli.ts'), 'utf-8');
-
-            expect(cliContent).toContain("'resource'");
-            expect(cliContent).toContain("choices: ['configuration']");
         });
 
         it('should mark --tag as required for restart', async () => {
