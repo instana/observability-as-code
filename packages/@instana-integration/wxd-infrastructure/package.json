@@ -1,0 +1,26 @@
+{
+  "name": "@instana-integration/wxd-infrastructure",
+  "version": "1.0.0",
+  "description": "The Instana integration package is designed to showcase infrastructure observability features in Instana by monitoring Kubernetes container resource metrics collected through the OpenTelemetry Prometheus Receiver.",
+  "author": "IBM",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {},
+  "keywords": [
+    "ibm",
+    "instana",
+    "opentelemetry",
+    "custom dashboard",
+    "watsonx.data",
+    "infrastructure",
+    "kubernetes",
+    "container metrics",
+    "prometheus",
+    "cpu",
+    "memory",
+    "filesystem",
+    "network"
+  ]
+}
