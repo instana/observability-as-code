@@ -1,7 +1,7 @@
 import { createAxiosInstance, handleAxiosError, resolveConnection } from '../utils';
 import logger from '../logger';
 
-export async function handleList(argv: any) {
+export async function handleList(argv: any): Promise<any> {
     const { server, token, type } = resolveConnection(argv);
 
     const axiosInstance = createAxiosInstance();

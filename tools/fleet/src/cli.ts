@@ -42,13 +42,14 @@ Examples:
 List configurations:
   ${execName} list-configs --server example.com --token validToken --type agentType
   ${execName} list-configs --type agentType (specify the server and token as environment variables using INSTANA_SERVER and INSTANA_API_TOKEN)
+  ${execName} list-configs --server example.com --token validToken --type agentType --debug
 `;
 
 export function configureCLI(handlers: {
     handleRestart: (argv: any) => Promise<void>;
     handleDeploy: (argv: any) => Promise<void>;
     handleUpdate: (argv: any) => Promise<void>;
-    handleList: (argv: any) => Promise<void>;
+    handleList: (argv: any) => Promise<any>;
 }) {
     return yargs
         .wrap(160)

@@ -146,7 +146,7 @@ describe('CLI Module', () => {
             expect(cliContent).toContain('handleRestart: (argv: any) => Promise<void>');
             expect(cliContent).toContain('handleDeploy: (argv: any) => Promise<void>');
             expect(cliContent).toContain('handleUpdate: (argv: any) => Promise<void>');
-            expect(cliContent).toContain('handleList: (argv: any) => Promise<void>');
+            expect(cliContent).toContain('handleList: (argv: any) => Promise<any>');
         });
     });
 
