@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { parseTags, handleAxiosError, sendAgentRequest } from '../utils';
+import { parseTags, handleAxiosError, resolveConnection, sendAgentRequest } from '../utils';
 
 jest.mock('axios');
 jest.mock('../logger', () => ({
@@ -93,6 +93,53 @@ describe('handleAxiosError', () => {
         expect(logger.error).toHaveBeenCalledWith(
             expect.stringContaining('Something unexpected')
         );
+    });
+});
+
+describe('resolveConnection', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+        process.env.INSTANA_SERVER = 'localhost:8080';
+        process.env.INSTANA_API_TOKEN = 'test-token';
+    });
+
+    it('returns server, token and type from argv', () => {
+        const result = resolveConnection({
+            server: 'myserver.com',
+            token: 'mytoken',
+            type: 'com.ibm.instana.agent',
+            debug: false
+        });
+        expect(result).toEqual({ server: 'myserver.com', token: 'mytoken', type: 'com.ibm.instana.agent' });
+    });
+
+    it('falls back to env vars for server and token', () => {
+        const result = resolveConnection({ type: 'com.ibm.instana.agent' });
+        expect(result.server).toBe('localhost:8080');
+        expect(result.token).toBe('test-token');
+    });
+
+    it('throws when server is missing from argv and env', () => {
+        delete process.env.INSTANA_SERVER;
+        expect(() => resolveConnection({ token: 'x', type: 'y' }))
+            .toThrow('Missing server. Specify --server or set INSTANA_SERVER');
+    });
+
+    it('throws when token is missing from argv and env', () => {
+        delete process.env.INSTANA_API_TOKEN;
+        expect(() => resolveConnection({ server: 'localhost', type: 'y' }))
+            .toThrow('Missing API token. Specify --token or set INSTANA_API_TOKEN');
+    });
+
+    it('throws when type is missing', () => {
+        expect(() => resolveConnection({ server: 'localhost', token: 'x' }))
+            .toThrow('Missing required parameter: --type');
+    });
+
+    it('sets debug log level when debug flag is true', () => {
+        const logger = require('../logger');
+        resolveConnection({ server: 'localhost', token: 'x', type: 'y', debug: true });
+        expect(logger.level).toBe('debug');
     });
 });
 

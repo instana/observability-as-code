@@ -54,6 +54,7 @@ describe('CLI Module', () => {
             expect(cliContent).toContain('examplesForRestart');
             expect(cliContent).toContain('examplesForDeploy');
             expect(cliContent).toContain('examplesForUpdate');
+            expect(cliContent).toContain('examplesForList');
             expect(cliContent).toContain('Examples:');
         });
 
@@ -64,7 +65,8 @@ describe('CLI Module', () => {
 
             expect(cliContent).toContain("'restart'");
             expect(cliContent).toContain("'deploy'");
-            expect(cliContent).toContain("'config-update'");
+            expect(cliContent).toContain("'update-config'");
+            expect(cliContent).toContain("'list-configs'");
         });
 
         it('should define command descriptions', async () => {
@@ -75,6 +77,7 @@ describe('CLI Module', () => {
             expect(cliContent).toContain('Restart the agent instances');
             expect(cliContent).toContain('Deploy the agent component');
             expect(cliContent).toContain('Update the agent configuration');
+            expect(cliContent).toContain('List configurations');
         });
 
         it('should configure yargs with proper settings', async () => {
@@ -132,6 +135,7 @@ describe('CLI Module', () => {
             expect(cliContent).toContain('handlers.handleRestart');
             expect(cliContent).toContain('handlers.handleDeploy');
             expect(cliContent).toContain('handlers.handleUpdate');
+            expect(cliContent).toContain('handlers.handleList');
         });
 
         it('should define all handler parameter types', async () => {
@@ -142,6 +146,7 @@ describe('CLI Module', () => {
             expect(cliContent).toContain('handleRestart: (argv: any) => Promise<void>');
             expect(cliContent).toContain('handleDeploy: (argv: any) => Promise<void>');
             expect(cliContent).toContain('handleUpdate: (argv: any) => Promise<void>');
+            expect(cliContent).toContain('handleList: (argv: any) => Promise<any>');
         });
     });
 
@@ -175,6 +180,7 @@ describe('CLI Module', () => {
             expect(cliContent).toContain('.epilog(examplesForRestart)');
             expect(cliContent).toContain('.epilog(examplesForDeploy)');
             expect(cliContent).toContain('.epilog(examplesForUpdate)');
+            expect(cliContent).toContain('.epilog(examplesForList)');
         });
 
         it('should set help and version aliases', async () => {

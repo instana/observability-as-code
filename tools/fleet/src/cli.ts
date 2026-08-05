@@ -31,15 +31,25 @@ const examplesForUpdate = `
 Examples:
 
 Update the agent configuration:
-  ${execName} config-update --server example.com --token validToken --type agentType --tag key1=value1 --tag key2=value2 --configuration-id=configID
-  ${execName} config-update --type agentType --tag key1=value1 --configuration-id=configID (specify the server and token as environment variables using INSTANA_SERVER and INSTANA_API_TOKEN)
-  ${execName} config-update --type agentType --tag key1=value1 --configuration-id=configID --debug
+  ${execName} update-config --server example.com --token validToken --type agentType --tag key1=value1 --tag key2=value2 --configuration-id=configID
+  ${execName} update-config --type agentType --tag key1=value1 --configuration-id=configID (specify the server and token as environment variables using INSTANA_SERVER and INSTANA_API_TOKEN)
+  ${execName} update-config --type agentType --tag key1=value1 --configuration-id=configID --debug
+`;
+
+const examplesForList = `
+Examples:
+
+List configurations:
+  ${execName} list-configs --server example.com --token validToken --type agentType
+  ${execName} list-configs --type agentType (specify the server and token as environment variables using INSTANA_SERVER and INSTANA_API_TOKEN)
+  ${execName} list-configs --server example.com --token validToken --type agentType --debug
 `;
 
 export function configureCLI(handlers: {
     handleRestart: (argv: any) => Promise<void>;
     handleDeploy: (argv: any) => Promise<void>;
     handleUpdate: (argv: any) => Promise<void>;
+    handleList: (argv: any) => Promise<any>;
 }) {
     return yargs
         .wrap(160)
@@ -81,6 +91,37 @@ export function configureCLI(handlers: {
                     })
                     .epilog(examplesForRestart);
             }, handlers.handleRestart)
+        .command(
+            'list-configs',
+            'List configurations',
+            (yargs) => {
+                return yargs
+                    .option('server', {
+                        alias: 'S',
+                        describe: 'Address of an environment',
+                        type: 'string',
+                        demandOption: false
+                    })
+                    .option('token', {
+                        alias: 't',
+                        describe: 'API token for authenticating agent requests',
+                        type: 'string',
+                        demandOption: false
+                    })
+                    .option('type', {
+                        alias: 'y',
+                        describe: 'Agent type, allowed values (com.ibm.opentelemetrycollector, com.ibm.instana.agent, com.ibm.instana.customcollector)',
+                        type: 'string',
+                        demandOption: true
+                    })
+                    .option('debug', {
+                        alias: 'd',
+                        describe: 'Enable debug mode',
+                        type: 'boolean',
+                        default: false
+                    })
+                    .epilog(examplesForList);
+            }, handlers.handleList)
         .command(
             'deploy',
             'Deploy the agent component',
@@ -125,7 +166,7 @@ export function configureCLI(handlers: {
                     .epilog(examplesForDeploy);
             }, handlers.handleDeploy)
         .command(
-            'config-update',
+            'update-config',
             'Update the agent configuration',
             (yargs) => {
                 return yargs
