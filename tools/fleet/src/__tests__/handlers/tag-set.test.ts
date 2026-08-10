@@ -67,6 +67,19 @@ describe('handleTag', () => {
         expect(body.args.tags).toEqual({ team: 'sre', region: 'us-east', abc: '123' });
     });
 
+    test('tag value can contain = character', async () => {
+        const postMock = jest.fn().mockResolvedValue({
+            data: { requestId: '456', status: 'accepted' }
+        });
+        mockedAxios.create.mockReturnValue({ post: postMock } as any);
+
+        const argv = { ...baseArgv, tags: ['key=a=b'] };
+        await handleTag(argv);
+
+        const [, body] = postMock.mock.calls[0];
+        expect(body.args.tags).toEqual({ key: 'a=b' });
+    });
+
     test('sends empty value for tag deletion (team=)', async () => {
         const postMock = jest.fn().mockResolvedValue({
             data: { requestId: '789', status: 'accepted' }

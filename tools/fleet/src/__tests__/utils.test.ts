@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { parseTags, parseTagsAllowEmpty, handleAxiosError, resolveConnection, sendAgentRequest } from '../utils';
+import { parseTags, handleAxiosError, resolveConnection, sendAgentRequest } from '../utils';
 
 jest.mock('axios');
 jest.mock('../logger', () => ({
@@ -41,7 +41,7 @@ describe('parseTags', () => {
         expect(parseTags([])).toEqual({});
     });
 
-    it('throws on missing value', () => {
+    it('throws on missing = separator', () => {
         expect(() => parseTags(['invalidTag'])).toThrow(
             'Invalid tag format: invalidTag. Expected key=value'
         );
@@ -52,50 +52,60 @@ describe('parseTags', () => {
             'Invalid tag format: =value. Expected key=value'
         );
     });
+
+    it('throws on empty value (allowEmpty defaults to false)', () => {
+        expect(() => parseTags(['key='])).toThrow(
+            'Invalid tag format: key=. Expected key=value'
+        );
+    });
 });
 
-describe('parseTagsAllowEmpty', () => {
+describe('parseTags (allowEmpty = true)', () => {
     it('parses a single key=value tag', () => {
-        expect(parseTagsAllowEmpty(['team=sre'])).toEqual({ team: 'sre' });
+        expect(parseTags(['team=sre'], true)).toEqual({ team: 'sre' });
     });
 
     it('parses multiple key=value tags', () => {
-        expect(parseTagsAllowEmpty(['team=sre', 'region=us-east'])).toEqual({
+        expect(parseTags(['team=sre', 'region=us-east'], true)).toEqual({
             team: 'sre',
             region: 'us-east'
         });
     });
 
     it('allows empty value (key=) for tag deletion', () => {
-        expect(parseTagsAllowEmpty(['team='])).toEqual({ team: '' });
+        expect(parseTags(['team='], true)).toEqual({ team: '' });
     });
 
     it('allows = in the value', () => {
-        expect(parseTagsAllowEmpty(['key=val=ue'])).toEqual({ key: 'val=ue' });
+        expect(parseTags(['key=val=ue'], true)).toEqual({ key: 'val=ue' });
     });
 
     it('trims whitespace from keys', () => {
-        expect(parseTagsAllowEmpty([' env = prod '])).toEqual({ env: 'prod' });
+        expect(parseTags([' env = prod '], true)).toEqual({ env: 'prod' });
     });
 
     it('returns empty object for empty array input', () => {
-        expect(parseTagsAllowEmpty([])).toEqual({});
+        expect(parseTags([], true)).toEqual({});
     });
 
     it('throws when = separator is missing', () => {
-        expect(() => parseTagsAllowEmpty(['invalidtag'])).toThrow(
+        expect(() => parseTags(['invalidtag'], true)).toThrow(
             'Invalid tag format: invalidtag. Expected key=value or key= (to delete)'
         );
     });
 
     it('throws when key is empty', () => {
-        expect(() => parseTagsAllowEmpty(['=value'])).toThrow(
+        expect(() => parseTags(['=value'], true)).toThrow(
             'Invalid tag format: =value. Expected key=value or key= (to delete)'
         );
     });
 
+    it('treats whitespace-only value as empty (deletion)', () => {
+        expect(parseTags(['team=   '], true)).toEqual({ team: '' });
+    });
+
     it('mixes add/update and delete in one call', () => {
-        expect(parseTagsAllowEmpty(['env=dev', 'abc=123', 'team='])).toEqual({
+        expect(parseTags(['env=dev', 'abc=123', 'team='], true)).toEqual({
             env: 'dev',
             abc: '123',
             team: ''

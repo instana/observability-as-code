@@ -68,7 +68,7 @@ describe('CLI Module', () => {
             expect(cliContent).toContain("'deploy'");
             expect(cliContent).toContain("'update-config'");
             expect(cliContent).toContain("'list-configs'");
-            expect(cliContent).toContain("'tag-set <tags..>'");
+            expect(cliContent).toContain("'set-tag <tags..>'");
         });
 
         it('should define command descriptions', async () => {
@@ -151,7 +151,7 @@ describe('CLI Module', () => {
             expect(cliContent).toContain('handleDeploy: (argv: any) => Promise<void>');
             expect(cliContent).toContain('handleUpdate: (argv: any) => Promise<void>');
             expect(cliContent).toContain('handleList: (argv: any) => Promise<any>');
-            expect(cliContent).toContain('handleTag:');
+            expect(cliContent).toContain('handleTag: (argv: any) => Promise<any>');
         });
     });
 
