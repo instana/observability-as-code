@@ -25,7 +25,7 @@ Import integration package with parameters replaced:
   ${execName} import --package my-package --server example.com --token mytoken --include "events/**/*.json"
   ${execName} import --package my-package --server example.com --token mytoken --include "entities/**/*.json"
   ${execName} import --package my-package --server example.com --token mytoken --include "smart-alerts/**/*.json"
-  ${execName} import --package my-package --server example.com --token mytoken --include collector
+  ${execName} import --package my-package --server example.com --token mytoken --include collector --type agentType
 `;
 
 const examplesForExport = `
@@ -135,11 +135,23 @@ export function configureCLI(handlers: {
                     type: 'array',
                     demandOption: false
                 })
+                .option('type', {
+                    alias: 'y',
+                    describe: 'Agent type for collector import, allowed values: com.ibm.opentelemetrycollector, com.ibm.instana.agent, com.ibm.instana.customcollector',
+                    type: 'string',
+                    demandOption: false
+                })
                 .option('debug', {
                     alias: 'd',
                     describe: 'Enable debug mode',
                     type: 'boolean',
                     default: false
+                })
+                .check((argv) => {
+                    if (argv['include'] === 'collector' && !argv['type']) {
+                        throw new Error('--type is required when --include collector is specified');
+                    }
+                    return true;
                 })
                 .epilog(examplesForImport);
         }, handlers.handleImport)

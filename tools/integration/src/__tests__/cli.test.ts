@@ -196,10 +196,20 @@ describe('CLI Module', () => {
             const cliPath = path.join(__dirname, '../cli.ts');
             const cliContent = fs.readFileSync(cliPath, 'utf-8');
 
-            // Collector import uses --include collector — no extra flags needed;
-            // name/version/type are derived from collector/config.json at runtime
             expect(cliContent).toContain("'include'");
-            expect(cliContent).toContain("collector");
+            expect(cliContent).toContain("'type'");
+            expect(cliContent).toContain("alias: 'y'");
+            expect(cliContent).toContain("com.ibm.instana.customcollector");
+        });
+
+        it('should define import collector conditional validation', async () => {
+            const fs = require('fs');
+            const path = require('path');
+            const cliPath = path.join(__dirname, '../cli.ts');
+            const cliContent = fs.readFileSync(cliPath, 'utf-8');
+
+            expect(cliContent).toContain("argv['include'] === 'collector'");
+            expect(cliContent).toContain('--type is required when --include collector is specified');
         });
 
         it('should define import collector example in epilog', async () => {

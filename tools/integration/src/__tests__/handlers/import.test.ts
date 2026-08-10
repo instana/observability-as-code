@@ -1134,6 +1134,7 @@ describe('handleImport', () => {
                 server: 'test-server.com',
                 token: 'test-token',
                 location: '/test/location',
+                type: 'com.ibm.instana.customcollector',
                 debug: false
             };
 
@@ -1147,14 +1148,15 @@ describe('handleImport', () => {
                 .mockReturnValueOnce(true)   // package exists
                 .mockReturnValueOnce(false)  // entities folder — not exists
                 .mockReturnValueOnce(true)   // collector/config.json — exists (auto-detect)
-                .mockReturnValueOnce(true);  // collector/config.json — exists again inside importCollectorConfiguration
+                .mockReturnValueOnce(true)   // collector/config.json — exists inside importCollectorConfiguration
+                .mockReturnValueOnce(true);  // collector/configurations/ — exists
             mockedGlobSync.mockReturnValue([]);
             mockedValidators.getEntityDashboardRefs = jest.fn().mockReturnValue(new Set());
             jest.spyOn(fs, 'statSync').mockReturnValue({ isFile: () => true } as any);
             mockedFs.readdirSync = jest.fn().mockReturnValue(['cassandra.yaml'] as any);
             mockedFs.readFileSync = jest.fn()
                 .mockReturnValueOnce(JSON.stringify(autoConfigJson))  // collector/config.json (metadata)
-                .mockReturnValueOnce(Buffer.from('content'));         // cassandra.yaml
+                .mockReturnValueOnce(Buffer.from('content'));         // collector/configurations/cassandra.yaml
             mockAxiosInstance.post.mockResolvedValue({ status: 201 });
 
             await handleImport(argv);
@@ -1165,6 +1167,29 @@ describe('handleImport', () => {
                 expect.objectContaining({ name: 'my-collector', version: '1.0' }),
                 expect.any(Object)
             );
+        });
+
+        it('should warn and skip collector import when collector/config.json exists but --type is not provided', async () => {
+            const argv = {
+                package: '/test/package',
+                server: 'test-server.com',
+                token: 'test-token',
+                location: '/test/location',
+                // no type
+                debug: false
+            };
+
+            mockedFs.existsSync = jest.fn()
+                .mockReturnValueOnce(true)   // package exists
+                .mockReturnValueOnce(false)  // entities folder — not exists
+                .mockReturnValueOnce(true);  // collector/config.json — exists
+            mockedGlobSync.mockReturnValue([]);
+            mockedValidators.getEntityDashboardRefs = jest.fn().mockReturnValue(new Set());
+
+            await handleImport(argv);
+
+            expect(mockedLogger.warn).toHaveBeenCalledWith(expect.stringContaining('--type was not specified'));
+            expect(mockAxiosInstance.post).not.toHaveBeenCalled();
         });
     });
 
@@ -1259,11 +1284,12 @@ describe('handleImport', () => {
     });
 
     describe('Collector Import', () => {
-        // Minimal argv — no collector-specific flags needed
+        // argv with default type (com.ibm.instana.customcollector)
         const collectorArgv = {
             server: 'test-server.com',
             token: 'test-token',
             include: 'collector',
+            type: 'com.ibm.instana.customcollector',
             package: '/test/package',
             location: '/test/location',
             debug: false
@@ -1284,16 +1310,17 @@ describe('handleImport', () => {
             mockedValidators.validateServerAddress = jest.fn();
         });
 
-        it('should read name, version, image from config.json and upload files from collector/', async () => {
+        it('should read name, version, image from config.json and upload files from collector/configurations/', async () => {
             mockedFs.existsSync = jest.fn()
                 .mockReturnValueOnce(true)   // package path exists
-                .mockReturnValueOnce(true);  // collector/config.json exists
+                .mockReturnValueOnce(true)   // collector/config.json exists
+                .mockReturnValueOnce(true);  // collector/configurations/ exists
             jest.spyOn(fs, 'statSync').mockReturnValue({ isFile: () => true } as any);
             mockedFs.readdirSync = jest.fn().mockReturnValue(['cassandra.yaml', 'postgres.yaml'] as any);
             mockedFs.readFileSync = jest.fn()
                 .mockReturnValueOnce(JSON.stringify(configJson))             // collector/config.json (metadata)
-                .mockReturnValueOnce(Buffer.from('cassandra-content'))       // cassandra.yaml
-                .mockReturnValueOnce(Buffer.from('postgres-content'));       // postgres.yaml
+                .mockReturnValueOnce(Buffer.from('cassandra-content'))       // collector/configurations/cassandra.yaml
+                .mockReturnValueOnce(Buffer.from('postgres-content'));       // collector/configurations/postgres.yaml
 
             mockAxiosInstance.post.mockResolvedValue({ status: 201 });
 
@@ -1328,13 +1355,14 @@ describe('handleImport', () => {
             mockedFs.existsSync = jest.fn()
                 .mockReturnValueOnce(true)   // package path exists
                 .mockReturnValueOnce(true)   // collector/config.json exists
-                .mockReturnValueOnce(true);  // package.json exists
+                .mockReturnValueOnce(true)   // package.json exists
+                .mockReturnValueOnce(true);  // collector/configurations/ exists
             jest.spyOn(fs, 'statSync').mockReturnValue({ isFile: () => true } as any);
             mockedFs.readdirSync = jest.fn().mockReturnValue(['agent.yaml'] as any);
             mockedFs.readFileSync = jest.fn()
                 .mockReturnValueOnce(JSON.stringify(configJsonNoMeta))  // collector/config.json
                 .mockReturnValueOnce(JSON.stringify(pkgJson))           // package.json
-                .mockReturnValueOnce(Buffer.from('agent-content'));     // agent.yaml
+                .mockReturnValueOnce(Buffer.from('agent-content'));     // collector/configurations/agent.yaml
 
             mockAxiosInstance.post.mockResolvedValue({ status: 201 });
 
@@ -1347,6 +1375,29 @@ describe('handleImport', () => {
             );
         });
 
+        it('should not include image block for non-customcollector type', async () => {
+            const argv = { ...collectorArgv, type: 'com.ibm.instana.agent' };
+            const configJsonNoImage = { extension_name: 'my-agent', extension_version: '1.0' };
+
+            mockedFs.existsSync = jest.fn()
+                .mockReturnValueOnce(true)   // package path exists
+                .mockReturnValueOnce(true)   // collector/config.json exists
+                .mockReturnValueOnce(true);  // collector/configurations/ exists
+            jest.spyOn(fs, 'statSync').mockReturnValue({ isFile: () => true } as any);
+            mockedFs.readdirSync = jest.fn().mockReturnValue(['agent.yaml'] as any);
+            mockedFs.readFileSync = jest.fn()
+                .mockReturnValueOnce(JSON.stringify(configJsonNoImage))  // collector/config.json
+                .mockReturnValueOnce(Buffer.from('agent-content'));      // collector/configurations/agent.yaml
+
+            mockAxiosInstance.post.mockResolvedValue({ status: 201 });
+
+            await handleImport(argv);
+
+            const postedBody = mockAxiosInstance.post.mock.calls[0][1];
+            expect(postedBody.type).toBe('com.ibm.instana.agent');
+            expect(postedBody.configuration.image).toBeUndefined();
+        });
+
         it('should exit if collector/config.json is not found', async () => {
             mockedFs.existsSync = jest.fn()
                 .mockReturnValueOnce(true)   // package path exists
@@ -1356,39 +1407,53 @@ describe('handleImport', () => {
             expect(mockedLogger.error).toHaveBeenCalledWith(expect.stringContaining('collector/config.json not found'));
         });
 
-        it('should exit if collector directory contains no uploadable files', async () => {
+        it('should exit if collector/configurations directory is missing', async () => {
             mockedFs.existsSync = jest.fn()
                 .mockReturnValueOnce(true)   // package path exists
-                .mockReturnValueOnce(true);  // collector/config.json exists
+                .mockReturnValueOnce(true)   // collector/config.json exists
+                .mockReturnValueOnce(false); // collector/configurations/ does not exist
+            mockedFs.readFileSync = jest.fn().mockReturnValueOnce(JSON.stringify(configJson));
+
+            await expect(handleImport(collectorArgv)).rejects.toThrow('process.exit(1)');
+            expect(mockedLogger.error).toHaveBeenCalledWith(expect.stringContaining('collector/configurations directory not found'));
+        });
+
+        it('should exit if collector/configurations directory contains no uploadable files', async () => {
+            mockedFs.existsSync = jest.fn()
+                .mockReturnValueOnce(true)   // package path exists
+                .mockReturnValueOnce(true)   // collector/config.json exists
+                .mockReturnValueOnce(true);  // collector/configurations/ exists
             jest.spyOn(fs, 'statSync').mockReturnValue({ isFile: () => true } as any);
             mockedFs.readdirSync = jest.fn().mockReturnValue([] as any);
             mockedFs.readFileSync = jest.fn().mockReturnValueOnce(JSON.stringify(configJson));
 
             await expect(handleImport(collectorArgv)).rejects.toThrow('process.exit(1)');
-            expect(mockedLogger.error).toHaveBeenCalledWith(expect.stringContaining('No uploadable files found'));
+            expect(mockedLogger.error).toHaveBeenCalledWith(expect.stringContaining('No files found'));
         });
 
-        it('should exit if collector directory contains only non-config files (.DS_Store, Thumbs.db)', async () => {
+        it('should exit if collector/configurations directory contains only non-config files (.DS_Store, Thumbs.db)', async () => {
             mockedFs.existsSync = jest.fn()
                 .mockReturnValueOnce(true)   // package path exists
-                .mockReturnValueOnce(true);  // collector/config.json exists
+                .mockReturnValueOnce(true)   // collector/config.json exists
+                .mockReturnValueOnce(true);  // collector/configurations/ exists
             jest.spyOn(fs, 'statSync').mockReturnValue({ isFile: () => true } as any);
             mockedFs.readdirSync = jest.fn().mockReturnValue(['.DS_Store', '.gitkeep', 'Thumbs.db'] as any);
             mockedFs.readFileSync = jest.fn().mockReturnValueOnce(JSON.stringify(configJson));
 
             await expect(handleImport(collectorArgv)).rejects.toThrow('process.exit(1)');
-            expect(mockedLogger.error).toHaveBeenCalledWith(expect.stringContaining('No uploadable files found'));
+            expect(mockedLogger.error).toHaveBeenCalledWith(expect.stringContaining('No files found'));
         });
 
-        it('should skip .DS_Store and Thumbs.db and upload only allowed-extension files', async () => {
+        it('should skip .DS_Store, .gitkeep, and Thumbs.db and upload remaining files from collector/configurations/', async () => {
             mockedFs.existsSync = jest.fn()
                 .mockReturnValueOnce(true)   // package path exists
-                .mockReturnValueOnce(true);  // collector/config.json exists
+                .mockReturnValueOnce(true)   // collector/config.json exists
+                .mockReturnValueOnce(true);  // collector/configurations/ exists
             jest.spyOn(fs, 'statSync').mockReturnValue({ isFile: () => true } as any);
             mockedFs.readdirSync = jest.fn().mockReturnValue(['.DS_Store', 'Thumbs.db', 'cassandra.yaml'] as any);
             mockedFs.readFileSync = jest.fn()
                 .mockReturnValueOnce(JSON.stringify(configJson))            // collector/config.json (metadata)
-                .mockReturnValueOnce(Buffer.from('cassandra-content'));     // cassandra.yaml
+                .mockReturnValueOnce(Buffer.from('cassandra-content'));     // collector/configurations/cassandra.yaml
 
             mockAxiosInstance.post.mockResolvedValue({ status: 201 });
 
@@ -1402,12 +1467,13 @@ describe('handleImport', () => {
         it('should exit if config.json is missing image fields', async () => {
             mockedFs.existsSync = jest.fn()
                 .mockReturnValueOnce(true)   // package path exists
-                .mockReturnValueOnce(true);  // collector/config.json exists
+                .mockReturnValueOnce(true)   // collector/config.json exists
+                .mockReturnValueOnce(true);  // collector/configurations/ exists
             jest.spyOn(fs, 'statSync').mockReturnValue({ isFile: () => true } as any);
             mockedFs.readdirSync = jest.fn().mockReturnValue(['cassandra.yaml'] as any);
             mockedFs.readFileSync = jest.fn()
                 .mockReturnValueOnce(JSON.stringify({ extension_name: 'x', extension_version: '1', image: {} }))  // config.json — missing image fields
-                .mockReturnValueOnce(Buffer.from('content'));  // cassandra.yaml
+                .mockReturnValueOnce(Buffer.from('content'));  // collector/configurations/cassandra.yaml
 
             await expect(handleImport(collectorArgv)).rejects.toThrow('process.exit(1)');
             expect(mockedLogger.error).toHaveBeenCalledWith(expect.stringContaining('missing required image fields'));
@@ -1416,12 +1482,13 @@ describe('handleImport', () => {
         it('should exit and log error on API failure', async () => {
             mockedFs.existsSync = jest.fn()
                 .mockReturnValueOnce(true)   // package path exists
-                .mockReturnValueOnce(true);  // collector/config.json exists
+                .mockReturnValueOnce(true)   // collector/config.json exists
+                .mockReturnValueOnce(true);  // collector/configurations/ exists
             jest.spyOn(fs, 'statSync').mockReturnValue({ isFile: () => true } as any);
             mockedFs.readdirSync = jest.fn().mockReturnValue(['cassandra.yaml'] as any);
             mockedFs.readFileSync = jest.fn()
                 .mockReturnValueOnce(JSON.stringify(configJson))        // collector/config.json
-                .mockReturnValueOnce(Buffer.from('content'));           // cassandra.yaml
+                .mockReturnValueOnce(Buffer.from('content'));           // collector/configurations/cassandra.yaml
 
             const apiError: any = new Error('API Error');
             apiError.response = { status: 500, data: { message: 'Internal Server Error' } };

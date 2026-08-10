@@ -60,7 +60,7 @@ export async function handleImport(argv: any) {
             resolvedPackagePath = path.join(location, 'node_modules', packageNameOrPath);
         }
         try {
-            await importCollectorConfiguration(server, token, resolvedPackagePath, axiosInstance);
+            await importCollectorConfiguration(server, token, argv.type, resolvedPackagePath, axiosInstance);
         } catch (error) {
             logger.error(error instanceof Error ? error.message : String(error));
             process.exit(1);
@@ -331,15 +331,19 @@ export async function handleImport(argv: any) {
             await importIntegration(searchPattern, "smart-alert", "smart alert");
         }
 
-        // Auto-detect collector: if package has collector/config.json, always import it
+        // Auto-detect collector: if package has collector/config.json, import it if --type is provided
         const collectorConfigPath = path.join(packagePath, 'collector', 'config.json');
         if (fs.existsSync(collectorConfigPath)) {
-            logger.info(`Detected collector folder in package — importing collector configuration ...`);
-            try {
-                await importCollectorConfiguration(server, token, packagePath, axiosInstance);
-            } catch (error) {
-                logger.error(error instanceof Error ? error.message : String(error));
-                process.exit(1);
+            if (!argv.type) {
+                logger.warn(`Detected collector folder in package but --type was not specified - skipping collector import. Provide --type to import collector configuration.`);
+            } else {
+                logger.info(`Detected collector folder in package - importing collector configuration ...`);
+                try {
+                    await importCollectorConfiguration(server, token, argv.type, packagePath, axiosInstance);
+                } catch (error) {
+                    logger.error(error instanceof Error ? error.message : String(error));
+                    process.exit(1);
+                }
             }
         }
     }
@@ -349,11 +353,11 @@ export async function handleImport(argv: any) {
  * Import a collector configuration to Instana.
  * Reads name and version from collector/config.json (extension_name, extension_version),
  * falling back to package.json (name, version) if not defined in config.json.
- * Type is always com.ibm.instana.customcollector.
- * Files are always read from <packagePath>/collector/.
+ * agentType comes from --type.
+ * Image block is only included for com.ibm.instana.customcollector.
+ * Files are always read from <packagePath>/collector/configurations.
  */
-async function importCollectorConfiguration(server: string, token: string, packagePath: string, axiosInstance: any): Promise<void> {
-    const agentType = 'com.ibm.instana.customcollector';
+async function importCollectorConfiguration(server: string, token: string, agentType: string, packagePath: string, axiosInstance: any): Promise<void> {
     const configJsonPath = path.join(packagePath, 'collector', 'config.json');
 
     if (!fs.existsSync(configJsonPath)) {
@@ -379,49 +383,38 @@ async function importCollectorConfiguration(server: string, token: string, packa
 
     logger.info(`Importing collector configuration "${name}" (type=${agentType}, version=${version}) ...`);
 
-    // Files are always read from <packagePath>/collector/
-    const configInput = path.join(packagePath, 'collector');
-    const allowedExtensions = new Set(['.yaml', '.yml', '.json', '.py']);
-    const allFiles = fs.readdirSync(configInput).filter(f => {
-        const ext = path.extname(f).toLowerCase();
-        return allowedExtensions.has(ext) && fs.statSync(path.join(configInput, f)).isFile();
+    // Files are read from <packagePath>/collector/configurations/ - required subfolder
+    const configurationsDir = path.join(packagePath, 'collector', 'configurations');
+    if (!fs.existsSync(configurationsDir)) {
+        throw new Error(`collector/configurations directory not found in package: ${configurationsDir}`);
+    }
+
+    const allFiles = fs.readdirSync(configurationsDir).filter(f => {
+        return !f.startsWith('.') && f !== 'Thumbs.db' && fs.statSync(path.join(configurationsDir, f)).isFile();
     });
     if (allFiles.length === 0) {
-        throw new Error(`No uploadable files found in collector directory: ${configInput}`);
+        throw new Error(`No files found in collector/configurations directory: ${configurationsDir}`);
     }
 
     const files = allFiles.map(f => ({
         name: f,
-        data: fs.readFileSync(path.join(configInput, f)).toString('base64')
+        data: fs.readFileSync(path.join(configurationsDir, f)).toString('base64')
     }));
-    logger.info(`Found ${files.length} collector file(s): ${allFiles.join(', ')}`);
+    logger.info(`Found ${files.length} collector configuration file(s): ${allFiles.join(', ')}`);
 
-    // Build image block from config.json
-    const { registry, repository, tag } = configJson.image ?? {};
-    if (!registry || !repository || !tag) {
-        throw new Error(`collector/config.json is missing required image fields: registry, repository, tag`);
+    // Image block is only required for com.ibm.instana.customcollector
+    const configuration: any = { files };
+    if (agentType === 'com.ibm.instana.customcollector') {
+        const { registry, repository, tag } = configJson.image ?? {};
+        if (!registry || !repository || !tag) {
+            throw new Error(`collector/config.json is missing required image fields: registry, repository, tag`);
+        }
+        configuration.image = { repo: `${registry}/${repository}:${tag}` };
+        logger.info(`Using image: ${configuration.image.repo}`);
     }
-    const configuration: any = {
-        files,
-        image: { repo: `${registry}/${repository}:${tag}` }
-    };
-    logger.info(`Using image: ${configuration.image.repo}`);
 
     const url = `${getCollectorBaseUrl(server)}/api/fleet/configurations?type=${agentType}`;
     logger.info(`Applying collector configuration to ${url} ...`);
-
-    if (logger.isDebugEnabled()) {
-        const debugPayload = {
-            name,
-            version,
-            type: agentType,
-            configuration: {
-                files: files.map(f => ({ name: f.name, data: `<base64 ${f.data.length} chars>` })),
-                image: configuration.image
-            }
-        };
-        logger.debug(`Payload:\n${JSON.stringify(debugPayload, null, 2)}`);
-    }
 
     try {
         const response = await axiosInstance.post(url, { name, version, type: agentType, configuration }, {
