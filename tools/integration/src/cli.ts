@@ -25,9 +25,7 @@ Import integration package with parameters replaced:
   ${execName} import --package my-package --server example.com --token mytoken --include "events/**/*.json"
   ${execName} import --package my-package --server example.com --token mytoken --include "entities/**/*.json"
   ${execName} import --package my-package --server example.com --token mytoken --include "smart-alerts/**/*.json"
-
-Import collector configuration:
-  ${execName} import --package my-package --server example.com --token mytoken --include collector --name <configurationName> --type <instanaAgent/idot/customcollector> --config-version <version> --config-input <path-to-directory>
+  ${execName} import --package my-package --server example.com --token mytoken --include collector
 `;
 
 const examplesForExport = `
@@ -127,7 +125,7 @@ export function configureCLI(handlers: {
                 })
                 .option('include', {
                     alias: 'i',
-                    describe: 'Folder or pattern to match integration element files to include, or "collector" to import a collector configuration',
+                    describe: 'Folder or pattern to match integration element files to include, or "collector" to import only the collector configuration',
                     type: 'string',
                     demandOption: false
                 })
@@ -142,42 +140,6 @@ export function configureCLI(handlers: {
                     describe: 'Enable debug mode',
                     type: 'boolean',
                     default: false
-                })
-                .option('name', {
-                    alias: 'n',
-                    describe: 'Configuration name',
-                    type: 'string',
-                    demandOption: false
-                })
-                .option('config-version', {
-                    alias: 'r',
-                    describe: 'Configuration version',
-                    type: 'string',
-                    demandOption: false
-                })
-                .option('type', {
-                    alias: 'y',
-                    describe: 'Agent type, allowed values (com.ibm.opentelemetrycollector, com.ibm.instana.agent, com.ibm.instana.customcollector)',
-                    type: 'string',
-                    demandOption: false
-                })
-                .option('config-input', {
-                    alias: 'c',
-                    describe: 'Path to directory containing collector configuration files to upload',
-                    type: 'string',
-                    demandOption: false
-                })
-                .check((argv) => {
-                    if (argv['include'] === 'collector') {
-                        const collectorFields = ['name', 'config-version', 'type', 'config-input'];
-                        const missing = collectorFields.filter(f => argv[f] === undefined);
-                        if (missing.length > 0) {
-                            throw new Error(
-                                `--include collector requires: ${missing.map(f => `--${f}`).join(', ')}`
-                            );
-                        }
-                    }
-                    return true;
                 })
                 .epilog(examplesForImport);
         }, handlers.handleImport)

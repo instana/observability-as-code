@@ -196,26 +196,19 @@ describe('CLI Module', () => {
             const cliPath = path.join(__dirname, '../cli.ts');
             const cliContent = fs.readFileSync(cliPath, 'utf-8');
 
-            // Verify collector-specific options exist
-            expect(cliContent).toContain("'name'");
-            expect(cliContent).toContain("'config-version'");
-            expect(cliContent).toContain("'type'");
-            expect(cliContent).toContain("'config-input'");
-            expect(cliContent).toContain("alias: 'n'");
-            expect(cliContent).toContain("alias: 'r'");
-            expect(cliContent).toContain("alias: 'y'");
-            expect(cliContent).toContain("alias: 'c'");
+            // Collector import uses --include collector — no extra flags needed;
+            // name/version/type are derived from collector/config.json at runtime
+            expect(cliContent).toContain("'include'");
+            expect(cliContent).toContain("collector");
         });
 
-        it('should define import collector conditional validation', async () => {
+        it('should define import collector example in epilog', async () => {
             const fs = require('fs');
             const path = require('path');
             const cliPath = path.join(__dirname, '../cli.ts');
             const cliContent = fs.readFileSync(cliPath, 'utf-8');
 
-            // Verify .check() enforces --include collector conditional required options
-            expect(cliContent).toContain("argv['include'] === 'collector'");
-            expect(cliContent).toContain("--include collector requires:");
+            expect(cliContent).toContain('--include collector');
         });
 
         it('should define export command options', async () => {
