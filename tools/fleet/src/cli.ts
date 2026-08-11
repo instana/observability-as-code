@@ -45,83 +45,30 @@ List configurations:
   ${execName} list-configs --server example.com --token validToken --type agentType --debug
 `;
 
+const examplesForTagSet = `
+Examples:
+
+Add or update a tag on all custom collectors tagged with env=staging:
+  ${execName} set-tag team=sre --server example.com --token validToken --type com.ibm.instana.customcollector --tag env=staging
+
+Delete a tag by setting its value to empty:
+  ${execName} set-tag team= --type com.ibm.instana.customcollector --tag env=staging (specify the server and token as environment variables using INSTANA_SERVER and INSTANA_API_TOKEN)
+
+Apply multiple tag changes at once:
+  ${execName} set-tag team=sre region=us-east --type com.ibm.instana.customcollector --tag env=staging --tag dc=prod
+`;
+
 export function configureCLI(handlers: {
     handleRestart: (argv: any) => Promise<void>;
     handleDeploy: (argv: any) => Promise<void>;
     handleUpdate: (argv: any) => Promise<void>;
     handleList: (argv: any) => Promise<any>;
+    handleTag: (argv: any) => Promise<any>;
 }) {
     return yargs
         .wrap(160)
         .usage(`The Instana CLI for agent fleet management\n\nUsage: ${execName} <command> <options>`)
-        .command(
-            'restart',
-            'Restart the agent instances',
-            (yargs) => {
-                return yargs
-                    .option('server', {
-                        alias: 'S',
-                        describe: 'Address of an environment',
-                        type: 'string',
-                        demandOption: false
-                    })
-                    .option('token', {
-                        alias: 't',
-                        describe: 'API token for authenticating agent requests',
-                        type: 'string',
-                        demandOption: false
-                    })
-                    .option('type', {
-                        alias: 'y',
-                        describe: 'Agent type, allowed values (com.ibm.opentelemetrycollector, com.ibm.instana.agent, com.ibm.instana.customcollector)',
-                        type: 'string',
-                        demandOption: true
-                    })
-                    .option('tag', {
-                        alias: 'T',
-                        describe: 'Tags in the format key=value, can be specified multiple times',
-                        type: 'array',
-                        demandOption: true
-                    })
-                    .option('debug', {
-                        alias: 'd',
-                        describe: 'Enable debug mode',
-                        type: 'boolean',
-                        default: false
-                    })
-                    .epilog(examplesForRestart);
-            }, handlers.handleRestart)
-        .command(
-            'list-configs',
-            'List configurations',
-            (yargs) => {
-                return yargs
-                    .option('server', {
-                        alias: 'S',
-                        describe: 'Address of an environment',
-                        type: 'string',
-                        demandOption: false
-                    })
-                    .option('token', {
-                        alias: 't',
-                        describe: 'API token for authenticating agent requests',
-                        type: 'string',
-                        demandOption: false
-                    })
-                    .option('type', {
-                        alias: 'y',
-                        describe: 'Agent type, allowed values (com.ibm.opentelemetrycollector, com.ibm.instana.agent, com.ibm.instana.customcollector)',
-                        type: 'string',
-                        demandOption: true
-                    })
-                    .option('debug', {
-                        alias: 'd',
-                        describe: 'Enable debug mode',
-                        type: 'boolean',
-                        default: false
-                    })
-                    .epilog(examplesForList);
-            }, handlers.handleList)
+        // Agent lifecycle commands
         .command(
             'deploy',
             'Deploy the agent component',
@@ -166,6 +113,43 @@ export function configureCLI(handlers: {
                     .epilog(examplesForDeploy);
             }, handlers.handleDeploy)
         .command(
+            'restart',
+            'Restart the agent instances',
+            (yargs) => {
+                return yargs
+                    .option('server', {
+                        alias: 'S',
+                        describe: 'Address of an environment',
+                        type: 'string',
+                        demandOption: false
+                    })
+                    .option('token', {
+                        alias: 't',
+                        describe: 'API token for authenticating agent requests',
+                        type: 'string',
+                        demandOption: false
+                    })
+                    .option('type', {
+                        alias: 'y',
+                        describe: 'Agent type, allowed values (com.ibm.opentelemetrycollector, com.ibm.instana.agent, com.ibm.instana.customcollector)',
+                        type: 'string',
+                        demandOption: true
+                    })
+                    .option('tag', {
+                        alias: 'T',
+                        describe: 'Tags in the format key=value, can be specified multiple times',
+                        type: 'array',
+                        demandOption: true
+                    })
+                    .option('debug', {
+                        alias: 'd',
+                        describe: 'Enable debug mode',
+                        type: 'boolean',
+                        default: false
+                    })
+                    .epilog(examplesForRestart);
+            }, handlers.handleRestart)
+        .command(
             'update-config',
             'Update the agent configuration',
             (yargs) => {
@@ -208,6 +192,80 @@ export function configureCLI(handlers: {
                     })
                     .epilog(examplesForUpdate);
             }, handlers.handleUpdate)
+        // Configuration commands
+        .command(
+            'list-configs',
+            'List configurations',
+            (yargs) => {
+                return yargs
+                    .option('server', {
+                        alias: 'S',
+                        describe: 'Address of an environment',
+                        type: 'string',
+                        demandOption: false
+                    })
+                    .option('token', {
+                        alias: 't',
+                        describe: 'API token for authenticating agent requests',
+                        type: 'string',
+                        demandOption: false
+                    })
+                    .option('type', {
+                        alias: 'y',
+                        describe: 'Agent type, allowed values (com.ibm.opentelemetrycollector, com.ibm.instana.agent, com.ibm.instana.customcollector)',
+                        type: 'string',
+                        demandOption: true
+                    })
+                    .option('debug', {
+                        alias: 'd',
+                        describe: 'Enable debug mode',
+                        type: 'boolean',
+                        default: false
+                    })
+                    .epilog(examplesForList);
+            }, handlers.handleList)
+        // Tag management commands
+        .command(
+            'set-tag <tags..>',
+            'Add, update, or delete tags on agent instances selected by --tag',
+            (yargs) => {
+                return yargs
+                    .positional('tags', {
+                        describe: 'Tags to apply: use key=value to add/update, key= (empty value) to delete. One or more pairs required.',
+                        type: 'string'
+                    })
+                    .option('server', {
+                        alias: 'S',
+                        describe: 'Address of an environment',
+                        type: 'string',
+                        demandOption: false
+                    })
+                    .option('token', {
+                        alias: 't',
+                        describe: 'API token for authenticating agent requests',
+                        type: 'string',
+                        demandOption: false
+                    })
+                    .option('type', {
+                        alias: 'y',
+                        describe: 'Agent type, allowed values (com.ibm.opentelemetrycollector, com.ibm.instana.agent, com.ibm.instana.customcollector)',
+                        type: 'string',
+                        demandOption: true
+                    })
+                    .option('tag', {
+                        alias: 'T',
+                        describe: 'Selector tag in key=value format. Targets only agents that match all supplied tags. Can be specified multiple times.',
+                        type: 'array',
+                        demandOption: true
+                    })
+                    .option('debug', {
+                        alias: 'd',
+                        describe: 'Enable debug mode',
+                        type: 'boolean',
+                        default: false
+                    })
+                    .epilog(examplesForTagSet);
+            }, handlers.handleTag)
         .demandCommand(1, 'You need at least one command before moving on')
         .help()
         .alias('help', 'h')

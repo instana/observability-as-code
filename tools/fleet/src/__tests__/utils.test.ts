@@ -41,7 +41,7 @@ describe('parseTags', () => {
         expect(parseTags([])).toEqual({});
     });
 
-    it('throws on missing value', () => {
+    it('throws on missing = separator', () => {
         expect(() => parseTags(['invalidTag'])).toThrow(
             'Invalid tag format: invalidTag. Expected key=value'
         );
@@ -51,6 +51,65 @@ describe('parseTags', () => {
         expect(() => parseTags(['=value'])).toThrow(
             'Invalid tag format: =value. Expected key=value'
         );
+    });
+
+    it('throws on empty value (allowEmpty defaults to false)', () => {
+        expect(() => parseTags(['key='])).toThrow(
+            'Invalid tag format: key=. Expected key=value'
+        );
+    });
+});
+
+describe('parseTags (allowEmpty = true)', () => {
+    it('parses a single key=value tag', () => {
+        expect(parseTags(['team=sre'], true)).toEqual({ team: 'sre' });
+    });
+
+    it('parses multiple key=value tags', () => {
+        expect(parseTags(['team=sre', 'region=us-east'], true)).toEqual({
+            team: 'sre',
+            region: 'us-east'
+        });
+    });
+
+    it('allows empty value (key=) for tag deletion', () => {
+        expect(parseTags(['team='], true)).toEqual({ team: '' });
+    });
+
+    it('allows = in the value', () => {
+        expect(parseTags(['key=val=ue'], true)).toEqual({ key: 'val=ue' });
+    });
+
+    it('trims whitespace from keys', () => {
+        expect(parseTags([' env = prod '], true)).toEqual({ env: 'prod' });
+    });
+
+    it('returns empty object for empty array input', () => {
+        expect(parseTags([], true)).toEqual({});
+    });
+
+    it('throws when = separator is missing', () => {
+        expect(() => parseTags(['invalidtag'], true)).toThrow(
+            'Invalid tag format: invalidtag. Expected key=value or key= (to delete)'
+        );
+    });
+
+    it('throws when key is empty', () => {
+        expect(() => parseTags(['=value'], true)).toThrow(
+            'Invalid tag format: =value. Expected key=value or key= (to delete)'
+        );
+    });
+
+    it('treats whitespace-only value as empty (deletion)', () => {
+        expect(parseTags(['team=   '], true)).toEqual({ team: '' });
+    });
+
+    it('mixes add/update and delete in one call', () => {
+        expect(parseTags(['env=dev', 'abc=123', 'team='], true)).toEqual({
+            env: 'dev',
+            abc: '123',
+            team: ''
+        });
     });
 });
 
@@ -188,6 +247,44 @@ describe('sendAgentRequest', () => {
         const [, body] = postMock.mock.calls[0];
         expect(body.action).toBe('agent.component.deploy');
         expect(body.args).toEqual({ configurationId: 'cfg-123' });
+    });
+
+    it('sends tagsToApply in args.tags for tag-set', async () => {
+        const postMock = jest.fn().mockResolvedValue({
+            data: { requestId: '3', status: 'accepted' }
+        });
+        mockedAxios.create.mockReturnValue({ post: postMock } as any);
+
+        await sendAgentRequest('agent.tag.set', baseArgv, undefined, { team: 'sre', env: '' });
+
+        const [, body] = postMock.mock.calls[0];
+        expect(body.action).toBe('agent.tag.set');
+        expect(body.args).toEqual({ tags: { team: 'sre', env: '' } });
+        expect(body.args.configurationId).toBeUndefined();
+    });
+
+    it('sends both configurationId and tagsToApply in args when both provided', async () => {
+        const postMock = jest.fn().mockResolvedValue({
+            data: { requestId: '4', status: 'accepted' }
+        });
+        mockedAxios.create.mockReturnValue({ post: postMock } as any);
+
+        await sendAgentRequest('agent.test', baseArgv, 'cfg-abc', { team: 'sre' });
+
+        const [, body] = postMock.mock.calls[0];
+        expect(body.args).toEqual({ configurationId: 'cfg-abc', tags: { team: 'sre' } });
+    });
+
+    it('omits args entirely when neither configurationId nor tagsToApply are provided', async () => {
+        const postMock = jest.fn().mockResolvedValue({
+            data: { requestId: '5', status: 'accepted' }
+        });
+        mockedAxios.create.mockReturnValue({ post: postMock } as any);
+
+        await sendAgentRequest('agent.restart', baseArgv);
+
+        const [, body] = postMock.mock.calls[0];
+        expect(body.args).toBeUndefined();
     });
 
     it('sets Authorization header correctly', async () => {

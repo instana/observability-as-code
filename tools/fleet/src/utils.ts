@@ -6,17 +6,37 @@ import { validateServerAddress } from './validators';
 /**
  * Parse an array of key=value tag strings into a Record.
  * Callers are expected to validate that tagsInput is non-empty before calling.
+ *
+ * When allowEmpty is false (default), an empty value throws an error.
+ * When allowEmpty is true, an empty value (key=) is permitted and signals tag deletion
+ * for the set-tag command. Note: whitespace-only values are trimmed and treated as empty,
+ * since whitespace-only values are not meaningful in this context.
  */
-export function parseTags(tagsInput: string[]): Record<string, string> {
+export function parseTags(tagsInput: string[], allowEmpty = false): Record<string, string> {
     const tags: Record<string, string> = {};
 
     for (const tag of tagsInput) {
-        const [key, ...rest] = String(tag).split('=');
-        const value = rest.join('=');
-        if (!key || !value) {
+        const eqIndex = String(tag).indexOf('=');
+        if (eqIndex === -1) {
+            throw new Error(
+                allowEmpty
+                    ? `Invalid tag format: ${tag}. Expected key=value or key= (to delete)`
+                    : `Invalid tag format: ${tag}. Expected key=value`
+            );
+        }
+        const key = tag.slice(0, eqIndex).trim();
+        const value = tag.slice(eqIndex + 1).trim();
+        if (!key) {
+            throw new Error(
+                allowEmpty
+                    ? `Invalid tag format: ${tag}. Expected key=value or key= (to delete)`
+                    : `Invalid tag format: ${tag}. Expected key=value`
+            );
+        }
+        if (!allowEmpty && !value) {
             throw new Error(`Invalid tag format: ${tag}. Expected key=value`);
         }
-        tags[key.trim()] = value.trim();
+        tags[key] = value;
     }
 
     return tags;
@@ -87,7 +107,8 @@ export function resolveConnection(argv: any): { server: string; token: string; t
 export async function sendAgentRequest(
     action: string,
     argv: any,
-    configurationId?: string
+    configurationId?: string,
+    tagsToApply?: Record<string, string>
 ): Promise<any> {
     const { server, token, type } = resolveConnection(argv);
 
@@ -97,11 +118,16 @@ export async function sendAgentRequest(
     }
     const tags = parseTags(tagsInput);
 
+    const args: Record<string, any> = {
+        ...(configurationId && { configurationId }),
+        ...(tagsToApply && { tags: tagsToApply })
+    };
+
     const request: Record<string, any> = {
         action,
         type,
         tags,
-        ...(configurationId && { args: { configurationId } })
+        ...(Object.keys(args).length > 0 && { args })
     };
 
     const axiosInstance = createAxiosInstance();
