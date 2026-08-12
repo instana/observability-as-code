@@ -1,5 +1,4 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
   "$comment": "Extension Base Configuration - This file defines the reusable, environment-agnostic configuration that gets imported to the Instana backend via 'stanctl-integration import'. It does NOT contain endpoints (those are deployment-specific and added via UI/API).",
   
   "extension_id": "{{PACKAGE_NAME}}",

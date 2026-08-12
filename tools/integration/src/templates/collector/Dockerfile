@@ -17,7 +17,10 @@ WORKDIR /opt/instana/custom-collector
 ENV PYTHONPATH=/opt/instana/custom-collector:$PYTHONPATH
 
 # Copy extension code
-COPY {{COLLECTOR_NAME}}_collector.py /opt/instana/custom-collector/extensions/collector.py
+# NOTE: All COPY paths are relative to the build context (the collector/ directory).
+# Do NOT use paths like "my-package/collector/file.py" — just use the filename directly.
+COPY {{COLLECTOR_NAME}}_collector.py \
+  /opt/instana/custom-collector/extensions/collector.py
 
 # Copy requirements and install dependencies
 COPY requirements.txt .
