@@ -13,15 +13,6 @@ Handlebars.registerHelper('default', function (value: string, defaultValue: stri
     return typeof value !== 'undefined' ? value : defaultValue;
 });
 
-// TODO: remove getCollectorBaseUrl once collector API is available on production HTTPS,
-// then uncomment the line below and delete the getCollectorBaseUrl call
-function getCollectorBaseUrl(server: string): string {
-    const portMatch = server.match(/:(\d+)$/);
-    const port = portMatch ? parseInt(portMatch[1], 10) : 443;
-    const protocol = port === 443 ? 'https' : 'http';
-    return `${protocol}://${server}`;
-}
-
 interface AccessRule {
     accessType: string;
     relationType: string;
@@ -60,7 +51,7 @@ export async function handleImport(argv: any) {
             resolvedPackagePath = path.join(location, 'node_modules', packageNameOrPath);
         }
         try {
-            await importCollectorConfiguration(server, token, argv.type, resolvedPackagePath, axiosInstance);
+            await importCollectorConfiguration(server, token, resolvedPackagePath, axiosInstance);
         } catch (error) {
             logger.error(error instanceof Error ? error.message : String(error));
             process.exit(1);
@@ -331,19 +322,15 @@ export async function handleImport(argv: any) {
             await importIntegration(searchPattern, "smart-alert", "smart alert");
         }
 
-        // Auto-detect collector: if package has collector/config.json, import it if --type is provided
-        const collectorConfigPath = path.join(packagePath, 'collector', 'config.json');
-        if (fs.existsSync(collectorConfigPath)) {
-            if (!argv.type) {
-                logger.warn(`Detected collector folder in package but --type was not specified - skipping collector import. Provide --type to import collector configuration.`);
-            } else {
-                logger.info(`Detected collector folder in package - importing collector configuration ...`);
-                try {
-                    await importCollectorConfiguration(server, token, argv.type, packagePath, axiosInstance);
-                } catch (error) {
-                    logger.error(error instanceof Error ? error.message : String(error));
-                    process.exit(1);
-                }
+        // Auto-detect collector: if package has a collector/config/ directory, always import it
+        const collectorConfigDir = path.join(packagePath, 'collector', 'config');
+        if (fs.existsSync(collectorConfigDir)) {
+            logger.info(`Detected collector/config folder in package - importing collector configuration ...`);
+            try {
+                await importCollectorConfiguration(server, token, packagePath, axiosInstance);
+            } catch (error) {
+                logger.error(error instanceof Error ? error.message : String(error));
+                process.exit(1);
             }
         }
     }
@@ -351,19 +338,27 @@ export async function handleImport(argv: any) {
 
 /**
  * Import a collector configuration to Instana.
- * Reads name and version from collector/config.json (extension_name, extension_version),
- * falling back to package.json (name, version) if not defined in config.json.
- * agentType comes from --type.
- * Image block is only included for com.ibm.instana.customcollector.
- * Files are always read from <packagePath>/collector/configurations.
+ * Only supports com.ibm.instana.customcollector — IDOT and Instana agent are handled by stanctl-fleet.
+ *
+ * Metadata (name, version, image) is read from the single collector/config.json file.
+ *   - extension_name / extension_version — falls back to package.json name / version if absent.
+ *   - image (registry/repository:tag) — required.
+ *
+ * Upload files are all files inside collector/config/ — multiple files are supported.
  */
-async function importCollectorConfiguration(server: string, token: string, agentType: string, packagePath: string, axiosInstance: any): Promise<void> {
+async function importCollectorConfiguration(server: string, token: string, packagePath: string, axiosInstance: any): Promise<void> {
+    const agentType = 'com.ibm.instana.customcollector';
     const configJsonPath = path.join(packagePath, 'collector', 'config.json');
 
     if (!fs.existsSync(configJsonPath)) {
         throw new Error(`collector/config.json not found in package: ${configJsonPath}`);
     }
-    const configJson = JSON.parse(fs.readFileSync(configJsonPath, 'utf8'));
+    let configJson: any;
+    try {
+        configJson = JSON.parse(fs.readFileSync(configJsonPath, 'utf8'));
+    } catch (e) {
+        throw new Error(`Failed to parse collector/config.json: ${e instanceof Error ? e.message : String(e)}`);
+    }
 
     // Resolve name: extension_name and extension_version from config.json, fallback to name from package.json
     let name: string = configJson.extension_name;
@@ -373,7 +368,12 @@ async function importCollectorConfiguration(server: string, token: string, agent
         if (!fs.existsSync(pkgJsonPath)) {
             throw new Error(`package.json not found in package: ${pkgJsonPath}`);
         }
-        const pkgJson = JSON.parse(fs.readFileSync(pkgJsonPath, 'utf8'));
+        let pkgJson: any;
+        try {
+            pkgJson = JSON.parse(fs.readFileSync(pkgJsonPath, 'utf8'));
+        } catch (e) {
+            throw new Error(`Failed to parse package.json: ${e instanceof Error ? e.message : String(e)}`);
+        }
         name = name || pkgJson.name;
         version = version || pkgJson.version;
     }
@@ -383,37 +383,36 @@ async function importCollectorConfiguration(server: string, token: string, agent
 
     logger.info(`Importing collector configuration "${name}" (type=${agentType}, version=${version}) ...`);
 
-    // Files are read from <packagePath>/collector/configurations/ - required subfolder
-    const configurationsDir = path.join(packagePath, 'collector', 'configurations');
-    if (!fs.existsSync(configurationsDir)) {
-        throw new Error(`collector/configurations directory not found in package: ${configurationsDir}`);
+    // Files are read from <packagePath>/collector/config/ - required subfolder
+    const configDir = path.join(packagePath, 'collector', 'config');
+    if (!fs.existsSync(configDir)) {
+        throw new Error(`collector/config directory not found in package: ${configDir}`);
     }
 
-    const allFiles = fs.readdirSync(configurationsDir).filter(f => {
-        return !f.startsWith('.') && f !== 'Thumbs.db' && fs.statSync(path.join(configurationsDir, f)).isFile();
+    const allFiles = fs.readdirSync(configDir).filter(f => {
+        return !f.startsWith('.') && f !== 'Thumbs.db' && fs.statSync(path.join(configDir, f)).isFile();
     });
     if (allFiles.length === 0) {
-        throw new Error(`No files found in collector/configurations directory: ${configurationsDir}`);
+        throw new Error(`No files found in collector/config directory: ${configDir}`);
     }
 
     const files = allFiles.map(f => ({
         name: f,
-        data: fs.readFileSync(path.join(configurationsDir, f)).toString('base64')
+        data: fs.readFileSync(path.join(configDir, f)).toString('base64')
     }));
     logger.info(`Found ${files.length} collector configuration file(s): ${allFiles.join(', ')}`);
 
-    // Image block is only required for com.ibm.instana.customcollector
-    const configuration: any = { files };
-    if (agentType === 'com.ibm.instana.customcollector') {
-        const { registry, repository, tag } = configJson.image ?? {};
-        if (!registry || !repository || !tag) {
-            throw new Error(`collector/config.json is missing required image fields: registry, repository, tag`);
-        }
-        configuration.image = { repo: `${registry}/${repository}:${tag}` };
-        logger.info(`Using image: ${configuration.image.repo}`);
+    const { registry, repository, tag } = configJson.image ?? {};
+    if (!registry || !repository || !tag) {
+        throw new Error(`collector/config.json is missing required image fields: registry, repository, tag`);
     }
+    const configuration: any = {
+        files,
+        image: { repo: `${registry}/${repository}:${tag}` }
+    };
+    logger.info(`Using image: ${configuration.image.repo}`);
 
-    const url = `${getCollectorBaseUrl(server)}/api/fleet/configurations?type=${agentType}`;
+    const url = `https://${server}/api/fleet/configurations?type=${agentType}`;
     logger.info(`Applying collector configuration to ${url} ...`);
 
     try {

@@ -196,20 +196,9 @@ describe('CLI Module', () => {
             const cliPath = path.join(__dirname, '../cli.ts');
             const cliContent = fs.readFileSync(cliPath, 'utf-8');
 
+            // --type removed: stanctl-integration import only supports com.ibm.instana.customcollector
             expect(cliContent).toContain("'include'");
-            expect(cliContent).toContain("'type'");
-            expect(cliContent).toContain("alias: 'y'");
-            expect(cliContent).toContain("com.ibm.instana.customcollector");
-        });
-
-        it('should define import collector conditional validation', async () => {
-            const fs = require('fs');
-            const path = require('path');
-            const cliPath = path.join(__dirname, '../cli.ts');
-            const cliContent = fs.readFileSync(cliPath, 'utf-8');
-
-            expect(cliContent).toContain("argv['include'] === 'collector'");
-            expect(cliContent).toContain('--type is required when --include collector is specified');
+            expect(cliContent).not.toContain("alias: 'y'");
         });
 
         it('should define import collector example in epilog', async () => {
