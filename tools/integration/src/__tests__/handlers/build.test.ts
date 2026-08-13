@@ -22,7 +22,7 @@ const mockChildProcess = child_process as jest.Mocked<typeof child_process>;
 describe('handleBuild', () => {
     const mockPackagePath = '/test/package';
     const mockCollectorPath = path.join(mockPackagePath, 'collector');
-    const mockConfigPath = path.join(mockCollectorPath, 'config.json');
+    const mockConfigPath = path.join(mockCollectorPath, 'config', 'config.json');
     const mockDockerfilePath = path.join(mockCollectorPath, 'Dockerfile');
 
     beforeEach(() => {
@@ -48,7 +48,7 @@ describe('handleBuild', () => {
 
     it('should validate package structure and build successfully', async () => {
         mockUtils.pathExists.mockReturnValue(true);
-        mockValidators.validateCollectorFiles.mockImplementation((collectorPath, errors, warnings, successMessages) => {
+        mockValidators.validateCollectorFiles.mockImplementation((collectorPath, configPath, errors, warnings, successMessages) => {
             // No errors - validation passes
         });
         const mockConfig = {
@@ -70,6 +70,7 @@ describe('handleBuild', () => {
         expect(mockUtils.pathExists).toHaveBeenCalledWith(mockCollectorPath);
         expect(mockValidators.validateCollectorFiles).toHaveBeenCalledWith(
             mockCollectorPath,
+            path.join(mockCollectorPath, 'config'),
             expect.any(Array),
             expect.any(Array),
             expect.any(Array)
@@ -92,17 +93,27 @@ describe('handleBuild', () => {
 
     it('should throw error if collector directory does not exist', async () => {
         mockUtils.pathExists
-            .mockReturnValueOnce(true)
-            .mockReturnValueOnce(false);
+            .mockReturnValueOnce(true)  // packagePath exists
+            .mockReturnValueOnce(false); // collectorPath missing
 
         await expect(handleBuild({ package: mockPackagePath }))
             .rejects.toThrow('Collector directory not found');
     });
 
+    it('should throw error if collector/config directory does not exist', async () => {
+        mockUtils.pathExists
+            .mockReturnValueOnce(true)  // packagePath exists
+            .mockReturnValueOnce(true)  // collectorPath exists
+            .mockReturnValueOnce(false); // configPath missing
+
+        await expect(handleBuild({ package: mockPackagePath }))
+            .rejects.toThrow('Collector config directory not found');
+    });
+
     it('should throw error if validator finds missing files', async () => {
         mockUtils.pathExists.mockReturnValue(true);
-        mockValidators.validateCollectorFiles.mockImplementation((collectorPath, errors, warnings, successMessages) => {
-            errors.push('Missing required collector file: config.json');
+        mockValidators.validateCollectorFiles.mockImplementation((collectorPath, configPath, errors, warnings, successMessages) => {
+            errors.push('Missing required collector file: config/config.json');
             errors.push('Missing required collector file: Dockerfile');
         });
 
@@ -112,7 +123,7 @@ describe('handleBuild', () => {
 
     it('should throw error if validator finds empty files', async () => {
         mockUtils.pathExists.mockReturnValue(true);
-        mockValidators.validateCollectorFiles.mockImplementation((collectorPath, errors, warnings, successMessages) => {
+        mockValidators.validateCollectorFiles.mockImplementation((collectorPath, configPath, errors, warnings, successMessages) => {
             warnings.push('Collector file is empty: requirements.txt');
         });
         const mockConfig = {
@@ -133,7 +144,7 @@ describe('handleBuild', () => {
 
     it('should throw error if config.json is invalid JSON', async () => {
         mockUtils.pathExists.mockReturnValue(true);
-        mockValidators.validateCollectorFiles.mockImplementation((collectorPath, errors) => {
+        mockValidators.validateCollectorFiles.mockImplementation((collectorPath, configPath, errors) => {
             errors.push('Collector config.json is not valid JSON');
         });
 
@@ -143,7 +154,7 @@ describe('handleBuild', () => {
 
     it('should throw error if config is missing image section', async () => {
         mockUtils.pathExists.mockReturnValue(true);
-        mockValidators.validateCollectorFiles.mockImplementation((collectorPath, errors) => {
+        mockValidators.validateCollectorFiles.mockImplementation((collectorPath, configPath, errors) => {
             errors.push('Collector config.json is missing required "image" section');
         });
 
@@ -153,7 +164,7 @@ describe('handleBuild', () => {
 
     it('should throw error if config is missing image.registry', async () => {
         mockUtils.pathExists.mockReturnValue(true);
-        mockValidators.validateCollectorFiles.mockImplementation((collectorPath, errors) => {
+        mockValidators.validateCollectorFiles.mockImplementation((collectorPath, configPath, errors) => {
             errors.push('Collector config.json is missing required fields: image.registry');
         });
 
@@ -163,7 +174,7 @@ describe('handleBuild', () => {
 
     it('should throw error if config is missing image.repository', async () => {
         mockUtils.pathExists.mockReturnValue(true);
-        mockValidators.validateCollectorFiles.mockImplementation((collectorPath, errors) => {
+        mockValidators.validateCollectorFiles.mockImplementation((collectorPath, configPath, errors) => {
             errors.push('Collector config.json is missing required fields: image.repository');
         });
 
@@ -173,7 +184,7 @@ describe('handleBuild', () => {
 
     it('should throw error if config is missing image.tag', async () => {
         mockUtils.pathExists.mockReturnValue(true);
-        mockValidators.validateCollectorFiles.mockImplementation((collectorPath, errors) => {
+        mockValidators.validateCollectorFiles.mockImplementation((collectorPath, configPath, errors) => {
             errors.push('Collector config.json is missing required fields: image.tag');
         });
 
@@ -183,7 +194,7 @@ describe('handleBuild', () => {
 
     it('should throw error with all missing image fields in one message', async () => {
         mockUtils.pathExists.mockReturnValue(true);
-        mockValidators.validateCollectorFiles.mockImplementation((collectorPath, errors) => {
+        mockValidators.validateCollectorFiles.mockImplementation((collectorPath, configPath, errors) => {
             errors.push('Collector config.json is missing required fields: image.registry, image.repository, image.tag');
         });
 
@@ -365,7 +376,7 @@ describe('handleBuild', () => {
 
     it('should throw error for invalid tag format with special characters', async () => {
         mockUtils.pathExists.mockReturnValue(true);
-        mockValidators.validateCollectorFiles.mockImplementation((collectorPath, errors) => {
+        mockValidators.validateCollectorFiles.mockImplementation((collectorPath, configPath, errors) => {
             errors.push('Collector config.json has invalid fields: image.tag (invalid format, must be alphanumeric with dots, dashes, underscores, max 128 chars)');
         });
 
@@ -375,7 +386,7 @@ describe('handleBuild', () => {
 
     it('should throw error for tag format exceeding 128 characters', async () => {
         mockUtils.pathExists.mockReturnValue(true);
-        mockValidators.validateCollectorFiles.mockImplementation((collectorPath, errors) => {
+        mockValidators.validateCollectorFiles.mockImplementation((collectorPath, configPath, errors) => {
             errors.push('Collector config.json has invalid fields: image.tag (invalid format, must be alphanumeric with dots, dashes, underscores, max 128 chars)');
         });
 

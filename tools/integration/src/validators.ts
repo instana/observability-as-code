@@ -491,9 +491,10 @@ export function validateSmartAlertFiles(
     });
 }
 
-export function validateCollectorFiles(collectorPath: string, errors: string[], warnings: string[], successMessages: string[]): void {
-    const requiredFiles = ['Dockerfile', 'requirements.txt', 'config.json'];
-    
+export function validateCollectorFiles(collectorPath: string, configPath: string, errors: string[], warnings: string[], successMessages: string[]): void {
+    const requiredCollectorFiles = ['Dockerfile', 'requirements.txt'];
+    const configFile = path.join(configPath, 'config.json');
+
     try {
         const files = fs.readdirSync(collectorPath);
         
@@ -502,8 +503,8 @@ export function validateCollectorFiles(collectorPath: string, errors: string[], 
             return;
         }
         
-        // Check for required files
-        requiredFiles.forEach(requiredFile => {
+        // Check for required files in collector root
+        requiredCollectorFiles.forEach(requiredFile => {
             if (!files.includes(requiredFile)) {
                 errors.push(`Missing required collector file: ${requiredFile}`);
             } else {
@@ -514,6 +515,16 @@ export function validateCollectorFiles(collectorPath: string, errors: string[], 
                 }
             }
         });
+
+        // Check for config.json in collector/config/
+        if (!fs.existsSync(configFile)) {
+            errors.push(`Missing required collector file: config/config.json`);
+        } else {
+            const stats = fs.statSync(configFile);
+            if (stats.size === 0) {
+                warnings.push(`Collector file is empty: config/config.json`);
+            }
+        }
         
         // Check for Python collector file
         const pythonCollectorFiles = files.filter(file => file.endsWith('.py'));
@@ -529,10 +540,9 @@ export function validateCollectorFiles(collectorPath: string, errors: string[], 
         }
         
         // Validate config.json content if it exists
-        const configPath = path.join(collectorPath, 'config.json');
-        if (files.includes('config.json')) {
+        if (fs.existsSync(configFile)) {
             try {
-                const configContent = fs.readFileSync(configPath, 'utf-8');
+                const configContent = fs.readFileSync(configFile, 'utf-8');
                 const config = JSON.parse(configContent);
                 
                 // Validate image section exists

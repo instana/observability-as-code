@@ -1,7 +1,8 @@
+import { execSync, spawn } from 'child_process';
+
 import fs from 'fs';
 import logger from './logger';
 import path from 'path';
-import { execSync, spawn } from 'child_process';
 
 /**
  * Generic filter function for filtering objects by conditions
@@ -457,6 +458,7 @@ export function generateCollectorFiles(packagePath: string, packageName: string,
         .join('_');
 
     const targetDir = path.join(packagePath, 'collector');
+    const configDir = path.join(packagePath, 'collector', 'config')
     const templatesDir = __dirname.includes('/dist')
         ? path.join(__dirname, '..', 'src', 'templates', 'collector')
         : path.join(__dirname, 'templates', 'collector');
@@ -475,10 +477,11 @@ export function generateCollectorFiles(packagePath: string, packageName: string,
     fs.writeFileSync(path.join(targetDir, 'requirements.txt'), requirementsContent);
     
     // config.json template
-    let configContent = fs.readFileSync(path.join(templatesDir, 'config.json'), 'utf-8');
+    fs.mkdirSync(configDir, { recursive: true });
+    let configContent = fs.readFileSync(path.join(templatesDir, 'config', 'config.json'), 'utf-8');
     const createdAt = new Date().toISOString();
     configContent = configContent.replace(/\{\{PACKAGE_NAME\}\}/g, normalizedPackageName);
     configContent = configContent.replace(/\{\{PACKAGE_NAME_LOWER\}\}/g, normalizedPackageName.toLowerCase());
     configContent = configContent.replace(/\{\{CREATED_AT\}\}/g, createdAt);
-    fs.writeFileSync(path.join(targetDir, 'config.json'), configContent);
+    fs.writeFileSync(path.join(configDir, 'config.json'), configContent);
 }

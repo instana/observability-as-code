@@ -207,7 +207,7 @@ describe('CLI Module', () => {
             const cliPath = path.join(__dirname, '../cli.ts');
             const cliContent = fs.readFileSync(cliPath, 'utf-8');
 
-            expect(cliContent).toContain('--include collector');
+            expect(cliContent).toContain('--include "collector/**/*.json"');
         });
 
         it('should define export command options', async () => {

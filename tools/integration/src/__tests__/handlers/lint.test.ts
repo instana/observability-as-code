@@ -383,6 +383,7 @@ describe('Lint Handler', () => {
 
             expect(validators.validateCollectorFiles).toHaveBeenCalledWith(
                 '/test/package/collector',
+                '/test/package/collector/config',
                 expect.any(Array),
                 expect.any(Array),
                 expect.any(Array)

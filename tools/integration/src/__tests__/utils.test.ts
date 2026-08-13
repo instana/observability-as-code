@@ -1,5 +1,5 @@
-import * as utils from '../utils';
 import * as child_process from 'child_process';
+import * as utils from '../utils';
 
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 
@@ -644,11 +644,11 @@ describe('Utils Module', () => {
             );
         });
 
-        it('should create config.json', () => {
+        it('should create config.json under collector/config', () => {
             utils.generateCollectorFiles('/test/package', '@instana-integration/test', ['collector']);
 
             expect(mockedFs.writeFileSync).toHaveBeenCalledWith(
-                expect.stringContaining('config.json'),
+                expect.stringContaining('collector/config/config.json'),
                 expect.any(String)
             );
         });
@@ -677,7 +677,7 @@ describe('Utils Module', () => {
 
             // Find the config.json write call
             const calls = (mockedFs.writeFileSync as jest.Mock).mock.calls;
-            const configCall = calls.find((call: any) => call[0].includes('config.json'));
+            const configCall = calls.find((call: any) => call[0].includes('collector/config/config.json'));
             
             expect(configCall).toBeDefined();
             if (configCall) {

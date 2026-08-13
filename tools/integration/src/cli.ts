@@ -25,7 +25,7 @@ Import integration package with parameters replaced:
   ${execName} import --package my-package --server example.com --token mytoken --include "events/**/*.json"
   ${execName} import --package my-package --server example.com --token mytoken --include "entities/**/*.json"
   ${execName} import --package my-package --server example.com --token mytoken --include "smart-alerts/**/*.json"
-  ${execName} import --package my-package --server example.com --token mytoken --include collector
+  ${execName} import --package my-package --server example.com --token mytoken --include "collector/**/*.json"
 `;
 
 const examplesForExport = `
@@ -125,7 +125,7 @@ export function configureCLI(handlers: {
                 })
                 .option('include', {
                     alias: 'i',
-                    describe: 'Folder or pattern to match integration element files to include, or "collector" to import only the collector configuration',
+                    describe: 'Folder or pattern to match integration element files to include',
                     type: 'string',
                     demandOption: false
                 })
