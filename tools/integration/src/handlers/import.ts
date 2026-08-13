@@ -37,6 +37,28 @@ export async function handleImport(argv: any) {
         process.exit(1);
     }
 
+    // Create an axios instance with a custom httpsAgent to ignore self-signed certificate errors
+    const axiosInstance = axios.create({
+        httpsAgent: new https.Agent({
+            rejectUnauthorized: false
+        })
+    });
+
+    // Collector mode — import only the collector configuration, skip all other integration elements
+    if (includePattern === 'collector') {
+        let resolvedPackagePath = packageNameOrPath;
+        if (!fs.existsSync(packageNameOrPath)) {
+            resolvedPackagePath = path.join(location, 'node_modules', packageNameOrPath);
+        }
+        try {
+            await importCollectorConfiguration(server, token, resolvedPackagePath, axiosInstance);
+        } catch (error) {
+            logger.error(error instanceof Error ? error.message : String(error));
+            process.exit(1);
+        }
+        return;
+    }
+
     let packagePath = packageNameOrPath;
     if (!fs.existsSync(packageNameOrPath)) {
         packagePath = path.join(location, 'node_modules', packageNameOrPath);
@@ -46,13 +68,6 @@ export async function handleImport(argv: any) {
     const defaultEventsFolders = ['events'];
     const defaultEntitiesFolders = ['entities'];
     const defaultSmartAlertsFolders = ['smart-alerts'];
-
-    // Create an axios instance with a custom httpsAgent to ignore self-signed certificate errors
-    const axiosInstance = axios.create({
-        httpsAgent: new https.Agent({
-            rejectUnauthorized: false
-        })
-    });
 
     async function importIntegration(searchPattern: string, apiPath: string, typeLabel: string, skipFiles: Set<string> = new Set()) {
         const files = globSync(searchPattern);
@@ -306,6 +321,116 @@ export async function handleImport(argv: any) {
             const searchPattern = path.join(packagePath, defaultFolder, '**/*.json');
             await importIntegration(searchPattern, "smart-alert", "smart alert");
         }
+
+        // Auto-detect collector: if package has a collector/config/ directory, always import it
+        const collectorConfigDir = path.join(packagePath, 'collector', 'config');
+        if (fs.existsSync(collectorConfigDir)) {
+            logger.info(`Detected collector/config folder in package - importing collector configuration ...`);
+            try {
+                await importCollectorConfiguration(server, token, packagePath, axiosInstance);
+            } catch (error) {
+                logger.error(error instanceof Error ? error.message : String(error));
+                process.exit(1);
+            }
+        }
+    }
+}
+
+/**
+ * Import a collector configuration to Instana.
+ * Only supports com.ibm.instana.customcollector — IDOT and Instana agent are handled by stanctl-fleet.
+ *
+ * Metadata (name, version, image) is read from the single collector/config.json file.
+ *   - extension_name / extension_version — falls back to package.json name / version if absent.
+ *   - image (registry/repository:tag) — required.
+ *
+ * Upload files are all files inside collector/config/ — multiple files are supported.
+ */
+async function importCollectorConfiguration(server: string, token: string, packagePath: string, axiosInstance: any): Promise<void> {
+    const agentType = 'com.ibm.instana.customcollector';
+    const configJsonPath = path.join(packagePath, 'collector', 'config.json');
+
+    if (!fs.existsSync(configJsonPath)) {
+        throw new Error(`collector/config.json not found in package: ${configJsonPath}`);
+    }
+    let configJson: any;
+    try {
+        configJson = JSON.parse(fs.readFileSync(configJsonPath, 'utf8'));
+    } catch (e) {
+        throw new Error(`Failed to parse collector/config.json: ${e instanceof Error ? e.message : String(e)}`);
+    }
+
+    // Resolve name: extension_name and extension_version from config.json, fallback to name from package.json
+    let name: string = configJson.extension_name;
+    let version: string = configJson.extension_version;
+    if (!name || !version) {
+        const pkgJsonPath = path.join(packagePath, 'package.json');
+        if (!fs.existsSync(pkgJsonPath)) {
+            throw new Error(`package.json not found in package: ${pkgJsonPath}`);
+        }
+        let pkgJson: any;
+        try {
+            pkgJson = JSON.parse(fs.readFileSync(pkgJsonPath, 'utf8'));
+        } catch (e) {
+            throw new Error(`Failed to parse package.json: ${e instanceof Error ? e.message : String(e)}`);
+        }
+        name = name || pkgJson.name;
+        version = version || pkgJson.version;
+    }
+    if (!name || !version) {
+        throw new Error(`Could not resolve collector configuration name or version from config.json or package.json`);
+    }
+
+    logger.info(`Importing collector configuration "${name}" (type=${agentType}, version=${version}) ...`);
+
+    // Files are read from <packagePath>/collector/config/ - required subfolder
+    const configDir = path.join(packagePath, 'collector', 'config');
+    if (!fs.existsSync(configDir)) {
+        throw new Error(`collector/config directory not found in package: ${configDir}`);
+    }
+
+    const allFiles = fs.readdirSync(configDir).filter(f => {
+        return !f.startsWith('.') && f !== 'Thumbs.db' && fs.statSync(path.join(configDir, f)).isFile();
+    });
+    if (allFiles.length === 0) {
+        throw new Error(`No files found in collector/config directory: ${configDir}`);
+    }
+
+    const files = allFiles.map(f => ({
+        name: f,
+        data: fs.readFileSync(path.join(configDir, f)).toString('base64')
+    }));
+    logger.info(`Found ${files.length} collector configuration file(s): ${allFiles.join(', ')}`);
+
+    const { registry, repository, tag } = configJson.image ?? {};
+    if (!registry || !repository || !tag) {
+        throw new Error(`collector/config.json is missing required image fields: registry, repository, tag`);
+    }
+    const configuration: any = {
+        files,
+        image: { repo: `${registry}/${repository}:${tag}` }
+    };
+    logger.info(`Using image: ${configuration.image.repo}`);
+
+    const url = `https://${server}/api/fleet/configurations?type=${agentType}`;
+    logger.info(`Applying collector configuration to ${url} ...`);
+
+    try {
+        const response = await axiosInstance.post(url, { name, version, type: agentType, configuration }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `apiToken ${token}`
+            }
+        });
+        logger.info(`Successfully imported collector configuration "${name}": ${response.status}`);
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            const details = error.response
+                ? ` (status: ${error.response.status}, data: ${JSON.stringify(error.response.data)})`
+                : '';
+            throw new Error(`Failed to import collector configuration: ${error.message}${details}`);
+        }
+        throw new Error(`Failed to import collector configuration: ${String(error)}`);
     }
 }
 

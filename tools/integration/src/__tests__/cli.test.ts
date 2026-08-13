@@ -190,6 +190,26 @@ describe('CLI Module', () => {
             expect(cliContent).toContain("alias: 'd'");
         });
 
+        it('should define import collector options', async () => {
+            const fs = require('fs');
+            const path = require('path');
+            const cliPath = path.join(__dirname, '../cli.ts');
+            const cliContent = fs.readFileSync(cliPath, 'utf-8');
+
+            // --type removed: stanctl-integration import only supports com.ibm.instana.customcollector
+            expect(cliContent).toContain("'include'");
+            expect(cliContent).not.toContain("alias: 'y'");
+        });
+
+        it('should define import collector example in epilog', async () => {
+            const fs = require('fs');
+            const path = require('path');
+            const cliPath = path.join(__dirname, '../cli.ts');
+            const cliContent = fs.readFileSync(cliPath, 'utf-8');
+
+            expect(cliContent).toContain('--include collector');
+        });
+
         it('should define export command options', async () => {
             const fs = require('fs');
             const path = require('path');

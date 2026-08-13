@@ -21,10 +21,11 @@ const examplesForImport = `
 Examples:
 
 Import integration package with parameters replaced:
-  ${execName} import --package my-package --server example.com --include "dashboards/**/test-*.json" --set key1=value1 --set key2=value2
-  ${execName} import --package my-package --server example.com --include "events/**/*.json"
-  ${execName} import --package my-package --server example.com --include "entities/**/*.json"
-  ${execName} import --package my-package --server example.com --include "smart-alerts/**/*.json"
+  ${execName} import --package my-package --server example.com --token mytoken --include "dashboards/**/test-*.json" --set key1=value1 --set key2=value2
+  ${execName} import --package my-package --server example.com --token mytoken --include "events/**/*.json"
+  ${execName} import --package my-package --server example.com --token mytoken --include "entities/**/*.json"
+  ${execName} import --package my-package --server example.com --token mytoken --include "smart-alerts/**/*.json"
+  ${execName} import --package my-package --server example.com --token mytoken --include collector
 `;
 
 const examplesForExport = `
@@ -124,7 +125,7 @@ export function configureCLI(handlers: {
                 })
                 .option('include', {
                     alias: 'i',
-                    describe: 'Folder or pattern to match integration element files to include',
+                    describe: 'Folder or pattern to match integration element files to include, or "collector" to import only the collector configuration',
                     type: 'string',
                     demandOption: false
                 })
