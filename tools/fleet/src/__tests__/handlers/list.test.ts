@@ -40,7 +40,7 @@ describe('handleList', () => {
 
         expect(getMock).toHaveBeenCalledTimes(1);
         const [url, config] = getMock.mock.calls[0];
-        expect(url).toBe('http://localhost:8080/api/fleet/configurations');
+        expect(url).toBe('https://localhost:8080/api/fleet/configurations');
         expect(config.params).toEqual({ type: 'com.ibm.instana.customcollector' });
         expect(config.headers['Authorization']).toBe('apiToken test-token');
         expect(result).toEqual([{ id: 'cfg-1', name: 'my-config' }]);

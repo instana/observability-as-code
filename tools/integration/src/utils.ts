@@ -458,7 +458,7 @@ export function generateCollectorFiles(packagePath: string, packageName: string,
         .join('_');
 
     const targetDir = path.join(packagePath, 'collector');
-    const configDir = path.join(packagePath, 'collector', 'config')
+    const configDir = path.join(packagePath, 'collector', 'config');
     const templatesDir = __dirname.includes('/dist')
         ? path.join(__dirname, '..', 'src', 'templates', 'collector')
         : path.join(__dirname, 'templates', 'collector');

@@ -1124,6 +1124,8 @@ describe('validators', () => {
             expect(warnings).toContain('Collector file is empty: requirements.txt');
             expect(warnings).toContain('Collector file is empty: config/config.json');
             expect(warnings).toContain('Python collector file is empty: test_collector.py');
+            // empty config.json must NOT trigger a JSON parse error
+            expect(errors.some(e => e.toLowerCase().includes('parse') || e.toLowerCase().includes('json'))).toBe(false);
         });
 
         it('should report error when collector directory is empty', () => {

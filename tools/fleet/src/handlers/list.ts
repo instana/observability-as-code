@@ -5,7 +5,7 @@ export async function handleList(argv: any): Promise<any> {
     const { server, token, type } = resolveConnection(argv);
 
     const axiosInstance = createAxiosInstance();
-    const url = `http://${server}/api/fleet/configurations`;
+    const url = `https://${server}/api/fleet/configurations`;
 
     try {
         logger.info(`Listing configurations for type: ${type}...`);

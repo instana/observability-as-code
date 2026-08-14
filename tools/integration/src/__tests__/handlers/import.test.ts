@@ -629,7 +629,8 @@ describe('handleImport', () => {
             };
 
             mockedFs.existsSync = jest.fn()
-                .mockReturnValueOnce(false) // package path doesn't exist
+                .mockReturnValueOnce(false) // package path doesn't exist — triggers fallback
+                .mockReturnValueOnce(true)  // fallback node_modules path exists
                 .mockReturnValueOnce(true); // entities path exists
             mockedGlobSync.mockReturnValue([]);
             mockedValidators.getEntityDashboardRefs = jest.fn().mockReturnValue(new Set());
@@ -651,6 +652,7 @@ describe('handleImport', () => {
 
             mockedFs.existsSync = jest.fn()
                 .mockReturnValueOnce(true)  // package path exists
+                .mockReturnValueOnce(true)  // validated — package path exists
                 .mockReturnValueOnce(false); // entities path does NOT exist
             mockedGlobSync.mockReturnValue([]);
             mockedValidators.getEntityDashboardRefs = jest.fn().mockReturnValue(new Set());
@@ -816,7 +818,8 @@ describe('handleImport', () => {
             };
 
             mockedFs.existsSync = jest.fn()
-                .mockReturnValueOnce(true) // package exists
+                .mockReturnValueOnce(true)  // package exists
+                .mockReturnValueOnce(true)  // validated — package path exists
                 .mockReturnValueOnce(false); // dashboard reference doesn't exist
             mockedGlobSync.mockReturnValue(['/test/package/entities/test.json']);
             mockedFs.readFileSync = jest.fn().mockReturnValue(JSON.stringify({
@@ -1115,6 +1118,7 @@ describe('handleImport', () => {
 
             mockedFs.existsSync = jest.fn()
                 .mockReturnValueOnce(true)   // package exists
+                .mockReturnValueOnce(true)   // validated — package path exists
                 .mockReturnValueOnce(false)  // entities folder — not exists
                 .mockReturnValueOnce(false); // collector/config/ — not exists (skip collector)
             mockedGlobSync.mockReturnValue([]);
@@ -1144,8 +1148,10 @@ describe('handleImport', () => {
 
             mockedFs.existsSync = jest.fn()
                 .mockReturnValueOnce(true)   // package exists
+                .mockReturnValueOnce(true)   // validated — package path exists
                 .mockReturnValueOnce(false)  // entities folder — not exists
                 .mockReturnValueOnce(true)   // collector/config/ — exists (triggers collector import)
+                .mockReturnValueOnce(true)   // resolvedPackagePath validated — exists
                 .mockReturnValueOnce(true)   // collector/config/ — exists inside importCollectorConfiguration
                 .mockReturnValueOnce(true);  // collector/config/config.json — exists
             mockedGlobSync
@@ -1289,9 +1295,19 @@ describe('handleImport', () => {
 
         // ── Filesystem / metadata errors ────────────────────────────────────
 
+        it('should exit if resolved package directory does not exist', async () => {
+            mockedFs.existsSync = jest.fn()
+                .mockReturnValueOnce(false)  // packageNameOrPath does not exist — triggers fallback
+                .mockReturnValueOnce(false); // fallback node_modules path also does not exist
+
+            await expect(handleImport(collectorArgv)).rejects.toThrow('process.exit(1)');
+            expect(mockedLogger.error).toHaveBeenCalledWith(expect.stringContaining('Package directory not found'));
+        });
+
         it('should exit if collector/config directory is missing', async () => {
             mockedFs.existsSync = jest.fn()
                 .mockReturnValueOnce(true)   // package path exists
+                .mockReturnValueOnce(true)   // validated — resolvedPackagePath exists
                 .mockReturnValueOnce(false); // collector/config/ does not exist
 
             await expect(handleImport(collectorArgv)).rejects.toThrow('process.exit(1)');
@@ -1301,6 +1317,7 @@ describe('handleImport', () => {
         it('should exit if collector/config/config.json is not found', async () => {
             mockedFs.existsSync = jest.fn()
                 .mockReturnValueOnce(true)   // package path exists
+                .mockReturnValueOnce(true)   // validated — resolvedPackagePath exists
                 .mockReturnValueOnce(true)   // collector/config/ exists
                 .mockReturnValueOnce(false); // collector/config/config.json does not exist
 
@@ -1311,6 +1328,7 @@ describe('handleImport', () => {
         it('should exit with clear error if collector/config/config.json is invalid JSON', async () => {
             mockedFs.existsSync = jest.fn()
                 .mockReturnValueOnce(true)   // package path exists
+                .mockReturnValueOnce(true)   // validated — resolvedPackagePath exists
                 .mockReturnValueOnce(true)   // collector/config/ exists
                 .mockReturnValueOnce(true);  // collector/config/config.json exists
             mockedFs.readFileSync = jest.fn().mockReturnValueOnce('{ invalid json }');
@@ -1322,6 +1340,7 @@ describe('handleImport', () => {
         it('should exit with clear error if package.json is invalid JSON', async () => {
             mockedFs.existsSync = jest.fn()
                 .mockReturnValueOnce(true)   // package path exists
+                .mockReturnValueOnce(true)   // validated — resolvedPackagePath exists
                 .mockReturnValueOnce(true)   // collector/config/ exists
                 .mockReturnValueOnce(true)   // collector/config/config.json exists
                 .mockReturnValueOnce(true);  // package.json exists
@@ -1336,6 +1355,7 @@ describe('handleImport', () => {
         it('should exit if config.json is missing image fields', async () => {
             mockedFs.existsSync = jest.fn()
                 .mockReturnValueOnce(true)   // package path exists
+                .mockReturnValueOnce(true)   // validated — resolvedPackagePath exists
                 .mockReturnValueOnce(true)   // collector/config/ exists
                 .mockReturnValueOnce(true);  // collector/config/config.json exists
             mockedFs.readFileSync = jest.fn()
@@ -1349,6 +1369,7 @@ describe('handleImport', () => {
         it('should exit if glob pattern matches no files', async () => {
             mockedFs.existsSync = jest.fn()
                 .mockReturnValueOnce(true)   // package path exists
+                .mockReturnValueOnce(true)   // validated — resolvedPackagePath exists
                 .mockReturnValueOnce(true)   // collector/config/ exists
                 .mockReturnValueOnce(true);  // collector/config/config.json exists
             mockedFs.readFileSync = jest.fn()
@@ -1364,6 +1385,7 @@ describe('handleImport', () => {
         it('should POST all matched files when no existing configuration found', async () => {
             mockedFs.existsSync = jest.fn()
                 .mockReturnValueOnce(true)   // package path exists
+                .mockReturnValueOnce(true)   // validated — resolvedPackagePath exists
                 .mockReturnValueOnce(true)   // collector/config/ exists
                 .mockReturnValueOnce(true);  // collector/config/config.json exists
             mockedFs.readFileSync = jest.fn()
@@ -1411,6 +1433,7 @@ describe('handleImport', () => {
 
             mockedFs.existsSync = jest.fn()
                 .mockReturnValueOnce(true)   // package path exists
+                .mockReturnValueOnce(true)   // validated — resolvedPackagePath exists
                 .mockReturnValueOnce(true)   // collector/config/ exists
                 .mockReturnValueOnce(true)   // collector/config/config.json exists
                 .mockReturnValueOnce(true);  // package.json exists
@@ -1431,11 +1454,49 @@ describe('handleImport', () => {
             );
         });
 
+        it('should skip PUT and log "already up to date" when all files are identical to server', async () => {
+            const fileData = Buffer.from('same-content').toString('base64');
+            const existingConfig = {
+                configuration_id: 'cfg-same',
+                name: 'my-collector',
+                configuration: {
+                    files: [
+                        { name: 'config.json', data: fileData },
+                        { name: 'credentials.json', data: fileData }
+                    ],
+                    image: { repo: 'quay.io/instana-collectors/my-collector:1.0.0' }
+                }
+            };
+
+            mockedFs.existsSync = jest.fn()
+                .mockReturnValueOnce(true)   // package path exists
+                .mockReturnValueOnce(true)   // validated — resolvedPackagePath exists
+                .mockReturnValueOnce(true)   // collector/config/ exists
+                .mockReturnValueOnce(true);  // collector/config/config.json exists
+            mockedFs.readFileSync = jest.fn()
+                .mockReturnValueOnce(JSON.stringify(configJson))          // config.json metadata
+                .mockReturnValueOnce(Buffer.from('same-content'))         // config.json file
+                .mockReturnValueOnce(Buffer.from('same-content'));        // credentials.json file
+            mockedGlobSync.mockReturnValue([
+                '/test/package/collector/config/config.json',
+                '/test/package/collector/config/credentials.json'
+            ]);
+            mockAxiosInstance.get.mockResolvedValue({ data: { items: [existingConfig] } });
+
+            await handleImport(collectorArgv);
+
+            expect(mockAxiosInstance.put).not.toHaveBeenCalled();
+            expect(mockedLogger.info).toHaveBeenCalledWith(expect.stringContaining('already up to date'));
+            expect(mockedLogger.info).toHaveBeenCalledWith(expect.stringContaining('No changes detected for file: config.json'));
+            expect(mockedLogger.info).toHaveBeenCalledWith(expect.stringContaining('No changes detected for file: credentials.json'));
+        });
+
         it('should exit and log error if POST fails', async () => {
             mockedFs.existsSync = jest.fn()
-                .mockReturnValueOnce(true)
-                .mockReturnValueOnce(true)
-                .mockReturnValueOnce(true);
+                .mockReturnValueOnce(true)   // package path exists
+                .mockReturnValueOnce(true)   // validated — resolvedPackagePath exists
+                .mockReturnValueOnce(true)   // collector/config/ exists
+                .mockReturnValueOnce(true);  // collector/config/config.json exists
             mockedFs.readFileSync = jest.fn()
                 .mockReturnValueOnce(JSON.stringify(configJson))
                 .mockReturnValueOnce(Buffer.from('content'));
@@ -1468,6 +1529,7 @@ describe('handleImport', () => {
 
             mockedFs.existsSync = jest.fn()
                 .mockReturnValueOnce(true)   // package path exists
+                .mockReturnValueOnce(true)   // validated — resolvedPackagePath exists
                 .mockReturnValueOnce(true)   // collector/config/ exists
                 .mockReturnValueOnce(true);  // collector/config/config.json exists
             mockedFs.readFileSync = jest.fn()
@@ -1513,9 +1575,10 @@ describe('handleImport', () => {
             };
 
             mockedFs.existsSync = jest.fn()
-                .mockReturnValueOnce(true)
-                .mockReturnValueOnce(true)
-                .mockReturnValueOnce(true);
+                .mockReturnValueOnce(true)   // package path exists
+                .mockReturnValueOnce(true)   // validated — resolvedPackagePath exists
+                .mockReturnValueOnce(true)   // collector/config/ exists
+                .mockReturnValueOnce(true);  // collector/config/config.json exists
             mockedFs.readFileSync = jest.fn()
                 .mockReturnValueOnce(JSON.stringify(configJson))
                 .mockReturnValueOnce(Buffer.from('new-credentials'));
@@ -1537,9 +1600,10 @@ describe('handleImport', () => {
             const existingConfig = { configuration_id: 'cfg-789', name: 'my-collector', configuration: { files: [] } };
 
             mockedFs.existsSync = jest.fn()
-                .mockReturnValueOnce(true)
-                .mockReturnValueOnce(true)
-                .mockReturnValueOnce(true);
+                .mockReturnValueOnce(true)   // package path exists
+                .mockReturnValueOnce(true)   // validated — resolvedPackagePath exists
+                .mockReturnValueOnce(true)   // collector/config/ exists
+                .mockReturnValueOnce(true);  // collector/config/config.json exists
             mockedFs.readFileSync = jest.fn()
                 .mockReturnValueOnce(JSON.stringify(configJson))
                 .mockReturnValueOnce(Buffer.from('content'));
@@ -1558,9 +1622,10 @@ describe('handleImport', () => {
 
         it('should exit and log error if GET fails', async () => {
             mockedFs.existsSync = jest.fn()
-                .mockReturnValueOnce(true)
-                .mockReturnValueOnce(true)
-                .mockReturnValueOnce(true);
+                .mockReturnValueOnce(true)   // package path exists
+                .mockReturnValueOnce(true)   // validated — resolvedPackagePath exists
+                .mockReturnValueOnce(true)   // collector/config/ exists
+                .mockReturnValueOnce(true);  // collector/config/config.json exists
             mockedFs.readFileSync = jest.fn()
                 .mockReturnValueOnce(JSON.stringify(configJson))
                 .mockReturnValueOnce(Buffer.from('content'));

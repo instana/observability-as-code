@@ -50,6 +50,10 @@ export async function handleImport(argv: any) {
         if (!fs.existsSync(packageNameOrPath)) {
             resolvedPackagePath = path.join(location, 'node_modules', packageNameOrPath);
         }
+        if (!fs.existsSync(resolvedPackagePath)) {
+            logger.error(`Package directory not found: ${resolvedPackagePath}`);
+            process.exit(1);
+        }
         try {
             await importCollectorConfiguration(server, token, resolvedPackagePath, includePattern, axiosInstance);
         } catch (error) {
@@ -62,6 +66,10 @@ export async function handleImport(argv: any) {
     let packagePath = packageNameOrPath;
     if (!fs.existsSync(packageNameOrPath)) {
         packagePath = path.join(location, 'node_modules', packageNameOrPath);
+    }
+    if (!fs.existsSync(packagePath)) {
+        logger.error(`Package directory not found: ${packagePath}`);
+        process.exit(1);
     }
 
     const defaultFolders = ['dashboards'];

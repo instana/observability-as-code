@@ -517,12 +517,15 @@ export function validateCollectorFiles(collectorPath: string, configPath: string
         });
 
         // Check for config.json in collector/config/
+        let configFileValid = false;
         if (!fs.existsSync(configFile)) {
             errors.push(`Missing required collector file: config/config.json`);
         } else {
             const stats = fs.statSync(configFile);
             if (stats.size === 0) {
                 warnings.push(`Collector file is empty: config/config.json`);
+            } else {
+                configFileValid = true;
             }
         }
         
@@ -539,8 +542,8 @@ export function validateCollectorFiles(collectorPath: string, configPath: string
             }
         }
         
-        // Validate config.json content if it exists
-        if (fs.existsSync(configFile)) {
+        // Validate config.json content only if it exists and is non-empty
+        if (configFileValid) {
             try {
                 const configContent = fs.readFileSync(configFile, 'utf-8');
                 const config = JSON.parse(configContent);
