@@ -32,12 +32,21 @@ export async function handleBuild(argv: any): Promise<void> {
     }
     logger.info(`Collector directory exists: ${collectorPath}`);
 
+    // Check if collector/config directory exists
+    const configPath = path.join(packagePath, 'collector', 'config');
+    if (!pathExists(configPath)) {
+        throw new Error(
+            `Collector config directory not found: ${configPath}. Make sure your package includes a 'collector/config' folder.`
+        );
+    }
+    logger.info(`Collector config directory exists: ${configPath}`);
+
     // Validate collector files
     const errors: string[] = [];
     const warnings: string[] = [];
     const successMessages: string[] = [];
 
-    validateCollectorFiles(collectorPath, errors, warnings, successMessages);
+    validateCollectorFiles(collectorPath, configPath, errors, warnings, successMessages);
     
     // Show detailed validation results in debug mode
     if (argv.debug) {
@@ -66,15 +75,15 @@ export async function handleBuild(argv: any): Promise<void> {
         logger.info('Required collector files exist');
     }
 
-    // Read config.json to get image information for container image build
-    const configPath = path.join(collectorPath, 'config.json');
+    // Read collector/config/config.json to get image information for container image build
+    const configFilePath = path.join(configPath, 'config.json');
     let config: any;
     try {
-        const configContent = fs.readFileSync(configPath, 'utf-8');
+        const configContent = fs.readFileSync(configFilePath, 'utf-8');
         config = JSON.parse(configContent);
     } catch (error) {
         throw new Error(
-            `Failed to read config.json: ${
+            `Failed to read collector/config/config.json: ${
                 error instanceof Error ? error.message : String(error)
             }`
         );

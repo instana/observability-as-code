@@ -1049,8 +1049,10 @@ describe('validators', () => {
     });
 
     describe('validateCollectorFiles', () => {
+        const collectorPath = '/test/collector';
+        const configPath = '/test/collector/config';
+
         it('should validate all required files are present', () => {
-            const collectorPath = '/test/collector';
             const validConfig = {
                 extension_id: 'test-collector',
                 image: {
@@ -1060,91 +1062,91 @@ describe('validators', () => {
                 }
             };
             
-            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'config.json', 'test_collector.py'] as any);
+            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'test_collector.py'] as any);
             mockedFs.statSync.mockReturnValue({ size: 100 } as any);
+            mockedFs.existsSync.mockReturnValue(true);
             mockedFs.readFileSync.mockReturnValue(JSON.stringify(validConfig));
 
-            validators.validateCollectorFiles(collectorPath, errors, warnings, successMessages);
+            validators.validateCollectorFiles(collectorPath, configPath, errors, warnings, successMessages);
 
             expect(errors).toHaveLength(0);
             expect(warnings).toHaveLength(0);
         });
 
         it('should report error when Dockerfile is missing', () => {
-            const collectorPath = '/test/collector';
-            mockedFs.readdirSync.mockReturnValue(['requirements.txt', 'config.json', 'test_collector.py'] as any);
+            mockedFs.readdirSync.mockReturnValue(['requirements.txt', 'test_collector.py'] as any);
             mockedFs.statSync.mockReturnValue({ size: 100 } as any);
+            mockedFs.existsSync.mockReturnValue(true);
 
-            validators.validateCollectorFiles(collectorPath, errors, warnings, successMessages);
+            validators.validateCollectorFiles(collectorPath, configPath, errors, warnings, successMessages);
 
             expect(errors).toContain('Missing required collector file: Dockerfile');
         });
 
         it('should report error when requirements.txt is missing', () => {
-            const collectorPath = '/test/collector';
-            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'config.json', 'test_collector.py'] as any);
+            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'test_collector.py'] as any);
             mockedFs.statSync.mockReturnValue({ size: 100 } as any);
+            mockedFs.existsSync.mockReturnValue(true);
 
-            validators.validateCollectorFiles(collectorPath, errors, warnings, successMessages);
+            validators.validateCollectorFiles(collectorPath, configPath, errors, warnings, successMessages);
 
             expect(errors).toContain('Missing required collector file: requirements.txt');
         });
 
         it('should report error when config.json is missing', () => {
-            const collectorPath = '/test/collector';
             mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'test_collector.py'] as any);
             mockedFs.statSync.mockReturnValue({ size: 100 } as any);
+            mockedFs.existsSync.mockReturnValue(false);
 
-            validators.validateCollectorFiles(collectorPath, errors, warnings, successMessages);
+            validators.validateCollectorFiles(collectorPath, configPath, errors, warnings, successMessages);
 
-            expect(errors).toContain('Missing required collector file: config.json');
+            expect(errors).toContain('Missing required collector file: config/config.json');
         });
 
         it('should warn when Python collector file is missing', () => {
-            const collectorPath = '/test/collector';
-            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'config.json'] as any);
+            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt'] as any);
             mockedFs.statSync.mockReturnValue({ size: 100 } as any);
+            mockedFs.existsSync.mockReturnValue(true);
 
-            validators.validateCollectorFiles(collectorPath, errors, warnings, successMessages);
+            validators.validateCollectorFiles(collectorPath, configPath, errors, warnings, successMessages);
 
             expect(warnings).toContain('Missing Python collector file (.py)');
         });
 
         it('should warn when files are empty', () => {
-            const collectorPath = '/test/collector';
-            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'config.json', 'test_collector.py'] as any);
+            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'test_collector.py'] as any);
             mockedFs.statSync.mockReturnValue({ size: 0 } as any);
+            mockedFs.existsSync.mockReturnValue(true);
 
-            validators.validateCollectorFiles(collectorPath, errors, warnings, successMessages);
+            validators.validateCollectorFiles(collectorPath, configPath, errors, warnings, successMessages);
 
             expect(warnings).toContain('Collector file is empty: Dockerfile');
             expect(warnings).toContain('Collector file is empty: requirements.txt');
-            expect(warnings).toContain('Collector file is empty: config.json');
+            expect(warnings).toContain('Collector file is empty: config/config.json');
             expect(warnings).toContain('Python collector file is empty: test_collector.py');
+            // empty config.json must NOT trigger a JSON parse error
+            expect(errors.some(e => e.toLowerCase().includes('parse') || e.toLowerCase().includes('json'))).toBe(false);
         });
 
         it('should report error when collector directory is empty', () => {
-            const collectorPath = '/test/collector';
             mockedFs.readdirSync.mockReturnValue([] as any);
 
-            validators.validateCollectorFiles(collectorPath, errors, warnings, successMessages);
+            validators.validateCollectorFiles(collectorPath, configPath, errors, warnings, successMessages);
 
             expect(errors).toContain('No files found in the collector folder.');
         });
 
         it('should handle errors gracefully', () => {
-            const collectorPath = '/test/collector';
             mockedFs.readdirSync.mockImplementation(() => {
                 throw new Error('Permission denied');
             });
 
-            validators.validateCollectorFiles(collectorPath, errors, warnings, successMessages);
+            validators.validateCollectorFiles(collectorPath, configPath, errors, warnings, successMessages);
 
             expect(errors).toContain('Error validating collector files: Permission denied');
         });
 
         it('should accept Python collector files with different names', () => {
-            const collectorPath = '/test/collector';
             const validConfig = {
                 extension_id: 'test-collector',
                 image: {
@@ -1157,37 +1159,36 @@ describe('validators', () => {
             mockedFs.readdirSync.mockReturnValue([
                 'Dockerfile',
                 'requirements.txt',
-                'config.json',
                 'my_custom_collector.py'
             ] as any);
             mockedFs.statSync.mockReturnValue({ size: 100 } as any);
+            mockedFs.existsSync.mockReturnValue(true);
             mockedFs.readFileSync.mockReturnValue(JSON.stringify(validConfig));
 
-            validators.validateCollectorFiles(collectorPath, errors, warnings, successMessages);
+            validators.validateCollectorFiles(collectorPath, configPath, errors, warnings, successMessages);
 
             expect(errors).toHaveLength(0);
             expect(warnings).toHaveLength(0);
         });
 
         it('should validate mixed file sizes correctly', () => {
-            const collectorPath = '/test/collector';
-            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'config.json', 'test_collector.py'] as any);
+            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'test_collector.py'] as any);
+            mockedFs.existsSync.mockReturnValue(true);
             
-            // Mock different file sizes
+            // Mock different file sizes: Dockerfile=100, requirements.txt=0, config/config.json=100, test_collector.py=100
             let callCount = 0;
             mockedFs.statSync.mockImplementation(() => {
                 callCount++;
                 return { size: callCount === 2 ? 0 : 100 } as any; // Second file (requirements.txt) is empty
             });
 
-            validators.validateCollectorFiles(collectorPath, errors, warnings, successMessages);
+            validators.validateCollectorFiles(collectorPath, configPath, errors, warnings, successMessages);
 
             expect(warnings).toContain('Collector file is empty: requirements.txt');
             expect(warnings).toHaveLength(1);
         });
 
         it('should validate config.json with valid image section', () => {
-            const collectorPath = '/test/collector';
             const validConfig = {
                 extension_id: 'test-collector',
                 image: {
@@ -1197,33 +1198,33 @@ describe('validators', () => {
                 }
             };
             
-            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'config.json', 'test_collector.py'] as any);
+            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'test_collector.py'] as any);
             mockedFs.statSync.mockReturnValue({ size: 100 } as any);
+            mockedFs.existsSync.mockReturnValue(true);
             mockedFs.readFileSync.mockReturnValue(JSON.stringify(validConfig));
 
-            validators.validateCollectorFiles(collectorPath, errors, warnings, successMessages);
+            validators.validateCollectorFiles(collectorPath, configPath, errors, warnings, successMessages);
 
             expect(errors).toHaveLength(0);
             expect(successMessages).toContain('Collector config.json image section is valid');
         });
 
         it('should report error when config.json is missing image section', () => {
-            const collectorPath = '/test/collector';
             const invalidConfig = {
                 extension_id: 'test-collector'
             };
             
-            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'config.json', 'test_collector.py'] as any);
+            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'test_collector.py'] as any);
             mockedFs.statSync.mockReturnValue({ size: 100 } as any);
+            mockedFs.existsSync.mockReturnValue(true);
             mockedFs.readFileSync.mockReturnValue(JSON.stringify(invalidConfig));
 
-            validators.validateCollectorFiles(collectorPath, errors, warnings, successMessages);
+            validators.validateCollectorFiles(collectorPath, configPath, errors, warnings, successMessages);
 
             expect(errors).toContain('Collector config.json is missing required "image" section');
         });
 
         it('should report error when config.json has invalid registry format', () => {
-            const collectorPath = '/test/collector';
             const invalidConfig = {
                 extension_id: 'test-collector',
                 image: {
@@ -1233,17 +1234,17 @@ describe('validators', () => {
                 }
             };
             
-            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'config.json', 'test_collector.py'] as any);
+            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'test_collector.py'] as any);
             mockedFs.statSync.mockReturnValue({ size: 100 } as any);
+            mockedFs.existsSync.mockReturnValue(true);
             mockedFs.readFileSync.mockReturnValue(JSON.stringify(invalidConfig));
 
-            validators.validateCollectorFiles(collectorPath, errors, warnings, successMessages);
+            validators.validateCollectorFiles(collectorPath, configPath, errors, warnings, successMessages);
 
             expect(errors.some(e => e.includes('image.registry (invalid hostname format)'))).toBe(true);
         });
 
         it('should report error when config.json has invalid repository format', () => {
-            const collectorPath = '/test/collector';
             const invalidConfig = {
                 extension_id: 'test-collector',
                 image: {
@@ -1253,17 +1254,17 @@ describe('validators', () => {
                 }
             };
             
-            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'config.json', 'test_collector.py'] as any);
+            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'test_collector.py'] as any);
             mockedFs.statSync.mockReturnValue({ size: 100 } as any);
+            mockedFs.existsSync.mockReturnValue(true);
             mockedFs.readFileSync.mockReturnValue(JSON.stringify(invalidConfig));
 
-            validators.validateCollectorFiles(collectorPath, errors, warnings, successMessages);
+            validators.validateCollectorFiles(collectorPath, configPath, errors, warnings, successMessages);
 
             expect(errors.some(e => e.includes('image.repository (invalid format'))).toBe(true);
         });
 
         it('should report error when config.json has invalid tag format', () => {
-            const collectorPath = '/test/collector';
             const invalidConfig = {
                 extension_id: 'test-collector',
                 image: {
@@ -1273,17 +1274,17 @@ describe('validators', () => {
                 }
             };
             
-            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'config.json', 'test_collector.py'] as any);
+            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'test_collector.py'] as any);
             mockedFs.statSync.mockReturnValue({ size: 100 } as any);
+            mockedFs.existsSync.mockReturnValue(true);
             mockedFs.readFileSync.mockReturnValue(JSON.stringify(invalidConfig));
 
-            validators.validateCollectorFiles(collectorPath, errors, warnings, successMessages);
+            validators.validateCollectorFiles(collectorPath, configPath, errors, warnings, successMessages);
 
             expect(errors.some(e => e.includes('image.tag (invalid format'))).toBe(true);
         });
 
         it('should report error when config.json has missing image fields', () => {
-            const collectorPath = '/test/collector';
             const invalidConfig = {
                 extension_id: 'test-collector',
                 image: {
@@ -1292,30 +1293,29 @@ describe('validators', () => {
                 }
             };
             
-            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'config.json', 'test_collector.py'] as any);
+            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'test_collector.py'] as any);
             mockedFs.statSync.mockReturnValue({ size: 100 } as any);
+            mockedFs.existsSync.mockReturnValue(true);
             mockedFs.readFileSync.mockReturnValue(JSON.stringify(invalidConfig));
 
-            validators.validateCollectorFiles(collectorPath, errors, warnings, successMessages);
+            validators.validateCollectorFiles(collectorPath, configPath, errors, warnings, successMessages);
 
             expect(errors.some(e => e.includes('image.repository'))).toBe(true);
             expect(errors.some(e => e.includes('image.tag'))).toBe(true);
         });
 
         it('should report error when config.json is not valid JSON', () => {
-            const collectorPath = '/test/collector';
-            
-            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'config.json', 'test_collector.py'] as any);
+            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'test_collector.py'] as any);
             mockedFs.statSync.mockReturnValue({ size: 100 } as any);
+            mockedFs.existsSync.mockReturnValue(true);
             mockedFs.readFileSync.mockReturnValue('{ invalid json }');
 
-            validators.validateCollectorFiles(collectorPath, errors, warnings, successMessages);
+            validators.validateCollectorFiles(collectorPath, configPath, errors, warnings, successMessages);
 
             expect(errors.some(e => e.includes('Collector config.json is not valid JSON'))).toBe(true);
         });
 
         it('should report error when config.json has empty string values', () => {
-            const collectorPath = '/test/collector';
             const invalidConfig = {
                 extension_id: 'test-collector',
                 image: {
@@ -1325,11 +1325,12 @@ describe('validators', () => {
                 }
             };
             
-            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'config.json', 'test_collector.py'] as any);
+            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'test_collector.py'] as any);
             mockedFs.statSync.mockReturnValue({ size: 100 } as any);
+            mockedFs.existsSync.mockReturnValue(true);
             mockedFs.readFileSync.mockReturnValue(JSON.stringify(invalidConfig));
 
-            validators.validateCollectorFiles(collectorPath, errors, warnings, successMessages);
+            validators.validateCollectorFiles(collectorPath, configPath, errors, warnings, successMessages);
 
             // Empty string is treated as missing field
             expect(errors.some(e => e.includes('missing required fields') && e.includes('image.registry'))).toBe(true);

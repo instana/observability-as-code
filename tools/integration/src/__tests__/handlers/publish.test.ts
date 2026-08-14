@@ -396,6 +396,18 @@ describe('Publish Handler', () => {
             expect(mockExit).toHaveBeenCalledWith(1);
         });
 
+        it('should exit with code 1 if collector/config directory does not exist', async () => {
+            (utils.pathExists as jest.Mock)
+                .mockReturnValueOnce(true)   // packagePath exists
+                .mockReturnValueOnce(true)   // collectorPath exists
+                .mockReturnValueOnce(false); // collectorConfigPath does not
+
+            await expect(handlePublish(imageArgv)).rejects.toThrow('process.exit(1)');
+
+            expect(logger.error).toHaveBeenCalledWith('Publish failed:', expect.objectContaining({ message: expect.stringContaining('Collector config directory not found') }));
+            expect(mockExit).toHaveBeenCalledWith(1);
+        });
+
         it('should exit with code 1 if config.json is missing or invalid', async () => {
             mockFs.readFileSync.mockImplementation(() => {
                 throw new Error('ENOENT');
@@ -403,7 +415,7 @@ describe('Publish Handler', () => {
 
             await expect(handlePublish(imageArgv)).rejects.toThrow('process.exit(1)');
 
-            expect(logger.error).toHaveBeenCalledWith('Publish failed:', expect.objectContaining({ message: expect.stringContaining('Failed to read config.json') }));
+            expect(logger.error).toHaveBeenCalledWith('Publish failed:', expect.objectContaining({ message: expect.stringContaining('Failed to read collector/config/config.json') }));
             expect(mockExit).toHaveBeenCalledWith(1);
         });
 
@@ -414,7 +426,7 @@ describe('Publish Handler', () => {
 
             await expect(handlePublish(imageArgv)).rejects.toThrow('process.exit(1)');
 
-            expect(logger.error).toHaveBeenCalledWith('Publish failed:', expect.objectContaining({ message: expect.stringContaining('config.json is missing required image fields') }));
+            expect(logger.error).toHaveBeenCalledWith('Publish failed:', expect.objectContaining({ message: expect.stringContaining('collector/config/config.json is missing required image fields') }));
             expect(mockExit).toHaveBeenCalledWith(1);
         });
 

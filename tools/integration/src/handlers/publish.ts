@@ -107,23 +107,28 @@ async function publishImage( packagePath: string, registryUsername: string, regi
     // Detect container runtime
     const containerRuntime = utils.detectContainerRuntime();
 
-    // Read config.json from collector directory
+    // Read collector/config/config.json
     const collectorPath = path.join(packagePath, 'collector');
     if (!utils.pathExists(collectorPath)) {
         throw new Error(`Collector directory not found: ${collectorPath}. Make sure your package includes a 'collector' folder.`);
     }
 
-    const configPath = path.join(collectorPath, 'config.json');
+    const collectorConfigPath = path.join(collectorPath, 'config');
+    if (!utils.pathExists(collectorConfigPath)) {
+        throw new Error(`Collector config directory not found: ${collectorConfigPath}. Make sure your package includes a 'collector/config' folder.`);
+    }
+
+    const configFilePath = path.join(collectorConfigPath, 'config.json');
     let config: any;
     try {
-        const configContent = fs.readFileSync(configPath, 'utf-8');
+        const configContent = fs.readFileSync(configFilePath, 'utf-8');
         config = JSON.parse(configContent);
     } catch (error) {
-        throw new Error(`Failed to read config.json: ${error instanceof Error ? error.message : String(error)}`);
+        throw new Error(`Failed to read collector/config/config.json: ${error instanceof Error ? error.message : String(error)}`);
     }
 
     if (!config.image?.registry || !config.image?.repository || !config.image?.tag) {
-        throw new Error('config.json is missing required image fields: registry, repository, tag');
+        throw new Error('collector/config/config.json is missing required image fields: registry, repository, tag');
     }
 
     const registry = config.image.registry;

@@ -7,7 +7,7 @@ import path from 'path';
 
 /**
  * Handler for linting integration packages
- * Validates package.json, README, dashboards, events, and entities
+ * Validates package.json, README, dashboards, events, entities, smart-alerts, and collector
  * @param argv Command line arguments containing debug and strict-mode flags
  */
 export async function handleLint(argv: any): Promise<void> {
@@ -28,6 +28,7 @@ export async function handleLint(argv: any): Promise<void> {
     const entitiesPath = path.join(currentDirectory, 'entities');
     const smartAlertPath = path.join(currentDirectory, 'smart-alerts');
     const collectorPath = path.join(currentDirectory, 'collector');
+    const collectorConfigPath = path.join(currentDirectory, 'collector', 'config');
 
     let embeddedDashboardRefs = new Set<string>();
 
@@ -73,7 +74,7 @@ export async function handleLint(argv: any): Promise<void> {
         }
 
         if (fs.existsSync(collectorPath)) {
-            validators.validateCollectorFiles(collectorPath, errors, warnings, successMessages);
+            validators.validateCollectorFiles(collectorPath, collectorConfigPath, errors, warnings, successMessages);
         } else {
             logger.info('No collector folder found for this package.');
         }
