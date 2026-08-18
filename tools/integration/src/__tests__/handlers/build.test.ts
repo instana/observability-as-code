@@ -441,7 +441,7 @@ describe('handleBuild', () => {
             },
             metadata: {
                 created_at: '2026-03-22T00:00:00Z',
-                created_by: 'stanctl-integration'
+                created_by: 'instana-integration'
             },
             build_options: {
                 platform: 'linux/amd64',

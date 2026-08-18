@@ -196,7 +196,7 @@ describe('CLI Module', () => {
             const cliPath = path.join(__dirname, '../cli.ts');
             const cliContent = fs.readFileSync(cliPath, 'utf-8');
 
-            // --type removed: stanctl-integration import only supports com.ibm.instana.customcollector
+            // --type removed: instana-integration import only supports com.ibm.instana.customcollector
             expect(cliContent).toContain("'include'");
             expect(cliContent).not.toContain("alias: 'y'");
         });

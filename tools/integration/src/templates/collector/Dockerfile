@@ -7,7 +7,7 @@
 # - Runtime utilities (entrypoint.sh, healthcheck.sh)
 
 # Change runtime image version if needed
-# Override via CLI: stanctl-integration build --package <pkg> --build-arg RUNTIME_TAG=1.0.0
+# Override via CLI: instana-integration build --package <pkg> --build-arg RUNTIME_TAG=1.0.0
 ARG RUNTIME_TAG=latest
 FROM icr.io/instana/collector-extension-runtime-python:${RUNTIME_TAG}
 
@@ -29,7 +29,7 @@ RUN if [ -f requirements.txt ] && [ -s requirements.txt ]; then \
     fi
 
 # NOTE: Do NOT copy config.json into the image
-# The config.json file is used by 'stanctl-integration import' to create
+# The config.json file is used by 'instana-integration import' to create
 # the Extension Base Configuration in the Instana backend.
 # At runtime, the Supervisor generates and mounts the actual configuration
 # to /opt/instana/custom-collector/config/extension-config.json

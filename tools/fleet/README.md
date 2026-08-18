@@ -14,18 +14,18 @@ The Instana CLI provides fleet management for agent instances including Instana 
 
 ### Download the CLI
 
-You can find the available binaries for the CLI on different platforms on the [release page of this project](https://github.com/instana/observability-as-code/releases). Select the binary from the latest release that matches your platform to download, then rename it to `stanctl-fleet`. You should now be able to run it on your local machine.
+You can find the available binaries for the CLI on different platforms on the [release page of this project](https://github.com/instana/observability-as-code/releases). Select the binary from the latest release that matches your platform to download, then rename it to `instana-fleet`. You should now be able to run it on your local machine.
 
 ### Run the CLI
 
 Simply run:
 ```console
-stanctl-fleet
+instana-fleet
 ```
 
 It will show you the help information, including all available commands and flags. For each command, run:
 ```console
-stanctl-fleet <command>
+instana-fleet <command>
 ```
 
 It will show the help information for the specific command to tell you how to run it.
@@ -69,12 +69,12 @@ npm run pkg
 
 Then you will find the binaries for all platforms in the `dist` directory, e.g.:
 ```console
-stanctl-fleet-linux
-stanctl-fleet-macos
-stanctl-fleet-win.exe
+instana-fleet-linux
+instana-fleet-macos
+instana-fleet-win.exe
 ```
 
-Choose the one that matches your platform and rename it to `stanctl-fleet`, then you should be able to run it as a normal executable.
+Choose the one that matches your platform and rename it to `instana-fleet`, then you should be able to run it as a normal executable.
 
 ### Run the CLI
 
@@ -86,11 +86,11 @@ npm link
 Then, you should be able to run the CLI from any place:
 
 ```console
-stanctl-fleet
+instana-fleet
 ```
 
 To run the CLI using the binary executable, you can go to `dist` directory, and select the one that matches your platform, e.g., on MacOS, please run:
 
 ```console
-./stanctl-fleet-macos
+./instana-fleet-macos
 ```
