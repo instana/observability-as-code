@@ -1,19 +1,19 @@
 {
-  "name": "@instana/stanctl-fleet",
+  "name": "@instana/instana-fleet",
   "version": "1.0.0",
   "description": "The Instana CLI for agent fleet management",
   "main": "./dist/index.js",
   "scripts": {
     "debug": "ts-node  src/index.ts  export --server sample.instana.io --token **TOKEN**  --include annotation='SHARED' ",
     "build": "tsc",
-    "pkg": "pkg . --output dist/stanctl-fleet",
+    "pkg": "pkg . --output dist/instana-fleet",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:verbose": "jest --verbose"
   },
   "bin": {
-    "stanctl-fleet": "./dist/index.js"
+    "instana-fleet": "./dist/index.js"
   },
   "pkg": {
     "assets": [

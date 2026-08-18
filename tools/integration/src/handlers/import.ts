@@ -346,7 +346,7 @@ export async function handleImport(argv: any) {
 
 /**
  * Import a collector configuration to Instana.
- * Only supports com.ibm.instana.customcollector — IDOT and Instana agent are handled by stanctl-fleet.
+ * Only supports com.ibm.instana.customcollector — IDOT and Instana agent are handled by instana-fleet.
  *
  * The includePattern is a glob relative to the package root
  * Metadata (name, version, image) is always read from collector/config/config.json.

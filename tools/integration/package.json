@@ -1,24 +1,25 @@
 {
-  "name": "@instana/stanctl-integration",
+  "name": "@instana/instana-integration",
   "version": "1.6.1",
   "description": "The Instana CLI for integration package management",
   "main": "./dist/index.js",
   "scripts": {
     "debug": "ts-node  src/index.ts  export --server sample.instana.io --token **TOKEN**  --include annotation='SHARED' ",
     "build": "tsc",
-    "pkg": "pkg . --output dist/stanctl-integration",
+    "pkg": "pkg . --output dist/instana-integration",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:verbose": "jest --verbose"
   },
   "bin": {
-    "stanctl-integration": "./dist/index.js"
+    "instana-integration": "./dist/index.js"
   },
   "pkg": {
     "assets": [
       "dist/**/*.js",
-      "node_modules/**/*"
+      "node_modules/**/*",
+      "src/templates/**/*"
     ],
     "targets": [
       "node18-macos",
@@ -58,7 +59,6 @@
   },
   "devDependencies": {
     "@jest/globals": "^30.2.0",
-    "@types/glob": "^8.1.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^20.14.2",
     "@types/semver": "^7.5.8",
