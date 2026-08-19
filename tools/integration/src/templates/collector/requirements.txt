@@ -1,36 +1,25 @@
 # Python dependencies for {{COLLECTOR_NAME}} collector
 #
-# NOTE: The following packages are already available in the base image:
+# NOTE: The following packages are already provided by the base image.
 
-# Python Runtime
-# Python 3.12.x (LTS)
-
-# OpenTelemetry SDK
-# - opentelemetry-api==1.24.0
-# - opentelemetry-sdk==1.24.0
-# - opentelemetry-exporter-otlp==1.24.0
+# OpenTelemetry Core & Exporters
+# opentelemetry-api==1.42.1
+# opentelemetry-sdk==1.42.1
+# opentelemetry-exporter-otlp-proto-grpc==1.42.1
+# opentelemetry-exporter-otlp-proto-http==1.42.1
 
 # Extension Base Library
 # extension-base==1.0.0
 
+# ---------------------------------------------------------------------
 # Add your additional required packages below.
-# Examples:
+# ---------------------------------------------------------------------
 
-# HTTP client for API calls
-# requests>=2.31.0
-
-# Prometheus client for scraping metrics
-# prometheus-client>=0.19.0
+# HTTP clients
+# httpx>=0.28.1           # supports both sync and async (recommended)
+# requests>=2.34.2        # synchronous only
 
 # Database connectors
-# psycopg2-binary>=2.9.9  # PostgreSQL
-# pymongo>=4.6.0          # MongoDB
-# redis>=5.0.0            # Redis
-
-# Data processing
-# pandas>=2.1.0
-# numpy>=1.26.0
-
-# Additional utilities
-# pyyaml>=6.0.1
-# python-dateutil>=2.8.2
+# psycopg[binary]>=3.3.4  # PostgreSQL (binary: faster, no build tools needed)
+# pymysql[rsa]>=1.2.0     # MySQL — [rsa] required for caching_sha2_password auth
+# redis>=8.1.0            # Redis
