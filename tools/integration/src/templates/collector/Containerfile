@@ -1,0 +1,36 @@
+# {{COLLECTOR_NAME}} Collector Image
+#
+# Base image (collector-extension-runtime-python) includes:
+# - Python 3.12 runtime with pip
+# - tini as PID 1 (signal forwarding, zombie reaping)
+# - OpenTelemetry Metrics SDK (API, SDK, OTLP/gRPC + HTTP exporters)
+# - Extension Base Library (extension_base) installed as a Python package
+
+# Override via CLI: instana-integration build --package <pkg> --build-arg RUNTIME_TAG=<version>
+ARG RUNTIME_TAG=latest
+FROM icr.io/instana/collector-extension-runtime-python:${RUNTIME_TAG}
+
+USER root
+
+# Copy and install additional dependencies (if any)
+COPY requirements.txt /tmp/requirements.txt
+RUN if [ -s /tmp/requirements.txt ]; then \
+        pip install --no-cache-dir -r /tmp/requirements.txt; \
+    fi \
+    && rm -f /tmp/requirements.txt
+
+# Copy extension code
+# NOTE: All COPY paths are relative to the build context (the collector/ directory).
+# Do NOT use paths like "my-package/collector/file.py" — just use the filename directly.
+COPY --chown=instana:0 {{COLLECTOR_NAME}}_collector.py \
+    /opt/instana/custom-collector/extensions/collector.py
+
+# NOTE: Do NOT copy config.json into the image
+# The config.json file is used by 'instana-integration import' to create
+# the Extension Base Configuration in the Instana backend.
+# At runtime, the Supervisor generates and mounts the actual configuration
+# to /opt/instana/custom-collector/config/extension-config.json
+
+USER instana
+
+CMD ["python", "/opt/instana/custom-collector/extensions/collector.py"]

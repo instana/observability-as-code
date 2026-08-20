@@ -14,7 +14,6 @@
   "configuration": {
     "interval": 60,
     "timeout": 30,
-    "batch_size": 100,
     "log_level": "INFO"
   },
   

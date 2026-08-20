@@ -1,240 +1,118 @@
 #!/usr/bin/env python3
-# (c) Copyright IBM Corp. 2026
 """
 {{COLLECTOR_NAME}} Collector
 
-This is a template collector that demonstrates how to build a custom collector
-using the Instana Extension Base Library.
-
-NOTE: This template uses a low-level approach (direct config loading and endpoint iteration).
-Future versions of the Extension Base Library may provide higher-level abstractions
-(e.g., ExtensionBase class with automatic endpoint management).
-
+Starter template to build a custom collector using the Instana Extension Base Library.
 Replace this implementation with your actual collection logic.
 """
 
-import os
-import sys
+import logging
 import time
-import json
-from typing import Dict, Any
+from typing import TYPE_CHECKING
 
-# Import extension base library (pre-installed in base image)
-from extension_base.logging import setup_logging, get_logger
+# Add your connector/client imports here, for example:
+# import requests
+# import pymysql
 
+from extension_base.core import ExtensionBase
 
-def load_config() -> Dict[str, Any]:
-    """
-    Load extension runtime configuration from mounted file.
-    
-    The Supervisor generates and mounts the runtime configuration at:
-    /opt/instana/custom-collector/config/extension-config.json
-    
-    This runtime configuration includes:
-    - Extension metadata (extension_id, extension_name, extension_version)
-    - Base configuration (interval, timeout, batch_size, log_level)
-    - Endpoints array (with credentials, tags, custom_params)
-    - OTLP configuration (endpoint, protocol, compression)
-    
-    Returns:
-        Configuration dictionary with runtime settings.
-    """
-    config_file = os.environ.get(
-        "INSTANA_EXTENSION_CONFIG",
-        "/opt/instana/custom-collector/config/extension-config.json"
-    )
-    
-    logger = get_logger(__name__)
-    
-    try:
-        with open(config_file, 'r') as f:
-            config = json.load(f)
-            logger.info(f"Configuration loaded from {config_file}")
-            return config
-    except FileNotFoundError:
-        logger.warning(f"Configuration file not found: {config_file}")
-        logger.warning("Using default configuration for development")
-        # Fallback configuration for local development/testing
-        return {
-            "extension_id": "{{PACKAGE_NAME}}-dev",
-            "extension_name": "{{PACKAGE_NAME}}",
-            "extension_version": "1.0.0",
-            "configuration": {
-                "interval": 60,
-                "timeout": 30,
-                "log_level": "INFO",
-                "endpoints": []
-            },
-            "otlp": {
-                "endpoint": "localhost:4317",
-                "protocol": "grpc"
-            }
-        }
-    except json.JSONDecodeError as e:
-        logger.error(f"Invalid JSON in configuration file: {e}")
-        sys.exit(1)
+if TYPE_CHECKING:
+    from extension_base.config.models import Endpoint
+    from extension_base.metrics.emitter import MetricsEmitter
+
+logger = logging.getLogger("{{COLLECTOR_NAME}}_collector")
 
 
-def collect_metrics(endpoint: Dict[str, Any], logger: Any) -> None:
-    """
-    Collect metrics from a single endpoint.
-    
-    This is where you implement your actual collection logic.
-    
+def collect_metrics(endpoint: "Endpoint", emitter: "MetricsEmitter") -> None:
+    """Collect metrics from a single endpoint and emit them via the emitter.
+
+    This function is called by ExtensionBase once per collection interval,
+    per enabled endpoint defined in extension-config.json.
+
     Args:
-        endpoint: Endpoint configuration from runtime config
-        logger: Logger instance for structured logging
-    
-    Example endpoint structure (from runtime configuration):
-        {
-            "id": "endpoint-1",
-            "url": "https://example.com:8000",
-            "credentials_ref": "example.endpoint.1",
-            "interval": 60,
-            "enabled": true,
-            "tags": {
-                "environment": "production",
-                "region": "us-east-1"
-            },
-            "custom_params": {
-                "timeout": 30,
-                "max_retries": 3
-            }
-        }
-    
-    Implementation Steps:
-        1. Extract endpoint details (url, credentials_ref, custom_params)
-        2. Fetch data from endpoint (HTTP, database, API, etc.)
-        3. Parse and transform data
-        4. Emit metrics using OpenTelemetry SDK
-        5. Handle errors and implement retry logic
+        endpoint: The resolved endpoint object. Key attributes:
+            - endpoint.url          hostname or IP of the target
+            - endpoint.port         port (may be None)
+            - endpoint.credentials  resolved credentials (username, password, token, …)
+            - endpoint.tags         dict of tags merged into every metric automatically
+            - endpoint.timeout      per-endpoint timeout override (may be None)
+        emitter: Thin OTel wrapper. Instrument caches and endpoint tags are
+            managed automatically. Use report_metric() to record collector metrics.
     """
-    endpoint_id = endpoint.get("id", "unknown")
-    endpoint_url = endpoint.get("url", "unknown")
-    
-    logger.info(
-        f"Collecting metrics from endpoint",
-        extra={
-            "extra_fields": {
-                "endpoint_id": endpoint_id,
-                "endpoint_url": endpoint_url
-            }
-        }
+    timeout = endpoint.timeout or 5
+    start = time.monotonic()
+
+    # ------------------------------------------------------------------
+    # 1. Connect to / query the target system
+    # ------------------------------------------------------------------
+    # Replace this block with your actual data collection logic.
+    #
+    # Example — HTTP API:
+    #   import requests
+    #   response = requests.get(
+    #       f"http://{endpoint.url}:{endpoint.port}/metrics",
+    #       timeout=timeout,
+    #   )
+    #   response.raise_for_status()
+    #   data = response.json()
+    #
+    # Example — database:
+    #   conn = pymysql.connect(
+    #       host=endpoint.url,
+    #       port=endpoint.port or 3306,
+    #       user=endpoint.credentials.username,
+    #       password=endpoint.credentials.password,
+    #       connect_timeout=timeout,
+    #   )
+
+    # ------------------------------------------------------------------
+    # 2. Emit metrics
+    # ------------------------------------------------------------------
+    # Replace the examples below with metrics derived from your data.
+    #
+    # Counter  — monotonically increasing total (e.g. requests, errors)
+    # Gauge    — point-in-time snapshot        (e.g. active connections, queue depth)
+    # Histogram — distribution of a value      (e.g. latency, response size)
+    #
+    # Endpoint tags from extension-config.json are merged automatically.
+    # Pass additional per-call attributes via the `attributes` keyword.
+
+    duration_ms = (time.monotonic() - start) * 1000
+
+    # Example counter
+    emitter.report_metric(
+        "counter",
+        "{{COLLECTOR_NAME}}.example.total",
+        value=1,
+        description="Example counter — replace with a real metric",
+        unit="{item}",
     )
-    
-    # TODO: Implement your collection logic here
-    # Example implementation:
-    #
-    # import requests
-    # from opentelemetry import metrics
-    # from opentelemetry.sdk.metrics import MeterProvider
-    # from opentelemetry.exporter.otlp.proto.grpc.metric_exporter import OTLPMetricExporter
-    #
-    # # 1. Get credentials (if needed)
-    # credentials_ref = endpoint.get("credentials_ref")
-    # # Note: Credentials are resolved by Supervisor and available in config
-    #
-    # # 2. Fetch data from endpoint
-    # timeout = endpoint.get("custom_params", {}).get("timeout", 30)
-    # response = requests.get(endpoint_url, timeout=timeout)
-    # data = response.json()
-    #
-    # # 3. Emit metrics
-    # meter = metrics.get_meter(__name__)
-    # counter = meter.create_counter("custom.metric.count")
-    # counter.add(data["count"], {"endpoint_id": endpoint_id})
-    
-    # Placeholder implementation
-    logger.debug(f"Metrics collected from {endpoint_id}")
 
+    # Example gauge
+    emitter.report_metric(
+        "gauge",
+        "{{COLLECTOR_NAME}}.example.active",
+        value=0,
+        description="Example gauge — replace with a real metric",
+        unit="{item}",
+    )
 
-def main():
-    """
-    Main entry point for the collector.
-    
-    This function:
-    1. Sets up structured logging (JSON format)
-    2. Loads runtime configuration from mounted file
-    3. Initializes OpenTelemetry SDK (if needed)
-    4. Starts collection loop for each endpoint
-    5. Handles graceful shutdown on SIGTERM/SIGINT
-    """
-    # Setup logging (JSON format for container environments)
-    log_level = os.environ.get("INSTANA_LOG_LEVEL", "INFO")
-    logger = setup_logging(level=log_level, json_format=True)
-    
-    logger.info("=== {{COLLECTOR_NAME}} Collector Starting ===")
-    logger.info(f"Python version: {sys.version}")
-    
-    # Load runtime configuration
-    config = load_config()
-    
-    extension_id = config.get("extension_id", "unknown")
-    extension_name = config.get("extension_name", "unknown")
-    extension_version = config.get("extension_version", "unknown")
-    
-    logger.info(f"Extension: {extension_name} v{extension_version} (ID: {extension_id})")
-    
-    # Get configuration settings
-    configuration = config.get("configuration", {})
-    interval = configuration.get("interval", 60)
-    endpoints = configuration.get("endpoints", [])
-    
-    # Get OTLP configuration
-    otlp_config = config.get("otlp", {})
-    otlp_endpoint = otlp_config.get("endpoint", "localhost:4317")
-    
-    logger.info(f"Collection interval: {interval}s")
-    logger.info(f"OTLP endpoint: {otlp_endpoint}")
-    logger.info(f"Configured endpoints: {len(endpoints)}")
-    
-    if not endpoints:
-        logger.warning("No endpoints configured. Running in idle mode.")
-        logger.warning("Waiting for configuration to be mounted by Supervisor...")
-    
-    # TODO: Initialize OpenTelemetry SDK with OTLP exporter
-    # Example:
-    # from opentelemetry.sdk.metrics import MeterProvider
-    # from opentelemetry.sdk.metrics.export import PeriodicExportingMetricReader
-    # from opentelemetry.exporter.otlp.proto.grpc.metric_exporter import OTLPMetricExporter
-    #
-    # exporter = OTLPMetricExporter(endpoint=otlp_endpoint)
-    # reader = PeriodicExportingMetricReader(exporter, export_interval_millis=60000)
-    # provider = MeterProvider(metric_readers=[reader])
-    # metrics.set_meter_provider(provider)
-    
-    # Main collection loop
-    try:
-        while True:
-            logger.debug(f"Starting collection cycle at {time.time()}")
-            
-            # Collect from each enabled endpoint
-            for endpoint in endpoints:
-                if not endpoint.get("enabled", True):
-                    logger.debug(f"Skipping disabled endpoint: {endpoint.get('id')}")
-                    continue
-                
-                try:
-                    collect_metrics(endpoint, logger)
-                except Exception as e:
-                    logger.error(
-                        f"Error collecting from endpoint {endpoint.get('id')}: {e}",
-                        exc_info=True
-                    )
-            
-            # Wait for next collection cycle
-            logger.debug(f"Sleeping for {interval}s until next collection")
-            time.sleep(interval)
-            
-    except KeyboardInterrupt:
-        logger.info("Received shutdown signal, stopping collector...")
-    except Exception as e:
-        logger.error(f"Unexpected error in main loop: {e}", exc_info=True)
-        sys.exit(1)
-    
-    logger.info("Collector stopped")
-    return 0
+    # Collection round-trip latency — keep this, it's useful for alerting
+    emitter.report_metric(
+        "histogram",
+        "{{COLLECTOR_NAME}}.collection.duration",
+        value=duration_ms,
+        description="Time spent collecting metrics from the target",
+        unit="ms",
+    )
+
+    logger.info(
+        "Collected metrics from %s in %.1f ms",
+        endpoint.id,
+        duration_ms,
+    )
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    extension = ExtensionBase()
+    extension.run(collect_metrics)
