@@ -43,7 +43,7 @@ describe('handleDeploy', () => {
 
         expect(postMock).toHaveBeenCalledTimes(1);
         const [url, body, config] = postMock.mock.calls[0];
-        expect(url).toBe('http://localhost:8080/api/unified-agent-request');
+        expect(url).toBe('https://localhost:8080/api/unified-agent-request');
         expect(body).toEqual({
             action: 'agent.component.deploy',
             type: 'com.ibm.opentelemetrycollector',

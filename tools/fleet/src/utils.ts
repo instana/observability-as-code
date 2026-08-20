@@ -131,7 +131,7 @@ export async function sendAgentRequest(
     };
 
     const axiosInstance = createAxiosInstance();
-    const url = `http://${server}/api/unified-agent-request`;
+    const url = `https://${server}/api/unified-agent-request`;
 
     try {
         logger.info(`Sending ${action} request...`);
