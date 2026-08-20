@@ -227,7 +227,7 @@ describe('sendAgentRequest', () => {
         await sendAgentRequest('agent.restart', baseArgv);
 
         const [url, body] = postMock.mock.calls[0];
-        expect(url).toBe('http://localhost:8080/api/unified-agent-request');
+        expect(url).toBe('https://localhost:8080/api/unified-agent-request');
         expect(body).toEqual({
             action: 'agent.restart',
             type: 'com.ibm.opentelemetrycollector',
