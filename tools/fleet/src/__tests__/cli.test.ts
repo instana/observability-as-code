@@ -88,6 +88,7 @@ describe('CLI Module', () => {
             const path = require('path');
             const cliContent = fs.readFileSync(path.join(__dirname, '../cli.ts'), 'utf-8');
 
+            expect(cliContent).toContain('.scriptName(');
             expect(cliContent).toContain('.wrap(160)');
             expect(cliContent).toContain('.usage(');
             expect(cliContent).toContain('.command(');

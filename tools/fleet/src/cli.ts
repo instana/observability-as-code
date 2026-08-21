@@ -6,7 +6,9 @@ import yargs from 'yargs';
  * Contains all yargs command definitions and configurations
  */
 
-const execName = path.basename(process.argv[1]);
+const execName = (process as any).pkg
+    ? path.basename(process.argv[0])
+    : path.basename(process.argv[1]);
 
 // Example texts for each command
 const examplesForRestart = `
@@ -66,6 +68,7 @@ export function configureCLI(handlers: {
     handleTag: (argv: any) => Promise<any>;
 }) {
     return yargs
+        .scriptName(execName)
         .wrap(160)
         .usage(`The Instana CLI for agent fleet management\n\nUsage: ${execName} <command> <options>`)
         // Agent lifecycle commands

@@ -581,7 +581,7 @@ describe('Utils Module', () => {
         beforeEach(() => {
             // Mock fs.readFileSync to return template content
             (mockedFs.readFileSync as jest.Mock).mockImplementation((filePath: any) => {
-                if (filePath.includes('Dockerfile')) {
+                if (filePath.includes('Containerfile')) {
                     return 'FROM python:3.9\nCOPY {{COLLECTOR_NAME}}_collector.py /app/';
                 }
                 if (filePath.includes('collector.py')) {
@@ -617,11 +617,11 @@ describe('Utils Module', () => {
             });
         });
 
-        it('should create Dockerfile', () => {
+        it('should create Containerfile', () => {
             utils.generateCollectorFiles('/test/package', '@instana-integration/test', ['collector']);
 
             expect(mockedFs.writeFileSync).toHaveBeenCalledWith(
-                expect.stringContaining('Dockerfile'),
+                expect.stringContaining('Containerfile'),
                 expect.any(String)
             );
         });

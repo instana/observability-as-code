@@ -116,13 +116,13 @@ export async function handleBuild(argv: any): Promise<void> {
         logger.info(`Registry: ${config.image.registry}`);
         logger.info(`Repository: ${config.image.repository}`);
         logger.info(`Tag: ${config.image.tag}`);
-        logger.info(`Dockerfile: ${path.join(collectorPath, 'Dockerfile')}`);
-        logger.info(`Build Command: ${containerRuntime} build -t ${imageTag} ${collectorPath}`);
+        logger.info(`Containerfile: ${path.join(collectorPath, 'Containerfile')}`);
+        logger.info(`Build Command: ${containerRuntime} build -f ${path.join(collectorPath, 'Containerfile')} -t ${imageTag} ${collectorPath}`);
         logger.info('======================================');
     }
     
     // Prepare container runtime build arguments
-    const dockerArgs = ['build', '-t', imageTag];
+    const dockerArgs = ['build', '-f', path.join(collectorPath, 'Containerfile'), '-t', imageTag];
 
     const effectiveOptions = {
         platform: argv.platform ?? config.build_options?.platform,

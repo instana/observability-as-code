@@ -7,7 +7,9 @@ import yargs from 'yargs';
  */
 
 // Dynamically determine the executable name
-const execName = path.basename(process.argv[1]);
+const execName = (process as any).pkg
+    ? path.basename(process.argv[0])
+    : path.basename(process.argv[1]);
 
 // Example texts for each command
 const examplesForDownload = `
@@ -77,6 +79,7 @@ export function configureCLI(handlers: {
     handleBuild: (argv: any) => Promise<void>;
 }) {
     return yargs
+        .scriptName(execName)
         .wrap(160) // Set the desired width here
         .usage(`The Instana CLI for integration package management\n\nUsage: ${execName} <command> <options>`)
         .command('download', 'Download an integration package', (yargs) => {

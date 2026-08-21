@@ -1062,7 +1062,7 @@ describe('validators', () => {
                 }
             };
             
-            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'test_collector.py'] as any);
+            mockedFs.readdirSync.mockReturnValue(['Containerfile', 'requirements.txt', 'test_collector.py'] as any);
             mockedFs.statSync.mockReturnValue({ size: 100 } as any);
             mockedFs.existsSync.mockReturnValue(true);
             mockedFs.readFileSync.mockReturnValue(JSON.stringify(validConfig));
@@ -1073,18 +1073,18 @@ describe('validators', () => {
             expect(warnings).toHaveLength(0);
         });
 
-        it('should report error when Dockerfile is missing', () => {
+        it('should report error when Containerfile is missing', () => {
             mockedFs.readdirSync.mockReturnValue(['requirements.txt', 'test_collector.py'] as any);
             mockedFs.statSync.mockReturnValue({ size: 100 } as any);
             mockedFs.existsSync.mockReturnValue(true);
 
             validators.validateCollectorFiles(collectorPath, configPath, errors, warnings, successMessages);
 
-            expect(errors).toContain('Missing required collector file: Dockerfile');
+            expect(errors).toContain('Missing required collector file: Containerfile');
         });
 
         it('should report error when requirements.txt is missing', () => {
-            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'test_collector.py'] as any);
+            mockedFs.readdirSync.mockReturnValue(['Containerfile', 'test_collector.py'] as any);
             mockedFs.statSync.mockReturnValue({ size: 100 } as any);
             mockedFs.existsSync.mockReturnValue(true);
 
@@ -1094,7 +1094,7 @@ describe('validators', () => {
         });
 
         it('should report error when config.json is missing', () => {
-            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'test_collector.py'] as any);
+            mockedFs.readdirSync.mockReturnValue(['Containerfile', 'requirements.txt', 'test_collector.py'] as any);
             mockedFs.statSync.mockReturnValue({ size: 100 } as any);
             mockedFs.existsSync.mockReturnValue(false);
 
@@ -1104,7 +1104,7 @@ describe('validators', () => {
         });
 
         it('should warn when Python collector file is missing', () => {
-            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt'] as any);
+            mockedFs.readdirSync.mockReturnValue(['Containerfile', 'requirements.txt'] as any);
             mockedFs.statSync.mockReturnValue({ size: 100 } as any);
             mockedFs.existsSync.mockReturnValue(true);
 
@@ -1114,13 +1114,13 @@ describe('validators', () => {
         });
 
         it('should warn when files are empty', () => {
-            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'test_collector.py'] as any);
+            mockedFs.readdirSync.mockReturnValue(['Containerfile', 'requirements.txt', 'test_collector.py'] as any);
             mockedFs.statSync.mockReturnValue({ size: 0 } as any);
             mockedFs.existsSync.mockReturnValue(true);
 
             validators.validateCollectorFiles(collectorPath, configPath, errors, warnings, successMessages);
 
-            expect(warnings).toContain('Collector file is empty: Dockerfile');
+            expect(warnings).toContain('Collector file is empty: Containerfile');
             expect(warnings).toContain('Collector file is empty: requirements.txt');
             expect(warnings).toContain('Collector file is empty: config/config.json');
             expect(warnings).toContain('Python collector file is empty: test_collector.py');
@@ -1157,7 +1157,7 @@ describe('validators', () => {
             };
             
             mockedFs.readdirSync.mockReturnValue([
-                'Dockerfile',
+                'Containerfile',
                 'requirements.txt',
                 'my_custom_collector.py'
             ] as any);
@@ -1172,10 +1172,10 @@ describe('validators', () => {
         });
 
         it('should validate mixed file sizes correctly', () => {
-            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'test_collector.py'] as any);
+            mockedFs.readdirSync.mockReturnValue(['Containerfile', 'requirements.txt', 'test_collector.py'] as any);
             mockedFs.existsSync.mockReturnValue(true);
             
-            // Mock different file sizes: Dockerfile=100, requirements.txt=0, config/config.json=100, test_collector.py=100
+            // Mock different file sizes: Containerfile=100, requirements.txt=0, config/config.json=100, test_collector.py=100
             let callCount = 0;
             mockedFs.statSync.mockImplementation(() => {
                 callCount++;
@@ -1198,7 +1198,7 @@ describe('validators', () => {
                 }
             };
             
-            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'test_collector.py'] as any);
+            mockedFs.readdirSync.mockReturnValue(['Containerfile', 'requirements.txt', 'test_collector.py'] as any);
             mockedFs.statSync.mockReturnValue({ size: 100 } as any);
             mockedFs.existsSync.mockReturnValue(true);
             mockedFs.readFileSync.mockReturnValue(JSON.stringify(validConfig));
@@ -1214,7 +1214,7 @@ describe('validators', () => {
                 extension_id: 'test-collector'
             };
             
-            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'test_collector.py'] as any);
+            mockedFs.readdirSync.mockReturnValue(['Containerfile', 'requirements.txt', 'test_collector.py'] as any);
             mockedFs.statSync.mockReturnValue({ size: 100 } as any);
             mockedFs.existsSync.mockReturnValue(true);
             mockedFs.readFileSync.mockReturnValue(JSON.stringify(invalidConfig));
@@ -1234,7 +1234,7 @@ describe('validators', () => {
                 }
             };
             
-            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'test_collector.py'] as any);
+            mockedFs.readdirSync.mockReturnValue(['Containerfile', 'requirements.txt', 'test_collector.py'] as any);
             mockedFs.statSync.mockReturnValue({ size: 100 } as any);
             mockedFs.existsSync.mockReturnValue(true);
             mockedFs.readFileSync.mockReturnValue(JSON.stringify(invalidConfig));
@@ -1254,7 +1254,7 @@ describe('validators', () => {
                 }
             };
             
-            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'test_collector.py'] as any);
+            mockedFs.readdirSync.mockReturnValue(['Containerfile', 'requirements.txt', 'test_collector.py'] as any);
             mockedFs.statSync.mockReturnValue({ size: 100 } as any);
             mockedFs.existsSync.mockReturnValue(true);
             mockedFs.readFileSync.mockReturnValue(JSON.stringify(invalidConfig));
@@ -1274,7 +1274,7 @@ describe('validators', () => {
                 }
             };
             
-            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'test_collector.py'] as any);
+            mockedFs.readdirSync.mockReturnValue(['Containerfile', 'requirements.txt', 'test_collector.py'] as any);
             mockedFs.statSync.mockReturnValue({ size: 100 } as any);
             mockedFs.existsSync.mockReturnValue(true);
             mockedFs.readFileSync.mockReturnValue(JSON.stringify(invalidConfig));
@@ -1293,7 +1293,7 @@ describe('validators', () => {
                 }
             };
             
-            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'test_collector.py'] as any);
+            mockedFs.readdirSync.mockReturnValue(['Containerfile', 'requirements.txt', 'test_collector.py'] as any);
             mockedFs.statSync.mockReturnValue({ size: 100 } as any);
             mockedFs.existsSync.mockReturnValue(true);
             mockedFs.readFileSync.mockReturnValue(JSON.stringify(invalidConfig));
@@ -1305,7 +1305,7 @@ describe('validators', () => {
         });
 
         it('should report error when config.json is not valid JSON', () => {
-            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'test_collector.py'] as any);
+            mockedFs.readdirSync.mockReturnValue(['Containerfile', 'requirements.txt', 'test_collector.py'] as any);
             mockedFs.statSync.mockReturnValue({ size: 100 } as any);
             mockedFs.existsSync.mockReturnValue(true);
             mockedFs.readFileSync.mockReturnValue('{ invalid json }');
@@ -1325,7 +1325,7 @@ describe('validators', () => {
                 }
             };
             
-            mockedFs.readdirSync.mockReturnValue(['Dockerfile', 'requirements.txt', 'test_collector.py'] as any);
+            mockedFs.readdirSync.mockReturnValue(['Containerfile', 'requirements.txt', 'test_collector.py'] as any);
             mockedFs.statSync.mockReturnValue({ size: 100 } as any);
             mockedFs.existsSync.mockReturnValue(true);
             mockedFs.readFileSync.mockReturnValue(JSON.stringify(invalidConfig));

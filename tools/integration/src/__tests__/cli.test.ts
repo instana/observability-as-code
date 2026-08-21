@@ -146,6 +146,7 @@ describe('CLI Module', () => {
             const cliContent = fs.readFileSync(cliPath, 'utf-8');
             
             // Verify yargs configuration methods are called
+            expect(cliContent).toContain('.scriptName(');
             expect(cliContent).toContain('.wrap(160)');
             expect(cliContent).toContain('.usage(');
             expect(cliContent).toContain('.command(');
