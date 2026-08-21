@@ -492,7 +492,7 @@ export function validateSmartAlertFiles(
 }
 
 export function validateCollectorFiles(collectorPath: string, configPath: string, errors: string[], warnings: string[], successMessages: string[]): void {
-    const requiredCollectorFiles = ['Dockerfile', 'requirements.txt'];
+    const requiredCollectorFiles = ['Containerfile', 'requirements.txt'];
     const configFile = path.join(configPath, 'config.json');
 
     try {

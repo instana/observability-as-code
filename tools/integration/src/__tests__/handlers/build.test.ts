@@ -23,7 +23,7 @@ describe('handleBuild', () => {
     const mockPackagePath = '/test/package';
     const mockCollectorPath = path.join(mockPackagePath, 'collector');
     const mockConfigPath = path.join(mockCollectorPath, 'config', 'config.json');
-    const mockDockerfilePath = path.join(mockCollectorPath, 'Dockerfile');
+    const mockContainerfilePath = path.join(mockCollectorPath, 'Containerfile');
 
     beforeEach(() => {
         jest.clearAllMocks();
@@ -79,7 +79,7 @@ describe('handleBuild', () => {
         expect(mockUtils.detectContainerRuntime).toHaveBeenCalled();
         expect(mockChildProcess.spawn).toHaveBeenCalledWith(
             'docker',
-            ['build', '-t', 'quay.io/instana-collectors/test:1.0.0', mockCollectorPath],
+            ['build', '-f', mockContainerfilePath, '-t', 'quay.io/instana-collectors/test:1.0.0', mockCollectorPath],
             { stdio: 'inherit' }
         );
     });
@@ -114,7 +114,7 @@ describe('handleBuild', () => {
         mockUtils.pathExists.mockReturnValue(true);
         mockValidators.validateCollectorFiles.mockImplementation((collectorPath, configPath, errors, warnings, successMessages) => {
             errors.push('Missing required collector file: config/config.json');
-            errors.push('Missing required collector file: Dockerfile');
+            errors.push('Missing required collector file: Containerfile');
         });
 
         await expect(handleBuild({ package: mockPackagePath }))
@@ -354,7 +354,7 @@ describe('handleBuild', () => {
         expect(mockUtils.detectContainerRuntime).toHaveBeenCalled();
         expect(mockChildProcess.spawn).toHaveBeenCalledWith(
             'podman',
-            ['build', '-t', 'quay.io/instana-collectors/test:1.0.0', mockCollectorPath],
+            ['build', '-f', mockContainerfilePath, '-t', 'quay.io/instana-collectors/test:1.0.0', mockCollectorPath],
             { stdio: 'inherit' }
         );
     });
@@ -414,7 +414,7 @@ describe('handleBuild', () => {
 
         expect(mockChildProcess.spawn).toHaveBeenCalledWith(
             'docker',
-            ['build', '-t', 'quay.io/instana-collectors/test:1.0.0', mockCollectorPath],
+            ['build', '-f', mockContainerfilePath, '-t', 'quay.io/instana-collectors/test:1.0.0', mockCollectorPath],
             { stdio: 'inherit' }
         );
     });
@@ -571,7 +571,7 @@ describe('handleBuild', () => {
 
         expect(mockChildProcess.spawn).toHaveBeenCalledWith(
             'docker',
-            ['build', '-t', 'quay.io/instana-collectors/test:1.0.0', mockCollectorPath],
+            ['build', '-f', mockContainerfilePath, '-t', 'quay.io/instana-collectors/test:1.0.0', mockCollectorPath],
             { stdio: 'inherit' }
         );
     });

@@ -463,10 +463,10 @@ export function generateCollectorFiles(packagePath: string, packageName: string,
         ? path.join(__dirname, '..', 'src', 'templates', 'collector')
         : path.join(__dirname, 'templates', 'collector');
 
-    // Dockerfile template
-    let dockerfileContent = fs.readFileSync(path.join(templatesDir, 'Dockerfile'), 'utf-8');
-    dockerfileContent = dockerfileContent.replace(/\{\{COLLECTOR_NAME\}\}/g, normalizedPackageName);
-    fs.writeFileSync(path.join(targetDir, 'Dockerfile'), dockerfileContent);
+    // Containerfile template
+    let containerfileContent = fs.readFileSync(path.join(templatesDir, 'Containerfile'), 'utf-8');
+    containerfileContent = containerfileContent.replace(/\{\{COLLECTOR_NAME\}\}/g, normalizedPackageName);
+    fs.writeFileSync(path.join(targetDir, 'Containerfile'), containerfileContent);
     
     // collector file template
     const collectorContent = fs.readFileSync(path.join(templatesDir, 'collector.py'), 'utf-8');
