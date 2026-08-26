@@ -13,9 +13,6 @@ import path from 'path';
  *
  * Only single-folder import is supported. If --include matches files across multiple
  * sub-directories, the command fails fast with a clear error.
- *
- * This persists configurations to the Instana backend database — it is intentionally
- * different from update-config, which sends a supervisor action and never saves to DB.
  */
 export async function handleImport(argv: any): Promise<void> {
     const { server, token, type } = resolveConnection(argv);
