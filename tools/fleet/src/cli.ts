@@ -100,7 +100,7 @@ export function configureCLI(handlers: {
                     })
                     .option('type', {
                         alias: 'y',
-                        describe: 'Agent type, allowed values (com.ibm.opentelemetrycollector, com.ibm.instana.agent)',
+                        describe: 'Agent type, allowed values (com.ibm.opentelemetrycollector, com.ibm.instana.agent, com.ibm.instana.customcollector)',
                         type: 'string',
                         demandOption: true
                     })

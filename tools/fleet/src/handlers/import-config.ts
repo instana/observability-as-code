@@ -26,31 +26,17 @@ export async function handleImport(argv: any): Promise<void> {
         throw new Error(`No files matched pattern: ${includePattern}`);
     }
 
-    // Group matched files by their top-level directory.
-    const topLevelDir = (filePath: string): string => {
-        const first = path.normalize(filePath).split(path.sep)[0];
-        return first === path.basename(filePath) ? '.' : first;
-    };
-
-    const groups = new Map<string, string[]>();
-    for (const filePath of matchedPaths) {
-        const dir = topLevelDir(filePath);
-        if (!groups.has(dir)) {
-            groups.set(dir, []);
-        }
-        groups.get(dir)!.push(filePath);
-    }
-
-    // Only single-folder import is supported
-    if (groups.size > 1) {
-        const folderNames = [...groups.keys()].join(', ');
+    // All matched files must share the same immediate parent directory.
+    const dirs = new Set(matchedPaths.map(f => path.dirname(f)));
+    if (dirs.size > 1) {
+        const folderNames = [...dirs].join(', ');
         throw new Error(
-            `--include matched files across ${groups.size} folders (${folderNames}). ` +
-            `Only single-folder import is supported. Use a more specific pattern.`
+            `--include matched files across ${dirs.size} directories (${folderNames}). ` +
+            `Only files from a single directory are supported. Use a more specific pattern.`
         );
     }
 
-    const [, files] = [...groups][0];
+    const files = matchedPaths;
 
     const newFiles = files.map(f => ({
         name: path.basename(f),

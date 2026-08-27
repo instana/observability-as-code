@@ -207,19 +207,19 @@ describe('handleImport', () => {
 
     // ── Fail fast — multiple folders ──────────────────────────────────────────
 
-    test('throws when --include matches multiple top-level folders', async () => {
+    test('throws when --include matches files in different directories', async () => {
         mockedGlobSync.mockReturnValue([
             'agent1/config1.yaml',
             'agent2/config1.yaml'
         ] as any);
 
         await expect(handleImport(BASE_ARGV)).rejects.toThrow(
-            'Only single-folder import is supported'
+            'Only files from a single directory are supported'
         );
         expect(getMock).not.toHaveBeenCalled();
     });
 
-    test('error message for multiple folders includes top-level folder names', async () => {
+    test('error message for multiple directories includes directory names', async () => {
         mockedGlobSync.mockReturnValue([
             'agent1/config1.yaml',
             'agent2/config1.yaml'
@@ -228,20 +228,28 @@ describe('handleImport', () => {
         await expect(handleImport(BASE_ARGV)).rejects.toThrow('agent1');
     });
 
-    test('accepts files at different depths within the same top-level folder', async () => {
+    test('throws when files are at different depths within the same root folder', async () => {
         mockedGlobSync.mockReturnValue([
             'agent1/config.yaml',
             'agent1/subdir/extra.yaml'
         ] as any);
-        getMock.mockResolvedValue({ data: [] });
-        postMock.mockResolvedValue({ status: 200 });
 
-        await expect(handleImport(BASE_ARGV)).resolves.toBeUndefined();
-        expect(postMock).toHaveBeenCalledTimes(1);
-        const [, body] = postMock.mock.calls[0];
-        expect(body.configuration.files.map((f: any) => f.name)).toEqual(
-            expect.arrayContaining(['config.yaml', 'extra.yaml'])
+        await expect(handleImport(BASE_ARGV)).rejects.toThrow(
+            'Only files from a single directory are supported'
         );
+        expect(getMock).not.toHaveBeenCalled();
+    });
+
+    test('throws when sibling agent folders share the same parent', async () => {
+        mockedGlobSync.mockReturnValue([
+            'agtsConf/agent1/config.yaml',
+            'agtsConf/agent2/config.yaml'
+        ] as any);
+
+        await expect(handleImport(BASE_ARGV)).rejects.toThrow(
+            'Only files from a single directory are supported'
+        );
+        expect(getMock).not.toHaveBeenCalled();
     });
 
     // ── Flags / connection ────────────────────────────────────────────────────
