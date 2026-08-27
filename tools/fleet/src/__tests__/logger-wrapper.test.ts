@@ -7,7 +7,7 @@ describe('Logger Wrapper - logFormat Function', () => {
     const result = logFormat.transform({
       level: 'info',
       message: 'Test message',
-      label: 'instana-integration',
+      label: 'instana-fleet',
       timestamp: '2024-01-01T00:00:00.000Z',
     });
 
@@ -19,7 +19,7 @@ describe('Logger Wrapper - logFormat Function', () => {
     const result = logFormat.transform({
       level: 'error',
       message: 'Error occurred',
-      label: 'instana-integration',
+      label: 'instana-fleet',
       timestamp: '2024-01-01T12:00:00.000Z',
     });
 
@@ -31,7 +31,7 @@ describe('Logger Wrapper - logFormat Function', () => {
     const result = logFormat.transform({
       level: 'warn',
       message: 'Warning message',
-      label: 'instana-integration',
+      label: 'instana-fleet',
       timestamp: '2024-01-01T12:00:00.000Z',
     });
 
@@ -43,7 +43,7 @@ describe('Logger Wrapper - logFormat Function', () => {
     const result = logFormat.transform({
       level: 'debug',
       message: 'Debug info',
-      label: 'instana-integration',
+      label: 'instana-fleet',
       timestamp: '2024-01-01T12:00:00.000Z',
     });
 
@@ -55,7 +55,7 @@ describe('Logger Wrapper - logFormat Function', () => {
     const result = logFormat.transform({
       level: 'info',
       message: '',
-      label: 'instana-integration',
+      label: 'instana-fleet',
       timestamp: '2024-01-01T12:00:00.000Z',
     });
 
@@ -66,7 +66,7 @@ describe('Logger Wrapper - logFormat Function', () => {
     const result = logFormat.transform({
       level: 'info',
       message: 'Special chars: !@#$%^&*()',
-      label: 'instana-integration',
+      label: 'instana-fleet',
       timestamp: '2024-01-01T12:00:00.000Z',
     });
 
@@ -79,7 +79,7 @@ describe('Logger Wrapper - logFormat Function', () => {
     const result = logFormat.transform({
       level: 'info',
       message: longMessage,
-      label: 'instana-integration',
+      label: 'instana-fleet',
       timestamp: '2024-01-01T12:00:00.000Z',
     });
 
@@ -91,7 +91,7 @@ describe('Logger Wrapper - logFormat Function', () => {
     const result = logFormat.transform({
       level: 'info',
       message: 'Line 1\nLine 2\nLine 3',
-      label: 'instana-integration',
+      label: 'instana-fleet',
       timestamp: '2024-01-01T12:00:00.000Z',
     });
 

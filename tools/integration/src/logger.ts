@@ -7,7 +7,7 @@ const { combine, timestamp, label, colorize } = format;
 const logger = createLogger({
     level: process.env.LOG_LEVEL || 'info', // Default to 'info', can be overridden by environment variable
     format: combine(
-        label({ label: 'stanctl' }),
+        label({ label: 'instana-integration' }),
         timestamp(),
         colorize(),
         logFormat

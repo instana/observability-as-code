@@ -15,7 +15,7 @@ describe('Logger Format Function', () => {
     const formatted = logFormat.transform({
       level: 'info',
       message: 'Test message',
-      label: 'instana-integration',
+      label: 'instana-fleet',
       timestamp: '2024-01-01T00:00:00.000Z',
     });
 
@@ -35,7 +35,7 @@ describe('Logger Format Function', () => {
       const formatted = logFormat.transform({
         level,
         message: `Test ${level} message`,
-        label: 'instana-integration',
+        label: 'instana-fleet',
         timestamp: '2024-01-01T00:00:00.000Z',
       });
 
@@ -53,7 +53,7 @@ describe('Logger Format Function', () => {
     const formatted = logFormat.transform({
       level: 'info',
       message: 'Message with special chars: !@#$%^&*()',
-      label: 'instana-integration',
+      label: 'instana-fleet',
       timestamp: '2024-01-01T00:00:00.000Z',
     });
 
@@ -70,7 +70,7 @@ describe('Logger Format Function', () => {
     const formatted = logFormat.transform({
       level: 'info',
       message: '',
-      label: 'instana-integration',
+      label: 'instana-fleet',
       timestamp: '2024-01-01T00:00:00.000Z',
     });
 
@@ -87,7 +87,7 @@ describe('Logger Format Function', () => {
     const formatted = logFormat.transform({
       level: 'info',
       message: undefined as any,
-      label: 'instana-integration',
+      label: 'instana-fleet',
       timestamp: '2024-01-01T00:00:00.000Z',
     });
 

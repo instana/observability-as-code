@@ -44,6 +44,8 @@ Examples:
 List configurations:
   ${execName} list-configs --server example.com --token validToken --type agentType
   ${execName} list-configs --type agentType (specify the server and token as environment variables using INSTANA_SERVER and INSTANA_API_TOKEN)
+  ${execName} list-configs --server example.com --token validToken --type agentType --configuration-id=configID
+  ${execName} list-configs --server example.com --token validToken --type agentType --config-name="Config Name"
   ${execName} list-configs --server example.com --token validToken --type agentType --debug
 `;
 
@@ -224,6 +226,18 @@ export function configureCLI(handlers: {
                         describe: 'Enable debug mode',
                         type: 'boolean',
                         default: false
+                    })
+                    .option('configuration-id', {
+                        alias: 'c',
+                        describe: 'Configuration ID',
+                        type: 'string',
+                        demandOption: false
+                    })
+                    .option('config-name', {
+                        alias: 'n',
+                        describe: 'Configuration name',
+                        type: 'string',
+                        demandOption: false
                     })
                     .epilog(examplesForList);
             }, handlers.handleList)
