@@ -207,10 +207,10 @@ describe('handleImport', () => {
 
     // ── Fail fast — multiple folders ──────────────────────────────────────────
 
-    test('throws when --include matches multiple folders', async () => {
+    test('throws when --include matches multiple top-level folders', async () => {
         mockedGlobSync.mockReturnValue([
-            'root/agent1/config1.yaml',
-            'root/agent2/config1.yaml'
+            'agent1/config1.yaml',
+            'agent2/config1.yaml'
         ] as any);
 
         await expect(handleImport(BASE_ARGV)).rejects.toThrow(
@@ -219,13 +219,29 @@ describe('handleImport', () => {
         expect(getMock).not.toHaveBeenCalled();
     });
 
-    test('error message for multiple folders includes folder names', async () => {
+    test('error message for multiple folders includes top-level folder names', async () => {
         mockedGlobSync.mockReturnValue([
-            'root/agent1/config1.yaml',
-            'root/agent2/config1.yaml'
+            'agent1/config1.yaml',
+            'agent2/config1.yaml'
         ] as any);
 
         await expect(handleImport(BASE_ARGV)).rejects.toThrow('agent1');
+    });
+
+    test('accepts files at different depths within the same top-level folder', async () => {
+        mockedGlobSync.mockReturnValue([
+            'agent1/config.yaml',
+            'agent1/subdir/extra.yaml'
+        ] as any);
+        getMock.mockResolvedValue({ data: [] });
+        postMock.mockResolvedValue({ status: 200 });
+
+        await expect(handleImport(BASE_ARGV)).resolves.toBeUndefined();
+        expect(postMock).toHaveBeenCalledTimes(1);
+        const [, body] = postMock.mock.calls[0];
+        expect(body.configuration.files.map((f: any) => f.name)).toEqual(
+            expect.arrayContaining(['config.yaml', 'extra.yaml'])
+        );
     });
 
     // ── Flags / connection ────────────────────────────────────────────────────
@@ -261,7 +277,9 @@ describe('handleImport', () => {
 
     test('throws when no files match pattern', async () => {
         mockedGlobSync.mockReturnValue([] as any);
-        await expect(handleImport(BASE_ARGV)).rejects.toThrow('No files matched pattern');
+        await expect(handleImport(BASE_ARGV)).rejects.toThrow(
+            `No files matched pattern: ${BASE_ARGV.include}`
+        );
     });
 
     // ── Error handling ────────────────────────────────────────────────────────
@@ -370,4 +388,63 @@ describe('handleImport', () => {
 
         expect(postMock).toHaveBeenCalledTimes(1);
     });
+
+    // ── Debug logging ─────────────────────────────────────────────────────────
+
+    test('logs POST payload and response via logger.debug when isDebugEnabled returns true', async () => {
+        mockedGlobSync.mockReturnValue(['agent-folder/config1.yaml'] as any);
+        getMock.mockResolvedValue({ data: [] });
+        postMock.mockResolvedValue({ status: 200, data: { configuration_id: 'new-id' } });
+        logger.isDebugEnabled.mockReturnValue(true);
+
+        await handleImport(BASE_ARGV);
+
+        expect(logger.debug).toHaveBeenCalledWith(expect.stringContaining('POST payload'));
+        expect(logger.debug).toHaveBeenCalledWith(expect.stringContaining('POST response'));
+    });
+
+    test('does not call logger.debug for POST when isDebugEnabled returns false', async () => {
+        mockedGlobSync.mockReturnValue(['agent-folder/config1.yaml'] as any);
+        getMock.mockResolvedValue({ data: [] });
+        postMock.mockResolvedValue({ status: 200, data: {} });
+        logger.isDebugEnabled.mockReturnValue(false);
+
+        await handleImport(BASE_ARGV);
+
+        expect(logger.debug).not.toHaveBeenCalled();
+    });
+
+    test('logs PUT payload and response via logger.debug when isDebugEnabled returns true', async () => {
+        mockedGlobSync.mockReturnValue(['agent-folder/config1.yaml'] as any);
+        const existing = {
+            configuration_id: 'id-abc',
+            name: 'my-agent-config',
+            configuration: { files: [{ name: 'other.yaml', data: 'ZGF0YQ==' }] }
+        };
+        getMock.mockResolvedValue({ data: [existing] });
+        putMock.mockResolvedValue({ status: 200, data: { configuration_version: '1.0.0' } });
+        logger.isDebugEnabled.mockReturnValue(true);
+
+        await handleImport(BASE_ARGV);
+
+        expect(logger.debug).toHaveBeenCalledWith(expect.stringContaining('PUT payload'));
+        expect(logger.debug).toHaveBeenCalledWith(expect.stringContaining('PUT response'));
+    });
+
+    test('does not call logger.debug for PUT when isDebugEnabled returns false', async () => {
+        mockedGlobSync.mockReturnValue(['agent-folder/config1.yaml'] as any);
+        const existing = {
+            configuration_id: 'id-abc',
+            name: 'my-agent-config',
+            configuration: { files: [{ name: 'other.yaml', data: 'ZGF0YQ==' }] }
+        };
+        getMock.mockResolvedValue({ data: [existing] });
+        putMock.mockResolvedValue({ status: 200, data: {} });
+        logger.isDebugEnabled.mockReturnValue(false);
+
+        await handleImport(BASE_ARGV);
+
+        expect(logger.debug).not.toHaveBeenCalled();
+    });
+
 });

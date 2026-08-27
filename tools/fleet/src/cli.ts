@@ -117,7 +117,7 @@ export function configureCLI(handlers: {
                         demandOption: true
                     })
                     .option('config-version', {
-                        alias: 'r',
+                        alias: 'V',
                         describe: 'Configuration version',
                         type: 'string',
                         demandOption: true

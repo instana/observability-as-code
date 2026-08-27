@@ -26,10 +26,15 @@ export async function handleImport(argv: any): Promise<void> {
         throw new Error(`No files matched pattern: ${includePattern}`);
     }
 
-    // Group matched files by their immediate parent directory
+    // Group matched files by their top-level directory.
+    const topLevelDir = (filePath: string): string => {
+        const first = path.normalize(filePath).split(path.sep)[0];
+        return first === path.basename(filePath) ? '.' : first;
+    };
+
     const groups = new Map<string, string[]>();
     for (const filePath of matchedPaths) {
-        const dir = path.dirname(filePath);
+        const dir = topLevelDir(filePath);
         if (!groups.has(dir)) {
             groups.set(dir, []);
         }
@@ -38,7 +43,7 @@ export async function handleImport(argv: any): Promise<void> {
 
     // Only single-folder import is supported
     if (groups.size > 1) {
-        const folderNames = [...groups.keys()].map(d => path.basename(d)).join(', ');
+        const folderNames = [...groups.keys()].join(', ');
         throw new Error(
             `--include matched files across ${groups.size} folders (${folderNames}). ` +
             `Only single-folder import is supported. Use a more specific pattern.`
@@ -81,11 +86,15 @@ export async function handleImport(argv: any): Promise<void> {
         // POST - create new configuration
         logger.info(`No existing configuration found for "${configName}" — creating...`);
         const payload: Record<string, any> = { name: configName, type, version: configVersion, configuration: { files: newFiles } };
-        logger.debug(`POST payload: ${JSON.stringify({ ...payload, configuration: { files: payload.configuration.files.map((f: any) => ({ ...f, data: '<base64>' })) } }, null, 2)}`);
+        if (logger.isDebugEnabled()) {
+            logger.debug(`POST payload: ${JSON.stringify({ ...payload, configuration: { files: payload.configuration.files.map((f: any) => ({ ...f, data: '<base64>' })) } }, null, 2)}`);
+        }
         try {
             const response = await axiosInstance.post(listUrl, payload, { headers });
             logger.info(`Successfully created configuration "${configName}": ${response.status}`);
-            logger.debug(`POST response: ${JSON.stringify(response.data, null, 2)}`);
+            if (logger.isDebugEnabled()) {
+                logger.debug(`POST response: ${JSON.stringify(response.data, null, 2)}`);
+            }
         } catch (error) {
             handleAxiosError(error, `create configuration "${configName}"`);
             throw error;
@@ -122,12 +131,16 @@ export async function handleImport(argv: any): Promise<void> {
         }
 
         const payload: Record<string, any> = { name: configName, type, version: configVersion, configuration: { files: mergedFiles } };
-        logger.debug(`PUT payload: ${JSON.stringify({ ...payload, configuration: { files: payload.configuration.files.map((f: any) => ({ ...f, data: '<base64>' })) } }, null, 2)}`);
+        if (logger.isDebugEnabled()) {
+            logger.debug(`PUT payload: ${JSON.stringify({ ...payload, configuration: { files: payload.configuration.files.map((f: any) => ({ ...f, data: '<base64>' })) } }, null, 2)}`);
+        }
         const putUrl = `${listUrl}/${existingId}`;
         try {
             const response = await axiosInstance.put(putUrl, payload, { headers });
             logger.info(`Successfully updated configuration "${configName}": ${response.status}`);
-            logger.debug(`PUT response: ${JSON.stringify(response.data, null, 2)}`);
+            if (logger.isDebugEnabled()) {
+                logger.debug(`PUT response: ${JSON.stringify(response.data, null, 2)}`);
+            }
             const actualVersion = response.data?.configuration_version;
             if (actualVersion && actualVersion !== configVersion) {
                 logger.warn(
