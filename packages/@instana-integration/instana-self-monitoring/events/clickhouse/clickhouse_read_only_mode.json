@@ -1,0 +1,18 @@
+{
+  "name": "[SREInfraSLO] ClickHouse replica is in read-only mode for > 1m [TF]",
+  "description": "This can occur if there is an unknown error during (re)initialization of sessions with Zookeeper, or during session reinitialization in ZK itself. Run the following command on the alerting ClickHouse node to verify that the replica is still in read-only mode. Initiate Clickhouse client first via root user using the following command: `clickhouse-client` Once client has started, use: `SELECT * FROM system.replicas WHERE is_readonly = 1 LIMIT 10;` If nothing points to more severe problems, try to **restart the ClickHouse node that contains the read-only replica.**",
+  "query": "entity.type:clickhouse",
+  "entityType": "clickHouseDatabase",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "ReadonlyReplica",
+      "aggregation": "min",
+      "window": 60000,
+      "conditionOperator": ">",
+      "conditionValue": 0,
+      "severity": 10
+    }
+  ]
+}

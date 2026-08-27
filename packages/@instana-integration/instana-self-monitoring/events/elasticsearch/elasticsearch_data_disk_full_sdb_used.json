@@ -1,0 +1,18 @@
+{
+  "name": "[SREInfraSLO] elasticsearch data disk utilized > 85% [TF]",
+  "description": "The elasticsearch disk usage for data is greater than 85%. This indicate the disk is getting closer to max capacity. This may require to cleanup the disk space. If this is not fixed on time, it may cause the node stop working and possible leave the cluster.",
+  "query": "entity.selfType:elasticsearch",
+  "entityType": "host",
+  "expirationTime": 600000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "fs./dev/sdb.used",
+      "aggregation": "max",
+      "window": 600000,
+      "conditionOperator": ">=",
+      "conditionValue": 0.85,
+      "severity": 10
+    }
+  ]
+}

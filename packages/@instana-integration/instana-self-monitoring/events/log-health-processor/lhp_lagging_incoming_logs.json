@@ -1,0 +1,18 @@
+{
+  "name": "[DevSLO] Incoming logs are lagging [TF]",
+  "description": "LHP is significantly lagging to consume from `enriched_logs` topic. This can result in `false positives` (e.g. wrong unusual low number of logs detected) or `false negatives` (no detection) in Smart-Alerts. Even when the dropping metrics indicate a low dropping rate of logs, depending on the lag and Smart Alert rule, this can mean that there is hidden dropping, either by hitting the Kafka retention limits, or by the fact that the logs are consumed too late to be considered. **Action Item:** Check the internal dashboard for dropping and lag of logs, and whether the bottleneck is the processing capacity of LHP, or originating upstream.",
+  "query": "entity.jvm.app.name:log-health-processor",
+  "entityType": "dropwizardApplicationContainer",
+  "expirationTime": 600000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "metrics.histograms.KPI.incoming.enriched_logs.message-age-ms.99th",
+      "aggregation": "avg",
+      "window": 60000,
+      "conditionOperator": ">",
+      "conditionValue": 180000,
+      "severity": 10
+    }
+  ]
+}

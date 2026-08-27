@@ -1,0 +1,18 @@
+{
+  "name": "[SRESLO] Synthetics Datacenter Activation Errors [TF]",
+  "description": "This indicates problems in the Synthetics Datacenter Activation / Managed Location Deployment process.",
+  "query": "entity.kubernetes.deployment.name:\"groundskeeper\"",
+  "entityType": "dropwizardApplicationContainer",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "metrics.gauges.KPI.synthetics.datacenter.activation.errors",
+      "aggregation": "max",
+      "window": 300000,
+      "conditionOperator": ">",
+      "conditionValue": 0,
+      "severity": 5
+    }
+  ]
+}

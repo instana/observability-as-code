@@ -1,0 +1,18 @@
+{
+    "name": "[SRESLO] Synthetics Acceptor External Storage Write Errors [TF]",
+    "description": "This indicates problems with the Synthetics Acceptor inserting data to the External Storage.",
+    "query": "entity.kubernetes.deployment.name:\"synthetics-acceptor\"",
+    "entityType": "dropwizardApplicationContainer",
+    "expirationTime": 300000,
+    "rules": [
+      {
+        "ruleType": "threshold",
+        "metricName": "metrics.gauges.KPI.synthetics.s3.store.error_rate",
+        "aggregation": "avg",
+        "window": 300000,
+        "conditionOperator": ">",
+        "conditionValue": 0.05,
+        "severity": 10
+      }
+    ]
+  }

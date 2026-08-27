@@ -1,0 +1,19 @@
+{
+  "name": "[DevSLO] synthetics-health-processor is not receiving test results [TF]",
+  "description": "`synthetics-health-processor is not receiving test results.` `Action Item:` Most likely there is a problem in synthetics-health-processor or in the components upstream: - As a quick fix, ask SRE to restart - Investigate whether a problem or bug was introduced in synthetics-health-processor or upstream components",
+  "query": "entity.jvm.app.name:synthetics-health-processor",
+  "entityType": "dropwizardApplicationContainer",
+  "expirationTime": 600000,
+  "triggering": true,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "metrics.meters.KPI.incoming.results.calls",
+      "aggregation": "sum",
+      "window": 300000,
+      "conditionOperator": "=",
+      "conditionValue": 0.0,
+      "severity": 10
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "[EXPTUSLO] filler stopped synchronizing ES search index [TF]",
+  "description": "Check for unexpired snapshots has not successfully run.  ## Consequences If this condition persists, it could lead to DFQ searches not returning correct results  ## Remediation - Check ElasticSearch cluster load. - Check `filler` logs.  To get more context: [🔵](https://blue-instanaops.instana.io/#/customDashboards/view;dashboardId=WgHDS_DRRSWjVYOzKoojeg) [🟢](https://green-instanaops.instana.io/#/customDashboards/view;dashboardId=gjymdolcRCmhsSBDYa9tEw) [🔴](https://red-instanaops.instana.io/#/customDashboards/view;dashboardId=d4cBzHW5Se-zzmtgQ9SLsw) [🟠](https://orange-instanaops.instana.io/#/customDashboards/view;dashboardId=OYEqU6yTTFmsdkhnuPNidQ)",
+  "query": "entity.jvm.app.name:filler AND NOT entity.kubernetes.deployment.name:techzone-observability-filler",
+  "entityType": "dropwizardApplicationContainer",
+  "expirationTime": 1800000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "metrics.gauges.com.instana.searchsnapshots.service.SearchStoreThroughCache.time-since-last-check-for-unexpired-snapshots",
+      "aggregation": "max",
+      "window": 1800000,
+      "conditionOperator": ">",
+      "conditionValue": 600000,
+      "severity": 5
+    }
+  ]
+}

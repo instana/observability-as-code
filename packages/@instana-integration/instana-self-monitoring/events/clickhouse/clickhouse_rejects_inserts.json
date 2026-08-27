@@ -1,0 +1,18 @@
+{
+  "name": "ClickHouse - Inserts are rejected [TF]",
+  "description": "The data is getting lost. Caused by 'Too many parts' exception due to high number of active data parts for partition. https://www.notion.so/instana/ClickHouse-Too-many-parts-in-one-of-the-partitions-of-the-XXX-table-01b7add852d74a499ed0216115ed8804",
+  "query": "entity.type:clickhouse",
+  "entityType": "clickHouseDatabase",
+  "expirationTime": 600000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "RejectedInserts",
+      "aggregation": "sum",
+      "window": 3600000,
+      "conditionOperator": ">",
+      "conditionValue": 0,
+      "severity": 5
+    }
+  ]
+}

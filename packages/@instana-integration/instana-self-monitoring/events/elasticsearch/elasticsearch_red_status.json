@@ -1,0 +1,18 @@
+{
+  "name": "[SREInfraSLO] elasticsearch is in red status [TF]",
+  "description": "Elasticsearch is in red status. This indicates that at least one primary shard and all of its replicas are not allocated to a node, meaning that some data is unavailable. Please check this issue as it will impact read/write operations.",
+  "query": "entity.service.name:global_metadata_ng",
+  "entityType": "elasticsearchCluster",
+  "expirationTime": 600000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "cluster_status",
+      "aggregation": "min",
+      "window": 300000,
+      "conditionOperator": ">=",
+      "conditionValue": 2,
+      "severity": 10
+    }
+  ]
+}

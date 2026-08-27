@@ -1,0 +1,17 @@
+{
+  "name": "[SREInfraSLO] ClickHouse is not running on the host. [TF]",
+  "description": "The ClickHouse process is not running on the underlying host. This can be caused by issues related to the replication process. Please check ClickHouse logs for any recurring exceptions / errors and if none are present you [start the ClickHouse recovery process](https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/replication/#recovery-after-failures).",
+  "query": "entity.zone:\"*clickhouse*\" AND NOT entity.zone:\"ZK*\"",
+  "entityType": "host",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "entity_verification",
+      "severity": 10,
+      "matchingEntityType": "clickHouseDatabase",
+      "matchingOperator": "startsWith",
+      "matchingEntityLabel": "ClickHouse",
+      "offlineDuration": 120000
+    }
+  ]
+}

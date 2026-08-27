@@ -1,0 +1,18 @@
+{
+  "name": "ClickHouse - Queries failing due to memory limit exceeded [TF]",
+  "description": "https://www.notion.so/instana/ClickHouse-Queries-failing-due-to-memory-limit-exceeded-8f2a3e6daea2438eb97289c0892459f2",
+  "query": "entity.type:clickhouse",
+  "entityType": "clickHouseDatabase",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "QueryMemoryLimitExceeded",
+      "aggregation": "sum",
+      "window": 120000,
+      "conditionOperator": ">",
+      "conditionValue": 50,
+      "severity": 5
+    }
+  ]
+}

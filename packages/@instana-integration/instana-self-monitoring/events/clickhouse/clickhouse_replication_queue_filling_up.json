@@ -1,0 +1,18 @@
+{
+  "name": "ClickHouse - Replication queue is filling up [TF]",
+  "description": "https://www.notion.so/instana/ClickHouse-Replication-queue-filling-up-405a445e25be4316add4cca943bf9d20",
+  "query": "entity.type:clickhouse",
+  "entityType": "clickHouseDatabase",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "ReplicasMaxQueueSize",
+      "aggregation": "min",
+      "window": 60000,
+      "conditionOperator": ">",
+      "conditionValue": 1000,
+      "severity": 10
+    }
+  ]
+}

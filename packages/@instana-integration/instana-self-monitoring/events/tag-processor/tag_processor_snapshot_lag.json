@@ -1,0 +1,18 @@
+{
+  "name": "[SRESLO] tag-processor is lagging [TF]",
+  "description": "Updates written to ES are not live - we have some lag in some part of the tag-processor pipeline.\n\nThis can come from:\n- latency writing into ES\n- latency in State Cassandra\n- latency writing to Kafka\n- High GC or High CPU from too many upstream updates\n\n## Consequences\nThere will be delays and possibly data-loss for changes that are occurring in customer environments in Custom Dashboards or Infrastructure Analyze.\n\n## Remediation\nSteps to take _until remediation_\n- Consider adjusting the dropping configuration e.g. decrease `config.tag.processor.start.dropping.age.ms` to enforce more dropping and reduce lag.\n- Verify that there are no issues with Kafka or Elasticsearch.\n- Consider increasing the number of tag-processor instances to keep up with increased load.\n\nTo get more context: [🔵](https://blue-instanaops.instana.io/#/customDashboards/view;dashboardId=l6yRfqedQn-t_GqhGVHYmg) [🟢](https://green-instanaops.instana.io/#/customDashboards/view;dashboardId=9VDfDX1UQ7yAMuBj14CK7A) [🔴](https://red-instanaops.instana.io/#/customDashboards/view;dashboardId=jDwGyhY8SAq88FJXvtsqIg) [🟠](https://orange-instanaops.instana.io/#/customDashboards/view;dashboardId=YalysPDKRoGpzuagPYtWwg)",
+  "query": "entity.jvm.app.name:tag-processor",
+  "entityType": "dropwizardApplicationContainer",
+  "expirationTime": 600000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "metrics.timers.com.instana.tags.writing.TagSetWriter.tagset-age.mean",
+      "aggregation": "min",
+      "window": 300000,
+      "conditionOperator": ">",
+      "conditionValue": 300000,
+      "severity": 5
+    }
+  ]
+}

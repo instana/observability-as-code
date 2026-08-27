@@ -1,0 +1,17 @@
+{
+  "name": "[SREInfraSLO] Zookeeper is not running for Clickhouse. [TF]",
+  "description": "The Zookeeper process is not running on the underlying host. This will prevent Clickhouse from functioning untill it is restored.",
+  "query": "entity.zone:\"zk*clickhouse*\"",
+  "entityType": "host",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "entity_verification",
+      "severity": 10,
+      "matchingEntityType": "zooKeeper",
+      "matchingOperator": "startsWith",
+      "matchingEntityLabel": "replica",
+      "offlineDuration": 120000
+    }
+  ]
+}

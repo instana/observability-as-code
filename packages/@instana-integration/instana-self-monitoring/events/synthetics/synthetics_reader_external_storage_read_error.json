@@ -1,0 +1,18 @@
+{
+  "name": "[DevSLO] - Synthetics Reader External Storage Read Errors [TF]",
+  "description": "This indicates problems with the Synthetics Reader retrieving data from the External Storage.",
+  "query": "entity.kubernetes.deployment.name:\"synthetics-reader\"",
+  "entityType": "dropwizardApplicationContainer",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "metrics.gauges.KPI.synthetics.s3.get.error_rate",
+      "aggregation": "avg",
+      "window": 300000,
+      "conditionOperator": ">",
+      "conditionValue": 0.05,
+      "severity": 10
+    }
+  ]
+}

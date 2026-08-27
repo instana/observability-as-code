@@ -1,0 +1,18 @@
+{
+  "name": "[SREInfraSLO] ClickHouse - Distribution queue is filling up [TF]",
+  "description": "https://www.notion.so/instana/Clickhouse-Distribution-queue-is-filling-up-9453591a12df4a5bb9e27",
+  "query": "entity.type:clickhouse",
+  "entityType": "clickHouseDatabase",
+  "expirationTime": 300000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "DistributedFilesToInsert",
+      "aggregation": "min",
+      "window": 60000,
+      "conditionOperator": ">",
+      "conditionValue": 1000,
+      "severity": 10
+    }
+  ]
+}

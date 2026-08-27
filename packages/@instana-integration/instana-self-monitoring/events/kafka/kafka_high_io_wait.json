@@ -1,0 +1,18 @@
+{
+  "name": "[SREInfraSLO] Kafka node is showing high I/O wait times [TF]",
+  "description": "A Kafka node is showing high wait times for a longer period of time. This can indicate underlying hardware issues (in case of local SSDS), a general load issue with the Kafka cluster in that region or a load increase for a certain customers whos partitions are located on that node. In case of hardware failures, replace the node in questions. Otherwise look into balancing topics acros the cluster to spread the load.",
+  "query": "entity.zone:Kafka",
+  "entityType": "host",
+  "expirationTime": 600000,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "metricName": "cpu.wait",
+      "aggregation": "avg",
+      "window": 600000,
+      "conditionOperator": ">",
+      "conditionValue": 0.15,
+      "severity": 10
+    }
+  ]
+}

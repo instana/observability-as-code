@@ -1,0 +1,2223 @@
+{
+  "id": "GNeisQvUTdyw3ZuaSXwC8w",
+  "title": "Self Monitoring: profile related pipelines",
+  "accessRules": [
+    {
+      "accessType": "READ_WRITE",
+      "relationType": "GLOBAL",
+      "relatedId": ""
+    },
+    {
+      "accessType": "READ_WRITE",
+      "relationType": "USER",
+      "relatedId": "6745ceced26b6f000181586b"
+    }
+  ],
+  "widgets": [
+    {
+      "id": "1o2diO-Hl3t5_OfP",
+      "title": "log-processor: error rate",
+      "width": 4,
+      "height": 17,
+      "x": 0,
+      "y": 124,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 50,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.KPI.processing.trace_logs.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.pod.label.app",
+                "type": "TAG_FILTER",
+                "value": "log-processor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge KPI.processing.trace_logs.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Duplicate of Dropwizard meter KPI.processing.trace_logs.errors",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 50,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.KPI.incoming.trace_logs.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.pod.label.app",
+                "type": "TAG_FILTER",
+                "value": "log-processor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge KPI.incoming.trace_logs.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "iv13WQbEW0fhK4NK",
+      "title": "Kafka Node under replicated partitions",
+      "width": 12,
+      "height": 13,
+      "x": 0,
+      "y": 141,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafka",
+              "metricPath": [
+                "Others",
+                "Kafka Node"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "broker.underReplicatedPartitions",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Under-replicated Partitions",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "BgvigXlJKNjJydDi",
+      "title": "otlp-acceptor error rate",
+      "width": 3,
+      "height": 13,
+      "x": 6,
+      "y": 6,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "grpc.server.concurrencyLimit.acquire.error_rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": true,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.grpc.server.concurrencyLimit.acquire.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "otlp-acceptor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge grpc.server.concurrencyLimit.acquire.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "grpc.server.error_rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": true,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.grpc.server.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "otlp-acceptor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge grpc.server.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "KPI.outgoing.spans.error_rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": true,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.KPI.outgoing.spans.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "otlp-acceptor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge KPI.outgoing.spans.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "KPI.processing.span_messages.error_rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": true,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.KPI.processing.span_messages.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "otlp-acceptor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge KPI.processing.span_messages.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "log.error_rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": true,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.log.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "otlp-acceptor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge log.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ]
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "5eUvgRapk1m6DGpc",
+      "title": "tag-processor Dropping",
+      "width": 4,
+      "height": 15,
+      "x": 0,
+      "y": 38,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Tag Sets",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.gauges.com.instana.tags.processing.TagSetUpdateDropper.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge com.instana.tags.processing.TagSetUpdateDropper.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Snapshots",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.gauges.com.instana.tags.processing.SnapshotUpdateDropper.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge com.instana.tags.processing.SnapshotUpdateDropper.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Tagged Metrics",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.gauges.com.instana.tags.processing.TaggedMetricDropper.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge com.instana.tags.processing.TaggedMetricDropper.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Tagged Propagation Actions",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.gauges.com.instana.tags.processing.TagPropagationActionDropper.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "instana-blue",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge com.instana.tags.processing.TagPropagationActionDropper.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "dWtI_wmXRGbEqaay",
+      "title": "Acceptor Error Rate top 5",
+      "width": 3,
+      "height": 13,
+      "x": 0,
+      "y": 6,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "error_rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": true,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.KPI.outgoing.spans.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "acceptor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge KPI.outgoing.spans.error_rate",
+              "crossSeriesAggregation": "MAX"
+            }
+          ]
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "HyHk3YdIm-YDiTRm",
+      "title": "Processor (metrics profile)",
+      "width": 12,
+      "height": 6,
+      "x": 0,
+      "y": 66,
+      "type": "markdown",
+      "config": "This is useful widgets for processor errors"
+    },
+    {
+      "id": "w1eYaMkw8O5V4wD8",
+      "title": "TU Processor droppping incidents top 5 (max)",
+      "width": 12,
+      "height": 13,
+      "x": 0,
+      "y": 72,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "min": 0.2,
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "Processor incoming error rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 10,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.gauges.KPI.incoming.rollups.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "processor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge KPI.incoming.rollups.error_rate",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "0W1xPF6xxH8TIqZl",
+      "title": "Logging pipeline (spans profile)",
+      "width": 12,
+      "height": 6,
+      "x": 0,
+      "y": 118,
+      "type": "markdown",
+      "config": "This is useful widgets for logging errors"
+    },
+    {
+      "id": "rKfoHY3bM-VMKy9k",
+      "title": "Metrics (infrastructure) pipeline (metrics profile)",
+      "width": 12,
+      "height": 6,
+      "x": 0,
+      "y": 19,
+      "type": "markdown",
+      "config": "This is useful widgets for metrics pipeline errors"
+    },
+    {
+      "id": "73niR7Zd6zu7nQ1O",
+      "title": "Beeinstana agg Kafka Error Count",
+      "width": 4,
+      "height": 15,
+      "x": 4,
+      "y": 38,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "SUM",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "beeInstanaNode",
+              "metricPath": [
+                "Others",
+                "BeeInstana Server"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "Aggregator.KafkaCommon.KafkaError.sum",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Aggregator metric KafkaCommon.KafkaError.sum",
+              "crossSeriesAggregation": "SUM"
+            }
+          ]
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "zIYqNSh417zksgzf",
+      "title": "log-writer: outgoing error_rate",
+      "width": 4,
+      "height": 17,
+      "x": 8,
+      "y": 124,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "log_tag_sets_error_rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 50,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.KPI.outgoing.log_tag_sets.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.pod.label.app",
+                "type": "TAG_FILTER",
+                "value": "log-writer",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge KPI.outgoing.log_tag_sets.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "cDlg_9NheTwgnWpl",
+      "title": "tag-reader Error rate",
+      "width": 4,
+      "height": 15,
+      "x": 8,
+      "y": 38,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "InstanaElasticsearchClient.GetIndexRequest.error_rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.gauges.com.instana.elastic.InstanaElasticsearchClient.GetIndexRequest.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "tag-reader",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge com.instana.elastic.InstanaElasticsearchClient.GetIndexRequest.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "InstanaElasticsearchClient.SearchRequest.error_rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.gauges.com.instana.elastic.InstanaElasticsearchClient.SearchRequest.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "tag-reader",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge com.instana.elastic.InstanaElasticsearchClient.SearchRequest.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "grpc.server.concurrencyLimit.acquire.error_rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.gauges.grpc.server.concurrencyLimit.acquire.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "tag-reader",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge grpc.server.concurrencyLimit.acquire.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "grpc.server.error_rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.gauges.grpc.server.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "tag-reader",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge grpc.server.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "log.error_rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.gauges.log.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "tag-reader",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge log.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "BezsD4UCvyXOfNx0",
+      "title": "appdata-reader : clickHouse.clustered.error_rate",
+      "width": 4,
+      "height": 14,
+      "x": 8,
+      "y": 104,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "appdata-reader : clickHouse.clustered.error_rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 20,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.clickHouse.clustered.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "appdata-reader",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge clickHouse.clustered.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ]
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "p3PNduR81rSVZw6H",
+      "title": "TU Raw message dropping Top 5",
+      "width": 12,
+      "height": 13,
+      "x": 0,
+      "y": 25,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "min": 0.15,
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.KPI.incoming.raw_messages.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge KPI.incoming.raw_messages.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ]
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "kVqeR3lsjEgS6iXI",
+      "title": "log-writer: incoming error rate",
+      "width": 4,
+      "height": 17,
+      "x": 4,
+      "y": 124,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "tag-sets-error-rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 50,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.KPI.incoming.tag_sets.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.pod.label.app",
+                "type": "TAG_FILTER",
+                "value": "log-writer",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge KPI.incoming.tag_sets.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "log-messages-error-rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 50,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.KPI.incoming.log_messages.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.pod.label.app",
+                "type": "TAG_FILTER",
+                "value": "log-writer",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge KPI.incoming.log_messages.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "log_tag_sets_error_rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 50,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.KPI.incoming.log_tag_sets.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.pod.label.app",
+                "type": "TAG_FILTER",
+                "value": "log-writer",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge KPI.incoming.log_tag_sets.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "TiHAQKxzcACnjmjo",
+      "title": "TU Span dropping Incidents Top 5",
+      "width": 12,
+      "height": 13,
+      "x": 0,
+      "y": 91,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.compact",
+          "renderer": "line",
+          "min": 0.25,
+          "max": 1,
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": true,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.KPI.incoming.span_messages.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge KPI.incoming.span_messages.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ]
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "8uZsVwVdz4Qg71--",
+      "title": "appdata-writer: Clickhouse Error Rate",
+      "width": 4,
+      "height": 14,
+      "x": 0,
+      "y": 104,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "insert.error_rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.com.instana.clickhouse.client.ClickHouseHttpClient.insert.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.pod.label",
+                "type": "TAG_FILTER",
+                "value": "appdata-writer",
+                "key": "app",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge com.instana.clickhouse.client.ClickHouseHttpClient.insert.error_rate",
+              "crossSeriesAggregation": "SUM"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "clickhouse clustered error rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.clickHouse.clustered.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.pod.label",
+                "type": "TAG_FILTER",
+                "value": "appdata-writer",
+                "key": "app",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge clickHouse.clustered.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ]
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "ByMhOEuC688WXw9W",
+      "title": "Elasticsearch unassigned shards",
+      "width": 9,
+      "height": 13,
+      "x": 0,
+      "y": 53,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.compact",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "cRed",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "elasticsearchCluster",
+              "metricPath": [
+                "ElasticSearch",
+                "Elasticsearch Cluster"
+              ],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "unassigned_shards",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Unassigned Shards",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "9iXhP9v78e9T9bzS",
+      "title": "Application pipeline (spans profile)",
+      "width": 12,
+      "height": 6,
+      "x": 0,
+      "y": 85,
+      "type": "markdown",
+      "config": "This is useful widgets for application pipeline errors"
+    },
+    {
+      "id": "vhTPZbcbcipX-xKJ",
+      "title": "Acceptor",
+      "width": 12,
+      "height": 6,
+      "x": 0,
+      "y": 0,
+      "type": "markdown",
+      "config": "This is useful widgets for acceptor errors"
+    },
+    {
+      "id": "MAiMEB3o-8kOxAoH",
+      "title": "serverless-acceptor error rate",
+      "width": 3,
+      "height": 13,
+      "x": 3,
+      "y": 6,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "KPI.outgoing.spans.error_rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.KPI.outgoing.spans.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "serverless-acceptor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge KPI.outgoing.spans.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "KPI.processing.bundle_messages.error_rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.KPI.processing.bundle_messages.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "serverless-acceptor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge KPI.processing.bundle_messages.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "KPI.processing.span_messages.error_rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.KPI.processing.span_messages.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "serverless-acceptor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge KPI.processing.span_messages.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "log.error_rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.log.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "serverless-acceptor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge log.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [],
+          "formatterSelected": false
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "sIQBnSNWZdbFDAxC",
+      "title": "appdata-live-agg: Error Rate",
+      "width": 4,
+      "height": 14,
+      "x": 4,
+      "y": 104,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "grpc.server.concurrencyLimit.acquire.error_rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.grpc.server.concurrencyLimit.acquire.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.pod.label",
+                "type": "TAG_FILTER",
+                "value": "appdata-live-aggregator",
+                "key": "app",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge grpc.server.concurrencyLimit.acquire.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "grpc.server.error_rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.grpc.server.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.pod.label",
+                "type": "TAG_FILTER",
+                "value": "appdata-live-aggregator",
+                "key": "app",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge grpc.server.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "KPI.deserializing.calls.error_rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.KPI.deserializing.calls.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.pod.label",
+                "type": "TAG_FILTER",
+                "value": "appdata-live-aggregator",
+                "key": "app",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge KPI.deserializing.calls.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "KPI.incoming.calls.error_rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.KPI.incoming.calls.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.pod.label",
+                "type": "TAG_FILTER",
+                "value": "appdata-live-aggregator",
+                "key": "app",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge KPI.incoming.calls.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "log.error_rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "grouping": [
+                {
+                  "maxResults": 5,
+                  "by": {
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "unit": "number",
+              "metric": "metrics.gauges.log.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.pod.label",
+                "type": "TAG_FILTER",
+                "value": "appdata-live-aggregator",
+                "key": "app",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge log.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ]
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    },
+    {
+      "id": "m6IuJINL6SF_qUJn",
+      "title": "EUM acceptor error rate",
+      "width": 3,
+      "height": 13,
+      "x": 9,
+      "y": 6,
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "percentage.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "userTimestampTrustAttempts.error_rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.gauges.instana.beaconProcessing.userTimestampTrustAttempts.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "eum-acceptor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge instana.beaconProcessing.userTimestampTrustAttempts.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "mobile.userTimestampTrustAttempts.error_rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.gauges.instana.mobileBeaconProcessing.userTimestampTrustAttempts.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "eum-acceptor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge instana.mobileBeaconProcessing.userTimestampTrustAttempts.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "kafka.beacons.writes.error_rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.gauges.kafka.beacons.writes.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "eum-acceptor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge kafka.beacons.writes.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "kafka.spans.writes.error_rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.gauges.kafka.spans.writes.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "eum-acceptor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge kafka.spans.writes.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "log.error_rate",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "dropwizardApplicationContainer",
+              "metricPath": [
+                "Others",
+                "Dropwizard App"
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "metrics.gauges.log.error_rate",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "name": "kubernetes.deployment.name",
+                "type": "TAG_FILTER",
+                "value": "eum-acceptor",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Dropwizard gauge log.error_rate",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": true
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      }
+    }
+  ],
+  "ownerId": "6745ceced26b6f000181586b",
+  "writable": true
+}
