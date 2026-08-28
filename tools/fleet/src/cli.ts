@@ -29,6 +29,14 @@ Deploy the agent component:
   ${execName} deploy --type agentType --tag key1=value1 --configuration-id=configID --debug
 `;
 
+const examplesForImport = `
+Examples:
+
+Import agent or IDOT configurations:
+  ${execName} import-config --server example.com --token validToken --type com.ibm.instana.agent --include "agent-folder/**/*.yaml" --config-name configName --config-version configVersion
+  ${execName} import-config --type com.ibm.opentelemetrycollector --include "agent-folder/**/*.yaml" --config-name configName --config-version configVersion (specify the server and token as environment variables using INSTANA_SERVER and INSTANA_API_TOKEN)
+`;
+
 const examplesForUpdate = `
 Examples:
 
@@ -66,12 +74,62 @@ export function configureCLI(handlers: {
     handleUpdate: (argv: any) => Promise<void>;
     handleList: (argv: any) => Promise<any>;
     handleTag: (argv: any) => Promise<any>;
+    handleImport: (argv: any) => Promise<void>;
 }) {
     return yargs
         .scriptName(execName)
         .wrap(160)
         .usage(`The Instana CLI for agent fleet management\n\nUsage: ${execName} <command> <options>`)
         // Agent lifecycle commands
+        .command(
+            'import-config',
+            'Import agent or IDOT configuration files and save them to the Instana backend',
+            (yargs) => {
+                return yargs
+                    .option('server', {
+                        alias: 'S',
+                        describe: 'Address of an environment',
+                        type: 'string',
+                        demandOption: false
+                    })
+                    .option('token', {
+                        alias: 't',
+                        describe: 'API token for authenticating agent requests',
+                        type: 'string',
+                        demandOption: false
+                    })
+                    .option('type', {
+                        alias: 'y',
+                        describe: 'Agent type, allowed values (com.ibm.opentelemetrycollector, com.ibm.instana.agent, com.ibm.instana.customcollector)',
+                        type: 'string',
+                        demandOption: true
+                    })
+                    .option('include', {
+                        alias: 'i',
+                        describe: 'Folder or glob pattern to match configuration files to import, e.g. "agent-folder/**/*.yaml"',
+                        type: 'string',
+                        demandOption: true
+                    })
+                    .option('config-name', {
+                        alias: 'n',
+                        describe: 'Configuration name',
+                        type: 'string',
+                        demandOption: true
+                    })
+                    .option('config-version', {
+                        alias: 'V',
+                        describe: 'Configuration version',
+                        type: 'string',
+                        demandOption: true
+                    })
+                    .option('debug', {
+                        alias: 'd',
+                        describe: 'Enable debug mode',
+                        type: 'boolean',
+                        default: false
+                    })
+                    .epilog(examplesForImport);
+            }, handlers.handleImport)
         .command(
             'deploy',
             'Deploy the agent component',
