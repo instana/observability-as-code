@@ -56,6 +56,7 @@ describe('CLI Module', () => {
             expect(cliContent).toContain('examplesForUpdate');
             expect(cliContent).toContain('examplesForList');
             expect(cliContent).toContain('examplesForTagSet');
+            expect(cliContent).toContain('examplesForImport');
             expect(cliContent).toContain('Examples:');
         });
 
@@ -64,6 +65,7 @@ describe('CLI Module', () => {
             const path = require('path');
             const cliContent = fs.readFileSync(path.join(__dirname, '../cli.ts'), 'utf-8');
 
+            expect(cliContent).toContain("'import-config'");
             expect(cliContent).toContain("'restart'");
             expect(cliContent).toContain("'deploy'");
             expect(cliContent).toContain("'update-config'");
@@ -76,6 +78,7 @@ describe('CLI Module', () => {
             const path = require('path');
             const cliContent = fs.readFileSync(path.join(__dirname, '../cli.ts'), 'utf-8');
 
+            expect(cliContent).toContain('Import agent or IDOT configuration files and save them to the Instana backend');
             expect(cliContent).toContain('Restart the agent instances');
             expect(cliContent).toContain('Deploy the agent component');
             expect(cliContent).toContain('Update the agent configuration');
@@ -129,6 +132,16 @@ describe('CLI Module', () => {
             expect(cliContent).toContain("'config-name'");
         });
 
+        it('should define import-config specific options', async () => {
+            const fs = require('fs');
+            const path = require('path');
+            const cliContent = fs.readFileSync(path.join(__dirname, '../cli.ts'), 'utf-8');
+
+            expect(cliContent).toContain("'include'");
+            expect(cliContent).toContain("'config-name'");
+            expect(cliContent).toContain("'config-version'");
+        });
+
         it('should mark --tag as required for restart', async () => {
             const fs = require('fs');
             const path = require('path');
@@ -144,6 +157,7 @@ describe('CLI Module', () => {
             const path = require('path');
             const cliContent = fs.readFileSync(path.join(__dirname, '../cli.ts'), 'utf-8');
 
+            expect(cliContent).toContain('handlers.handleImport');
             expect(cliContent).toContain('handlers.handleRestart');
             expect(cliContent).toContain('handlers.handleDeploy');
             expect(cliContent).toContain('handlers.handleUpdate');
@@ -156,6 +170,7 @@ describe('CLI Module', () => {
             const path = require('path');
             const cliContent = fs.readFileSync(path.join(__dirname, '../cli.ts'), 'utf-8');
 
+            expect(cliContent).toContain('handleImport: (argv: any) => Promise<void>');
             expect(cliContent).toContain('handleRestart: (argv: any) => Promise<void>');
             expect(cliContent).toContain('handleDeploy: (argv: any) => Promise<void>');
             expect(cliContent).toContain('handleUpdate: (argv: any) => Promise<void>');
@@ -191,6 +206,7 @@ describe('CLI Module', () => {
             const path = require('path');
             const cliContent = fs.readFileSync(path.join(__dirname, '../cli.ts'), 'utf-8');
 
+            expect(cliContent).toContain('.epilog(examplesForImport)');
             expect(cliContent).toContain('.epilog(examplesForRestart)');
             expect(cliContent).toContain('.epilog(examplesForDeploy)');
             expect(cliContent).toContain('.epilog(examplesForUpdate)');
