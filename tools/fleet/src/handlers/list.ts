@@ -6,6 +6,14 @@ export async function handleList(argv: any): Promise<any> {
     const configName: string | undefined = argv['config-name'];
     const configId: string | undefined = argv['configuration-id'];
 
+    if (configId && configName) {
+        throw new Error('--configuration-id and --config-name are mutually exclusive');
+    }
+
+    if (!configId && !type) {
+        throw new Error('Missing required parameter: --type');
+    }
+
     const url = configId
         ? `https://${server}/api/fleet/configurations/${configId}`
         : `https://${server}/api/fleet/configurations`;
@@ -32,7 +40,7 @@ export async function handleList(argv: any): Promise<any> {
         }
 
         if (logger.isDebugEnabled()) {
-            logger.debug(`Response data: \n${JSON.stringify(data)}`);
+            logger.debug(JSON.stringify(data, null, 2));
         } else {
             logger.info(JSON.stringify(data, null, 2));
         }

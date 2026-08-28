@@ -2,100 +2,84 @@ import { describe, expect, it } from '@jest/globals';
 
 import { logFormat } from '../logger-wrapper';
 
-describe('Logger Wrapper - logFormat Function', () => {
-  it('should format log messages with all fields', () => {
-    const result = logFormat.transform({
-      level: 'info',
-      message: 'Test message',
-      label: 'instana-fleet',
-      timestamp: '2024-01-01T00:00:00.000Z',
+// Winston's printf transform stores the final formatted string on Symbol.for('message')
+const FORMATTED = Symbol.for('message');
+
+describe('logFormat', () => {
+    it('produces the expected format: timestamp [label] level: message', () => {
+        const result = logFormat.transform({
+            level: 'info',
+            message: 'Test message',
+            label: 'instana-fleet',
+            timestamp: '2024-01-01T00:00:00.000Z',
+        }) as any;
+
+        expect(result[FORMATTED]).toBe('2024-01-01T00:00:00.000Z [instana-fleet] info: Test message');
     });
 
-    expect(result).toBeDefined();
-    expect(result).toHaveProperty('message');
-  });
+    it('formats error level correctly', () => {
+        const result = logFormat.transform({
+            level: 'error',
+            message: 'Error occurred',
+            label: 'instana-fleet',
+            timestamp: '2024-01-01T12:00:00.000Z',
+        }) as any;
 
-  it('should format error level messages', () => {
-    const result = logFormat.transform({
-      level: 'error',
-      message: 'Error occurred',
-      label: 'instana-fleet',
-      timestamp: '2024-01-01T12:00:00.000Z',
+        expect(result[FORMATTED]).toBe('2024-01-01T12:00:00.000Z [instana-fleet] error: Error occurred');
     });
 
-    expect(result).toBeDefined();
-    expect(result).toHaveProperty('message');
-  });
+    it('formats warn level correctly', () => {
+        const result = logFormat.transform({
+            level: 'warn',
+            message: 'Warning message',
+            label: 'instana-fleet',
+            timestamp: '2024-01-01T12:00:00.000Z',
+        }) as any;
 
-  it('should format warn level messages', () => {
-    const result = logFormat.transform({
-      level: 'warn',
-      message: 'Warning message',
-      label: 'instana-fleet',
-      timestamp: '2024-01-01T12:00:00.000Z',
+        expect(result[FORMATTED]).toBe('2024-01-01T12:00:00.000Z [instana-fleet] warn: Warning message');
     });
 
-    expect(result).toBeDefined();
-    expect(result).toHaveProperty('message');
-  });
+    it('formats debug level correctly', () => {
+        const result = logFormat.transform({
+            level: 'debug',
+            message: 'Debug info',
+            label: 'instana-fleet',
+            timestamp: '2024-01-01T12:00:00.000Z',
+        }) as any;
 
-  it('should format debug level messages', () => {
-    const result = logFormat.transform({
-      level: 'debug',
-      message: 'Debug info',
-      label: 'instana-fleet',
-      timestamp: '2024-01-01T12:00:00.000Z',
+        expect(result[FORMATTED]).toBe('2024-01-01T12:00:00.000Z [instana-fleet] debug: Debug info');
     });
 
-    expect(result).toBeDefined();
-    expect(result).toHaveProperty('message');
-  });
+    it('handles empty message', () => {
+        const result = logFormat.transform({
+            level: 'info',
+            message: '',
+            label: 'instana-fleet',
+            timestamp: '2024-01-01T12:00:00.000Z',
+        }) as any;
 
-  it('should handle empty messages', () => {
-    const result = logFormat.transform({
-      level: 'info',
-      message: '',
-      label: 'instana-fleet',
-      timestamp: '2024-01-01T12:00:00.000Z',
+        expect(result[FORMATTED]).toBe('2024-01-01T12:00:00.000Z [instana-fleet] info: ');
     });
 
-    expect(result).toBeDefined();
-  });
+    it('handles message with special characters', () => {
+        const result = logFormat.transform({
+            level: 'info',
+            message: 'Special chars: !@#$%^&*()',
+            label: 'instana-fleet',
+            timestamp: '2024-01-01T12:00:00.000Z',
+        }) as any;
 
-  it('should handle messages with special characters', () => {
-    const result = logFormat.transform({
-      level: 'info',
-      message: 'Special chars: !@#$%^&*()',
-      label: 'instana-fleet',
-      timestamp: '2024-01-01T12:00:00.000Z',
+        expect(result[FORMATTED]).toBe('2024-01-01T12:00:00.000Z [instana-fleet] info: Special chars: !@#$%^&*()');
     });
 
-    expect(result).toBeDefined();
-    expect(result).toHaveProperty('message');
-  });
+    it('handles multiline message', () => {
+        const result = logFormat.transform({
+            level: 'info',
+            message: 'Line 1\nLine 2\nLine 3',
+            label: 'instana-fleet',
+            timestamp: '2024-01-01T12:00:00.000Z',
+        }) as any;
 
-  it('should handle long messages', () => {
-    const longMessage = 'A'.repeat(1000);
-    const result = logFormat.transform({
-      level: 'info',
-      message: longMessage,
-      label: 'instana-fleet',
-      timestamp: '2024-01-01T12:00:00.000Z',
+        expect(result[FORMATTED]).toBe('2024-01-01T12:00:00.000Z [instana-fleet] info: Line 1\nLine 2\nLine 3');
     });
-
-    expect(result).toBeDefined();
-    expect(result).toHaveProperty('message');
-  });
-
-  it('should handle multiline messages', () => {
-    const result = logFormat.transform({
-      level: 'info',
-      message: 'Line 1\nLine 2\nLine 3',
-      label: 'instana-fleet',
-      timestamp: '2024-01-01T12:00:00.000Z',
-    });
-
-    expect(result).toBeDefined();
-    expect(result).toHaveProperty('message');
-  });
 });

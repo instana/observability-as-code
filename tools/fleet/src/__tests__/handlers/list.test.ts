@@ -62,6 +62,21 @@ describe('handleList', () => {
         expect(result).toEqual({ configuration_id: 'dkjpfmGQQ7qU5QJ4T6uAMw', name: 'fi-heartbeat-config', version: 3 });
     });
 
+    test('fetches a single configuration by ID without --type', async () => {
+        const getMock = jest.fn().mockResolvedValue({
+            data: { configuration_id: 'dkjpfmGQQ7qU5QJ4T6uAMw', name: 'fi-heartbeat-config', version: 3 }
+        });
+        mockedAxios.create.mockReturnValue({ get: getMock } as any);
+
+        // type is intentionally omitted - should not throw
+        const result = await handleList({ server: 'localhost:8080', token: 'test-token', 'configuration-id': 'dkjpfmGQQ7qU5QJ4T6uAMw' });
+
+        expect(getMock).toHaveBeenCalledTimes(1);
+        const [url] = getMock.mock.calls[0];
+        expect(url).toBe('https://localhost:8080/api/fleet/configurations/dkjpfmGQQ7qU5QJ4T6uAMw');
+        expect(result).toEqual({ configuration_id: 'dkjpfmGQQ7qU5QJ4T6uAMw', name: 'fi-heartbeat-config', version: 3 });
+    });
+
     test('filters configurations by name', async () => {
         const allConfigs = [
             { configuration_id: 'id-1', name: 'fi-heartbeat-config', version: 1 },
@@ -121,11 +136,26 @@ describe('handleList', () => {
         );
     });
 
-    test('throws when type is missing', async () => {
+    test('throws when both configuration-id and config-name are provided', async () => {
+        await expect(
+            handleList({ ...baseArgv, 'configuration-id': 'abc', 'config-name': 'my-config' })
+        ).rejects.toThrow('--configuration-id and --config-name are mutually exclusive');
+    });
+
+    test('throws when type is missing and no configuration-id provided', async () => {
         const argv = { ...baseArgv, type: undefined };
         await expect(handleList(argv)).rejects.toThrow(
             'Missing required parameter: --type'
         );
+    });
+
+    test('does not throw when type is missing but configuration-id is provided', async () => {
+        const getMock = jest.fn().mockResolvedValue({ data: { configuration_id: 'abc' } });
+        mockedAxios.create.mockReturnValue({ get: getMock } as any);
+
+        await expect(
+            handleList({ ...baseArgv, type: undefined, 'configuration-id': 'abc' })
+        ).resolves.toBeDefined();
     });
 
     test('sets debug log level when debug flag is true', async () => {
@@ -147,7 +177,7 @@ describe('handleList', () => {
         await handleList(baseArgv);
 
         expect(logger.debug).toHaveBeenCalledWith(
-            `Response data: \n${JSON.stringify([{ id: 'cfg-1' }])}`
+            JSON.stringify([{ id: 'cfg-1' }], null, 2)
         );
         expect(logger.info).not.toHaveBeenCalledWith(
             JSON.stringify([{ id: 'cfg-1' }], null, 2)

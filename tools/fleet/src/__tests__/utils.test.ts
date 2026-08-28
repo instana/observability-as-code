@@ -190,9 +190,9 @@ describe('resolveConnection', () => {
             .toThrow('Missing API token. Specify --token or set INSTANA_API_TOKEN');
     });
 
-    it('throws when type is missing', () => {
-        expect(() => resolveConnection({ server: 'localhost', token: 'x' }))
-            .toThrow('Missing required parameter: --type');
+    it('returns undefined type when type is not provided', () => {
+        const result = resolveConnection({ server: 'localhost', token: 'x' });
+        expect(result.type).toBeUndefined();
     });
 
     it('sets debug log level when debug flag is true', () => {
