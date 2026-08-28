@@ -59,7 +59,7 @@ describe('handleImport', () => {
         getMock.mockResolvedValue({ data: [] });
         postMock.mockResolvedValue({
             status: 200,
-            data: { id: 'new-cfg-id-123', configuration: { name: 'my-agent-config', version: '1.0.0' } }
+            data: { id: 'new-cfg-id-123', configuration_version: '1.0.0' }
         });
 
         await handleImport(BASE_ARGV);
@@ -77,7 +77,7 @@ describe('handleImport', () => {
         expect(opts.headers['Content-Type']).toBe('application/json');
         expect(logger.info).toHaveBeenCalledWith(
             'Successfully created configuration "my-agent-config" (id=new-cfg-id-123, version=1.0.0): 200'
-        );
+        ); // name comes from configName (request payload), not response
     });
 
     test('uses --config-name as the exact configuration name', async () => {
@@ -114,7 +114,7 @@ describe('handleImport', () => {
         getMock.mockResolvedValue({ data: [existing] });
         putMock.mockResolvedValue({
             status: 200,
-            data: { id: 'existing-id-123', configuration: { name: 'my-agent-config', version: '1.0.0' } }
+            data: { id: 'existing-id-123', configuration_version: '1.0.0' }
         });
 
         await handleImport(BASE_ARGV);
@@ -127,7 +127,7 @@ describe('handleImport', () => {
         expect(body.configuration.files.map((f: any) => f.name)).toContain('config1.yaml');
         expect(logger.info).toHaveBeenCalledWith(
             'Successfully updated configuration "my-agent-config" (id=existing-id-123, version=1.0.0): 200'
-        );
+        ); // name comes from configName (request payload), not response
     });
 
     test('replaces existing file with same name on PUT when content differs', async () => {

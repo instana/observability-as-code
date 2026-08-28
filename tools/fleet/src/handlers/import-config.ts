@@ -81,10 +81,9 @@ export async function handleImport(argv: any): Promise<void> {
         }
         try {
             const response = await axiosInstance.post(listUrl, payload, { headers });
-            const responseId = response.data?.id ?? response.data?.configuration?.configuration_id ?? 'unknown';
-            const responseName = response.data?.configuration?.name ?? configName;
+            const responseId = response.data?.id ?? 'unknown';
             const responseVersion = response.data?.configuration_version ?? response.data?.configuration?.version ?? configVersion;
-            logger.info(`Successfully created configuration "${responseName}" (id=${responseId}, version=${responseVersion}): ${response.status}`);
+            logger.info(`Successfully created configuration "${configName}" (id=${responseId}, version=${responseVersion}): ${response.status}`);
             if (logger.isDebugEnabled()) {
                 logger.debug(`POST response: ${JSON.stringify(response.data, null, 2)}`);
             }
@@ -130,11 +129,10 @@ export async function handleImport(argv: any): Promise<void> {
         const putUrl = `${listUrl}/${existingId}`;
         try {
             const response = await axiosInstance.put(putUrl, payload, { headers });
-            const responseId = response.data?.id ?? response.data?.configuration?.configuration_id ?? existingId;
-            const responseName = response.data?.configuration?.name ?? configName;
+            const responseId = response.data?.id ?? existingId;
             const actualVersion: string | undefined = response.data?.configuration_version ?? response.data?.configuration?.version;
             const responseVersion = actualVersion ?? configVersion;
-            logger.info(`Successfully updated configuration "${responseName}" (id=${responseId}, version=${responseVersion}): ${response.status}`);
+            logger.info(`Successfully updated configuration "${configName}" (id=${responseId}, version=${responseVersion}): ${response.status}`);
             if (logger.isDebugEnabled()) {
                 logger.debug(`PUT response: ${JSON.stringify(response.data, null, 2)}`);
             }
