@@ -17,6 +17,10 @@ import path from 'path';
 export async function handleImport(argv: any): Promise<void> {
     const { server, token, type } = resolveConnection(argv);
 
+    if (!type) {
+        throw new Error('Missing required parameter: --type');
+    }
+
     const includePattern: string = argv.include;
     const configName: string = argv['config-name'];
     const configVersion: string = argv['config-version'];
@@ -77,7 +81,10 @@ export async function handleImport(argv: any): Promise<void> {
         }
         try {
             const response = await axiosInstance.post(listUrl, payload, { headers });
-            logger.info(`Successfully created configuration "${configName}": ${response.status}`);
+            const responseId = response.data?.id ?? response.data?.configuration?.configuration_id ?? 'unknown';
+            const responseName = response.data?.configuration?.name ?? configName;
+            const responseVersion = response.data?.configuration_version ?? response.data?.configuration?.version ?? configVersion;
+            logger.info(`Successfully created configuration "${responseName}" (id=${responseId}, version=${responseVersion}): ${response.status}`);
             if (logger.isDebugEnabled()) {
                 logger.debug(`POST response: ${JSON.stringify(response.data, null, 2)}`);
             }
@@ -123,11 +130,14 @@ export async function handleImport(argv: any): Promise<void> {
         const putUrl = `${listUrl}/${existingId}`;
         try {
             const response = await axiosInstance.put(putUrl, payload, { headers });
-            logger.info(`Successfully updated configuration "${configName}": ${response.status}`);
+            const responseId = response.data?.id ?? response.data?.configuration?.configuration_id ?? existingId;
+            const responseName = response.data?.configuration?.name ?? configName;
+            const actualVersion: string | undefined = response.data?.configuration_version ?? response.data?.configuration?.version;
+            const responseVersion = actualVersion ?? configVersion;
+            logger.info(`Successfully updated configuration "${responseName}" (id=${responseId}, version=${responseVersion}): ${response.status}`);
             if (logger.isDebugEnabled()) {
                 logger.debug(`PUT response: ${JSON.stringify(response.data, null, 2)}`);
             }
-            const actualVersion = response.data?.configuration_version;
             if (actualVersion && actualVersion !== configVersion) {
                 logger.warn(
                     `Configuration version "${configVersion}" already exists. Auto-incremented to "${actualVersion}".`

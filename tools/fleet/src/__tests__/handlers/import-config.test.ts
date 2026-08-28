@@ -57,7 +57,10 @@ describe('handleImport', () => {
     test('POSTs a new configuration when none exists', async () => {
         mockedGlobSync.mockReturnValue(['agent-folder/config1.yaml', 'agent-folder/config2.yaml'] as any);
         getMock.mockResolvedValue({ data: [] });
-        postMock.mockResolvedValue({ status: 200 });
+        postMock.mockResolvedValue({
+            status: 200,
+            data: { id: 'new-cfg-id-123', configuration: { name: 'my-agent-config', version: '1.0.0' } }
+        });
 
         await handleImport(BASE_ARGV);
 
@@ -72,6 +75,9 @@ describe('handleImport', () => {
         expect(body.configuration.files[0].data).toBe(FAKE_FILE_CONTENT.toString('base64'));
         expect(opts.headers['Authorization']).toBe('apiToken test-token');
         expect(opts.headers['Content-Type']).toBe('application/json');
+        expect(logger.info).toHaveBeenCalledWith(
+            'Successfully created configuration "my-agent-config" (id=new-cfg-id-123, version=1.0.0): 200'
+        );
     });
 
     test('uses --config-name as the exact configuration name', async () => {
@@ -106,7 +112,10 @@ describe('handleImport', () => {
             configuration: { files: [{ name: 'old-file.yaml', data: 'b2xkLWRhdGE=' }] }
         };
         getMock.mockResolvedValue({ data: [existing] });
-        putMock.mockResolvedValue({ status: 200 });
+        putMock.mockResolvedValue({
+            status: 200,
+            data: { id: 'existing-id-123', configuration: { name: 'my-agent-config', version: '1.0.0' } }
+        });
 
         await handleImport(BASE_ARGV);
 
@@ -116,6 +125,9 @@ describe('handleImport', () => {
         expect(body.configuration.files).toHaveLength(2);
         expect(body.configuration.files.map((f: any) => f.name)).toContain('old-file.yaml');
         expect(body.configuration.files.map((f: any) => f.name)).toContain('config1.yaml');
+        expect(logger.info).toHaveBeenCalledWith(
+            'Successfully updated configuration "my-agent-config" (id=existing-id-123, version=1.0.0): 200'
+        );
     });
 
     test('replaces existing file with same name on PUT when content differs', async () => {

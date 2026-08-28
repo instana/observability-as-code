@@ -1397,7 +1397,10 @@ describe('handleImport', () => {
                 '/test/package/collector/config/postgres.yaml'
             ]);
             mockAxiosInstance.get.mockResolvedValue({ data: { items: [] } }); // no existing
-            mockAxiosInstance.post.mockResolvedValue({ status: 201 });
+            mockAxiosInstance.post.mockResolvedValue({
+                status: 201,
+                data: { id: 'new-id-123', configuration: { name: 'my-collector', version: '1.0' } }
+            });
 
             await handleImport(collectorArgv);
 
@@ -1422,7 +1425,7 @@ describe('handleImport', () => {
                 expect.any(Object)
             );
             expect(mockedLogger.info).toHaveBeenCalledWith(expect.stringContaining('creating new configuration'));
-            expect(mockedLogger.info).toHaveBeenCalledWith(expect.stringContaining('Successfully created collector configuration'));
+            expect(mockedLogger.info).toHaveBeenCalledWith(expect.stringContaining('Successfully created collector configuration "my-collector" (id=new-id-123, version=1.0): 201'));
         });
 
         it('should fall back to package.json name and version when config.json does not define them', async () => {
@@ -1537,7 +1540,10 @@ describe('handleImport', () => {
                 .mockReturnValueOnce(Buffer.from('credentials-content'));        // credentials.json
             mockedGlobSync.mockReturnValue(['/test/package/collector/config/credentials.json']);
             mockAxiosInstance.get.mockResolvedValue({ data: { items: [existingConfig] } });
-            mockAxiosInstance.put.mockResolvedValue({ status: 200 });
+            mockAxiosInstance.put.mockResolvedValue({
+                status: 200,
+                data: { id: 'cfg-123', configuration: { name: 'my-collector', version: '1.0' } }
+            });
 
             await handleImport({ ...collectorArgv, include: 'collector/**/credentials.json' });
 
@@ -1558,7 +1564,7 @@ describe('handleImport', () => {
                 expect.any(Object)
             );
             expect(mockedLogger.info).toHaveBeenCalledWith(expect.stringContaining('Adding new file: credentials.json'));
-            expect(mockedLogger.info).toHaveBeenCalledWith(expect.stringContaining('Successfully updated collector configuration'));
+            expect(mockedLogger.info).toHaveBeenCalledWith(expect.stringContaining('Successfully updated collector configuration "my-collector" (id=cfg-123, version=1.0): 200'));
         });
 
         it('should replace an existing file with the same name on PUT', async () => {
@@ -1584,7 +1590,10 @@ describe('handleImport', () => {
                 .mockReturnValueOnce(Buffer.from('new-credentials'));
             mockedGlobSync.mockReturnValue(['/test/package/collector/config/credentials.json']);
             mockAxiosInstance.get.mockResolvedValue({ data: { items: [existingConfig] } });
-            mockAxiosInstance.put.mockResolvedValue({ status: 200 });
+            mockAxiosInstance.put.mockResolvedValue({
+                status: 200,
+                data: { id: 'cfg-456', configuration: { name: 'my-collector', version: '1.0' } }
+            });
 
             await handleImport({ ...collectorArgv, include: 'collector/**/credentials.json' });
 
@@ -1593,7 +1602,7 @@ describe('handleImport', () => {
             expect(putBody.configuration.files.find((f: any) => f.name === 'credentials.json').data)
                 .toBe(Buffer.from('new-credentials').toString('base64'));
             expect(mockedLogger.info).toHaveBeenCalledWith(expect.stringContaining('Replacing existing file: credentials.json'));
-            expect(mockedLogger.info).toHaveBeenCalledWith(expect.stringContaining('Successfully updated collector configuration'));
+            expect(mockedLogger.info).toHaveBeenCalledWith(expect.stringContaining('Successfully updated collector configuration "my-collector" (id=cfg-456, version=1.0): 200'));
         });
 
         it('should exit and log error if PUT fails', async () => {

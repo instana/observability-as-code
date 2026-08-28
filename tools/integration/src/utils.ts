@@ -469,7 +469,8 @@ export function generateCollectorFiles(packagePath: string, packageName: string,
     fs.writeFileSync(path.join(targetDir, 'Containerfile'), containerfileContent);
     
     // collector file template
-    const collectorContent = fs.readFileSync(path.join(templatesDir, 'collector.py'), 'utf-8');
+    let collectorContent = fs.readFileSync(path.join(templatesDir, 'collector.py'), 'utf-8');
+    collectorContent = collectorContent.replace(/\{\{COLLECTOR_NAME\}\}/g, normalizedPackageName);
     fs.writeFileSync(path.join(targetDir, `${normalizedPackageName}_collector.py`), collectorContent);
     
     // requirements.txt template
