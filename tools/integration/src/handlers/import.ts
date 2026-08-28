@@ -436,7 +436,9 @@ async function importCollectorConfiguration(server: string, token: string, packa
         logger.info(`Using image: ${imageRepo}`);
         try {
             const response = await axiosInstance.post(listUrl, { name, version, type: agentType, configuration }, { headers });
-            logger.info(`Successfully created collector configuration "${name}": ${response.status}`);
+            const responseId = response.data?.id ?? 'unknown';
+            const responseVersion = response.data?.configuration?.version ?? version;
+            logger.info(`Successfully created collector configuration "${name}" (id=${responseId}, version=${responseVersion}): ${response.status}`);
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 const details = error.response
@@ -478,7 +480,9 @@ async function importCollectorConfiguration(server: string, token: string, packa
         const putUrl = `https://${server}/api/fleet/configurations/${existingId}`;
         try {
             const response = await axiosInstance.put(putUrl, { name, version, type: agentType, configuration }, { headers });
-            logger.info(`Successfully updated collector configuration "${name}": ${response.status}`);
+            const responseId = response.data?.id ?? existingId;
+            const responseVersion = response.data?.configuration?.version ?? version;
+            logger.info(`Successfully updated collector configuration "${name}" (id=${responseId}, version=${responseVersion}): ${response.status}`);
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 const details = error.response

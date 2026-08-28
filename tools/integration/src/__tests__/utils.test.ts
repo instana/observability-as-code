@@ -685,6 +685,20 @@ describe('Utils Module', () => {
                 expect(configCall[1]).not.toContain('{{PACKAGE_NAME}}');
             }
         });
+
+        it('should replace {{COLLECTOR_NAME}} placeholder in collector.py', () => {
+            const packageName = '@instana-integration/my-test';
+            utils.generateCollectorFiles('/test/package', packageName, ['collector']);
+
+            const calls = (mockedFs.writeFileSync as jest.Mock).mock.calls;
+            const collectorCall = calls.find((call: any) => call[0].includes('my-test_collector.py'));
+
+            expect(collectorCall).toBeDefined();
+            if (collectorCall) {
+                expect(collectorCall[1]).toContain('my-test');
+                expect(collectorCall[1]).not.toContain('{{COLLECTOR_NAME}}');
+            }
+        });
     });
     });
 
