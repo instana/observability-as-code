@@ -30,7 +30,7 @@ describe('handleList', () => {
         } as any);
     });
 
-    test('successfully lists configurations', async () => {
+    test('successfully lists all configurations', async () => {
         const getMock = jest.fn().mockResolvedValue({
             data: [{ id: 'cfg-1', name: 'my-config' }]
         });
@@ -44,6 +44,65 @@ describe('handleList', () => {
         expect(config.params).toEqual({ type: 'com.ibm.instana.customcollector' });
         expect(config.headers['Authorization']).toBe('apiToken test-token');
         expect(result).toEqual([{ id: 'cfg-1', name: 'my-config' }]);
+    });
+
+    test('fetches a single configuration by ID', async () => {
+        const getMock = jest.fn().mockResolvedValue({
+            data: { configuration_id: 'dkjpfmGQQ7qU5QJ4T6uAMw', name: 'fi-heartbeat-config', version: 3 }
+        });
+        mockedAxios.create.mockReturnValue({ get: getMock } as any);
+
+        const result = await handleList({ ...baseArgv, 'configuration-id': 'dkjpfmGQQ7qU5QJ4T6uAMw' });
+
+        expect(getMock).toHaveBeenCalledTimes(1);
+        const [url, config] = getMock.mock.calls[0];
+        expect(url).toBe('https://localhost:8080/api/fleet/configurations/dkjpfmGQQ7qU5QJ4T6uAMw');
+        expect(config.params).toBeUndefined();
+        expect(config.headers['Authorization']).toBe('apiToken test-token');
+        expect(result).toEqual({ configuration_id: 'dkjpfmGQQ7qU5QJ4T6uAMw', name: 'fi-heartbeat-config', version: 3 });
+    });
+
+    test('fetches a single configuration by ID without --type', async () => {
+        const getMock = jest.fn().mockResolvedValue({
+            data: { configuration_id: 'dkjpfmGQQ7qU5QJ4T6uAMw', name: 'fi-heartbeat-config', version: 3 }
+        });
+        mockedAxios.create.mockReturnValue({ get: getMock } as any);
+
+        // type is intentionally omitted - should not throw
+        const result = await handleList({ server: 'localhost:8080', token: 'test-token', 'configuration-id': 'dkjpfmGQQ7qU5QJ4T6uAMw' });
+
+        expect(getMock).toHaveBeenCalledTimes(1);
+        const [url] = getMock.mock.calls[0];
+        expect(url).toBe('https://localhost:8080/api/fleet/configurations/dkjpfmGQQ7qU5QJ4T6uAMw');
+        expect(result).toEqual({ configuration_id: 'dkjpfmGQQ7qU5QJ4T6uAMw', name: 'fi-heartbeat-config', version: 3 });
+    });
+
+    test('filters configurations by name', async () => {
+        const allConfigs = [
+            { configuration_id: 'id-1', name: 'fi-heartbeat-config', version: 1 },
+            { configuration_id: 'id-2', name: 'other-config', version: 2 }
+        ];
+        const getMock = jest.fn().mockResolvedValue({ data: allConfigs });
+        mockedAxios.create.mockReturnValue({ get: getMock } as any);
+
+        const result = await handleList({ ...baseArgv, 'config-name': 'fi-heartbeat-config' });
+
+        expect(getMock).toHaveBeenCalledTimes(1);
+        const [url, config] = getMock.mock.calls[0];
+        expect(url).toBe('https://localhost:8080/api/fleet/configurations');
+        expect(config.params).toEqual({ type: 'com.ibm.instana.customcollector' });
+        expect(result).toEqual([{ configuration_id: 'id-1', name: 'fi-heartbeat-config', version: 1 }]);
+    });
+
+    test('returns empty array when no configurations match the given name', async () => {
+        const getMock = jest.fn().mockResolvedValue({
+            data: [{ configuration_id: 'id-1', name: 'other-config', version: 1 }]
+        });
+        mockedAxios.create.mockReturnValue({ get: getMock } as any);
+
+        const result = await handleList({ ...baseArgv, 'config-name': 'nonexistent' });
+
+        expect(result).toEqual([]);
     });
 
     test('uses environment variables when server/token not in argv', async () => {
@@ -77,11 +136,26 @@ describe('handleList', () => {
         );
     });
 
-    test('throws when type is missing', async () => {
+    test('throws when both configuration-id and config-name are provided', async () => {
+        await expect(
+            handleList({ ...baseArgv, 'configuration-id': 'abc', 'config-name': 'my-config' })
+        ).rejects.toThrow('--configuration-id and --config-name are mutually exclusive');
+    });
+
+    test('throws when type is missing and no configuration-id provided', async () => {
         const argv = { ...baseArgv, type: undefined };
         await expect(handleList(argv)).rejects.toThrow(
             'Missing required parameter: --type'
         );
+    });
+
+    test('does not throw when type is missing but configuration-id is provided', async () => {
+        const getMock = jest.fn().mockResolvedValue({ data: { configuration_id: 'abc' } });
+        mockedAxios.create.mockReturnValue({ get: getMock } as any);
+
+        await expect(
+            handleList({ ...baseArgv, type: undefined, 'configuration-id': 'abc' })
+        ).resolves.toBeDefined();
     });
 
     test('sets debug log level when debug flag is true', async () => {
@@ -94,8 +168,8 @@ describe('handleList', () => {
         expect(logger.level).toBe('debug');
     });
 
-    test('logs debug response when isDebugEnabled returns true', async () => {
-        const getMock = jest.fn().mockResolvedValue({ data: [{ id: 'cfg-1' }] });
+    test('logs debug response data when isDebugEnabled returns true', async () => {
+        const getMock = jest.fn().mockResolvedValue({ data: [{ id: 'cfg-1' }], status: 200 });
         mockedAxios.create.mockReturnValue({ get: getMock } as any);
         const logger = require('../../logger');
         logger.isDebugEnabled.mockReturnValue(true);
@@ -110,17 +184,15 @@ describe('handleList', () => {
         );
     });
 
-    test('logs info response when isDebugEnabled returns false', async () => {
-        const getMock = jest.fn().mockResolvedValue({ data: [{ id: 'cfg-1' }] });
+    test('logs info JSON when isDebugEnabled returns false', async () => {
+        const getMock = jest.fn().mockResolvedValue({ data: [{ id: 'cfg-1' }], status: 200 });
         mockedAxios.create.mockReturnValue({ get: getMock } as any);
         const logger = require('../../logger');
         logger.isDebugEnabled.mockReturnValue(false);
 
         await handleList(baseArgv);
 
-        expect(logger.info).toHaveBeenCalledWith(
-            JSON.stringify([{ id: 'cfg-1' }], null, 2)
-        );
+        expect(logger.info).toHaveBeenCalledWith(JSON.stringify([{ id: 'cfg-1' }], null, 2));
         expect(logger.debug).not.toHaveBeenCalled();
     });
 

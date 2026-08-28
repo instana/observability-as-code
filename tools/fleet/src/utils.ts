@@ -75,7 +75,7 @@ export function handleAxiosError(error: any, context: string): void {
  * shared across all fleet commands. Extracted to avoid duplication between sendAgentRequest
  * and other handlers (e.g. handleList) that cannot reuse sendAgentRequest directly.
  */
-export function resolveConnection(argv: any): { server: string; token: string; type: string } {
+export function resolveConnection(argv: any): { server: string; token: string; type: string | undefined } {
     const server = argv.server ?? process.env.INSTANA_SERVER;
     if (!server) {
         throw new Error('Missing server. Specify --server or set INSTANA_SERVER');
@@ -92,12 +92,7 @@ export function resolveConnection(argv: any): { server: string; token: string; t
 
     validateServerAddress(server);
 
-    const { type } = argv;
-    if (!type) {
-        throw new Error('Missing required parameter: --type');
-    }
-
-    return { server, token, type };
+    return { server, token, type: argv.type };
 }
 
 /**
@@ -111,6 +106,10 @@ export async function sendAgentRequest(
     tagsToApply?: Record<string, string>
 ): Promise<any> {
     const { server, token, type } = resolveConnection(argv);
+
+    if (!type) {
+        throw new Error('Missing required parameter: --type');
+    }
 
     const tagsInput: string[] = [].concat(argv.tag ?? []).filter(Boolean);
     if (tagsInput.length === 0) {

@@ -52,6 +52,8 @@ Examples:
 List configurations:
   ${execName} list-configs --server example.com --token validToken --type agentType
   ${execName} list-configs --type agentType (specify the server and token as environment variables using INSTANA_SERVER and INSTANA_API_TOKEN)
+  ${execName} list-configs --server example.com --token validToken --configuration-id=-FL1OxD0TIeT8kYFisTUzQ
+  ${execName} list-configs --server example.com --token validToken --type agentType --config-name="Config Name"
   ${execName} list-configs --server example.com --token validToken --type agentType --debug
 `;
 
@@ -273,15 +275,36 @@ export function configureCLI(handlers: {
                     })
                     .option('type', {
                         alias: 'y',
-                        describe: 'Agent type, allowed values (com.ibm.opentelemetrycollector, com.ibm.instana.agent, com.ibm.instana.customcollector)',
+                        describe: 'Agent type, allowed values (com.ibm.opentelemetrycollector, com.ibm.instana.agent, com.ibm.instana.customcollector). Required unless --configuration-id is provided.',
                         type: 'string',
-                        demandOption: true
+                        demandOption: false
                     })
                     .option('debug', {
                         alias: 'd',
                         describe: 'Enable debug mode',
                         type: 'boolean',
                         default: false
+                    })
+                    .option('configuration-id', {
+                        alias: 'c',
+                        describe: 'Configuration ID',
+                        type: 'string',
+                        demandOption: false
+                    })
+                    .option('config-name', {
+                        alias: 'n',
+                        describe: 'Configuration name',
+                        type: 'string',
+                        demandOption: false
+                    })
+                    .check((argv) => {
+                        if (argv['configuration-id'] && argv['config-name']) {
+                            throw new Error('--configuration-id and --config-name are mutually exclusive');
+                        }
+                        if (!argv['configuration-id'] && !argv.type) {
+                            throw new Error('--type is required unless --configuration-id is provided');
+                        }
+                        return true;
                     })
                     .epilog(examplesForList);
             }, handlers.handleList)

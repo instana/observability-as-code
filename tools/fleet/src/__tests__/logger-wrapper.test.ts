@@ -10,76 +10,76 @@ describe('logFormat', () => {
         const result = logFormat.transform({
             level: 'info',
             message: 'Test message',
-            label: 'instana-integration',
+            label: 'instana-fleet',
             timestamp: '2024-01-01T00:00:00.000Z',
         }) as any;
 
-        expect(result[FORMATTED]).toBe('2024-01-01T00:00:00.000Z [instana-integration] info: Test message');
+        expect(result[FORMATTED]).toBe('2024-01-01T00:00:00.000Z [instana-fleet] info: Test message');
     });
 
     it('formats error level correctly', () => {
         const result = logFormat.transform({
             level: 'error',
             message: 'Error occurred',
-            label: 'instana-integration',
+            label: 'instana-fleet',
             timestamp: '2024-01-01T12:00:00.000Z',
         }) as any;
 
-        expect(result[FORMATTED]).toBe('2024-01-01T12:00:00.000Z [instana-integration] error: Error occurred');
+        expect(result[FORMATTED]).toBe('2024-01-01T12:00:00.000Z [instana-fleet] error: Error occurred');
     });
 
     it('formats warn level correctly', () => {
         const result = logFormat.transform({
             level: 'warn',
             message: 'Warning message',
-            label: 'instana-integration',
+            label: 'instana-fleet',
             timestamp: '2024-01-01T12:00:00.000Z',
         }) as any;
 
-        expect(result[FORMATTED]).toBe('2024-01-01T12:00:00.000Z [instana-integration] warn: Warning message');
+        expect(result[FORMATTED]).toBe('2024-01-01T12:00:00.000Z [instana-fleet] warn: Warning message');
     });
 
     it('formats debug level correctly', () => {
         const result = logFormat.transform({
             level: 'debug',
             message: 'Debug info',
-            label: 'instana-integration',
+            label: 'instana-fleet',
             timestamp: '2024-01-01T12:00:00.000Z',
         }) as any;
 
-        expect(result[FORMATTED]).toBe('2024-01-01T12:00:00.000Z [instana-integration] debug: Debug info');
+        expect(result[FORMATTED]).toBe('2024-01-01T12:00:00.000Z [instana-fleet] debug: Debug info');
     });
 
     it('handles empty message', () => {
         const result = logFormat.transform({
             level: 'info',
             message: '',
-            label: 'instana-integration',
+            label: 'instana-fleet',
             timestamp: '2024-01-01T12:00:00.000Z',
         }) as any;
 
-        expect(result[FORMATTED]).toBe('2024-01-01T12:00:00.000Z [instana-integration] info: ');
+        expect(result[FORMATTED]).toBe('2024-01-01T12:00:00.000Z [instana-fleet] info: ');
     });
 
     it('handles message with special characters', () => {
         const result = logFormat.transform({
             level: 'info',
             message: 'Special chars: !@#$%^&*()',
-            label: 'instana-integration',
+            label: 'instana-fleet',
             timestamp: '2024-01-01T12:00:00.000Z',
         }) as any;
 
-        expect(result[FORMATTED]).toBe('2024-01-01T12:00:00.000Z [instana-integration] info: Special chars: !@#$%^&*()');
+        expect(result[FORMATTED]).toBe('2024-01-01T12:00:00.000Z [instana-fleet] info: Special chars: !@#$%^&*()');
     });
 
     it('handles multiline message', () => {
         const result = logFormat.transform({
             level: 'info',
             message: 'Line 1\nLine 2\nLine 3',
-            label: 'instana-integration',
+            label: 'instana-fleet',
             timestamp: '2024-01-01T12:00:00.000Z',
         }) as any;
 
-        expect(result[FORMATTED]).toBe('2024-01-01T12:00:00.000Z [instana-integration] info: Line 1\nLine 2\nLine 3');
+        expect(result[FORMATTED]).toBe('2024-01-01T12:00:00.000Z [instana-fleet] info: Line 1\nLine 2\nLine 3');
     });
 });

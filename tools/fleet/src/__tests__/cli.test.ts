@@ -124,6 +124,14 @@ describe('CLI Module', () => {
             expect(cliContent).toContain("'configuration-id'");
         });
 
+        it('should define config-name option for list-configs command', async () => {
+            const fs = require('fs');
+            const path = require('path');
+            const cliContent = fs.readFileSync(path.join(__dirname, '../cli.ts'), 'utf-8');
+
+            expect(cliContent).toContain("'config-name'");
+        });
+
         it('should define import-config specific options', async () => {
             const fs = require('fs');
             const path = require('path');
