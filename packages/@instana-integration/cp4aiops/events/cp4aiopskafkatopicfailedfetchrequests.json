@@ -1,0 +1,36 @@
+{
+  "id": "dsSDHqBJyxtS6CXP",
+  "name": "CP4AIOpsKafkaTopicFailedFetchRequests",
+  "entityType": "kafka",
+  "query": null,
+  "triggering": false,
+  "description": "Consumers encounter failures while fetching messages.\nWarning alert for Failed Fetch requests exceeding 5% for 5 minutes.",
+  "expirationTime": 3600000,
+  "enabled": true,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "severity": 5,
+      "metricName": "broker.failedFetch",
+      "rollup": 0,
+      "window": 300000,
+      "metricPattern": null,
+      "aggregation": "avg",
+      "conditionOperator": ">=",
+      "conditionValue": 5,
+      "metricLabel": "Fetch",
+      "metricFormat": "NUMBER"
+    }
+  ],
+  "ruleLogicalOperator": "AND",
+  "lastUpdated": 1788854228852,
+  "validVersion": 1,
+  "actions": null,
+  "migrated": false,
+  "applicationAlertConfigId": null,
+  "infraAlertConfigId": null,
+  "deleted": false,
+  "transientEventEnabled": true,
+  "transientEventThreshold": 300000,
+  "transientEventAlertMuted": false
+}

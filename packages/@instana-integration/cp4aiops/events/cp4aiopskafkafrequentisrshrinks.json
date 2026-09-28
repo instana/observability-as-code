@@ -1,0 +1,36 @@
+{
+  "id": "tyKVMZ5bbCdPXqYp",
+  "name": "CP4AIOpsKafkaFrequentISRShrinks",
+  "entityType": "kafka",
+  "query": null,
+  "triggering": false,
+  "description": "Warning alert for Replicas fall out of sync with the leader -  InSync Replica (ISR) Shrinks value >0\nKafka manages an In-Sync Replica set to ensure data durability and high availability. When a follower replica stops keeping pace with the leader—probably due to broker resource exhaustion, network issue—Kafka removes it from the ISR list, causing a \"shrink\" event\n",
+  "expirationTime": 3600000,
+  "enabled": true,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "severity": 5,
+      "metricName": "broker.isrShrinks",
+      "rollup": 0,
+      "window": 600000,
+      "metricPattern": null,
+      "aggregation": "avg",
+      "conditionOperator": ">",
+      "conditionValue": 0,
+      "metricLabel": "ISR Shrinks",
+      "metricFormat": "NUMBER"
+    }
+  ],
+  "ruleLogicalOperator": "AND",
+  "lastUpdated": 1788854189534,
+  "validVersion": 1,
+  "actions": null,
+  "migrated": false,
+  "applicationAlertConfigId": null,
+  "infraAlertConfigId": null,
+  "deleted": false,
+  "transientEventEnabled": true,
+  "transientEventThreshold": 300000,
+  "transientEventAlertMuted": false
+}

@@ -1,0 +1,41 @@
+{
+  "id": "BvGZyrtzZC9SDvp2",
+  "name": "CP4AIOpsCassandraTombstoneCountCritical",
+  "entityType": "cassandraNode",
+  "query": null,
+  "triggering": false,
+  "description": "CP4AIOps Cassandra Tombstone Count > 5000 for Critical severity",
+  "expirationTime": 7200000,
+  "enabled": true,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "severity": 10,
+      "metricName": null,
+      "rollup": 0,
+      "window": 60000,
+      "metricPattern": {
+        "prefix": "tombstoneCount",
+        "postfix": "tombstone",
+        "placeholder": null,
+        "operator": "any"
+      },
+      "aggregation": "max",
+      "conditionOperator": ">",
+      "conditionValue": 5000,
+      "metricLabel": "Unknown label",
+      "metricFormat": "UNDEFINED"
+    }
+  ],
+  "ruleLogicalOperator": "AND",
+  "lastUpdated": 1788854165023,
+  "validVersion": 1,
+  "actions": null,
+  "migrated": false,
+  "applicationAlertConfigId": null,
+  "infraAlertConfigId": null,
+  "deleted": false,
+  "transientEventEnabled": true,
+  "transientEventThreshold": 300000,
+  "transientEventAlertMuted": false
+}

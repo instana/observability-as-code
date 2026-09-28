@@ -1,0 +1,36 @@
+{
+  "id": "jnGD2ZzFHUKwFwEp",
+  "name": "CP4AIOpsCassandraReadLatencyCritical",
+  "entityType": "cassandraNode",
+  "query": null,
+  "triggering": false,
+  "description": "CP4AIOps Cassandra Read Latency Critical - value > 200ms",
+  "expirationTime": 7200000,
+  "enabled": true,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "severity": 10,
+      "metricName": "clientrequests.read.mean",
+      "rollup": 0,
+      "window": 60000,
+      "metricPattern": null,
+      "aggregation": "avg",
+      "conditionOperator": ">",
+      "conditionValue": 200000,
+      "metricLabel": "Read Mean",
+      "metricFormat": "MICROS"
+    }
+  ],
+  "ruleLogicalOperator": "AND",
+  "lastUpdated": 1788854130615,
+  "validVersion": 1,
+  "actions": null,
+  "migrated": false,
+  "applicationAlertConfigId": null,
+  "infraAlertConfigId": null,
+  "deleted": false,
+  "transientEventEnabled": true,
+  "transientEventThreshold": 300000,
+  "transientEventAlertMuted": false
+}

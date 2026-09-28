@@ -1,0 +1,41 @@
+{
+  "id": "nIXkjFUNTbudLGG2",
+  "name": "CP4AIOpsCassandraTombstoneCountWarning",
+  "entityType": "cassandraNode",
+  "query": null,
+  "triggering": false,
+  "description": "CP4AIOps Cassandra Tombstone Count >= 1000 for Warning severity",
+  "expirationTime": 7200000,
+  "enabled": true,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "severity": 5,
+      "metricName": null,
+      "rollup": 0,
+      "window": 60000,
+      "metricPattern": {
+        "prefix": "tombstoneCount",
+        "postfix": "tombstone",
+        "placeholder": null,
+        "operator": "any"
+      },
+      "aggregation": "max",
+      "conditionOperator": ">=",
+      "conditionValue": 1000,
+      "metricLabel": "Unknown label",
+      "metricFormat": "UNDEFINED"
+    }
+  ],
+  "ruleLogicalOperator": "AND",
+  "lastUpdated": 1788854178024,
+  "validVersion": 1,
+  "actions": null,
+  "migrated": false,
+  "applicationAlertConfigId": null,
+  "infraAlertConfigId": null,
+  "deleted": false,
+  "transientEventEnabled": true,
+  "transientEventThreshold": 300000,
+  "transientEventAlertMuted": false
+}

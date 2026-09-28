@@ -1,0 +1,49 @@
+{
+  "id": "xZqglE2CH2Eg-jQ9",
+  "name": "CP4AIOpsCassandraTombstoneCompactionPendingWarning",
+  "entityType": "cassandraNode",
+  "query": null,
+  "triggering": false,
+  "description": "CP4AIOps Cassandra Tombstone Compaction Pending - Warning for value >=10 to <=50",
+  "expirationTime": 7200000,
+  "enabled": true,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "severity": 5,
+      "metricName": "compaction.pending",
+      "rollup": 0,
+      "window": 60000,
+      "metricPattern": null,
+      "aggregation": "max",
+      "conditionOperator": ">=",
+      "conditionValue": 10,
+      "metricLabel": "Compaction Pending",
+      "metricFormat": "NUMBER"
+    },
+    {
+      "ruleType": "threshold",
+      "severity": 5,
+      "metricName": "compaction.pending",
+      "rollup": 0,
+      "window": 60000,
+      "metricPattern": null,
+      "aggregation": "max",
+      "conditionOperator": "<=",
+      "conditionValue": 50,
+      "metricLabel": "Compaction Pending",
+      "metricFormat": "NUMBER"
+    }
+  ],
+  "ruleLogicalOperator": "AND",
+  "lastUpdated": 1788854155792,
+  "validVersion": 1,
+  "actions": null,
+  "migrated": false,
+  "applicationAlertConfigId": null,
+  "infraAlertConfigId": null,
+  "deleted": false,
+  "transientEventEnabled": true,
+  "transientEventThreshold": 300000,
+  "transientEventAlertMuted": false
+}

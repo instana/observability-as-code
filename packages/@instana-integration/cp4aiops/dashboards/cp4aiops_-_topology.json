@@ -1,0 +1,2030 @@
+{
+  "rbacTags": [],
+  "accessRules": [
+  {
+    "accessType": "READ_WRITE",
+    "relationType": "GLOBAL",
+    "relatedId": ""
+  }
+],
+  "id": "CtxODqBkQoaySw-ShI0lSg",
+  "title": "CP4AIOPS - Topology",
+  "widgets": [
+    {
+      "width": 4,
+      "x": 0,
+      "y": 8,
+      "id": "thyldoLl2KIHJzt7",
+      "title": "Topology pods - restarts over time",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesPod",
+              "metricPath": [],
+              "grouping": [
+                {
+                  "maxResults": 20,
+                  "by": {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Kubernetes"
+                        },
+                        {
+                          "label": "Pod"
+                        },
+                        {
+                          "label": "name"
+                        }
+                      ],
+                      "name": "kubernetes.pod.name",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "groupbyTag": "kubernetes.pod.name",
+                    "groupbyTagEntity": "NOT_APPLICABLE",
+                    "groupbyTagSecondLevelKey": ""
+                  },
+                  "includeOthers": false,
+                  "direction": "DESC"
+                }
+              ],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "restartCount",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [
+                  {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Kubernetes"
+                        },
+                        {
+                          "label": "Pod"
+                        },
+                        {
+                          "label": "label"
+                        }
+                      ],
+                      "name": "kubernetes.pod.label",
+                      "availability": [],
+                      "type": "KEY_VALUE_PAIR"
+                    },
+                    "name": "kubernetes.pod.label",
+                    "type": "TAG_FILTER",
+                    "value": "topology",
+                    "key": "cp4aiops.ibm.com/component",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "CONTAINS"
+                  },
+                  {
+                    "tagDefinition": {
+                      "path": [
+                        {
+                          "label": "Kubernetes"
+                        },
+                        {
+                          "label": "Pod"
+                        },
+                        {
+                          "label": "name"
+                        }
+                      ],
+                      "name": "kubernetes.pod.name",
+                      "availability": [],
+                      "type": "STRING"
+                    },
+                    "name": "kubernetes.pod.name",
+                    "type": "TAG_FILTER",
+                    "value": "job",
+                    "entity": "NOT_APPLICABLE",
+                    "operator": "NOT_CONTAIN"
+                  }
+                ],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Restarts Count",
+              "crossSeriesAggregation": "SUM"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 13
+    },
+    {
+      "width": 6,
+      "x": 6,
+      "y": 48,
+      "id": "wf_Qpd-UnFsyyoXA",
+      "title": "Topology pods: ratio of cassandra cpu/memory usage to limit",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesPod",
+              "metricPath": [],
+              "formatter": "percentage.detailed",
+              "unit": "number",
+              "metric": "cpuUsageToLimitRatio",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Pod"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.pod.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.pod.name",
+                "type": "TAG_FILTER",
+                "value": "topology-cassandra",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Limit Allocation",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesPod",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "memoryUsageToLimitRatio",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Pod"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.pod.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.pod.name",
+                "type": "TAG_FILTER",
+                "value": "topology-cassandra",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Memory Limit Allocation",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 13
+    },
+    {
+      "width": 12,
+      "x": 0,
+      "y": 61,
+      "id": "wEGAYPKugyTLWFcf",
+      "title": "Topology: bytes in per sec",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": false,
+              "metric": "broker.topicData.cp4waiops-cartridge.topology.input.resources.bytesInPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.topology.input.resources Bytes In Per Second",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": false,
+              "metric": "broker.topicData.cp4waiops-cartridge.topology.output.edges.bytesInPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.topology.output.edges Bytes In Per Second",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": false,
+              "metric": "broker.topicData.cp4waiops-cartridge.topology.output.groups.bytesInPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.topology.output.groups Bytes In Per Second",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": false,
+              "metric": "broker.topicData.cp4waiops-cartridge.topology.output.management-artifacts.bytesInPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.topology.output.management-artifacts Bytes In Per Second",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": false,
+              "metric": "broker.topicData.cp4waiops-cartridge.topology.output.resources.bytesInPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.topology.output.resources Bytes In Per Second",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": false,
+              "metric": "broker.topicData.cp4waiops-cartridge.topology.output.status.bytesInPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.topology.output.status Bytes In Per Second",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": false,
+              "metric": "broker.topicData.cp4waiops-cartridge.topology.schedules.bytesInPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.topology.schedules Bytes In Per Second",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 13
+    },
+    {
+      "width": 12,
+      "x": 0,
+      "y": 87,
+      "id": "qESKBMJsWUxvDaPJ",
+      "title": "Topology: bytes out per sec",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.topicData.cp4waiops-cartridge.topology.composites.bytesOutPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.topology.composites Bytes Out Per Second",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.topicData.cp4waiops-cartridge.topology.input.resources.bytesOutPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.topology.input.resources Bytes Out Per Second",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.topicData.cp4waiops-cartridge.topology.output.edges.bytesOutPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.topology.output.edges Bytes Out Per Second",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.topicData.cp4waiops-cartridge.topology.output.groups.bytesOutPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.topology.output.groups Bytes Out Per Second",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.topicData.cp4waiops-cartridge.topology.output.management-artifacts.bytesOutPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.topology.output.management-artifacts Bytes Out Per Second",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.topicData.cp4waiops-cartridge.topology.output.rebroadcast.bytesOutPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.topology.output.rebroadcast Bytes Out Per Second",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.topicData.cp4waiops-cartridge.topology.output.rebroadcast.edges.bytesOutPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.topology.output.rebroadcast.edges Bytes Out Per Second",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.topicData.cp4waiops-cartridge.topology.output.rebroadcast.status.bytesOutPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.topology.output.rebroadcast.status Bytes Out Per Second",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.topicData.cp4waiops-cartridge.topology.output.resources.bytesOutPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.topology.output.resources Bytes Out Per Second",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.topicData.cp4waiops-cartridge.topology.output.rules.bytesOutPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.topology.output.rules Bytes Out Per Second",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.topicData.cp4waiops-cartridge.topology.output.status.bytesOutPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.topology.output.status Bytes Out Per Second",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.topicData.cp4waiops-cartridge.topology.output.types.bytesOutPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.topology.output.types Bytes Out Per Second",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.topicData.cp4waiops-cartridge.topology.profiler.state.bytesOutPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.topology.profiler.state Bytes Out Per Second",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.topicData.cp4waiops-cartridge.topology.schedules.bytesOutPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.topology.schedules Bytes Out Per Second",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.topicData.cp4waiops-cartridge.topology.templates.bytesOutPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.topology.templates Bytes Out Per Second",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 13
+    },
+    {
+      "width": 12,
+      "x": 0,
+      "y": 21,
+      "id": "YIk4yXU1gGHTnScc",
+      "title": "Topology (janusgraph) Tombstone count",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "janusgraph/edgestore Tombstone count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "tombstoneCount.janusgraph/edgestore.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Pod"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.pod.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.pod.name",
+                "type": "TAG_FILTER",
+                "value": "topology-cassandra",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "janusgraph/edgestore Tombstone",
+              "crossSeriesAggregation": "SUM"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "tombstoneCount.janusgraph/edgestore_lock_.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Pod"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.pod.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.pod.name",
+                "type": "TAG_FILTER",
+                "value": "topology-cassandra",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "janusgraph/edgestore_lock_ Tombstone",
+              "crossSeriesAggregation": "SUM"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": false,
+              "metric": "tombstoneCount.janusgraph/txlog.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Pod"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.pod.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.pod.name",
+                "type": "TAG_FILTER",
+                "value": "topology-cassandra",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "janusgraph/txlog Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": false,
+              "metric": "tombstoneCount.janusgraph/systemlog.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Pod"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.pod.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.pod.name",
+                "type": "TAG_FILTER",
+                "value": "topology-cassandra",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "janusgraph/systemlog Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": false,
+              "metric": "tombstoneCount.janusgraph/graphindex.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Pod"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.pod.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.pod.name",
+                "type": "TAG_FILTER",
+                "value": "topology-cassandra",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "janusgraph/graphindex Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": false,
+              "metric": "tombstoneCount.janusgraph/janusgraph_ids.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Pod"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.pod.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.pod.name",
+                "type": "TAG_FILTER",
+                "value": "topology-cassandra",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "janusgraph/janusgraph_ids Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": false,
+              "metric": "tombstoneCount.janusgraph/graphindex_lock_.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Pod"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.pod.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.pod.name",
+                "type": "TAG_FILTER",
+                "value": "topology-cassandra",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "janusgraph/graphindex_lock_ Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": false,
+              "metric": "tombstoneCount.janusgraph/system_properties.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Pod"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.pod.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.pod.name",
+                "type": "TAG_FILTER",
+                "value": "topology-cassandra",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "janusgraph/system_properties Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": false,
+              "metric": "tombstoneCount.janusgraph/system_properties_lock_.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Pod"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.pod.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.pod.name",
+                "type": "TAG_FILTER",
+                "value": "topology-cassandra",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "janusgraph/system_properties_lock_ Tombstone",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 14
+    },
+    {
+      "width": 12,
+      "x": 0,
+      "y": 74,
+      "id": "RuJWPSypkJEVhEAf",
+      "title": "Topology: messages in per sec",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.topicData.cp4waiops-cartridge.topology.input.resources.messagesInPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.topology.input.resources Messages In Per Second",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.topicData.cp4waiops-cartridge.topology.output.edges.messagesInPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.topology.output.edges Messages In Per Second",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.topicData.cp4waiops-cartridge.topology.output.groups.messagesInPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.topology.output.groups Messages In Per Second",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.topicData.cp4waiops-cartridge.topology.output.management-artifacts.messagesInPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.topology.output.management-artifacts Messages In Per Second",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.topicData.cp4waiops-cartridge.topology.output.resources.messagesInPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.topology.output.resources Messages In Per Second",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.topicData.cp4waiops-cartridge.topology.output.status.messagesInPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.topology.output.status Messages In Per Second",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.topicData.cp4waiops-cartridge.topology.schedules.messagesInPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.topology.schedules Messages In Per Second",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 13
+    },
+    {
+      "width": 8,
+      "x": 4,
+      "y": 0,
+      "id": "DUqUfSWcWv66_ImD",
+      "title": "CP4AIOPS Topology pods status",
+      "type": "table",
+      "config": {
+        "showGroupsWithMissingTags": false,
+        "tagFilterExpression": {
+          "logicalOperator": "AND",
+          "elements": [
+            {
+              "tagDefinition": {
+                "path": [
+                  {
+                    "label": "Kubernetes"
+                  },
+                  {
+                    "label": "Pod"
+                  },
+                  {
+                    "label": "label"
+                  }
+                ],
+                "name": "kubernetes.pod.label",
+                "availability": [],
+                "type": "KEY_VALUE_PAIR"
+              },
+              "name": "kubernetes.pod.label",
+              "type": "TAG_FILTER",
+              "value": "topology",
+              "key": "cp4aiops.ibm.com/component",
+              "entity": "NOT_APPLICABLE",
+              "operator": "CONTAINS"
+            },
+            {
+              "name": "kubernetes.pod.name",
+              "type": "TAG_FILTER",
+              "value": "job",
+              "entity": "NOT_APPLICABLE",
+              "operator": "NOT_CONTAIN"
+            }
+          ],
+          "type": "EXPRESSION"
+        },
+        "entityType": "kubernetesPod",
+        "sorting": {
+          "by": "conditions.not.Ready.MAX.MAX",
+          "direction": "DESC"
+        },
+        "tableSize": 20,
+        "countGroup": false,
+        "source": "INFRASTRUCTURE_METRICS",
+        "datasets": {
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesPod",
+              "metricPath": [],
+              "required": false,
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "conditions.not.Ready",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Pod Condition not.Ready",
+              "crossSeriesAggregation": "MAX"
+            }
+          ]
+        },
+        "grouping": [
+          {
+            "tagDefinition": {
+              "path": [
+                {
+                  "label": "Kubernetes"
+                },
+                {
+                  "label": "Pod"
+                },
+                {
+                  "label": "name"
+                }
+              ],
+              "name": "kubernetes.pod.name",
+              "availability": [],
+              "type": "STRING"
+            },
+            "tagType": "STRING",
+            "groupbyTag": "kubernetes.pod.name"
+          },
+          {
+            "tagDefinition": {
+              "path": [
+                {
+                  "label": "Kubernetes"
+                },
+                {
+                  "label": "Pod"
+                },
+                {
+                  "label": "phase"
+                }
+              ],
+              "name": "kubernetes.pod.phase",
+              "availability": [],
+              "type": "STRING"
+            },
+            "tagType": "STRING",
+            "groupbyTag": "kubernetes.pod.phase"
+          }
+        ]
+      },
+      "height": 21
+    },
+    {
+      "width": 6,
+      "x": 0,
+      "y": 48,
+      "id": "PTwIxwOmpFSgCLwH",
+      "title": "Topology pods: ratio of postgres cpu/memory usage to limit",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesPod",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "cpuUsageToLimitRatio",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Pod"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.pod.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.pod.name",
+                "type": "TAG_FILTER",
+                "value": "topology-postgres",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Limit Allocation",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesPod",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "memoryUsageToLimitRatio",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Pod"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.pod.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.pod.name",
+                "type": "TAG_FILTER",
+                "value": "topology-postgres",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Memory Limit Allocation",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 13
+    },
+    {
+      "width": 12,
+      "x": 0,
+      "y": 35,
+      "id": "j7K9qr4XGf87wUkr",
+      "title": "Topology pods: ratio of overall cpu/memory usage to limit",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesPod",
+              "metricPath": [],
+              "formatter": "percentage.detailed",
+              "unit": "number",
+              "metric": "cpuUsageToLimitRatio",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Pod"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.pod.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.pod.name",
+                "type": "TAG_FILTER",
+                "value": "topology",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Limit Allocation",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesPod",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "memoryUsageToLimitRatio",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Pod"
+                    },
+                    {
+                      "label": "label"
+                    }
+                  ],
+                  "name": "kubernetes.pod.label",
+                  "availability": [],
+                  "type": "KEY_VALUE_PAIR"
+                },
+                "name": "kubernetes.pod.label",
+                "type": "TAG_FILTER",
+                "value": "topology",
+                "key": "cp4aiops.ibm.com/component",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Memory Limit Allocation",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 13
+    },
+    {
+      "width": 4,
+      "x": 0,
+      "y": 0,
+      "id": "e-czcYjv-DbnnEz0",
+      "title": "Topology: Critical/Warning events count",
+      "type": "bigNumber",
+      "config": {
+        "formatter": "number.detailed",
+        "comparisonDecreaseColor": "greenish",
+        "metricConfiguration": {
+          "dynamicFocusQuery": "event.severity:critical event.severity:warning event.state:open entity.kubernetes.pod.name:aiops-topology*",
+          "metric": "eventCount",
+          "timeShift": 0,
+          "metricLabel": "Event count",
+          "threshold": {
+            "critical": "5",
+            "warning": "1",
+            "thresholdEnabled": true,
+            "operator": ">="
+          },
+          "aggregation": "DISTINCT_COUNT",
+          "source": "EVENT",
+          "includeAgentMonitoringIssues": false,
+          "includeK8sInfoEvents": false
+        },
+        "comparisonIncreaseColor": "redish"
+      },
+      "height": 4
+    },
+    {
+      "width": 4,
+      "x": 0,
+      "y": 4,
+      "id": "_YCYYE1R5lesRYvo",
+      "title": "Topology: Open events count",
+      "type": "bigNumber",
+      "config": {
+        "formatter": "number.detailed",
+        "comparisonDecreaseColor": "greenish",
+        "metricConfiguration": {
+          "dynamicFocusQuery": "event.state:open entity.kubernetes.pod.name:aiops-topology*",
+          "metric": "eventCount",
+          "timeShift": 0,
+          "metricLabel": "Event count",
+          "threshold": {
+            "critical": "5",
+            "warning": "1",
+            "thresholdEnabled": true,
+            "operator": ">="
+          },
+          "aggregation": "DISTINCT_COUNT",
+          "source": "EVENT",
+          "includeAgentMonitoringIssues": false,
+          "includeK8sInfoEvents": false
+        },
+        "comparisonIncreaseColor": "redish",
+        "formatterSelected": false
+      },
+      "height": 4
+    }
+  ],
+  "ownerId": "696aa1bb4afd5c00013370dd",
+  "writable": false
+}

@@ -1,0 +1,36 @@
+{
+  "id": "3nLLmKoSY56qUN9Z",
+  "name": "CP4AIOpsKafkaRequestHandlerBusy",
+  "entityType": "kafka",
+  "query": null,
+  "triggering": false,
+  "description": "Warning alert for request handler threads which operate with minimal idle time, in which Idle time is below 15% for 10 minutes.",
+  "expirationTime": 3600000,
+  "enabled": true,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "severity": 5,
+      "metricName": "broker.requestHandlerIdle",
+      "rollup": 0,
+      "window": 600000,
+      "metricPattern": null,
+      "aggregation": "avg",
+      "conditionOperator": "<",
+      "conditionValue": 0.15,
+      "metricLabel": "Request Handler",
+      "metricFormat": "MILLIS"
+    }
+  ],
+  "ruleLogicalOperator": "AND",
+  "lastUpdated": 1788854218700,
+  "validVersion": 1,
+  "actions": null,
+  "migrated": false,
+  "applicationAlertConfigId": null,
+  "infraAlertConfigId": null,
+  "deleted": false,
+  "transientEventEnabled": true,
+  "transientEventThreshold": 300000,
+  "transientEventAlertMuted": false
+}

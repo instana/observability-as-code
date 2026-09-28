@@ -1,0 +1,1796 @@
+{
+  "rbacTags": [],
+  "accessRules": [
+  {
+    "accessType": "READ_WRITE",
+    "relationType": "GLOBAL",
+    "relatedId": ""
+  }
+],
+  "id": "WfE7aVqyQPij5y6VuLUAHw",
+  "title": "CP4AIOPS - Cassandra",
+  "widgets": [
+    {
+      "width": 6,
+      "x": 6,
+      "y": 27,
+      "id": "VGU4ZxDd21NO5CZC",
+      "title": "aiops Cassandra Tombstone pending compaction",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "SUM",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "compaction.pending",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Compaction Pending",
+              "crossSeriesAggregation": "SUM"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 13
+    },
+    {
+      "width": 6,
+      "x": 6,
+      "y": 40,
+      "id": "0K8N_xv4fbPCFD2A",
+      "title": "aiops Cassandra disk size",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraCluster",
+              "metricPath": [],
+              "formatter": "bytes.detailed",
+              "unit": "number",
+              "metric": "keyspace.aiops.diskSize",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "aiops Disk Size",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "keyspace.aiops_policies.diskSize",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "aiops_policies Disk Size",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 13
+    },
+    {
+      "width": 6,
+      "x": 0,
+      "y": 27,
+      "id": "mGjWpfaccW87aTlt",
+      "title": "Cassandra Latency Read/Write mean (microseconds)",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Latency Read Mean",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "clientrequests.read.mean",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Read Mean",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Latency Write Mean",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "clientrequests.write.mean",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Write Mean",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 13
+    },
+    {
+      "width": 12,
+      "x": 0,
+      "y": 53,
+      "id": "BtKwxNwmMLRZ3z29",
+      "title": "mime_config Tombstone count",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "tombstoneCount.mime_config/words.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "mime_config/words Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "tombstoneCount.mime_config/models.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "mime_config/models Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "tombstoneCount.mime_config/severity.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "mime_config/severity Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "tombstoneCount.mime_config/cachereload.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "mime_config/cachereload Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "tombstoneCount.mime_config/aiopsvertexsseen.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "mime_config/aiopsvertexsseen Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "tombstoneCount.mime_config/io_configuration.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "mime_config/io_configuration Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "tombstoneCount.mime_config/edge_label_weight.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "mime_config/edge_label_weight Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "tombstoneCount.mime_config/alerttopofragments.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "mime_config/alerttopofragments Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": false,
+              "metric": "tombstoneCount.mime_config/titleexample.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "mime_config/titleexample Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": false,
+              "metric": "tombstoneCount.mime_config/instance_app_status.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "mime_config/instance_app_status Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": false,
+              "metric": "tombstoneCount.mime_config/models_training_data.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "mime_config/models_training_data Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": false,
+              "metric": "tombstoneCount.mime_config/classification_labels_weights.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "mime_config/classification_labels_weights Tombstone",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 13
+    },
+    {
+      "width": 6,
+      "x": 0,
+      "y": 40,
+      "id": "v4-eaALL2Gn-WV7O",
+      "title": "aiops Cassandra Read/Write per second",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "PER_SECOND",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "keyspace.aiops.writes",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "aiops Writes",
+              "crossSeriesAggregation": "SUM"
+            },
+            {
+              "lastValue": false,
+              "color": "cGreen",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "PER_SECOND",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "keyspace.aiops.reads",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "aiops Reads",
+              "crossSeriesAggregation": "SUM"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 13
+    },
+    {
+      "width": 12,
+      "x": 0,
+      "y": 14,
+      "id": "tqXXCDTjE2P_bAKE",
+      "title": "aiops policies Tombstone count",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "tombstoneCount.aiops_policies/eventid_to_policy.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "aiops_policies/eventid_to_policy Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "tombstoneCount.aiops_policies/hotfield_to_policy.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "aiops_policies/hotfield_to_policy Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "tombstoneCount.aiops_policies/aiops_policies.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "aiops_policies/aiops_policies Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "tombstoneCount.aiops_policies/policyset_todelete.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "aiops_policies/policyset_todelete Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "tombstoneCount.aiops_policies/policies_system.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "aiops_policies/policies_system Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "tombstoneCount.aiops_policies/policies_ranking_live.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "aiops_policies/policies_ranking_live Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "tombstoneCount.aiops_policies/policies_ranking_system.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "aiops_policies/policies_ranking_system Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "tombstoneCount.aiops_policies/policies_ranking_user.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "aiops_policies/policies_ranking_user Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "tombstoneCount.aiops_policies/policies.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "aiops_policies/policies Tombstone",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 13
+    },
+    {
+      "width": 12,
+      "x": 0,
+      "y": 0,
+      "id": "A-wpF0psxHzr9GyE",
+      "title": "Topology (janusgraph) Tombstone count",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "janusgraph/edgestore Tombstone count",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "tombstoneCount.janusgraph/edgestore.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Pod"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.pod.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.pod.name",
+                "type": "TAG_FILTER",
+                "value": "topology-cassandra",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "janusgraph/edgestore Tombstone",
+              "crossSeriesAggregation": "SUM"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "tombstoneCount.janusgraph/edgestore_lock_.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Pod"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.pod.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.pod.name",
+                "type": "TAG_FILTER",
+                "value": "topology-cassandra",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "janusgraph/edgestore_lock_ Tombstone",
+              "crossSeriesAggregation": "SUM"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": false,
+              "metric": "tombstoneCount.janusgraph/txlog.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Pod"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.pod.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.pod.name",
+                "type": "TAG_FILTER",
+                "value": "topology-cassandra",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "janusgraph/txlog Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": false,
+              "metric": "tombstoneCount.janusgraph/systemlog.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Pod"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.pod.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.pod.name",
+                "type": "TAG_FILTER",
+                "value": "topology-cassandra",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "janusgraph/systemlog Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": false,
+              "metric": "tombstoneCount.janusgraph/graphindex.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Pod"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.pod.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.pod.name",
+                "type": "TAG_FILTER",
+                "value": "topology-cassandra",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "janusgraph/graphindex Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": false,
+              "metric": "tombstoneCount.janusgraph/janusgraph_ids.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Pod"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.pod.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.pod.name",
+                "type": "TAG_FILTER",
+                "value": "topology-cassandra",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "janusgraph/janusgraph_ids Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": false,
+              "metric": "tombstoneCount.janusgraph/graphindex_lock_.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Pod"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.pod.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.pod.name",
+                "type": "TAG_FILTER",
+                "value": "topology-cassandra",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "janusgraph/graphindex_lock_ Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": false,
+              "metric": "tombstoneCount.janusgraph/system_properties.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Pod"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.pod.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.pod.name",
+                "type": "TAG_FILTER",
+                "value": "topology-cassandra",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "janusgraph/system_properties Tombstone",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "cassandraNode",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": false,
+              "metric": "tombstoneCount.janusgraph/system_properties_lock_.tombstone",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Pod"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.pod.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.pod.name",
+                "type": "TAG_FILTER",
+                "value": "topology-cassandra",
+                "entity": "NOT_APPLICABLE",
+                "operator": "CONTAINS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "janusgraph/system_properties_lock_ Tombstone",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 14
+    }
+  ],
+  "ownerId": "696aa1bb4afd5c00013370dd",
+  "writable": false
+}

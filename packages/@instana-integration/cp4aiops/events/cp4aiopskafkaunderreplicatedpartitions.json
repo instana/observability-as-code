@@ -1,0 +1,36 @@
+{
+  "id": "v0_1blYmFW_Dp0hJ",
+  "name": "CP4AIOpsKafkaUnderReplicatedPartitions",
+  "entityType": "kafka",
+  "query": null,
+  "triggering": false,
+  "description": "Partitions do not maintain the required number of in-sync replicas.\nCritical event created when any partitions lose replicas for 2 minutes (modified to 90s)",
+  "expirationTime": 3600000,
+  "enabled": true,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "severity": 10,
+      "metricName": "broker.underReplicatedPartitions",
+      "rollup": 0,
+      "window": 90000,
+      "metricPattern": null,
+      "aggregation": "avg",
+      "conditionOperator": ">",
+      "conditionValue": 0,
+      "metricLabel": "Under-replicated Partitions",
+      "metricFormat": "NUMBER"
+    }
+  ],
+  "ruleLogicalOperator": "AND",
+  "lastUpdated": 1788854241787,
+  "validVersion": 1,
+  "actions": null,
+  "migrated": false,
+  "applicationAlertConfigId": null,
+  "infraAlertConfigId": null,
+  "deleted": false,
+  "transientEventEnabled": true,
+  "transientEventThreshold": 300000,
+  "transientEventAlertMuted": false
+}

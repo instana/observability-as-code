@@ -1,0 +1,36 @@
+{
+  "id": "uqXMSceZYnaUPkD-",
+  "name": "CP4AIOpsPostgresReplicationLagCritical",
+  "entityType": "postgreSqlDatabase",
+  "query": null,
+  "triggering": false,
+  "description": "Replica lags significantly behind the primary.\nLag exceeds 300 seconds for 5 minutes.",
+  "expirationTime": 3600000,
+  "enabled": true,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "severity": 10,
+      "metricName": "replication_stats.replication_delay_seconds",
+      "rollup": 0,
+      "window": 300000,
+      "metricPattern": null,
+      "aggregation": "avg",
+      "conditionOperator": ">=",
+      "conditionValue": 300,
+      "metricLabel": "Replication Delay In Seconds",
+      "metricFormat": "SECONDS"
+    }
+  ],
+  "ruleLogicalOperator": "AND",
+  "lastUpdated": 1788854276473,
+  "validVersion": 1,
+  "actions": null,
+  "migrated": false,
+  "applicationAlertConfigId": null,
+  "infraAlertConfigId": null,
+  "deleted": false,
+  "transientEventEnabled": true,
+  "transientEventThreshold": 300000,
+  "transientEventAlertMuted": false
+}

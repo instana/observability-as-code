@@ -1,0 +1,36 @@
+{
+  "id": "E0L-wRM35cam9Sjj",
+  "name": "CP4AIOpsCassandraTombstoneCompactionPendingCritical",
+  "entityType": "cassandraNode",
+  "query": null,
+  "triggering": false,
+  "description": "CP4AIOps Cassandra Tombstone Compaction Pending - Critical value > 50",
+  "expirationTime": 7200000,
+  "enabled": true,
+  "rules": [
+    {
+      "ruleType": "threshold",
+      "severity": 10,
+      "metricName": "compaction.pending",
+      "rollup": 0,
+      "window": 60000,
+      "metricPattern": null,
+      "aggregation": "max",
+      "conditionOperator": ">",
+      "conditionValue": 50,
+      "metricLabel": "Compaction Pending",
+      "metricFormat": "NUMBER"
+    }
+  ],
+  "ruleLogicalOperator": "AND",
+  "lastUpdated": 1788854145941,
+  "validVersion": 1,
+  "actions": null,
+  "migrated": false,
+  "applicationAlertConfigId": null,
+  "infraAlertConfigId": null,
+  "deleted": false,
+  "transientEventEnabled": true,
+  "transientEventThreshold": 300000,
+  "transientEventAlertMuted": false
+}

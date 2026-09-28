@@ -1,0 +1,869 @@
+{
+  "rbacTags": [],
+  "accessRules": [
+  {
+    "accessType": "READ_WRITE",
+    "relationType": "GLOBAL",
+    "relatedId": ""
+  }
+],
+  "id": "sEoXGxndSpWbz1PQkNUzJw",
+  "title": "CP4AIOPS - OCP Health",
+  "widgets": [
+    {
+      "width": 12,
+      "x": 0,
+      "y": 94,
+      "id": "A3UYV7Lx1VPFcJTC",
+      "title": "Persistent Volume Claim (PVC) Capacity Used",
+      "type": "table",
+      "config": {
+        "showGroupsWithMissingTags": false,
+        "tagFilterExpression": {
+          "tagDefinition": {
+            "path": [
+              {
+                "label": "Kubernetes"
+              },
+              {
+                "label": "Namespace"
+              },
+              {
+                "label": "name"
+              }
+            ],
+            "name": "kubernetes.namespace.name",
+            "availability": [],
+            "type": "STRING"
+          },
+          "name": "kubernetes.namespace.name",
+          "type": "TAG_FILTER",
+          "value": "{{ namespace.name }}",
+          "entity": "NOT_APPLICABLE",
+          "operator": "EQUALS"
+        },
+        "entityType": "kubernetesPersistentVolumeClaim",
+        "sorting": {
+          "by": "currentMetrics.capacity.usedPercent.MAX.MAX",
+          "direction": "DESC"
+        },
+        "tableSize": 20,
+        "countGroup": true,
+        "source": "INFRASTRUCTURE_METRICS",
+        "datasets": {
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "85",
+                "warning": "80",
+                "thresholdEnabled": true,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesPersistentVolumeClaim",
+              "metricPath": [],
+              "required": true,
+              "formatterSelected": true,
+              "formatter": "percentage.detailed",
+              "unit": "number",
+              "metric": "currentMetrics.capacity.usedPercent",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Capacity Used %",
+              "crossSeriesAggregation": "MAX"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesPersistentVolumeClaim",
+              "metricPath": [],
+              "required": false,
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "currentMetrics.capacity.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Capacity Used",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ]
+        },
+        "grouping": []
+      },
+      "height": 18
+    },
+    {
+      "width": 6,
+      "x": 6,
+      "y": 36,
+      "id": "znLLcgFle4D7zZKO",
+      "title": "Top Pods Restarts Count in CP4AIOPS",
+      "type": "table",
+      "config": {
+        "showGroupsWithMissingTags": false,
+        "tagFilterExpression": {
+          "tagDefinition": {
+            "path": [
+              {
+                "label": "Kubernetes"
+              },
+              {
+                "label": "Namespace"
+              },
+              {
+                "label": "name"
+              }
+            ],
+            "name": "kubernetes.namespace.name",
+            "availability": [],
+            "type": "STRING"
+          },
+          "name": "kubernetes.namespace.name",
+          "type": "TAG_FILTER",
+          "value": "{{ namespace.name }}",
+          "entity": "NOT_APPLICABLE",
+          "operator": "EQUALS"
+        },
+        "entityType": "kubernetesPod",
+        "sorting": {
+          "by": "restartCount.MAX.MAX",
+          "direction": "DESC"
+        },
+        "tableSize": 20,
+        "countGroup": true,
+        "source": "INFRASTRUCTURE_METRICS",
+        "datasets": {
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesPod",
+              "metricPath": [],
+              "required": false,
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "restartCount",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Restarts Count",
+              "crossSeriesAggregation": "MAX"
+            }
+          ]
+        },
+        "grouping": []
+      },
+      "height": 18
+    },
+    {
+      "width": 6,
+      "x": 6,
+      "y": 67,
+      "id": "yGPDi5sgKB_w7PSE",
+      "title": "Memory Usage (filter: Zone & namespace)",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Host Memory Used Ratio",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "memory.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Other"
+                    },
+                    {
+                      "label": "zone"
+                    }
+                  ],
+                  "name": "zone",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "svl",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Total RSS percent used",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "crio",
+              "metricPath": [],
+              "formatter": "bytes.detailed",
+              "unit": "number",
+              "metric": "memory.total_rss_percent",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Other"
+                    },
+                    {
+                      "label": "zone"
+                    }
+                  ],
+                  "name": "zone",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "svl",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "total_rss_percent",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Ratio of Memory Usage to Request Allocation",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesPod",
+              "metricPath": [],
+              "formatter": "bytes.detailed",
+              "unit": "number",
+              "metric": "memoryUsageToRequestedRatio",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Memory Request Allocation",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 13
+    },
+    {
+      "width": 6,
+      "x": 0,
+      "y": 36,
+      "id": "pb5zogECbaJF_CTw",
+      "title": "Top Unready Pods in CP4AIOPS",
+      "type": "table",
+      "config": {
+        "showGroupsWithMissingTags": false,
+        "tagFilterExpression": {
+          "tagDefinition": {
+            "path": [
+              {
+                "label": "Kubernetes"
+              },
+              {
+                "label": "Namespace"
+              },
+              {
+                "label": "name"
+              }
+            ],
+            "name": "kubernetes.namespace.name",
+            "availability": [],
+            "type": "STRING"
+          },
+          "name": "kubernetes.namespace.name",
+          "type": "TAG_FILTER",
+          "value": "{{ namespace.name }}",
+          "entity": "NOT_APPLICABLE",
+          "operator": "EQUALS"
+        },
+        "entityType": "kubernetesDeployment",
+        "sorting": {
+          "by": "conditions.Ready.False.MAX.SUM",
+          "direction": "DESC"
+        },
+        "tableSize": 20,
+        "countGroup": true,
+        "source": "INFRASTRUCTURE_METRICS",
+        "datasets": {
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesDeployment",
+              "metricPath": [],
+              "required": true,
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "conditions.Ready.False",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Unready Pods",
+              "crossSeriesAggregation": "SUM"
+            }
+          ]
+        },
+        "grouping": []
+      },
+      "height": 18
+    },
+    {
+      "width": 12,
+      "x": 0,
+      "y": 18,
+      "id": "9aEdkTA7bHXIPis2",
+      "title": "Kubernetes CP4AIOPS events",
+      "type": "table",
+      "config": {
+        "dynamicFocusQuery": "entity.kubernetes.namespace:cp4aiops ",
+        "columns": [
+          "type",
+          "reason",
+          "message",
+          "namespace",
+          "time",
+          "involvedObject",
+          "kind"
+        ],
+        "source": "KubernetesEventsTable"
+      },
+      "height": 18
+    },
+    {
+      "width": 6,
+      "x": 6,
+      "y": 54,
+      "id": "iw05U8lo8nGgUwjN",
+      "title": "aiops4x Cluster CPU & Memory Limits/Capacity",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Ratio of CPU Limits/Capacity",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "limitCapacityCPURatio",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Cluster"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.cluster.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.cluster.name",
+                "type": "TAG_FILTER",
+                "value": "aiops4x",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Limits Allocation",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Ratio of Memory Limits/Capacity",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "limitCapacityMemoryRatio",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Cluster"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.cluster.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.cluster.name",
+                "type": "TAG_FILTER",
+                "value": "aiops4x",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Memory Limits Allocation",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 13
+    },
+    {
+      "width": 6,
+      "x": 0,
+      "y": 54,
+      "id": "aeI3Z7FVkt1PYGPR",
+      "title": "aiops4x Cluster CPU & Memory Requests/Capacity",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Ratio of CPU Requests/Capacity",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "requiredCapacityCPURatio",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Cluster"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.cluster.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.cluster.name",
+                "type": "TAG_FILTER",
+                "value": "aiops4x",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Requests Allocation",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Ratio of Memory Requests/Capacity",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "requiredCapacityMemoryRatio",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Cluster"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.cluster.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.cluster.name",
+                "type": "TAG_FILTER",
+                "value": "aiops4x",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Memory Requests Allocation",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 13
+    },
+    {
+      "width": 12,
+      "x": 0,
+      "y": 0,
+      "id": "y9Kna5MfF9BmprUN",
+      "title": "Top CP4AIOPS Infra Critical Events",
+      "type": "table",
+      "config": {
+        "dynamicFocusQuery": "event.source:infra event.severity:critical entity.kubernetes.namespace:cp4aiops",
+        "columns": [
+          "icon",
+          "title",
+          "entityLabel",
+          "started",
+          "ended",
+          "duration"
+        ],
+        "source": "EventsTable"
+      },
+      "height": 18
+    },
+    {
+      "width": 6,
+      "x": 0,
+      "y": 67,
+      "id": "BJUVdE_hRqU9oSJg",
+      "title": "CPU Usage (filter: Zone & namespace)",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "cpu.user",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Other"
+                    },
+                    {
+                      "label": "zone"
+                    }
+                  ],
+                  "name": "zone",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "svl",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU user usage",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Host CPU Usage",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "host",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "cpu.used",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Other"
+                    },
+                    {
+                      "label": "zone"
+                    }
+                  ],
+                  "name": "zone",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "zone",
+                "type": "TAG_FILTER",
+                "value": "svl",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Used",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Ratio of CPU Usage to Request Allocation",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kubernetesPod",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": false,
+              "metric": "cpuUsageToRequestedRatio",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "CPU Request Allocation",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 13
+    }
+  ],
+  "ownerId": "696aa1bb4afd5c00013370dd",
+  "writable": false
+}

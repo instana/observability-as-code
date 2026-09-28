@@ -1,0 +1,19 @@
+{
+  "name": "@instana-integration/cp4aiops",
+  "version": "1.0.0",
+  "description": "The integration package is a collection of Instana custom dashboards and event used to support the monitoring of CP4AIOps. Once you had installed Instana agent and started monitoring the OCP running the CP4AIOps, you can import this custom dashboards & events package into your Instana environment. Then you will be able to view relevant monitoring metrics of CP4AIOps via the curated custom dashboards and events which are included in this integration package.",
+  "author": "IBM",
+  "license": "Instana",
+  "scripts": {},
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "ibm",
+    "instana",
+    "custom dashboard",
+    "custom events",
+    "cp4aiops",
+    "monitoring"
+  ]
+}

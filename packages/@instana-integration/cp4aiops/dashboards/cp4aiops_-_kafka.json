@@ -1,0 +1,1185 @@
+{
+  "rbacTags": [],
+  "accessRules": [
+  {
+    "accessType": "READ_WRITE",
+    "relationType": "GLOBAL",
+    "relatedId": ""
+  }
+],
+  "id": "ufgdidQ5T6eF_38dN3Fj7g",
+  "title": "CP4AIOPS - Kafka",
+  "widgets": [
+    {
+      "width": 4,
+      "x": 0,
+      "y": 65,
+      "id": "EDZSNPZ3RlcI7Itf",
+      "title": "Kafka Traffic In",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "SUM",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafka",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.bytesIn",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "In",
+              "crossSeriesAggregation": "SUM"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 13
+    },
+    {
+      "width": 4,
+      "x": 0,
+      "y": 52,
+      "id": "j3XdXpYA4Ge4Wqpe",
+      "title": "Kafka Fetch Request Latency",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "orange",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "SUM",
+              "label": "Fetch Consumer Request Latency",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafka",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.totalTimeFetchConsumer",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Fetch Consumer Latency",
+              "crossSeriesAggregation": "SUM"
+            },
+            {
+              "lastValue": false,
+              "color": "green",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "SUM",
+              "label": "Fetch Follower Request Latency",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafka",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.totalTimeFetchFollower",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Fetch Follower Latency",
+              "crossSeriesAggregation": "SUM"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 13
+    },
+    {
+      "width": 4,
+      "x": 8,
+      "y": 64,
+      "id": "1twqqh5FCQhYqIZE",
+      "title": "Active Controller Count",
+      "type": "bigNumber",
+      "config": {
+        "formatter": "number.compact",
+        "comparisonDecreaseColor": "greenish",
+        "metricConfiguration": {
+          "lastValue": false,
+          "threshold": {
+            "critical": "0",
+            "warning": "",
+            "thresholdEnabled": true,
+            "operator": "<="
+          },
+          "aggregation": "MEAN",
+          "source": "INFRASTRUCTURE_METRICS",
+          "type": "kafka",
+          "metricPath": [],
+          "formatter": "number.detailed",
+          "unit": "number",
+          "metric": "broker.activeControllerCount",
+          "timeShift": 0,
+          "tagFilterExpression": {
+            "tagDefinition": {
+              "path": [
+                {
+                  "label": "Kubernetes"
+                },
+                {
+                  "label": "Namespace"
+                },
+                {
+                  "label": "name"
+                }
+              ],
+              "name": "kubernetes.namespace.name",
+              "availability": [],
+              "type": "STRING"
+            },
+            "name": "kubernetes.namespace.name",
+            "type": "TAG_FILTER",
+            "value": "{{ namespace.name }}",
+            "entity": "NOT_APPLICABLE",
+            "operator": "EQUALS"
+          },
+          "allowedCrossSeriesAggregations": [],
+          "crossSeriesAggregation": "SUM"
+        },
+        "comparisonIncreaseColor": "redish",
+        "formatterSelected": true
+      },
+      "height": 4
+    },
+    {
+      "width": 4,
+      "x": 4,
+      "y": 65,
+      "id": "Qw_GI0YncWdfyKTb",
+      "title": "Kafka Traffic Out",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "SUM",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafka",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.bytesOut",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Out",
+              "crossSeriesAggregation": "SUM"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 13
+    },
+    {
+      "width": 4,
+      "x": 8,
+      "y": 52,
+      "id": "gLkLdKTOa4qa2fOZ",
+      "title": "DeadLetter Messages In per second",
+      "type": "bigNumber",
+      "config": {
+        "formatter": "number.detailed",
+        "comparisonDecreaseColor": "greenish",
+        "metricConfiguration": {
+          "lastValue": false,
+          "threshold": {
+            "critical": "1",
+            "warning": "",
+            "thresholdEnabled": true,
+            "operator": ">="
+          },
+          "aggregation": "MAX",
+          "source": "INFRASTRUCTURE_METRICS",
+          "type": "kafkaCluster",
+          "metricPath": [],
+          "formatter": "number.detailed",
+          "unit": "number",
+          "metric": "broker.topicData.dead_letters.messagesInPerSec",
+          "timeShift": 0,
+          "tagFilterExpression": {
+            "logicalOperator": "AND",
+            "elements": [],
+            "type": "EXPRESSION"
+          },
+          "allowedCrossSeriesAggregations": [],
+          "crossSeriesAggregation": "SUM"
+        },
+        "comparisonIncreaseColor": "redish",
+        "formatterSelected": false
+      },
+      "height": 4
+    },
+    {
+      "width": 4,
+      "x": 4,
+      "y": 52,
+      "id": "7pIzABFNv3xrSt69",
+      "title": "Kafka Fetch Broker Latency",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Fetch Consumer Broker Latency",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.totalTimeFetchConsumer",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Fetch Consumer Latency",
+              "crossSeriesAggregation": "MEAN"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MEAN",
+              "label": "Fetch Follower Broker Latency",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "millis.compact",
+              "unit": "number",
+              "regex": false,
+              "metric": "broker.totalTimeFetchFollower",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Fetch Follower Latency",
+              "crossSeriesAggregation": "MEAN"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 13
+    },
+    {
+      "width": 4,
+      "x": 4,
+      "y": 0,
+      "id": "GMS3T1LI1lo5lboI",
+      "title": "Kafka Produce Failures (max)",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "Produce Failures (max)",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafka",
+              "metricPath": [],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "broker.failedProduce",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Produce",
+              "crossSeriesAggregation": "SUM"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 13
+    },
+    {
+      "width": 6,
+      "x": 0,
+      "y": 13,
+      "id": "ADHG0dw_KLIZ3kSY",
+      "title": "Event ingestion rate (messages in per sec)",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "SUM",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.topicData.cp4waiops-cartridge.lifecycle.input.events.messagesInPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.lifecycle.input.events Messages In Per Second",
+              "crossSeriesAggregation": "SUM"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 13
+    },
+    {
+      "width": 6,
+      "x": 6,
+      "y": 13,
+      "id": "hegnDY8MWjBa_kPS",
+      "title": "Event ingestion rate (bytes in/out per sec)",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "SUM",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.topicData.cp4waiops-cartridge.lifecycle.input.events.bytesInPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.lifecycle.input.events Bytes In Per Second",
+              "crossSeriesAggregation": "SUM"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "SUM",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.topicData.cp4waiops-cartridge.lifecycle.input.events.bytesOutPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.lifecycle.input.events Bytes Out Per Second",
+              "crossSeriesAggregation": "SUM"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 13
+    },
+    {
+      "width": 6,
+      "x": 0,
+      "y": 26,
+      "id": "9ZPMm86g8ji_X3Oc",
+      "title": "Alert request rate (creates & updates)",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "SUM",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": false,
+              "metric": "broker.topicData.cp4waiops-cartridge.irdatalayer.changes.alerts.messagesInPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.irdatalayer.changes.alerts Messages In Per Second",
+              "crossSeriesAggregation": "SUM"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 13
+    },
+    {
+      "width": 4,
+      "x": 8,
+      "y": 60,
+      "id": "i1LF76gg5AUZup2_",
+      "title": "Kafka UnderReplicated Partitions",
+      "type": "bigNumber",
+      "config": {
+        "formatter": "number.compact",
+        "comparisonDecreaseColor": "greenish",
+        "metricConfiguration": {
+          "lastValue": false,
+          "threshold": {
+            "critical": "1",
+            "warning": "",
+            "thresholdEnabled": true,
+            "operator": ">="
+          },
+          "aggregation": "SUM",
+          "source": "INFRASTRUCTURE_METRICS",
+          "type": "kafkaCluster",
+          "metricPath": [],
+          "formatter": "number.compact",
+          "unit": "number",
+          "metric": "broker.underReplicatedPartitions",
+          "timeShift": 0,
+          "tagFilterExpression": {
+            "logicalOperator": "AND",
+            "elements": [],
+            "type": "EXPRESSION"
+          },
+          "allowedCrossSeriesAggregations": [],
+          "crossSeriesAggregation": "SUM"
+        },
+        "comparisonIncreaseColor": "redish",
+        "formatterSelected": false
+      },
+      "height": 4
+    },
+    {
+      "width": 4,
+      "x": 0,
+      "y": 0,
+      "id": "a_gzUfh0EDcFWDEW",
+      "title": "Kafka Fetch Failures (max)",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "Fetch Failures (max)",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafka",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.failedFetch",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Fetch",
+              "crossSeriesAggregation": "MAX"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 13
+    },
+    {
+      "width": 4,
+      "x": 8,
+      "y": 0,
+      "id": "e9Aq4D11J5ZNbsS6",
+      "title": "Kafka  Rejected Traffic",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "MAX",
+              "label": "Rejected Traffic",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafka",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.bytesRejected",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Rejected",
+              "crossSeriesAggregation": "SUM"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 13
+    },
+    {
+      "width": 6,
+      "x": 6,
+      "y": 39,
+      "id": "t4esXoqKJ1vVMtbt",
+      "title": "Kafka Throughput CP4AIOPS",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "cMagenta",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "SUM",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafka",
+              "metricPath": [],
+              "formatter": "number.compact",
+              "unit": "number",
+              "metric": "broker.fetchConsumerRequests",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Fetch Consumer Throughput",
+              "crossSeriesAggregation": "SUM"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "SUM",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafka",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.fetchFollowerRequests",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "tagDefinition": {
+                  "path": [
+                    {
+                      "label": "Kubernetes"
+                    },
+                    {
+                      "label": "Namespace"
+                    },
+                    {
+                      "label": "name"
+                    }
+                  ],
+                  "name": "kubernetes.namespace.name",
+                  "availability": [],
+                  "type": "STRING"
+                },
+                "name": "kubernetes.namespace.name",
+                "type": "TAG_FILTER",
+                "value": "{{ namespace.name }}",
+                "entity": "NOT_APPLICABLE",
+                "operator": "EQUALS"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "Fetch Follower Throughput",
+              "crossSeriesAggregation": "SUM"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 13
+    },
+    {
+      "width": 6,
+      "x": 6,
+      "y": 26,
+      "id": "jw7fNRVwRY-aIMT-",
+      "title": "Alert request rate (bytes in/out per sec)",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "SUM",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": false,
+              "metric": "broker.topicData.cp4waiops-cartridge.irdatalayer.changes.alerts.bytesInPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.irdatalayer.changes.alerts Bytes In Per Second",
+              "crossSeriesAggregation": "SUM"
+            },
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "SUM",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "regex": false,
+              "metric": "broker.topicData.cp4waiops-cartridge.irdatalayer.changes.alerts.bytesOutPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "cp4waiops-cartridge.irdatalayer.changes.alerts Bytes Out Per Second",
+              "crossSeriesAggregation": "SUM"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 13
+    },
+    {
+      "width": 6,
+      "x": 0,
+      "y": 39,
+      "id": "InGTPtBurKPtJi_v",
+      "title": "Kafka logs messages in rate",
+      "type": "chart",
+      "config": {
+        "shareMaxAxisDomain": false,
+        "y1": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": [
+            {
+              "lastValue": false,
+              "color": "",
+              "compareToTimeShifted": false,
+              "threshold": {
+                "critical": "",
+                "warning": "",
+                "thresholdEnabled": false,
+                "operator": ">="
+              },
+              "aggregation": "SUM",
+              "label": "",
+              "source": "INFRASTRUCTURE_METRICS",
+              "type": "kafkaCluster",
+              "metricPath": [],
+              "formatter": "number.detailed",
+              "unit": "number",
+              "metric": "broker.topicData.logs.messagesInPerSec",
+              "timeShift": 0,
+              "tagFilterExpression": {
+                "logicalOperator": "AND",
+                "elements": [],
+                "type": "EXPRESSION"
+              },
+              "allowedCrossSeriesAggregations": [],
+              "metricLabel": "logs Messages In Per Second",
+              "crossSeriesAggregation": "SUM"
+            }
+          ],
+          "formatterSelected": false
+        },
+        "y2": {
+          "formatter": "number.detailed",
+          "renderer": "line",
+          "metrics": []
+        },
+        "type": "TIME_SERIES"
+      },
+      "height": 13
+    },
+    {
+      "width": 4,
+      "x": 8,
+      "y": 56,
+      "id": "hYyNTpFvLVSfpUuL",
+      "title": "Kafka Offline Partitions Count",
+      "type": "bigNumber",
+      "config": {
+        "formatter": "number.compact",
+        "comparisonDecreaseColor": "greenish",
+        "metricConfiguration": {
+          "lastValue": false,
+          "threshold": {
+            "critical": "1",
+            "warning": "",
+            "thresholdEnabled": true,
+            "operator": ">="
+          },
+          "aggregation": "SUM",
+          "source": "INFRASTRUCTURE_METRICS",
+          "type": "kafka",
+          "metricPath": [],
+          "formatter": "number.detailed",
+          "unit": "number",
+          "metric": "broker.offlinePartitionsCount",
+          "timeShift": 0,
+          "tagFilterExpression": {
+            "logicalOperator": "AND",
+            "elements": [],
+            "type": "EXPRESSION"
+          },
+          "allowedCrossSeriesAggregations": [],
+          "crossSeriesAggregation": "SUM"
+        },
+        "comparisonIncreaseColor": "redish",
+        "formatterSelected": true
+      },
+      "height": 4
+    }
+  ],
+  "ownerId": "696aa1bb4afd5c00013370dd",
+  "writable": false
+}
