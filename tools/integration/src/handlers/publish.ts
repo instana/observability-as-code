@@ -9,7 +9,9 @@ import path from 'path';
  * @param argv Command line arguments
  */
 export async function handlePublish(argv: any): Promise<void> {
-    const { package: packageNameOrPath, registryUsername } = argv;
+    const { package: packageNameOrPath } = argv;
+    const imageRegistryUsername = argv['image-registry-username'];
+    const packageRegistryUsername = argv['npm-registry-username'];
     const type = argv['artifact-type'] || 'package';
 
     logger.info(`Start to publish the integration package: ${packageNameOrPath}`);
@@ -29,11 +31,11 @@ export async function handlePublish(argv: any): Promise<void> {
 
     try {
         if (type === 'image') {
-            await publishImage(packagePath, registryUsername, argv['registry-password'], argv.debug);
+            await publishImage(packagePath, imageRegistryUsername, argv['image-registry-password'], argv.debug);
         } else if (type === 'both') {
-            await publishPackage(packagePath, packageNameOrPath, registryUsername, argv['registry-email']);
+            await publishPackage(packagePath, packageNameOrPath, packageRegistryUsername, argv['npm-registry-email']);
             try {
-                await publishImage(packagePath, registryUsername, argv['registry-password'], argv.debug);
+                await publishImage(packagePath, imageRegistryUsername, argv['image-registry-password'], argv.debug);
             } catch (error) {
                 const msg = error instanceof Error ? error.message : String(error);
                 throw new Error(
@@ -42,7 +44,7 @@ export async function handlePublish(argv: any): Promise<void> {
                 );
             }
         } else {
-            await publishPackage(packagePath, packageNameOrPath, registryUsername, argv['registry-email']);
+            await publishPackage(packagePath, packageNameOrPath, packageRegistryUsername, argv['npm-registry-email']);
         }
     } catch (error) {
         logger.error('Publish failed:', error);
@@ -53,7 +55,7 @@ export async function handlePublish(argv: any): Promise<void> {
 /**
  * Publish npm integration package
  */
-async function publishPackage( packagePath: string, packageNameOrPath: string, registryUsername: string, registryEmail: string): Promise<void> {
+async function publishPackage( packagePath: string, packageNameOrPath: string, packageRegistryUsername: string, registryEmail: string): Promise<void> {
     const packageJson = utils.readPackageJson(packagePath);
     if (!packageJson) {
         throw new Error('Failed to read the package.json');
@@ -68,7 +70,7 @@ async function publishPackage( packagePath: string, packageNameOrPath: string, r
     if (!(await utils.isUserLoggedIn())) {
         try {
             // npm login
-            const loginArgs = ['login', '--username', registryUsername, '--email', registryEmail];
+            const loginArgs = ['login', '--username', packageRegistryUsername, '--email', registryEmail];
             if (scope) {
                 loginArgs.push(`--scope=@${scope}`);
             }
@@ -103,7 +105,7 @@ async function publishPackage( packagePath: string, packageNameOrPath: string, r
 /**
  * Publish collector container image to a registry
  */
-async function publishImage( packagePath: string, registryUsername: string, registryPassword: string, debug: boolean = false): Promise<void> {
+async function publishImage( packagePath: string, imageRegistryUsername: string, registryPassword: string, debug: boolean = false): Promise<void> {
     // Detect container runtime
     const containerRuntime = utils.detectContainerRuntime();
 
@@ -140,7 +142,7 @@ async function publishImage( packagePath: string, registryUsername: string, regi
         logger.info(`=== ${containerRuntime} Publish Debug Information ===`);
         logger.info(`Registry: ${registry}`);
         logger.info(`Image Tag: ${imageTag}`);
-        logger.info(`Username: ${registryUsername}`);
+        logger.info(`Username: ${imageRegistryUsername}`);
         logger.info('======================================');
     }
 
@@ -149,7 +151,7 @@ async function publishImage( packagePath: string, registryUsername: string, regi
     try {
         await utils.spawnAsync(
             containerRuntime,
-            ['login', registry, '--username', registryUsername, '--password-stdin'],
+            ['login', registry, '--username', imageRegistryUsername, '--password-stdin'],
             { stdio: ['pipe', 'inherit', 'inherit'], input: registryPassword }
         );
         logger.info('Logged into container registry successfully');

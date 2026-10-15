@@ -228,11 +228,13 @@ describe('CLI Module', () => {
             const cliContent = fs.readFileSync(cliPath, 'utf-8');
             
             // Verify publish options
-            expect(cliContent).toContain("'registry-username'");
-            expect(cliContent).toContain("'registry-email'");
-            expect(cliContent).toContain("'registry-password'");
+            expect(cliContent).toContain("'npm-registry-username'");
+            expect(cliContent).toContain("'image-registry-username'");
+            expect(cliContent).toContain("'npm-registry-email'");
+            expect(cliContent).toContain("'image-registry-password'");
             expect(cliContent).toContain("'artifact-type'");
             expect(cliContent).toContain("alias: 'U'");
+            expect(cliContent).toContain("alias: 'u'");
             expect(cliContent).toContain("alias: 'E'");
             expect(cliContent).toContain("alias: 'P'");
             expect(cliContent).toContain("alias: 't'");
@@ -248,10 +250,14 @@ describe('CLI Module', () => {
             expect(cliContent).toContain('.check(');
             expect(cliContent).toContain("argv['artifact-type'] === 'package'");
             expect(cliContent).toContain("argv['artifact-type'] === 'image'");
-            expect(cliContent).toContain("'registry-email'");
-            expect(cliContent).toContain("'registry-password'");
-            expect(cliContent).toContain('--registry-email is required when --artifact-type is package or both');
-            expect(cliContent).toContain('--registry-password is required when --artifact-type is image or both');
+            expect(cliContent).toContain("'npm-registry-email'");
+            expect(cliContent).toContain("'image-registry-password'");
+            expect(cliContent).toContain("'npm-registry-username'");
+            expect(cliContent).toContain("'image-registry-username'");
+            expect(cliContent).toContain('--npm-registry-username is required when --artifact-type is package or both');
+            expect(cliContent).toContain('--npm-registry-email is required when --artifact-type is package or both');
+            expect(cliContent).toContain('--image-registry-username is required when --artifact-type is image or both');
+            expect(cliContent).toContain('--image-registry-password is required when --artifact-type is image or both');
         });
 
         it('should define lint command options', async () => {

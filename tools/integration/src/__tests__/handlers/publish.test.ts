@@ -39,8 +39,8 @@ describe('Publish Handler', () => {
         it('should publish a package from a valid path', async () => {
             const argv = {
                 package: '/path/to/package',
-                registryUsername: 'testuser',
-                'registry-email': 'test@example.com',
+                'npm-registry-username': 'testuser',
+                'npm-registry-email': 'test@example.com',
                 'artifact-type': 'package'
             };
 
@@ -65,8 +65,8 @@ describe('Publish Handler', () => {
         it('should handle package name without path', async () => {
             const argv = {
                 package: 'test-package',
-                registryUsername: 'testuser',
-                'registry-email': 'test@example.com',
+                'npm-registry-username': 'testuser',
+                'npm-registry-email': 'test@example.com',
                 'artifact-type': 'package'
             };
 
@@ -88,8 +88,8 @@ describe('Publish Handler', () => {
         it('should exit with code 1 if package.json cannot be read', async () => {
             const argv = {
                 package: '/path/to/package',
-                registryUsername: 'testuser',
-                'registry-email': 'test@example.com',
+                'npm-registry-username': 'testuser',
+                'npm-registry-email': 'test@example.com',
                 'artifact-type': 'package'
             };
 
@@ -106,8 +106,8 @@ describe('Publish Handler', () => {
         it('should exit with code 1 if package path does not exist', async () => {
             const argv = {
                 package: 'nonexistent-package',
-                registryUsername: 'testuser',
-                'registry-email': 'test@example.com',
+                'npm-registry-username': 'testuser',
+                'npm-registry-email': 'test@example.com',
                 'artifact-type': 'package'
             };
 
@@ -123,8 +123,8 @@ describe('Publish Handler', () => {
         it('should login when user is not logged in', async () => {
             const argv = {
                 package: '/path/to/package',
-                registryUsername: 'testuser',
-                'registry-email': 'test@example.com',
+                'npm-registry-username': 'testuser',
+                'npm-registry-email': 'test@example.com',
                 'artifact-type': 'package'
             };
 
@@ -148,8 +148,8 @@ describe('Publish Handler', () => {
         it('should include scope in login args for scoped packages', async () => {
             const argv = {
                 package: '/path/to/package',
-                registryUsername: 'testuser',
-                'registry-email': 'test@example.com',
+                'npm-registry-username': 'testuser',
+                'npm-registry-email': 'test@example.com',
                 'artifact-type': 'package'
             };
 
@@ -172,8 +172,8 @@ describe('Publish Handler', () => {
         it('should exit with code 1 on login error', async () => {
             const argv = {
                 package: '/path/to/package',
-                registryUsername: 'testuser',
-                'registry-email': 'test@example.com',
+                'npm-registry-username': 'testuser',
+                'npm-registry-email': 'test@example.com',
                 'artifact-type': 'package'
             };
 
@@ -193,8 +193,8 @@ describe('Publish Handler', () => {
         it('should publish with --access public for scoped packages', async () => {
             const argv = {
                 package: '/path/to/package',
-                registryUsername: 'testuser',
-                'registry-email': 'test@example.com',
+                'npm-registry-username': 'testuser',
+                'npm-registry-email': 'test@example.com',
                 'artifact-type': 'package'
             };
 
@@ -217,8 +217,8 @@ describe('Publish Handler', () => {
         it('should publish without --access flag for non-scoped packages', async () => {
             const argv = {
                 package: '/path/to/package',
-                registryUsername: 'testuser',
-                'registry-email': 'test@example.com',
+                'npm-registry-username': 'testuser',
+                'npm-registry-email': 'test@example.com',
                 'artifact-type': 'package'
             };
 
@@ -241,8 +241,8 @@ describe('Publish Handler', () => {
         it('should exit with code 1 on publish error', async () => {
             const argv = {
                 package: '/path/to/package',
-                registryUsername: 'testuser',
-                'registry-email': 'test@example.com',
+                'npm-registry-username': 'testuser',
+                'npm-registry-email': 'test@example.com',
                 'artifact-type': 'package'
             };
 
@@ -265,8 +265,8 @@ describe('Publish Handler', () => {
         it('should log package details before publishing', async () => {
             const argv = {
                 package: '/path/to/package',
-                registryUsername: 'testuser',
-                'registry-email': 'test@example.com',
+                'npm-registry-username': 'testuser',
+                'npm-registry-email': 'test@example.com',
                 'artifact-type': 'package'
             };
 
@@ -287,8 +287,8 @@ describe('Publish Handler', () => {
         it('should log "none" for scope when package is not scoped', async () => {
             const argv = {
                 package: '/path/to/package',
-                registryUsername: 'testuser',
-                'registry-email': 'test@example.com',
+                'npm-registry-username': 'testuser',
+                'npm-registry-email': 'test@example.com',
                 'artifact-type': 'package'
             };
 
@@ -307,8 +307,8 @@ describe('Publish Handler', () => {
         it('should extract scope correctly from package name', async () => {
             const argv = {
                 package: '/path/to/package',
-                registryUsername: 'testuser',
-                'registry-email': 'test@example.com',
+                'npm-registry-username': 'testuser',
+                'npm-registry-email': 'test@example.com',
                 'artifact-type': 'package'
             };
 
@@ -327,8 +327,8 @@ describe('Publish Handler', () => {
         it('should handle complex scoped package names', async () => {
             const argv = {
                 package: '/path/to/package',
-                registryUsername: 'testuser',
-                'registry-email': 'test@example.com',
+                'npm-registry-username': 'testuser',
+                'npm-registry-email': 'test@example.com',
                 'artifact-type': 'package'
             };
 
@@ -348,8 +348,8 @@ describe('Publish Handler', () => {
     describe('handlePublish --artifact-type image', () => {
         const imageArgv = {
             package: '/path/to/package',
-            registryUsername: 'testuser',
-            'registry-password': 'secret',
+            'image-registry-username': 'testuser',
+            'image-registry-password': 'secret',
             'artifact-type': 'image'
         };
 
@@ -557,9 +557,10 @@ describe('Publish Handler', () => {
     describe('handlePublish --artifact-type both', () => {
         const bothArgv = {
             package: '/path/to/package',
-            registryUsername: 'testuser',
-            'registry-email': 'test@example.com',
-            'registry-password': 'secret',
+            'npm-registry-username': 'testuser',
+            'image-registry-username': 'testuser',
+            'npm-registry-email': 'test@example.com',
+            'image-registry-password': 'secret',
             'artifact-type': 'both'
         };
 

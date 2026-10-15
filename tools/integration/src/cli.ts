@@ -44,13 +44,13 @@ const examplesForPublish = `
 Examples:
 
 Publish an integration package to npm:
-  ${execName} publish --package @instana-integration/my-package --registry-username myuser --registry-email me@example.com --artifact-type package
+  ${execName} publish --package @instana-integration/my-package --npm-registry-username myuser --npm-registry-email me@example.com --artifact-type package
 
 Publish a collector container image to a registry:
-  ${execName} publish --package @instana-integration/my-package --registry-username myuser --registry-password mypassword --artifact-type image
+  ${execName} publish --package @instana-integration/my-package --image-registry-username myuser --image-registry-password mypassword --artifact-type image
 
 Publish both the integration package and container image:
-  ${execName} publish --package @instana-integration/my-package --registry-username myuser --registry-email me@example.com --registry-password mypassword --artifact-type both
+  ${execName} publish --package @instana-integration/my-package --npm-registry-username mynpmuser --image-registry-username myimageuser --npm-registry-email me@example.com --image-registry-password mypassword --artifact-type both
 `;
 
 const examplesForBuild = `
@@ -191,13 +191,14 @@ export function configureCLI(handlers: {
                     type: 'string',
                     demandOption: true
                 })
-                .option('registry-username', {
+                .option('npm-registry-username', {
                     alias: 'U',
-                    describe: 'Username to access the integration package or container image registry',
+                    describe: 'Username to access the integration package registry (required when --artifact-type is package or both)',
                     type: 'string',
-                    demandOption: true
+                    demandOption: false
                 })
-                .option('registry-email', {
+
+                .option('npm-registry-email', {
                     alias: 'E',
                     describe: 'Email to access the integration package registry (required when --artifact-type is package or both)',
                     type: 'string',
@@ -211,18 +212,30 @@ export function configureCLI(handlers: {
                     choices: ['package', 'image', 'both'],
                     demandOption: false
                 })
-                .option('registry-password', {
+				.option('image-registry-username', {
+                	alias: 'u',
+                    describe: 'Username to access the container image registry (required when --artifact-type is image or both)',
+                    type: 'string',
+                    demandOption: false
+                })
+                .option('image-registry-password', {
                     alias: 'P',
                     describe: 'Password to access the container image registry (required when --artifact-type is image or both)',
                     type: 'string',
                     demandOption: false
                 })
                 .check((argv) => {
-                    if ((argv['artifact-type'] === 'package' || argv['artifact-type'] === 'both') && !argv['registry-email']) {
-                        throw new Error('--registry-email is required when --artifact-type is package or both');
+                    if ((argv['artifact-type'] === 'package' || argv['artifact-type'] === 'both') && !argv['npm-registry-username']) {
+                        throw new Error('--npm-registry-username is required when --artifact-type is package or both');
                     }
-                    if ((argv['artifact-type'] === 'image' || argv['artifact-type'] === 'both') && !argv['registry-password']) {
-                        throw new Error('--registry-password is required when --artifact-type is image or both');
+                    if ((argv['artifact-type'] === 'package' || argv['artifact-type'] === 'both') && !argv['npm-registry-email']) {
+                        throw new Error('--npm-registry-email is required when --artifact-type is package or both');
+                    }
+                    if ((argv['artifact-type'] === 'image' || argv['artifact-type'] === 'both') && !argv['image-registry-username']) {
+                        throw new Error('--image-registry-username is required when --artifact-type is image or both');
+                    }
+                    if ((argv['artifact-type'] === 'image' || argv['artifact-type'] === 'both') && !argv['image-registry-password']) {
+                        throw new Error('--image-registry-password is required when --artifact-type is image or both');
                     }
                     return true;
                 })
