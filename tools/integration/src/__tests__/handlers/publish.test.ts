@@ -557,8 +557,8 @@ describe('Publish Handler', () => {
     describe('handlePublish --artifact-type both', () => {
         const bothArgv = {
             package: '/path/to/package',
-            'npm-registry-username': 'testuser',
-            'image-registry-username': 'testuser',
+            'npm-registry-username': 'npmuser',
+            'image-registry-username': 'imageuser',
             'npm-registry-email': 'test@example.com',
             'image-registry-password': 'secret',
             'artifact-type': 'both'
@@ -588,6 +588,27 @@ describe('Publish Handler', () => {
 
             expect(utils.spawnAsync).toHaveBeenCalledWith('npm', ['publish', '--access', 'public'], expect.any(Object));
             expect(utils.spawnAsync).toHaveBeenCalledWith('docker', ['push', 'quay.io/instana-collectors/my-collector:1.0.0'], expect.any(Object));
+        });
+
+        it('should use the npm username for npm login and the image username for container registry login', async () => {
+            const packageJson = { name: '@scope/test-package' };
+            (utils.readPackageJson as jest.Mock).mockReturnValue(packageJson);
+            (utils.isUserLoggedIn as jest.Mock).mockResolvedValue(false);
+            (utils.spawnAsync as jest.Mock).mockResolvedValue({ stdout: '', stderr: '' });
+            mockFs.readFileSync.mockReturnValue(JSON.stringify(mockConfig) as any);
+
+            await handlePublish(bothArgv);
+
+            expect(utils.spawnAsync).toHaveBeenCalledWith(
+                'npm',
+                ['login', '--username', 'npmuser', '--email', 'test@example.com', '--scope=@scope'],
+                { stdio: 'inherit' }
+            );
+            expect(utils.spawnAsync).toHaveBeenCalledWith(
+                'docker',
+                ['login', 'quay.io', '--username', 'imageuser', '--password-stdin'],
+                expect.objectContaining({ input: 'secret' })
+            );
         });
 
         it('should exit with code 1 and clear message if publishImage fails after publishPackage succeeds', async () => {

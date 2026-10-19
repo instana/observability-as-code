@@ -192,14 +192,11 @@ export function configureCLI(handlers: {
                     demandOption: true
                 })
                 .option('npm-registry-username', {
-                    alias: 'U',
                     describe: 'Username to access the integration package registry (required when --artifact-type is package or both)',
                     type: 'string',
                     demandOption: false
                 })
-
                 .option('npm-registry-email', {
-                    alias: 'E',
                     describe: 'Email to access the integration package registry (required when --artifact-type is package or both)',
                     type: 'string',
                     demandOption: false
@@ -212,19 +209,31 @@ export function configureCLI(handlers: {
                     choices: ['package', 'image', 'both'],
                     demandOption: false
                 })
-				.option('image-registry-username', {
-                	alias: 'u',
+                .option('image-registry-username', {
                     describe: 'Username to access the container image registry (required when --artifact-type is image or both)',
                     type: 'string',
                     demandOption: false
                 })
                 .option('image-registry-password', {
-                    alias: 'P',
                     describe: 'Password to access the container image registry (required when --artifact-type is image or both)',
                     type: 'string',
                     demandOption: false
                 })
+                // Removed flags: kept hidden so .strict() doesn't mask the rename guidance in .check() below
+                .option('registry-username', { alias: 'U', type: 'string', hidden: true })
+                .option('registry-email', { alias: 'E', type: 'string', hidden: true })
+                .option('registry-password', { alias: 'P', type: 'string', hidden: true })
                 .check((argv) => {
+                    const renamedFlags: Record<string, string> = {
+                        'registry-username': '--npm-registry-username (for --artifact-type package) or --image-registry-username (for --artifact-type image)',
+                        'registry-email': '--npm-registry-email',
+                        'registry-password': '--image-registry-password'
+                    };
+                    for (const [oldFlag, replacement] of Object.entries(renamedFlags)) {
+                        if (argv[oldFlag] !== undefined) {
+                            throw new Error(`--${oldFlag} has been removed. Use ${replacement} instead.`);
+                        }
+                    }
                     if ((argv['artifact-type'] === 'package' || argv['artifact-type'] === 'both') && !argv['npm-registry-username']) {
                         throw new Error('--npm-registry-username is required when --artifact-type is package or both');
                     }

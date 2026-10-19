@@ -233,11 +233,22 @@ describe('CLI Module', () => {
             expect(cliContent).toContain("'npm-registry-email'");
             expect(cliContent).toContain("'image-registry-password'");
             expect(cliContent).toContain("'artifact-type'");
-            expect(cliContent).toContain("alias: 'U'");
-            expect(cliContent).toContain("alias: 'u'");
-            expect(cliContent).toContain("alias: 'E'");
-            expect(cliContent).toContain("alias: 'P'");
             expect(cliContent).toContain("alias: 't'");
+
+            // Registry-specific flags must not define short aliases
+            expect(cliContent).not.toMatch(/option\('(npm|image)-registry-[a-z]+', \{\s*alias:/);
+        });
+
+        it('should reject removed publish flags with rename guidance', async () => {
+            const fs = require('fs');
+            const path = require('path');
+            const cliPath = path.join(__dirname, '../cli.ts');
+            const cliContent = fs.readFileSync(cliPath, 'utf-8');
+
+            expect(cliContent).toContain("'registry-username'");
+            expect(cliContent).toContain("'registry-email'");
+            expect(cliContent).toContain("'registry-password'");
+            expect(cliContent).toContain('has been removed. Use');
         });
 
         it('should define publish command conditional validation', async () => {
@@ -431,6 +442,182 @@ describe('CLI Module', () => {
             
             expect(cliContent).toContain("import path from 'path'");
             expect(cliContent).toContain("from 'yargs'");
+        });
+    });
+
+    describe('publish option validation (runs real yargs parsing)', () => {
+        const originalArgv = process.argv;
+        let mockExit: jest.SpyInstance;
+        let mockConsoleError: jest.SpyInstance;
+        let handlePublish: jest.Mock;
+
+        // yargs is a module-level singleton, so load cli.ts in an isolated module registry for every run
+        const runPublish = (...args: string[]): string => {
+            process.argv = ['node', 'instana-integration', 'publish', '--package', 'my-pkg', ...args];
+            handlePublish = jest.fn();
+            const noop = async () => {};
+            jest.isolateModules(() => {
+                const { configureCLI } = require('../cli');
+                try {
+                    configureCLI({
+                        handleDownload: noop,
+                        handleImport: noop,
+                        handleExport: noop,
+                        handleInit: noop,
+                        handlePublish,
+                        handleLint: noop,
+                        handleBuild: noop,
+                    });
+                } catch (error) {
+                    // process.exit is mocked to throw, which stops yargs after it reported the failure
+                    if (!(error instanceof Error) || !error.message.startsWith('process.exit')) {
+                        throw error;
+                    }
+                }
+            });
+            return mockConsoleError.mock.calls.map((call) => call.join(' ')).join('\n');
+        };
+
+        beforeEach(() => {
+            mockExit = jest.spyOn(process, 'exit').mockImplementation(((code?: string | number | null) => {
+                throw new Error(`process.exit(${code})`);
+            }) as any);
+            mockConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+        });
+
+        afterEach(() => {
+            process.argv = originalArgv;
+            mockExit.mockRestore();
+            mockConsoleError.mockRestore();
+        });
+
+        describe('--artifact-type both', () => {
+            it('should accept both usernames together with email and password', () => {
+                const output = runPublish(
+                    '--artifact-type', 'both',
+                    '--npm-registry-username', 'npmuser',
+                    '--image-registry-username', 'imageuser',
+                    '--npm-registry-email', 'me@example.com',
+                    '--image-registry-password', 'secret'
+                );
+
+                expect(output).toBe('');
+                expect(mockExit).not.toHaveBeenCalled();
+                expect(handlePublish).toHaveBeenCalledTimes(1);
+                expect(handlePublish.mock.calls[0][0]).toMatchObject({
+                    'npm-registry-username': 'npmuser',
+                    'image-registry-username': 'imageuser',
+                });
+            });
+
+            it('should fail when only --npm-registry-username is supplied', () => {
+                const output = runPublish(
+                    '--artifact-type', 'both',
+                    '--npm-registry-username', 'npmuser',
+                    '--npm-registry-email', 'me@example.com',
+                    '--image-registry-password', 'secret'
+                );
+
+                expect(output).toContain('--image-registry-username is required when --artifact-type is image or both');
+                expect(mockExit).toHaveBeenCalledWith(1);
+                expect(handlePublish).not.toHaveBeenCalled();
+            });
+
+            it('should fail when only --image-registry-username is supplied', () => {
+                const output = runPublish(
+                    '--artifact-type', 'both',
+                    '--image-registry-username', 'imageuser',
+                    '--npm-registry-email', 'me@example.com',
+                    '--image-registry-password', 'secret'
+                );
+
+                expect(output).toContain('--npm-registry-username is required when --artifact-type is package or both');
+                expect(mockExit).toHaveBeenCalledWith(1);
+                expect(handlePublish).not.toHaveBeenCalled();
+            });
+
+            it('should fail when neither username is supplied', () => {
+                const output = runPublish(
+                    '--artifact-type', 'both',
+                    '--npm-registry-email', 'me@example.com',
+                    '--image-registry-password', 'secret'
+                );
+
+                expect(output).toContain('is required when --artifact-type is');
+                expect(mockExit).toHaveBeenCalledWith(1);
+                expect(handlePublish).not.toHaveBeenCalled();
+            });
+        });
+
+        describe('--artifact-type package', () => {
+            it('should not require the image registry flags', () => {
+                const output = runPublish(
+                    '--artifact-type', 'package',
+                    '--npm-registry-username', 'npmuser',
+                    '--npm-registry-email', 'me@example.com'
+                );
+
+                expect(output).toBe('');
+                expect(handlePublish).toHaveBeenCalledTimes(1);
+            });
+
+            it('should fail when --npm-registry-username is missing', () => {
+                const output = runPublish('--artifact-type', 'package', '--npm-registry-email', 'me@example.com');
+
+                expect(output).toContain('--npm-registry-username is required when --artifact-type is package or both');
+                expect(handlePublish).not.toHaveBeenCalled();
+            });
+
+            it('should fail when --npm-registry-email is missing', () => {
+                const output = runPublish('--artifact-type', 'package', '--npm-registry-username', 'npmuser');
+
+                expect(output).toContain('--npm-registry-email is required when --artifact-type is package or both');
+                expect(handlePublish).not.toHaveBeenCalled();
+            });
+        });
+
+        describe('--artifact-type image', () => {
+            it('should not require the npm registry flags', () => {
+                const output = runPublish(
+                    '--artifact-type', 'image',
+                    '--image-registry-username', 'imageuser',
+                    '--image-registry-password', 'secret'
+                );
+
+                expect(output).toBe('');
+                expect(handlePublish).toHaveBeenCalledTimes(1);
+            });
+
+            it('should fail when --image-registry-username is missing', () => {
+                const output = runPublish('--artifact-type', 'image', '--image-registry-password', 'secret');
+
+                expect(output).toContain('--image-registry-username is required when --artifact-type is image or both');
+                expect(handlePublish).not.toHaveBeenCalled();
+            });
+
+            it('should fail when --image-registry-password is missing', () => {
+                const output = runPublish('--artifact-type', 'image', '--image-registry-username', 'imageuser');
+
+                expect(output).toContain('--image-registry-password is required when --artifact-type is image or both');
+                expect(handlePublish).not.toHaveBeenCalled();
+            });
+        });
+
+        describe('removed flags', () => {
+            it.each([
+                ['--registry-username', '--npm-registry-username'],
+                ['-U', '--npm-registry-username'],
+                ['--registry-email', '--npm-registry-email'],
+                ['-E', '--npm-registry-email'],
+                ['--registry-password', '--image-registry-password'],
+                ['-P', '--image-registry-password'],
+            ])('should reject %s with rename guidance', (oldFlag, replacement) => {
+                const output = runPublish('--artifact-type', 'image', oldFlag, 'value');
+
+                expect(output).toContain('has been removed');
+                expect(output).toContain(replacement);
+                expect(handlePublish).not.toHaveBeenCalled();
+            });
         });
     });
 });
