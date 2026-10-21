@@ -1,6 +1,6 @@
 # @instana-integration/cp4aiops
 
-This integration package is designed to showcase observability capabilities within Instana by monitoring the IBM Cloud Pak for Watson AIOps (CP4AIOps) v4.13. This package includes custom dashboards and events that specifically monitoring of CP4AIOps components such as Kafka, Cassandra, PostgreSQL as well as the CP4AIOps's Topology and RedHat OCP metrics.
+This integration package is designed to showcase observability capabilities within Instana by monitoring the IBM Cloud Pak for Watson AIOps (CP4AIOps) v4.13. This package includes custom dashboards and events that specifically monitors the CP4AIOps components such as Kafka, Cassandra, PostgreSQL as well as the CP4AIOps's Topology and RedHat OCP metrics.
 
 ## Dashboards
 
@@ -58,17 +58,26 @@ Importing the package into Instana:
 $ stanctl-integration import --package @instana-integration/cp4aiops \
   --server $INSTANA_SERVER \
   --token $API_TOKEN \
-  --set namespace.name=$CP4AIOPS_NAMESPACE
+  --set namespace.name=$CP4AIOPS_NAMESPACE \
+  --set k8cluster.name=$CP4AIOPS_KUBERNETES_CLUSTERNAME \
+  --set env.name=$CP4AIOPS_ENVIRONMENT_NAME \
+  --set zone.name=$INSTANA_ZONE_NAME
   
 ```
 
-- INSTANA_SERVER: This is the base URL of an Instana tenant unit, e.g. https://test-example.instana.io, which is used by the CLI to communicate with Instana server for package lifecycle management.
-- API_TOKEN: Requests against the Instana API require valid API tokens. The API token can be generated via the Instana user interface. For more information, please refer to [Instana documentation](https://www.ibm.com/docs/en/instana-observability/current?topic=apis-instana-rest-api#usage-of-api-token).
-- CP4AIOPS_NAMESPACE: The Kubernetes namespace name where CP4AIOps is running on.
+- $INSTANA_SERVER: This is the base URL of an Instana tenant unit, e.g. https://test-example.instana.io, which is used by the CLI to communicate with Instana server for package lifecycle management.
+- $API_TOKEN: Requests against the Instana API require valid API tokens. The API token can be generated via the Instana user interface. For more information, please refer to [Instana documentation](https://www.ibm.com/docs/en/instana-observability/current?topic=apis-instana-rest-api#usage-of-api-token).
+- $CP4AIOPS_NAMESPACE: The Kubernetes namespace name where CP4AIOps is running on.
+- $CP4AIOPS_KUBERNETES_CLUSTERNAME: The Kubernetes cluster name where your CP4AIOPS is running on. This is to cater for more than a single CP4AIOPS environment (e.g. Production, non-Production, etc) and using the cluster name as the differentiator.
+- $CP4AIOPS_ENVIRONMENT_NAME: The environment name where the widget title will include as part of the multiple widget titles.
+- $INSTANA_ZONE_NAME: The Instana zone name used by some of the widgets for CPU/Memory related metrics.
 
 For example:
 stanctl-integration import --package @instana-integration/cp4aiops \
 --server unit0-tenant0.instana.mycompany.io \
 --token exampleofmyapitoken \
-–-set namespace.name=cp4aiops
+–-set namespace.name=cp4aiops \
+--set k8cluster.name=aiops4xprod \
+--set env.name=Prod \
+--set zone.name=ProdDC-Zone
 
