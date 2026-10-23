@@ -44,13 +44,13 @@ const examplesForPublish = `
 Examples:
 
 Publish an integration package to npm:
-  ${execName} publish --package @instana-integration/my-package --registry-username myuser --registry-email me@example.com --artifact-type package
+  ${execName} publish --package @instana-integration/my-package --npm-registry-username myuser --npm-registry-email me@example.com --artifact-type package
 
 Publish a collector container image to a registry:
-  ${execName} publish --package @instana-integration/my-package --registry-username myuser --registry-password mypassword --artifact-type image
+  ${execName} publish --package @instana-integration/my-package --image-registry-username myuser --image-registry-password mypassword --artifact-type image
 
 Publish both the integration package and container image:
-  ${execName} publish --package @instana-integration/my-package --registry-username myuser --registry-email me@example.com --registry-password mypassword --artifact-type both
+  ${execName} publish --package @instana-integration/my-package --npm-registry-username mynpmuser --image-registry-username myimageuser --npm-registry-email me@example.com --image-registry-password mypassword --artifact-type both
 `;
 
 const examplesForBuild = `
@@ -191,14 +191,12 @@ export function configureCLI(handlers: {
                     type: 'string',
                     demandOption: true
                 })
-                .option('registry-username', {
-                    alias: 'U',
-                    describe: 'Username to access the integration package or container image registry',
+                .option('npm-registry-username', {
+                    describe: 'Username to access the integration package registry (required when --artifact-type is package or both)',
                     type: 'string',
-                    demandOption: true
+                    demandOption: false
                 })
-                .option('registry-email', {
-                    alias: 'E',
+                .option('npm-registry-email', {
                     describe: 'Email to access the integration package registry (required when --artifact-type is package or both)',
                     type: 'string',
                     demandOption: false
@@ -211,18 +209,45 @@ export function configureCLI(handlers: {
                     choices: ['package', 'image', 'both'],
                     demandOption: false
                 })
-                .option('registry-password', {
-                    alias: 'P',
+                .option('image-registry-username', {
+                    describe: 'Username to access the container image registry (required when --artifact-type is image or both)',
+                    type: 'string',
+                    demandOption: false
+                })
+                .option('image-registry-password', {
                     describe: 'Password to access the container image registry (required when --artifact-type is image or both)',
                     type: 'string',
                     demandOption: false
                 })
+                // TODO(2.0.0): remove the hidden registry-* options below and the renamedFlags check in .check().
+                // They only exist so that users of the removed flags get a "renamed to" message instead of
+                // yargs' generic "Unknown arguments" error (kept hidden so .strict() doesn't mask it).
+                .option('registry-username', { alias: 'U', type: 'string', hidden: true })
+                .option('registry-email', { alias: 'E', type: 'string', hidden: true })
+                .option('registry-password', { alias: 'P', type: 'string', hidden: true })
                 .check((argv) => {
-                    if ((argv['artifact-type'] === 'package' || argv['artifact-type'] === 'both') && !argv['registry-email']) {
-                        throw new Error('--registry-email is required when --artifact-type is package or both');
+                    // TODO(2.0.0): remove this renamedFlags check together with the hidden registry-* options above.
+                    const renamedFlags: Record<string, string> = {
+                        'registry-username': '--npm-registry-username (for --artifact-type package) or --image-registry-username (for --artifact-type image)',
+                        'registry-email': '--npm-registry-email',
+                        'registry-password': '--image-registry-password'
+                    };
+                    for (const [oldFlag, replacement] of Object.entries(renamedFlags)) {
+                        if (argv[oldFlag] !== undefined) {
+                            throw new Error(`--${oldFlag} has been removed. Use ${replacement} instead.`);
+                        }
                     }
-                    if ((argv['artifact-type'] === 'image' || argv['artifact-type'] === 'both') && !argv['registry-password']) {
-                        throw new Error('--registry-password is required when --artifact-type is image or both');
+                    if ((argv['artifact-type'] === 'package' || argv['artifact-type'] === 'both') && !argv['npm-registry-username']) {
+                        throw new Error('--npm-registry-username is required when --artifact-type is package or both');
+                    }
+                    if ((argv['artifact-type'] === 'package' || argv['artifact-type'] === 'both') && !argv['npm-registry-email']) {
+                        throw new Error('--npm-registry-email is required when --artifact-type is package or both');
+                    }
+                    if ((argv['artifact-type'] === 'image' || argv['artifact-type'] === 'both') && !argv['image-registry-username']) {
+                        throw new Error('--image-registry-username is required when --artifact-type is image or both');
+                    }
+                    if ((argv['artifact-type'] === 'image' || argv['artifact-type'] === 'both') && !argv['image-registry-password']) {
+                        throw new Error('--image-registry-password is required when --artifact-type is image or both');
                     }
                     return true;
                 })
