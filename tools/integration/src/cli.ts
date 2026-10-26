@@ -219,14 +219,14 @@ export function configureCLI(handlers: {
                     type: 'string',
                     demandOption: false
                 })
-                // TODO(2.0.0): remove the hidden registry-* options below and the renamedFlags check in .check().
+                // TODO(1.7): remove the hidden registry-* options below and the renamedFlags check in .check().
                 // They only exist so that users of the removed flags get a "renamed to" message instead of
                 // yargs' generic "Unknown arguments" error (kept hidden so .strict() doesn't mask it).
                 .option('registry-username', { alias: 'U', type: 'string', hidden: true })
                 .option('registry-email', { alias: 'E', type: 'string', hidden: true })
                 .option('registry-password', { alias: 'P', type: 'string', hidden: true })
                 .check((argv) => {
-                    // TODO(2.0.0): remove this renamedFlags check together with the hidden registry-* options above.
+                    // TODO(1.7): remove this renamedFlags check together with the hidden registry-* options above.
                     const renamedFlags: Record<string, string> = {
                         'registry-username': '--npm-registry-username (for --artifact-type package) or --image-registry-username (for --artifact-type image)',
                         'registry-email': '--npm-registry-email',
